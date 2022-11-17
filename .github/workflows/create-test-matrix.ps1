@@ -2,10 +2,10 @@ $Jobs = @()
 
 @('windows-latest') | ForEach-Object {
   $os = $_
-  $build_cpu = 'C11_X64'
+  $build_cpu = 'C17_X64'
   $build_thread = 'WIN'
   $build_os = 'WIN'
-  $build_device = 'DESKTOP_X86'
+  $build_device = 'DESKTOP'
   $build_audio = 'NONE'
   @('NONE','REF','DX12') | ForEach-Object {
     $build_gpu = $_

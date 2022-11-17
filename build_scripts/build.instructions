@@ -1,0 +1,8 @@
+cmake -G "Visual Studio 16 2019" -T "ClangCL" -S . -B .\msvc2019.clang.win\ -DCMAKE_BUILD_TYPE=DEBUG -DMK_BUILD__OS__WIN=1 -DMK_BUILD__THREAD__WIN=1
+cmake -G "Ninja" -S . -B .\ninja.msvc.win\ -DCMAKE_BUILD_TYPE=DEBUG -DMK_BUILD__OS__WIN=1 -DMK_BUILD__THREAD__WIN=1 -DCMAKE_VS_PLATFORM_TOOLSET="ClangCL"
+
+Bootstrap
+-G "Visual Studio 17 2022" -A x64 -T ClangCL -DMK_BUILD__HW=C11_X64 -DMK_BUILD__THREAD=POSIX -DMK_BUILD__OS=POSIX -DMK_BUILD__DEVICE=DESKTOP_X86 -DMK_FEATURE__GRAPHICS=NONE -DCMAKE_BUILD_TYPE=DEBUG -S ./../bld/xcode_clang_c11_x64_posix_posix_desktop_x86/bootstrap -B ./../bld/msvc_17_clang_c11_x64_posix_posix_desktop_x86/bootstrap
+
+Regular
+-G "Visual Studio 17 2022" -A x64 -T ClangCL -DMK_BUILD__HW=C11_X64 -DMK_BUILD__THREAD=POSIX -DMK_BUILD__OS=POSIX -DMK_BUILD__DEVICE=DESKTOP_X86 -DMK_FEATURE__GRAPHICS=NONE -DCMAKE_BUILD_TYPE=DEBUG -S . -B ./../bld/msvc_17_clang_c11_x64_posix_posix_desktop_x86

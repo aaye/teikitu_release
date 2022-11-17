@@ -1,0 +1,4318 @@
+From 8365ba43b59c378cb92892a2650c91c37fd58b59 Mon Sep 17 00:00:00 2001
+From: Andrew Aye <andrew.aye@gmail.com>
+Date: Wed, 27 Sep 2023 12:57:29 -0700
+Subject: [PATCH] Teikitu Compile Patch
+
+---
+ build_scripts/build_usd.py                    | 34 ++++++++--
+ cmake/defaults/CXXDefaults.cmake              |  4 ++
+ cmake/defaults/Options.cmake                  |  1 +
+ cmake/defaults/Packages.cmake                 | 23 ++++++-
+ cmake/defaults/clangdefaults.cmake            |  2 +
+ cmake/defaults/msvcdefaults.cmake             | 65 +++++++------------
+ cmake/defaults/windefaults.cmake              | 62 ++++++++++++++++++
+ cmake/macros/Private.cmake                    |  8 ++-
+ cmake/macros/Public.cmake                     | 15 +++--
+ cmake/modules/FindTBB.cmake                   | 21 +++++-
+ extras/imaging/examples/CMakeLists.txt        |  4 +-
+ extras/usd/examples/usdObj/pch.h              |  1 -
+ extras/usd/examples/usdSchemaExamples/pch.h   |  1 -
+ pxr/base/arch/attributes.cpp                  |  1 +
+ pxr/base/arch/attributes.h                    |  2 +
+ pxr/base/arch/defines.h                       |  4 ++
+ pxr/base/arch/demangle.cpp                    |  4 +-
+ pxr/base/arch/env.cpp                         |  2 +-
+ pxr/base/arch/errno.cpp                       |  2 +-
+ pxr/base/arch/fileSystem.cpp                  |  1 +
+ pxr/base/arch/fileSystem.h                    |  4 ++
+ pxr/base/arch/library.cpp                     |  4 ++
+ pxr/base/arch/pragmas.h                       | 49 ++++++++++++++
+ pxr/base/arch/stackTrace.cpp                  |  4 +-
+ pxr/base/arch/symbols.cpp                     |  2 +-
+ pxr/base/arch/testenv/testArchPRead.cpp       |  1 +
+ pxr/base/arch/testenv/testArchUtil.cpp        |  6 +-
+ pxr/base/gf/ilmbase_half.cpp                  |  4 +-
+ pxr/base/plug/CMakeLists.txt                  | 15 +++--
+ pxr/base/plug/pch.h                           |  1 -
+ pxr/base/tf/fileUtils.cpp                     |  2 +-
+ pxr/base/tf/mallocTag.cpp                     |  6 +-
+ pxr/base/tf/pch.h                             |  1 -
+ pxr/base/tf/preprocessorUtils.h               |  2 +-
+ pxr/base/tf/preprocessorUtilsLite.h           |  8 +--
+ pxr/base/tf/pyClassMethod.h                   |  3 +-
+ pxr/base/tf/pyPtrHelpers.h                    |  5 +-
+ pxr/base/tf/refPtr.h                          |  4 ++
+ pxr/base/tf/singleton.h                       |  4 +-
+ pxr/base/tf/stringUtils.cpp                   | 10 ++-
+ pxr/base/tf/testenv/error.cpp                 |  4 +-
+ pxr/base/tf/testenv/notice.cpp                |  1 +
+ pxr/base/tf/testenv/scopeDescription.cpp      |  1 +
+ pxr/base/tf/wrapTestPyStaticTokens.cpp        |  2 +-
+ pxr/base/tf/wrapTypeHelpers.h                 |  3 +-
+ pxr/base/trace/concurrentList.h               |  4 +-
+ pxr/base/trace/pch.h                          |  1 -
+ pxr/base/vt/array.h                           | 24 +++----
+ pxr/base/vt/pch.h                             |  1 -
+ pxr/base/vt/value.cpp                         |  6 ++
+ pxr/base/vt/wrapArrayDualQuaternion.cpp       | 11 ++++
+ pxr/base/vt/wrapArrayFloat.cpp                | 11 ++++
+ pxr/base/vt/wrapArrayIntegral.cpp             | 17 +++++
+ pxr/base/vt/wrapArrayMatrix.cpp               | 14 ++++
+ pxr/base/vt/wrapArrayQuaternion.cpp           | 12 ++++
+ pxr/base/vt/wrapArrayRange.cpp                | 16 +++++
+ pxr/base/vt/wrapArrayString.cpp               |  9 +++
+ pxr/base/vt/wrapArrayToken.cpp                |  9 +++
+ pxr/base/vt/wrapArrayVec.cpp                  | 20 ++++++
+ pxr/base/work/dispatcher.cpp                  | 23 ++++++-
+ pxr/base/work/dispatcher.h                    | 61 +++++++++++++++--
+ pxr/base/work/pch.h                           |  2 -
+ .../work/testenv/testWorkThreadLimits.cpp     | 59 ++++++++++++-----
+ pxr/base/work/threadLimits.cpp                | 43 ++++++++++--
+ pxr/imaging/garch/pch.h                       |  1 -
+ pxr/imaging/glf/pch.h                         |  1 -
+ .../hd/dependencyForwardingSceneIndex.cpp     |  2 +-
+ pxr/imaging/hd/flattenedDataSourceProvider.h  |  2 +
+ ...enedMaterialBindingsDataSourceProvider.cpp |  2 +-
+ pxr/imaging/hd/materialNetwork2Interface.cpp  |  8 +--
+ pxr/imaging/hd/pch.h                          |  1 -
+ pxr/imaging/hd/perfLog.cpp                    |  4 +-
+ pxr/imaging/hd/renderSettings.cpp             | 38 -----------
+ pxr/imaging/hd/renderSettings.h               | 33 ++++++++++
+ pxr/imaging/hd/testenv/testHdSceneIndex.cpp   |  2 +-
+ pxr/imaging/hdGp/CMakeLists.txt               |  3 +
+ .../hdGp/generativeProceduralPluginRegistry.h |  1 -
+ pxr/imaging/hdGp/pch.h                        |  1 -
+ pxr/imaging/hdMtlx/pch.h                      |  1 -
+ pxr/imaging/hdSt/bufferArrayRegistry.cpp      |  5 +-
+ pxr/imaging/hdSt/commandBuffer.cpp            |  2 +-
+ pxr/imaging/hdSt/interleavedMemoryManager.cpp |  2 +-
+ pxr/imaging/hdSt/mesh.cpp                     |  1 -
+ pxr/imaging/hdSt/pch.h                        |  1 -
+ pxr/imaging/hdSt/primUtils.cpp                |  2 +-
+ pxr/imaging/hdSt/renderDelegate.cpp           |  3 +
+ pxr/imaging/hdSt/vboMemoryManager.cpp         |  4 +-
+ pxr/imaging/hdSt/vboSimpleMemoryManager.cpp   |  2 +-
+ pxr/imaging/hdar/pch.h                        |  1 -
+ pxr/imaging/hdar/systemSchema.h               |  2 +-
+ pxr/imaging/hdsi/coordSysPrimSceneIndex.cpp   |  2 +-
+ pxr/imaging/hdsi/pch.h                        |  1 -
+ pxr/imaging/hdx/pch.h                         |  1 -
+ pxr/imaging/hdx/selectionTracker.cpp          |  2 +-
+ pxr/imaging/hgiGL/scopedStateHolder.h         |  1 -
+ pxr/imaging/hgiMetal/pch.h                    |  1 -
+ pxr/imaging/hio/OpenEXR/OpenEXRCore/chunk.c   |  2 +-
+ .../hio/OpenEXR/OpenEXRCore/encoding.c        |  2 +-
+ .../OpenEXR/deflate/lib/deflate_decompress.c  |  6 +-
+ pxr/imaging/hio/OpenEXR/openexr-c.c           |  8 +++
+ pxr/imaging/hio/fieldTextureData.h            |  2 +-
+ pxr/imaging/hio/glslfxConfig.cpp              |  8 +--
+ pxr/imaging/hio/image.h                       |  2 +-
+ pxr/imaging/hio/stb/stb_image.h               |  4 +-
+ pxr/imaging/plugin/hdEmbree/pch.h             |  1 -
+ pxr/imaging/plugin/hdStorm/pch.h              |  1 -
+ pxr/imaging/plugin/hioOiio/pch.h              |  1 -
+ pxr/usd/ar/pch.h                              |  1 -
+ pxr/usd/ndr/pch.h                             |  1 -
+ pxr/usd/pcp/mapExpression.cpp                 |  4 +-
+ pxr/usd/pcp/mapExpression.h                   |  3 +-
+ pxr/usd/pcp/pch.h                             |  1 -
+ pxr/usd/plugin/usdAbc/pch.h                   |  1 -
+ pxr/usd/plugin/usdDraco/pch.h                 |  1 -
+ pxr/usd/sdf/changeManager.cpp                 | 10 +--
+ pxr/usd/sdf/layer.cpp                         |  2 +-
+ pxr/usd/sdf/layer.h                           |  2 +-
+ pxr/usd/sdf/pch.h                             |  1 -
+ pxr/usd/sdf/predicateExpression.cpp           |  3 +
+ pxr/usd/sdf/textFileFormat.cpp                |  2 +-
+ pxr/usd/sdf/textFileFormat.tab.cpp            |  8 +--
+ pxr/usd/sdf/wrapArrayAssetPath.cpp            |  9 +++
+ pxr/usd/sdf/wrapPredicateExpression.cpp       |  4 +-
+ pxr/usd/usd/clipCache.cpp                     | 22 +++----
+ pxr/usd/usd/clipCache.h                       |  4 +-
+ pxr/usd/usd/collectionMembershipQuery.h       |  6 +-
+ pxr/usd/usd/collectionPredicateLibrary.h      |  2 +-
+ pxr/usd/usd/crateFile.cpp                     |  3 +
+ pxr/usd/usd/crateFile.h                       | 17 +++--
+ pxr/usd/usd/pch.h                             |  1 -
+ pxr/usd/usd/prim.h                            |  2 +-
+ pxr/usd/usd/primDefinition.cpp                |  4 +-
+ pxr/usd/usd/stage.cpp                         |  2 +-
+ pxr/usd/usd/testenv/testUsdResolveTarget.cpp  |  6 +-
+ pxr/usd/usdGeom/bboxCache.cpp                 | 21 ++++--
+ pxr/usd/usdGeom/pch.h                         |  1 -
+ pxr/usd/usdGeom/primvar.h                     |  4 +-
+ pxr/usd/usdGeom/subset.cpp                    |  8 +--
+ pxr/usd/usdHydra/pch.h                        |  1 -
+ pxr/usd/usdLux/pch.h                          |  1 -
+ pxr/usd/usdMedia/pch.h                        |  1 -
+ pxr/usd/usdMtlx/pch.h                         |  1 -
+ pxr/usd/usdPhysics/pch.h                      |  1 -
+ pxr/usd/usdProc/pch.h                         |  1 -
+ pxr/usd/usdRender/pch.h                       |  1 -
+ pxr/usd/usdRi/pch.h                           |  1 -
+ pxr/usd/usdShade/pch.h                        |  1 -
+ pxr/usd/usdSkel/animation.cpp                 |  4 +-
+ pxr/usd/usdSkel/pch.h                         |  1 -
+ pxr/usd/usdUI/pch.h                           |  1 -
+ pxr/usd/usdUtils/assetLocalizationDelegate.h  |  2 +-
+ pxr/usd/usdUtils/pch.h                        |  1 -
+ pxr/usd/usdUtils/pipeline.cpp                 |  2 +-
+ pxr/usd/usdVol/pch.h                          |  1 -
+ pxr/usdImaging/plugin/usdShaders/pch.h        |  1 -
+ pxr/usdImaging/usdAppUtils/frameRecorder.cpp  |  2 +-
+ pxr/usdImaging/usdAppUtils/pch.h              |  1 -
+ .../usdImaging/dataSourceMaterial.cpp         |  4 +-
+ pxr/usdImaging/usdImaging/dataSourcePrim.cpp  |  6 +-
+ pxr/usdImaging/usdImaging/dataSourcePrim.h    |  2 -
+ .../usdImaging/dataSourceVolume.cpp           |  3 +-
+ pxr/usdImaging/usdImaging/dataSourceVolume.h  |  1 -
+ pxr/usdImaging/usdImaging/delegate.cpp        |  2 +-
+ .../usdImaging/drawModeSceneIndex.cpp         |  2 +-
+ pxr/usdImaging/usdImaging/drawModeStandin.cpp |  2 +
+ pxr/usdImaging/usdImaging/gprimAdapter.cpp    |  8 +--
+ pxr/usdImaging/usdImaging/indexProxy.cpp      |  3 +
+ pxr/usdImaging/usdImaging/instanceAdapter.cpp |  5 +-
+ pxr/usdImaging/usdImaging/pch.h               |  1 -
+ .../usdImaging/pointInstancerAdapter.cpp      |  6 +-
+ .../usdImaging/resolvedAttributeCache.h       | 26 ++++++--
+ pxr/usdImaging/usdImagingGL/pch.h             |  1 -
+ .../generativeProceduralAdapter.h             | 19 +++---
+ pxr/usdImaging/usdProcImaging/pch.h           |  1 -
+ pxr/usdImaging/usdRiPxrImaging/pch.h          |  1 -
+ .../usdRiPxrImaging/pxrDisplayFilterAdapter.h |  8 +--
+ .../usdRiPxrImaging/pxrIntegratorAdapter.h    |  8 +--
+ .../usdRiPxrImaging/pxrSampleFilterAdapter.h  |  8 +--
+ pxr/usdImaging/usdSkelImaging/pch.h           |  1 -
+ .../usdSkelImaging/skeletonAdapter.h          |  6 +-
+ .../usdVolImaging/field3dAssetAdapter.h       |  6 +-
+ .../usdVolImaging/openvdbAssetAdapter.h       |  6 +-
+ pxr/usdImaging/usdVolImaging/pch.h            |  1 -
+ pxr/usdImaging/usdviewq/pch.h                 |  1 -
+ 184 files changed, 849 insertions(+), 386 deletions(-)
+ create mode 100644 cmake/defaults/windefaults.cmake
+
+diff --git a/build_scripts/build_usd.py b/build_scripts/build_usd.py
+index 14e2c7a5..404af618 100644
+--- a/build_scripts/build_usd.py
++++ b/build_scripts/build_usd.py
+@@ -939,13 +939,19 @@ elif MacOS():
+ else:
+     TBB_URL = "https://github.com/oneapi-src/oneTBB/archive/refs/tags/v2020.3.zip"
+ 
++TBB_2021_URL = "https://github.com/oneapi-src/oneTBB/archive/refs/tags/v2021.9.0.zip"
++
+ def InstallTBB(context, force, buildArgs):
+-    if Windows():
+-        InstallTBB_Windows(context, force, buildArgs)
+-    elif MacOS():
+-        InstallTBB_MacOS(context, force, buildArgs)
++    if context.tbbVersion == "2021":
++        with CurrentWorkingDirectory(DownloadURL(TBB_2021_URL, context, force)):
++            RunCMake(context, force, buildArgs)
+     else:
+-        InstallTBB_Linux(context, force, buildArgs)
++        if Windows():
++            InstallTBB_Windows(context, force, buildArgs)
++        elif MacOS():
++            InstallTBB_MacOS(context, force, buildArgs)
++        else:
++            InstallTBB_Linux(context, force, buildArgs)
+ 
+ def InstallTBB_Windows(context, force, buildArgs):
+     with CurrentWorkingDirectory(DownloadURL(TBB_URL, context, force, 
+@@ -1195,7 +1201,8 @@ BLOSC = Dependency("Blosc", InstallBLOSC, "include/blosc.h")
+ ############################################################
+ # OpenVDB
+ 
+-OPENVDB_URL = "https://github.com/AcademySoftwareFoundation/openvdb/archive/refs/tags/v9.1.0.zip"
++OPENVDB_9_URL = "https://github.com/AcademySoftwareFoundation/openvdb/archive/refs/tags/v9.1.0.zip"
++OPENVDB_10_URL = "https://github.com/AcademySoftwareFoundation/openvdb/archive/refs/tags/v10.0.1.zip"
+ 
+ # OpenVDB v9.1.0 requires TBB 2019.0 or above, but this script installs
+ # TBB 2018 on macOS Intel systems for reasons documented above. So we
+@@ -1204,7 +1211,8 @@ OPENVDB_URL = "https://github.com/AcademySoftwareFoundation/openvdb/archive/refs
+ OPENVDB_INTEL_URL = "https://github.com/AcademySoftwareFoundation/openvdb/archive/refs/tags/v8.2.0.zip"
+ 
+ def InstallOpenVDB(context, force, buildArgs):
+-    openvdb_url = OPENVDB_URL
++    # oneTBB requires new OpenVDB
++    openvdb_url = OPENVDB_10_URL if context.tbbVersion == "2021" else OPENVDB_9_URL
+     if MacOS() and not apple_utils.IsTargetArm(context):
+         openvdb_url = OPENVDB_INTEL_URL
+ 
+@@ -1930,6 +1938,13 @@ subgroup.add_argument("--no-openvdb", dest="enable_openvdb",
+                       action="store_false",
+                       help="Disable OpenVDB support in imaging (default)")
+ subgroup = group.add_mutually_exclusive_group()
++subgroup.add_argument("--onetbb", dest="enable_onetbb", action="store_true",
++                      default=False,
++                      help="Use new oneAPI TBB version")
++subgroup.add_argument("--no-onetbb", dest="enable_onetbb",
++                      action="store_false",
++                      help="Use old TBB version (default)")
++subgroup = group.add_mutually_exclusive_group()
+ subgroup.add_argument("--usdview", dest="build_usdview",
+                       action="store_true", default=True,
+                       help="Build usdview (default)")
+@@ -2102,6 +2117,9 @@ class InstallContext:
+         self.buildTutorials = args.build_tutorials
+         self.buildTools = args.build_tools
+ 
++        # - TBB
++        self.tbbVersion = "2021" if args.enable_onetbb else "2019"
++
+         # - Imaging
+         self.buildImaging = (args.build_imaging == IMAGING or
+                              args.build_imaging == USD_IMAGING)
+@@ -2366,6 +2384,7 @@ summaryMsg += """\
+     Python support              {buildPython}
+       Python Debug:             {debugPython}
+       Python docs:              {buildPythonDocs}
++    TBB version:                {tbbVersion}
+     Documentation               {buildDocs}
+     Tests                       {buildTests}
+     Examples                    {buildExamples}
+@@ -2427,6 +2446,7 @@ summaryMsg = summaryMsg.format(
+     buildPython=("On" if context.buildPython else "Off"),
+     debugPython=("On" if context.debugPython else "Off"),
+     buildPythonDocs=("On" if context.buildPythonDocs else "Off"),
++    tbbVersion=context.tbbVersion,
+     buildDocs=("On" if context.buildDocs else "Off"),
+     buildTests=("On" if context.buildTests else "Off"),
+     buildExamples=("On" if context.buildExamples else "Off"),
+diff --git a/cmake/defaults/CXXDefaults.cmake b/cmake/defaults/CXXDefaults.cmake
+index f903d8bb..bb933219 100644
+--- a/cmake/defaults/CXXDefaults.cmake
++++ b/cmake/defaults/CXXDefaults.cmake
+@@ -38,6 +38,10 @@ elseif(MSVC)
+     include(msvcdefaults)
+ endif()
+ 
++if(WIN32)
++    include(windefaults)
++endif()
++
+ _add_define(GL_GLEXT_PROTOTYPES)
+ _add_define(GLX_GLXEXT_PROTOTYPES)
+ 
+diff --git a/cmake/defaults/Options.cmake b/cmake/defaults/Options.cmake
+index e51d1271..9e750f8a 100644
+--- a/cmake/defaults/Options.cmake
++++ b/cmake/defaults/Options.cmake
+@@ -50,6 +50,7 @@ option(PXR_ENABLE_NAMESPACES "Enable C++ namespaces." ON)
+ option(PXR_PREFER_SAFETY_OVER_SPEED
+        "Enable certain checks designed to avoid crashes or out-of-bounds memory reads with malformed input files.  These checks may negatively impact performance."
+         ON)
++option(PXR_ENABLE_ONEAPI_TBB "Enable OneAPI TBB 2021." OFF)
+ 
+ # Determine GFX api
+ # Metal only valid on Apple platforms
+diff --git a/cmake/defaults/Packages.cmake b/cmake/defaults/Packages.cmake
+index 2bb1f30d..23d017a7 100644
+--- a/cmake/defaults/Packages.cmake
++++ b/cmake/defaults/Packages.cmake
+@@ -40,6 +40,10 @@ set(PXR_THREAD_LIBS "${CMAKE_THREAD_LIBS_INIT}")
+ # Find Boost package before getting any boost specific components as we need to
+ # disable boost-provided cmake config, based on the boost version found.
+ find_package(Boost REQUIRED)
++if(Boost_FOUND)
++    include_directories(${Boost_INCLUDE_DIRS})
++    link_directories(${Boost_LIBRARY_DIRS})
++endif()
+ 
+ # Boost provided cmake files (introduced in boost version 1.70) result in 
+ # inconsistent build failures on different platforms, when trying to find boost 
+@@ -152,8 +156,23 @@ endif()
+ 
+ 
+ # --TBB
+-find_package(TBB REQUIRED COMPONENTS tbb)
+-add_definitions(${TBB_DEFINITIONS})
++if (PXR_ENABLE_ONEAPI_TBB)
++    find_package(TBB REQUIRED COMPONENTS tbb12) # OneAPI TBB encodes the major version on the library name.
++    if(TBB_FOUND)
++        add_definitions(${TBB_DEFINITIONS})
++        include_directories(${TBB_INCLUDE_DIRS})
++        link_directories(${TBB_LIBRARY}) # Required for tbb.lib/tbb_debug.lib to find their binary interface match tbb12.lib/tbb12_debug.lib
++        set(TBB_tbb_library ${TBB_LIBRARIES}) # Copy over the libraries to be linked into the previous variable name.
++    endif()
++else()
++    find_package(TBB REQUIRED COMPONENTS tbb)
++    if(TBB_FOUND)
++        add_definitions(${TBB_DEFINITIONS})
++    endif()
++endif()
++if(NOT TBB_FOUND)
++    message(FATAL_ERROR "Did not find TBB")
++endif()
+ 
+ # --math
+ if(WIN32)
+diff --git a/cmake/defaults/clangdefaults.cmake b/cmake/defaults/clangdefaults.cmake
+index 4e20af32..1c30f5e6 100644
+--- a/cmake/defaults/clangdefaults.cmake
++++ b/cmake/defaults/clangdefaults.cmake
+@@ -36,3 +36,5 @@ endif()
+ if(CMAKE_USE_PTHREADS_INIT)
+     _disable_warning("unused-command-line-argument")
+ endif()
++
++set(_PXR_CXX_FLAGS "${_PXR_CXX_FLAGS} -Werror")
+diff --git a/cmake/defaults/msvcdefaults.cmake b/cmake/defaults/msvcdefaults.cmake
+index 0f7fb7ef..a34632c9 100644
+--- a/cmake/defaults/msvcdefaults.cmake
++++ b/cmake/defaults/msvcdefaults.cmake
+@@ -25,8 +25,30 @@
+ # Enable exception handling.
+ set(_PXR_CXX_FLAGS "${_PXR_CXX_FLAGS} /EHsc")
+ 
+-# Standards compliant.
+-set(_PXR_CXX_FLAGS "${_PXR_CXX_FLAGS} /Zc:rvalueCast /Zc:strictStrings")
++# Standards conformance: This option disables permissive behaviors, and sets
++# the /Zc compiler options for strict conformance
++set(_PXR_CXX_FLAGS "${_PXR_CXX_FLAGS} /permissive-")
++
++# Standards conformance: Enforce Standard C++ explicit type conversion rules.
++# Enabled automatically by permissive-
++# set(_PXR_CXX_FLAGS "${_PXR_CXX_FLAGS} /Zc:rvalueCast")
++
++# Standards conformance: Disable string-literal to char* or wchar_t* conversion.
++# Enabled automatically by permissive-
++# set(_PXR_CXX_FLAGS "${_PXR_CXX_FLAGS} /Zc:strictStrings")
++
++# Standards conformance: Standard compliant preprocessor
++set(_PXR_CXX_FLAGS "${_PXR_CXX_FLAGS} /Zc:preprocessor")
++
++# Standards conformance: MSVC stores the C++ standard version in _MSVC_LANG and
++# __cplusplus was stuck on an early standard version. This will force
++# __cplusplus == _MSVC_LANG which conforms to the standard.
++set(_PXR_CXX_FLAGS "${_PXR_CXX_FLAGS} /Zc:__cplusplus")
++
++# Standards conformance: This causes the class-level dllexport and dllimport
++# attributes to not apply to inline member functions, as they otherwise would.
++# Only available with Clang-CL
++# set(_PXR_CXX_FLAGS "${_PXR_CXX_FLAGS} /Zc:dllexportInlines-")
+ 
+ # The /Zc:inline option strips out the "arch_ctor_<name>" symbols used for
+ # library initialization by ARCH_CONSTRUCTOR starting in Visual Studio 2019, 
+@@ -93,45 +115,6 @@ _disable_warning("4180")
+ # tbb/enumerable_thread_specific.h
+ _disable_warning("4334")
+ 
+-# Disable warning C4996 regarding fopen(), strcpy(), etc.
+-_add_define("_CRT_SECURE_NO_WARNINGS")
+-
+-# Disable warning C4996 regarding unchecked iterators for std::transform,
+-# std::copy, std::equal, et al.
+-_add_define("_SCL_SECURE_NO_WARNINGS")
+-
+-# Make sure WinDef.h does not define min and max macros which
+-# will conflict with std::min() and std::max().
+-_add_define("NOMINMAX")
+-
+-# Needed to prevent YY files trying to include unistd.h
+-# (which doesn't exist on Windows)
+-_add_define("YY_NO_UNISTD_H")
+-
+-# Forces all libraries that have separate source to be linked as
+-# DLL's rather than static libraries on Microsoft Windows, unless
+-# explicitly told otherwise.
+-if (NOT Boost_USE_STATIC_LIBS)
+-    _add_define("BOOST_ALL_DYN_LINK")
+-endif()
+-
+-# Suppress automatic boost linking via pragmas, as we must not rely on
+-# a heuristic, but upon the tool set we have specified in our build.
+-_add_define("BOOST_ALL_NO_LIB")
+-
+-if(${PXR_USE_DEBUG_PYTHON})
+-    _add_define("BOOST_DEBUG_PYTHON")
+-    _add_define("BOOST_LINKING_PYTHON")
+-endif()
+-
+-# Need half::_toFloat and half::_eLut.
+-_add_define("OPENEXR_DLL")
+-
+-# Exclude headers from unnecessary Windows APIs to improve build
+-# times and avoid annoying conflicts with macros defined in those
+-# headers.
+-_add_define("WIN32_LEAN_AND_MEAN")
+-
+ # These files require /bigobj compiler flag
+ #   Vt/arrayPyBuffer.cpp
+ #   Usd/crateFile.cpp
+diff --git a/cmake/defaults/windefaults.cmake b/cmake/defaults/windefaults.cmake
+new file mode 100644
+index 00000000..0de3da6b
+--- /dev/null
++++ b/cmake/defaults/windefaults.cmake
+@@ -0,0 +1,62 @@
++#
++# Copyright 2016 Pixar
++#
++# Licensed under the Apache License, Version 2.0 (the "Apache License")
++# with the following modification; you may not use this file except in
++# compliance with the Apache License and the following modification to it:
++# Section 6. Trademarks. is deleted and replaced with:
++#
++# 6. Trademarks. This License does not grant permission to use the trade
++#    names, trademarks, service marks, or product names of the Licensor
++#    and its affiliates, except as required to comply with Section 4(c) of
++#    the License and to reproduce the content of the NOTICE file.
++#
++# You may obtain a copy of the Apache License at
++#
++#     http://www.apache.org/licenses/LICENSE-2.0
++#
++# Unless required by applicable law or agreed to in writing, software
++# distributed under the Apache License with the above modification is
++# distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
++# KIND, either express or implied. See the Apache License for the specific
++# language governing permissions and limitations under the Apache License.
++#
++
++# Disable warning C4996 regarding fopen(), strcpy(), etc.
++_add_define("_CRT_SECURE_NO_WARNINGS")
++
++# Disable warning C4996 regarding unchecked iterators for std::transform,
++# std::copy, std::equal, et al.
++_add_define("_SCL_SECURE_NO_WARNINGS")
++
++# Make sure WinDef.h does not define min and max macros which
++# will conflict with std::min() and std::max().
++_add_define("NOMINMAX")
++
++# Needed to prevent YY files trying to include unistd.h
++# (which doesn't exist on Windows)
++_add_define("YY_NO_UNISTD_H")
++
++# Forces all libraries that have separate source to be linked as
++# DLL's rather than static libraries on Microsoft Windows, unless
++# explicitly told otherwise.
++if (NOT Boost_USE_STATIC_LIBS)
++    _add_define("BOOST_ALL_DYN_LINK")
++endif()
++
++# Suppress automatic boost linking via pragmas, as we must not rely on
++# a heuristic, but upon the tool set we have specified in our build.
++_add_define("BOOST_ALL_NO_LIB")
++
++if(${PXR_USE_DEBUG_PYTHON})
++    _add_define("BOOST_DEBUG_PYTHON")
++    _add_define("BOOST_LINKING_PYTHON")
++endif()
++
++# Need half::_toFloat and half::_eLut.
++_add_define("OPENEXR_DLL")
++
++# Exclude headers from unnecessary Windows APIs to improve build
++# times and avoid annoying conflicts with macros defined in those
++# headers.
++_add_define("WIN32_LEAN_AND_MEAN")
+diff --git a/cmake/macros/Private.cmake b/cmake/macros/Private.cmake
+index 23172745..85478089 100644
+--- a/cmake/macros/Private.cmake
++++ b/cmake/macros/Private.cmake
+@@ -480,7 +480,7 @@ function(_pxr_enable_precompiled_header TARGET_NAME)
+     # Headers live in subdirectories.
+     set(rel_output_header_path "${PXR_PREFIX}/${TARGET_NAME}/${output_header_name}")
+     set(abs_output_header_path "${PROJECT_BINARY_DIR}/include/${rel_output_header_path}")
+-    set(abs_precompiled_path ${PROJECT_BINARY_DIR}/include/${PXR_PREFIX}/${TARGET_NAME}/${precompiled_name})
++    set(abs_precompiled_path ${PROJECT_BINARY_DIR}/include/${PXR_PREFIX}/${TARGET_NAME}/${CMAKE_BUILD_TYPE}${precompiled_name})
+ 
+     # Additional compile flags to use precompiled header.  This will be
+     set(compile_flags "")
+@@ -874,7 +874,11 @@ function(_pxr_target_link_libraries NAME)
+                 elseif(CMAKE_COMPILER_IS_GNUCXX)
+                     list(APPEND final -Wl,--whole-archive ${lib} -Wl,--no-whole-archive)
+                 elseif("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")
+-                    list(APPEND final -Wl,-force_load ${lib})
++                    if (WIN32) #lld-link does not have a consistent set of arguments
++                        list(APPEND final -Wl,-wholearchive:$<TARGET_FILE:${lib}>)
++                    else()
++                        list(APPEND final -Wl,-force_load ${lib})
++                    endif()
+                 else()
+                     # Unknown platform.
+                     list(APPEND final ${lib})
+diff --git a/cmake/macros/Public.cmake b/cmake/macros/Public.cmake
+index 926e16e8..40f120b6 100644
+--- a/cmake/macros/Public.cmake
++++ b/cmake/macros/Public.cmake
+@@ -1059,10 +1059,17 @@ function(pxr_toplevel_epilogue)
+                     -Wl,--whole-archive $<BUILD_INTERFACE:$<TARGET_FILE:usd_m>> -Wl,--no-whole-archive
+             )
+         elseif("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")
+-            target_link_libraries(usd_ms
+-                PRIVATE
+-                    -Wl,-force_load $<BUILD_INTERFACE:$<TARGET_FILE:usd_m>>
+-            )
++            if (WIN32) #lld-link does not have a consistent set of arguments
++                target_link_libraries(usd_ms
++                    PRIVATE
++                        -Wl,-wholearchive $<BUILD_INTERFACE:$<TARGET_FILE:usd_m>>
++                )
++            else()
++                target_link_libraries(usd_ms
++                    PRIVATE
++                        -Wl,-force_load $<BUILD_INTERFACE:$<TARGET_FILE:usd_m>>
++                )
++            endif()
+         endif()
+ 
+         # Since we didn't add a dependency to usd_ms on usd_m above, we
+diff --git a/cmake/modules/FindTBB.cmake b/cmake/modules/FindTBB.cmake
+index 9bf69a02..8a5e7fdf 100644
+--- a/cmake/modules/FindTBB.cmake
++++ b/cmake/modules/FindTBB.cmake
+@@ -197,7 +197,14 @@ if(NOT TBB_FOUND)
+   ##################################
+ 
+   if(TBB_INCLUDE_DIRS)
+-    file(READ "${TBB_INCLUDE_DIRS}/tbb/tbb_stddef.h" _tbb_version_file)
++    # Use new oneTBB version header if it exists.
++    if(EXISTS "${TBB_INCLUDE_DIRS}/oneapi/tbb/version.h")
++      file(READ "${TBB_INCLUDE_DIRS}/oneapi/tbb/version.h" _tbb_version_file)
++    elseif (EXISTS "${TBB_INCLUDE_DIRS}/tbb/tbb_stddef.h")
++      file(READ "${TBB_INCLUDE_DIRS}/tbb/tbb_stddef.h" _tbb_version_file)
++    else ()
++      MESSAGE (FATAL_ERROR "Failed to find TBB Version information.")
++    endif()
+     string(REGEX REPLACE ".*#define TBB_VERSION_MAJOR ([0-9]+).*" "\\1"
+         TBB_VERSION_MAJOR "${_tbb_version_file}")
+     string(REGEX REPLACE ".*#define TBB_VERSION_MINOR ([0-9]+).*" "\\1"
+@@ -205,6 +212,9 @@ if(NOT TBB_FOUND)
+     string(REGEX REPLACE ".*#define TBB_INTERFACE_VERSION ([0-9]+).*" "\\1"
+         TBB_INTERFACE_VERSION "${_tbb_version_file}")
+     set(TBB_VERSION "${TBB_VERSION_MAJOR}.${TBB_VERSION_MINOR}")
++    if(NOT ${TBB_INTERFACE_VERSION} STREQUAL "")
++      math(EXPR TBB_INTERFACE_VERSION_MAJOR "${TBB_INTERFACE_VERSION} / 1000" OUTPUT_FORMAT DECIMAL)
++    endif()
+   endif()
+ 
+   ##################################
+@@ -213,13 +223,18 @@ if(NOT TBB_FOUND)
+ 
+   if(TBB_VERSION VERSION_LESS 4.3)
+     set(TBB_SEARCH_COMPOMPONENTS tbb_preview tbbmalloc tbb)
+-  else()
++    list(APPEND TBB_FIND_COMPONENTS tbb)
++  elseif(TBB_INTERFACE_VERSION_MAJOR VERSION_LESS 12.0)
+     set(TBB_SEARCH_COMPOMPONENTS tbb_preview tbbmalloc_proxy tbbmalloc tbb)
++    list(APPEND TBB_FIND_COMPONENTS tbb)
++  else()
++    set(TBB_SEARCH_COMPOMPONENTS tbb_preview tbbmalloc_proxy tbbmalloc tbb${TBB_INTERFACE_VERSION_MAJOR})
++    list(APPEND TBB_FIND_COMPONENTS tbb${TBB_INTERFACE_VERSION_MAJOR})
+   endif()
+ 
+   # Find each component
+   foreach(_comp ${TBB_SEARCH_COMPOMPONENTS})
+-    if(";${TBB_FIND_COMPONENTS};tbb;" MATCHES ";${_comp};")
++    if(";${TBB_FIND_COMPONENTS};" MATCHES ";${_comp};")
+ 
+       # Search for the libraries
+       find_library(TBB_${_comp}_LIBRARY_RELEASE ${_comp}
+diff --git a/extras/imaging/examples/CMakeLists.txt b/extras/imaging/examples/CMakeLists.txt
+index 40887be9..c33e188c 100644
+--- a/extras/imaging/examples/CMakeLists.txt
++++ b/extras/imaging/examples/CMakeLists.txt
+@@ -1,4 +1,6 @@
+ set(PXR_PREFIX examples)
+ set(PXR_INSTALL_SUBDIR share/usd/examples)
+ 
+-add_subdirectory(hdTiny)
++if (${PXR_BUILD_GPU_SUPPORT})
++    add_subdirectory(hdTiny)
++endif()
+diff --git a/extras/usd/examples/usdObj/pch.h b/extras/usd/examples/usdObj/pch.h
+index 6a8744cb..5e952730 100644
+--- a/extras/usd/examples/usdObj/pch.h
++++ b/extras/usd/examples/usdObj/pch.h
+@@ -166,7 +166,6 @@
+ #include <boost/utility.hpp>
+ #include <boost/utility/enable_if.hpp>
+ #include <boost/variant.hpp>
+-#include <tbb/atomic.h>
+ #include <tbb/cache_aligned_allocator.h>
+ #include <tbb/concurrent_queue.h>
+ #include <tbb/concurrent_unordered_set.h>
+diff --git a/extras/usd/examples/usdSchemaExamples/pch.h b/extras/usd/examples/usdSchemaExamples/pch.h
+index 47666439..ef31dc08 100644
+--- a/extras/usd/examples/usdSchemaExamples/pch.h
++++ b/extras/usd/examples/usdSchemaExamples/pch.h
+@@ -168,7 +168,6 @@
+ #include <boost/unordered_map.hpp>
+ #include <boost/utility.hpp>
+ #include <boost/utility/enable_if.hpp>
+-#include <tbb/atomic.h>
+ #include <tbb/cache_aligned_allocator.h>
+ #include <tbb/concurrent_queue.h>
+ #include <tbb/concurrent_unordered_set.h>
+diff --git a/pxr/base/arch/attributes.cpp b/pxr/base/arch/attributes.cpp
+index dc75c200..7d409ce1 100644
+--- a/pxr/base/arch/attributes.cpp
++++ b/pxr/base/arch/attributes.cpp
+@@ -269,6 +269,7 @@ static void InstallDyldCallbacks()
+ 
+ PXR_NAMESPACE_CLOSE_SCOPE
+ 
++#elif defined(ARCH_COMPILER_GCC) || defined(ARCH_COMPILER_CLANG)
+ #elif defined(ARCH_OS_WINDOWS)
+ 
+ #include <Windows.h>
+diff --git a/pxr/base/arch/attributes.h b/pxr/base/arch/attributes.h
+index 0df315f8..94c9eefe 100644
+--- a/pxr/base/arch/attributes.h
++++ b/pxr/base/arch/attributes.h
+@@ -175,6 +175,7 @@ PXR_NAMESPACE_OPEN_SCOPE
+         __attribute__((format(printf, _fmt, _firstArg)))
+ #   define ARCH_SCANF_FUNCTION(_fmt, _firstArg)	\
+         __attribute__((format(scanf, _fmt, _firstArg)))
++#   define ARCH_FORCEINLINE __attribute__((always_inline))
+ #   define ARCH_NOINLINE __attribute__((noinline))
+ #   define ARCH_UNUSED_ARG   __attribute__ ((unused))
+ #   define ARCH_UNUSED_FUNCTION __attribute__((unused))
+@@ -185,6 +186,7 @@ PXR_NAMESPACE_OPEN_SCOPE
+ 
+ #   define ARCH_PRINTF_FUNCTION(_fmt, _firstArg)
+ #   define ARCH_SCANF_FUNCTION(_fmt, _firstArg)
++#   define ARCH_FORCEINLINE __forceinline
+ #   define ARCH_NOINLINE // __declspec(noinline)
+ #   define ARCH_UNUSED_ARG
+ #   define ARCH_UNUSED_FUNCTION
+diff --git a/pxr/base/arch/defines.h b/pxr/base/arch/defines.h
+index cb6ad44c..593d8ac2 100644
+--- a/pxr/base/arch/defines.h
++++ b/pxr/base/arch/defines.h
+@@ -104,4 +104,8 @@
+ #define ARCH_HAS_MMAP_MAP_POPULATE
+ #endif
+ 
++#if defined(ARCH_COMPILER_MSVC) && (!defined(_MSVC_TRADITIONAL) || _MSVC_TRADITIONAL)
++#define ARCH_MSVC_TRADITIONAL_PREPROCESSOR
++#endif
++
+ #endif // PXR_BASE_ARCH_DEFINES_H 
+diff --git a/pxr/base/arch/demangle.cpp b/pxr/base/arch/demangle.cpp
+index 4a7e5025..337efbd5 100644
+--- a/pxr/base/arch/demangle.cpp
++++ b/pxr/base/arch/demangle.cpp
+@@ -33,8 +33,8 @@
+ 
+ using std::string;
+ 
+-#if (ARCH_COMPILER_GCC_MAJOR == 3 && ARCH_COMPILER_GCC_MINOR >= 1) || \
+-    ARCH_COMPILER_GCC_MAJOR > 3 || defined(ARCH_COMPILER_CLANG)
++#if ((ARCH_COMPILER_GCC_MAJOR == 3 && ARCH_COMPILER_GCC_MINOR >= 1) || \
++    ARCH_COMPILER_GCC_MAJOR > 3 || defined(ARCH_COMPILER_CLANG)) && !defined(ARCH_OS_WINDOWS)
+ #define _AT_LEAST_GCC_THREE_ONE_OR_CLANG
+ #endif
+ 
+diff --git a/pxr/base/arch/env.cpp b/pxr/base/arch/env.cpp
+index a0f5ae75..a914f369 100644
+--- a/pxr/base/arch/env.cpp
++++ b/pxr/base/arch/env.cpp
+@@ -36,7 +36,7 @@
+ 
+ #if defined(ARCH_OS_DARWIN)
+ #include <crt_externs.h>
+-#else
++#elif !defined(ARCH_OS_WINDOWS)
+ extern "C" char** environ;
+ #endif
+ 
+diff --git a/pxr/base/arch/errno.cpp b/pxr/base/arch/errno.cpp
+index 7dcae283..dfa7ac4f 100644
+--- a/pxr/base/arch/errno.cpp
++++ b/pxr/base/arch/errno.cpp
+@@ -55,7 +55,7 @@ ArchStrerror(int errorCode)
+     //   unknown). The string always includes a terminating null byte.
+     //
+     return strerror_r(errorCode, msg_buf, 256);
+-#elif !defined(ARCH_COMPILER_MSVC)
++#elif !defined(ARCH_OS_WINDOWS)
+     strerror_r(errorCode, msg_buf, 256);
+ #else
+     strerror_s(msg_buf, 256, errorCode);
+diff --git a/pxr/base/arch/fileSystem.cpp b/pxr/base/arch/fileSystem.cpp
+index e2d5db44..98c729cb 100644
+--- a/pxr/base/arch/fileSystem.cpp
++++ b/pxr/base/arch/fileSystem.cpp
+@@ -615,6 +615,7 @@ MakeUnique(
+     int maxRetry = 1000)
+ {
+     static const bool init = (srand(GetTickCount()), true);
++    (void)init;
+ 
+     // Copy template to a writable buffer.
+     const auto length = sTemplate.size();
+diff --git a/pxr/base/arch/fileSystem.h b/pxr/base/arch/fileSystem.h
+index cc08b716..66fbe82b 100644
+--- a/pxr/base/arch/fileSystem.h
++++ b/pxr/base/arch/fileSystem.h
+@@ -66,6 +66,10 @@ PXR_NAMESPACE_OPEN_SCOPE
+         #include <sys/param.h>                  /* for MAXPATHLEN */
+     #endif
+ #else
++    // S_ISDIR may be previously defined in pyport.h
++    #if defined(S_ISDIR)
++        #undef S_ISDIR
++    #endif
+     // XXX -- Should probably have ARCH_ macro for this.
+     #define S_ISDIR(m) (((m) & S_IFMT) == S_IFDIR)
+ 
+diff --git a/pxr/base/arch/library.cpp b/pxr/base/arch/library.cpp
+index 65e6b4bd..0d12768a 100644
+--- a/pxr/base/arch/library.cpp
++++ b/pxr/base/arch/library.cpp
+@@ -23,6 +23,7 @@
+ //
+ 
+ #include "pxr/pxr.h"
++#include "pxr/base/arch/pragmas.h"
+ #include "pxr/base/arch/library.h"
+ #include "pxr/base/arch/errno.h"
+ 
+@@ -88,7 +89,10 @@ int ArchLibraryClose(void* handle)
+ void* ArchLibraryGetSymbolAddress(void* handle, const char* name)
+ {
+ #if defined(ARCH_OS_WINDOWS)
++    ARCH_PRAGMA_PUSH
++    ARCH_PRAGMA_MICROSOFT_CAST
+     return GetProcAddress(reinterpret_cast<HMODULE>(handle), name);
++    ARCH_PRAGMA_POP
+ #else
+     return dlsym(handle, name);
+ #endif
+diff --git a/pxr/base/arch/pragmas.h b/pxr/base/arch/pragmas.h
+index ce9e15e3..33db50fa 100644
+--- a/pxr/base/arch/pragmas.h
++++ b/pxr/base/arch/pragmas.h
+@@ -102,6 +102,27 @@
+     #define ARCH_PRAGMA_INSTANCE_METHOD_NOT_FOUND \
+         _Pragma("clang diagnostic ignored \"-Wobjc-method-access\"")
+ 
++    #define ARCH_PRAGMA_INT_FLOAT_CONVERSION
++        _Pragma("clang diagnostic ignored \"-Wimplicit-const-int-float-conversion\"")
++
++    #define ARCH_PRAGMA_POTENTIALLY_EVALUATED_EXPRESSION
++        _Pragma("clang diagnostic ignored \"-Wpotentially-evaluated-expression\"")
++
++    #define ARCH_PRAGMA_REINTERPRET_BASE_CLASS
++        _Pragma("clang diagnostic ignored \"-Wreinterpret-base-class\"")
++
++    #define ARCH_PRAGMA_MICROSOFT_CAST
++        _Pragma("clang diagnostic ignored \"-Wmicrosoft-cast\"")
++
++    #define ARCH_PRAGMA_UNUSED_LAMBDA_CAPTURE
++        _Pragma("clang diagnostic ignored \"-Wunused-lambda-capture\"")
++
++    #define ARCH_PRAGMA_UNUSED_VARIABLE
++        _Pragma("clang diagnostic ignored \"-Wunused-variable\"")
++
++    #define ARCH_PRAGMA_BITWISE_INSTEAD_OF_LOGICAL
++        _Pragma("clang diagnostic ignored \"-Wbitwise-instead-of-logical\"")
++
+ #elif defined(ARCH_COMPILER_MSVC)
+ 
+     #define ARCH_PRAGMA_PUSH \
+@@ -262,4 +283,32 @@
+     #define ARCH_PRAGMA_INSTANCE_METHOD_NOT_FOUND
+ #endif
+ 
++#if !defined ARCH_PRAGMA_INT_FLOAT_CONVERSION
++    #define ARCH_PRAGMA_INT_FLOAT_CONVERSION
++#endif
++
++#if !defined ARCH_PRAGMA_POTENTIALLY_EVALUATED_EXPRESSION
++    #define ARCH_PRAGMA_POTENTIALLY_EVALUATED_EXPRESSION
++#endif
++
++#if !defined(ARCH_PRAGMA_REINTERPRET_BASE_CLASS)
++    #define ARCH_PRAGMA_REINTERPRET_BASE_CLASS
++#endif
++
++#if !defined(ARCH_PRAGMA_MICROSOFT_CAST)
++    #define ARCH_PRAGMA_MICROSOFT_CAST
++#endif
++
++#if !defined(ARCH_PRAGMA_UNUSED_LAMBDA_CAPTURE)
++    #define ARCH_PRAGMA_UNUSED_LAMBDA_CAPTURE
++#endif
++
++#if !defined(ARCH_PRAGMA_UNUSED_VARIABLE)
++    #define ARCH_PRAGMA_UNUSED_VARIABLE
++#endif
++
++#if !defined(ARCH_PRAGMA_BITWISE_INSTEAD_OF_LOGICAL)
++    #define ARCH_PRAGMA_BITWISE_INSTEAD_OF_LOGICAL
++#endif
++
+ #endif // PXR_BASE_ARCH_PRAGMAS_H
+diff --git a/pxr/base/arch/stackTrace.cpp b/pxr/base/arch/stackTrace.cpp
+index 1d75c779..e2414753 100644
+--- a/pxr/base/arch/stackTrace.cpp
++++ b/pxr/base/arch/stackTrace.cpp
+@@ -1462,7 +1462,7 @@ Arch_DefaultStackTraceCallback(uintptr_t address)
+         Arch_DemangleFunctionName(&symbolName);
+         const uintptr_t symbolOffset =
+             (uint64_t)(address - (uintptr_t)symbolAddress);
+-        return ArchStringPrintf("%s+%#0lx", symbolName.c_str(), symbolOffset);
++        return ArchStringPrintf("%s+%#0zx", symbolName.c_str(), symbolOffset);
+     }
+     else {
+         return "<unknown>";
+@@ -1531,7 +1531,7 @@ Arch_GetStackTrace(const vector<uintptr_t> &frames,
+         if (skipUnknownFrames && symbolic == "<unknown>") {
+             continue;
+         }
+-        rv.push_back(ArchStringPrintf(" #%-3i 0x%016lx in %s",
++        rv.push_back(ArchStringPrintf(" #%-3i 0x%016zx in %s",
+                                       n++, frames[i], symbolic.c_str()));
+     }
+ 
+diff --git a/pxr/base/arch/symbols.cpp b/pxr/base/arch/symbols.cpp
+index 299c71aa..6952cb3b 100644
+--- a/pxr/base/arch/symbols.cpp
++++ b/pxr/base/arch/symbols.cpp
+@@ -128,7 +128,7 @@ ArchGetAddressInfo(
+         }
+ 
+         if (symbolName) {
+-            *symbolName = symbol->Name ? symbol->Name : "";
++            *symbolName = symbol->NameLen > 0 ? symbol->Name : "";
+         }
+ 
+         if (symbolAddress) {
+diff --git a/pxr/base/arch/testenv/testArchPRead.cpp b/pxr/base/arch/testenv/testArchPRead.cpp
+index 70f8502a..18b1c0e8 100644
+--- a/pxr/base/arch/testenv/testArchPRead.cpp
++++ b/pxr/base/arch/testenv/testArchPRead.cpp
+@@ -46,6 +46,7 @@ int main(int argc, char** argv)
+     }
+     catch (const std::exception& e) {
+         printf("ERROR: Invalid number of bytes specified\n");
++        (void)e;
+         return 1;
+     }
+ 
+diff --git a/pxr/base/arch/testenv/testArchUtil.cpp b/pxr/base/arch/testenv/testArchUtil.cpp
+index 17415633..2210df4e 100644
+--- a/pxr/base/arch/testenv/testArchUtil.cpp
++++ b/pxr/base/arch/testenv/testArchUtil.cpp
+@@ -21,7 +21,9 @@
+ // KIND, either express or implied. See the Apache License for the specific
+ // language governing permissions and limitations under the Apache License.
+ //
+-#define _CRT_SECURE_NO_WARNINGS
++#if !defined(_CRT_SECURE_NO_WARNINGS)
++    #define _CRT_SECURE_NO_WARNINGS
++#endif
+ 
+ #include "pxr/pxr.h"
+ #include "pxr/base/arch/testArchUtil.h"
+@@ -87,7 +89,7 @@ Arch_ReadInvalidAddresses(bool spawnthread)
+     for (size_t i = 0; i != ~0ull; ++i) {
+         // This will eventually give us NULL in a way that the compiler probably
+         // cannot prove at compile-time.
+-        char const *ptr = reinterpret_cast<char const *>(rand() & 7);
++        char const *ptr = reinterpret_cast<char const *>((intptr_t)rand() & 7);
+         printf("byte %p = %d\n", ptr, *ptr);
+     }
+ 
+diff --git a/pxr/base/gf/ilmbase_half.cpp b/pxr/base/gf/ilmbase_half.cpp
+index 2b1dcfa0..0edaa3ec 100644
+--- a/pxr/base/gf/ilmbase_half.cpp
++++ b/pxr/base/gf/ilmbase_half.cpp
+@@ -79,8 +79,8 @@ half::overflow ()
+     volatile float f = 1e10;
+ 
+     for (int i = 0; i < 10; i++)	
+-	f *= f;				// this will overflow before
+-					// the for­loop terminates
++        f *= f;         // this will overflow before
++                        // the for loop terminates
+     return f;
+ }
+ 
+diff --git a/pxr/base/plug/CMakeLists.txt b/pxr/base/plug/CMakeLists.txt
+index f3f7583b..01733d94 100644
+--- a/pxr/base/plug/CMakeLists.txt
++++ b/pxr/base/plug/CMakeLists.txt
+@@ -104,10 +104,17 @@ pxr_build_test_shared_lib(TestPlugDsoUnloadable
+ # link flag to force these symbols to be looked up at runtime.
+ if (TARGET TestPlugDsoUnloadable)
+     if ("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")
+-        set_target_properties(TestPlugDsoUnloadable
+-            PROPERTIES
+-            LINK_FLAGS "-undefined dynamic_lookup"
+-        )
++        if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
++            set_target_properties(TestPlugDsoUnloadable
++                PROPERTIES
++                LINK_FLAGS "-Wl,/force:unresolved -Wl,/ignore:4088 -Wl,/ignore:2019"
++            )
++        else()
++            set_target_properties(TestPlugDsoUnloadable
++                PROPERTIES
++                LINK_FLAGS "-undefined dynamic_lookup"
++            )
++        endif()
+     elseif (CMAKE_SYSTEM_NAME STREQUAL "Windows")
+         # This forces the link to complete but the linker will still
+         # report the missing symbol as an error and will also emit a
+diff --git a/pxr/base/plug/pch.h b/pxr/base/plug/pch.h
+index 98b6fc78..64ffff9b 100644
+--- a/pxr/base/plug/pch.h
++++ b/pxr/base/plug/pch.h
+@@ -183,7 +183,6 @@
+ #include <boost/type_traits/remove_reference.hpp>
+ #include <boost/utility.hpp>
+ #include <boost/utility/enable_if.hpp>
+-#include <tbb/atomic.h>
+ #include <tbb/cache_aligned_allocator.h>
+ #include <tbb/concurrent_vector.h>
+ #include <tbb/enumerable_thread_specific.h>
+diff --git a/pxr/base/tf/fileUtils.cpp b/pxr/base/tf/fileUtils.cpp
+index d9dff3a1..761968db 100644
+--- a/pxr/base/tf/fileUtils.cpp
++++ b/pxr/base/tf/fileUtils.cpp
+@@ -358,7 +358,7 @@ TfReadDir(
+     if((hFind = FindFirstFileW(szPath, &fdFile)) == INVALID_HANDLE_VALUE)
+     {
+         if (errMsg) {
+-            *errMsg = TfStringPrintf("Path not found: %s", szPath);
++            *errMsg = TfStringPrintf("Path not found: %ls", szPath);
+         }
+         return false;
+     }
+diff --git a/pxr/base/tf/mallocTag.cpp b/pxr/base/tf/mallocTag.cpp
+index 3fd235e9..dcfe9702 100644
+--- a/pxr/base/tf/mallocTag.cpp
++++ b/pxr/base/tf/mallocTag.cpp
+@@ -1231,7 +1231,7 @@ _GetAsCommaSeparatedString(size_t number)
+ {
+     string result;
+ 
+-    string str = TfStringPrintf("%ld", number);
++    string str = TfStringPrintf("%zu", number);
+     size_t n = str.size();
+ 
+     TF_FOR_ALL(it, str) {
+@@ -1361,7 +1361,7 @@ _PrintMallocCallSites(
+     const size_t maxPercentageWidth = 15;
+ 
+     string fmt = TfStringPrintf(
+-        "%%-%lds %%%lds %%%lds\n",
++        "%%-%zus %%%zus %%%zus\n",
+         maxNameWidth, maxBytesWidth, maxPercentageWidth);
+ 
+     *rpt += TfStringPrintf(fmt.c_str(), "NAME", "BYTES", "%ROOT");
+@@ -1442,7 +1442,7 @@ _ReportMallocNode(
+     }
+ 
+     out << TfStringPrintf(
+-        "%13s B %13s B %7ld samples    ",
++        "%13s B %13s B %7zu samples    ",
+         _GetAsCommaSeparatedString(node.nBytes).c_str(),
+         _GetAsCommaSeparatedString(node.nBytesDirect).c_str(),
+         node.nAllocations);
+diff --git a/pxr/base/tf/pch.h b/pxr/base/tf/pch.h
+index 64e232c8..01781a6a 100644
+--- a/pxr/base/tf/pch.h
++++ b/pxr/base/tf/pch.h
+@@ -242,7 +242,6 @@
+ #include <boost/variant.hpp>
+ #include <boost/variant/get.hpp>
+ #include <boost/variant/variant.hpp>
+-#include <tbb/atomic.h>
+ #include <tbb/enumerable_thread_specific.h>
+ #include <tbb/spin_mutex.h>
+ #include <tbb/spin_rw_mutex.h>
+diff --git a/pxr/base/tf/preprocessorUtils.h b/pxr/base/tf/preprocessorUtils.h
+index 8053b740..de23044a 100644
+--- a/pxr/base/tf/preprocessorUtils.h
++++ b/pxr/base/tf/preprocessorUtils.h
+@@ -63,7 +63,7 @@ ARCH_PRAGMA_MACRO_TOO_FEW_ARGUMENTS
+ ///
+ /// \ingroup group_tf_Preprocessor
+ /// \hideinitializer
+-#if defined(ARCH_COMPILER_MSVC)
++#if defined(ARCH_MSVC_TRADITIONAL_PREPROCESSOR)
+ #define TF_NUM_ARGS(...) \
+     BOOST_PP_IIF(BOOST_VMD_IS_EMPTY(__VA_ARGS__),\
+         0, BOOST_PP_VARIADIC_SIZE(__VA_ARGS__))
+diff --git a/pxr/base/tf/preprocessorUtilsLite.h b/pxr/base/tf/preprocessorUtilsLite.h
+index e022387b..a9aed4ca 100644
+--- a/pxr/base/tf/preprocessorUtilsLite.h
++++ b/pxr/base/tf/preprocessorUtilsLite.h
+@@ -45,7 +45,7 @@
+ /// Expand and convert the argument to a string, using a most minimal macro.
+ #define TF_PP_STRINGIZE(x) TF_PP_STRINGIZE_IMPL(x)
+ 
+-#ifdef ARCH_COMPILER_MSVC
++#if defined(ARCH_MSVC_TRADITIONAL_PREPROCESSOR)
+ 
+ /// Expand to the number of arguments passed.  For example,
+ /// TF_PP_VARIADIC_SIZE(foo, bar, baz) expands to 3.  Supports up to 64
+@@ -70,7 +70,7 @@
+ /// and TF_PP_VARIADIC_ELEM(1, a, b, c) expands to b.
+ #define TF_PP_VARIADIC_ELEM(n, ...) TF_PP_CAT(TF_PP_VAE_, n)(__VA_ARGS__,)
+ 
+-#endif // ARCH_COMPILER_MSVC
++#endif // defined(ARCH_MSVC_TRADITIONAL_PREPROCESSOR)
+ 
+ #define TF_PP_VARIADIC_SIZE_IMPL(a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13, a14, a15, a16, a17, a18, a19, a20, a21, a22, a23, a24, a25, a26, a27, a28, a29, a30, a31, a32, a33, a34, a35, a36, a37, a38, a39, a40, a41, a42, a43, a44, a45, a46, a47, a48, a49, a50, a51, a52, a53, a54, a55, a56, a57, a58, a59, a60, a61, a62, a63, size, ...) size
+ 
+@@ -139,7 +139,7 @@
+ #define TF_PP_VAE_62(a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13, a14, a15, a16, a17, a18, a19, a20, a21, a22, a23, a24, a25, a26, a27, a28, a29, a30, a31, a32, a33, a34, a35, a36, a37, a38, a39, a40, a41, a42, a43, a44, a45, a46, a47, a48, a49, a50, a51, a52, a53, a54, a55, a56, a57, a58, a59, a60, a61, a62, ...) a62
+ #define TF_PP_VAE_63(a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13, a14, a15, a16, a17, a18, a19, a20, a21, a22, a23, a24, a25, a26, a27, a28, a29, a30, a31, a32, a33, a34, a35, a36, a37, a38, a39, a40, a41, a42, a43, a44, a45, a46, a47, a48, a49, a50, a51, a52, a53, a54, a55, a56, a57, a58, a59, a60, a61, a62, a63, ...) a63
+ 
+-#ifdef ARCH_COMPILER_MSVC
++#if defined(ARCH_MSVC_TRADITIONAL_PREPROCESSOR)
+ 
+ #define TF_PP_FE_0(_macro, ...)
+ #define TF_PP_FE_1(_macro, a) _macro(a)
+@@ -275,7 +275,7 @@
+ 
+ #endif
+ 
+-#ifdef ARCH_COMPILER_MSVC
++#if defined(ARCH_MSVC_TRADITIONAL_PREPROCESSOR)
+ 
+ /// Expand the macro \p x on every variadic argument.  For example
+ /// TF_PP_FOR_EACH(MACRO, foo, bar, baz) expands to MACRO(foo) MACRO(bar)
+diff --git a/pxr/base/tf/pyClassMethod.h b/pxr/base/tf/pyClassMethod.h
+index 569e1740..37267319 100644
+--- a/pxr/base/tf/pyClassMethod.h
++++ b/pxr/base/tf/pyClassMethod.h
+@@ -36,6 +36,7 @@ PXR_NAMESPACE_OPEN_SCOPE
+ namespace Tf_PyClassMethod {
+ 
+ using namespace boost::python;
++namespace bp = boost::python;
+ 
+ // Visitor for wrapping functions as Python class methods.
+ // See typedef below for docs.
+@@ -43,7 +44,7 @@ using namespace boost::python;
+ // except it uses PyClassMethod_New() instead of PyStaticMethod_New().
+ struct _TfPyClassMethod : def_visitor<_TfPyClassMethod>
+ {
+-    friend class def_visitor_access;
++    friend class bp::def_visitor_access;
+ 
+     _TfPyClassMethod(const std::string &methodName) :
+         _methodName(methodName) {}
+diff --git a/pxr/base/tf/pyPtrHelpers.h b/pxr/base/tf/pyPtrHelpers.h
+index cbe3f1cc..e1c5204b 100644
+--- a/pxr/base/tf/pyPtrHelpers.h
++++ b/pxr/base/tf/pyPtrHelpers.h
+@@ -111,6 +111,7 @@ struct TfMakePyPtr {
+ namespace Tf_PyDefHelpers {
+ 
+ using namespace boost::python;
++namespace bp = boost::python;
+ 
+ template <typename Ptr>
+ struct _PtrInterface {
+@@ -310,7 +311,7 @@ converter::to_python_function_t
+ _PtrToPythonWrapper<T>::_originalConverter = 0;
+ 
+ struct WeakPtr : def_visitor<WeakPtr> {
+-    friend class def_visitor_access;
++    friend class bp::def_visitor_access;
+ 
+     template <typename WrapperPtrType, typename Wrapper, typename T>
+     static void _RegisterConversions(Wrapper *, T *) {
+@@ -406,7 +407,7 @@ struct WeakPtr : def_visitor<WeakPtr> {
+ };
+ 
+ struct RefAndWeakPtr : def_visitor<RefAndWeakPtr> {
+-    friend class def_visitor_access;
++    friend class bp::def_visitor_access;
+ 
+     template <typename CLS, typename Wrapper, typename T>
+     static void _AddAPI(Wrapper *, T *) {
+diff --git a/pxr/base/tf/refPtr.h b/pxr/base/tf/refPtr.h
+index a6ea42c4..3d3c3bf6 100644
+--- a/pxr/base/tf/refPtr.h
++++ b/pxr/base/tf/refPtr.h
+@@ -425,6 +425,7 @@
+ ///
+ 
+ #include "pxr/pxr.h"
++#include "pxr/base/arch/pragmas.h"
+ 
+ #include "pxr/base/tf/diagnosticLite.h"
+ #include "pxr/base/tf/hash.h"
+@@ -1079,9 +1080,12 @@ private:
+     // not the first base class of T then the resulting pointer may
+     // not point to a T.  Nevertheless, it should be consistent to
+     // all calls to the tracking functions.
++    ARCH_PRAGMA_PUSH
++    ARCH_PRAGMA_REINTERPRET_BASE_CLASS
+     T* _GetObjectForTracking() const {
+         return reinterpret_cast<T*>(const_cast<TfRefBase*>(_refBase));
+     }
++    ARCH_PRAGMA_POP
+ 
+     /// Call \c typeid on the object pointed to by a \c TfRefPtr.
+     ///
+diff --git a/pxr/base/tf/singleton.h b/pxr/base/tf/singleton.h
+index 326782e2..2709b626 100644
+--- a/pxr/base/tf/singleton.h
++++ b/pxr/base/tf/singleton.h
+@@ -194,8 +194,10 @@ public:
+     
+ private:
+     static T *_CreateInstance(std::atomic<T *> &instance);
+-    
++    ARCH_PRAGMA_PUSH
++    ARCH_PRAGMA_NEEDS_EXPORT_INTERFACE
+     static std::atomic<T *> _instance;
++    ARCH_PRAGMA_POP
+ };
+ 
+ PXR_NAMESPACE_CLOSE_SCOPE
+diff --git a/pxr/base/tf/stringUtils.cpp b/pxr/base/tf/stringUtils.cpp
+index 044c55ae..f5606700 100644
+--- a/pxr/base/tf/stringUtils.cpp
++++ b/pxr/base/tf/stringUtils.cpp
+@@ -806,8 +806,12 @@ TfDictionaryLessThan::_LessImpl(const string& lstr, const string& rstr) const
+             // Add 5 mod 32 makes '_' sort before all letters.
+             return ((l + 5) & 31) < ((r + 5) & 31);
+         }
+-        else if (IsDigit(l) | IsDigit(r)) {
++        ARCH_PRAGMA_PUSH
++        ARCH_PRAGMA_BITWISE_INSTEAD_OF_LOGICAL
++        // Intentionally using bitwise operators due to performance critical code path.
++         else if (IsDigit(l) | IsDigit(r)) {
+             if (IsDigit(l) & IsDigit(r)) {
++        ARCH_PRAGMA_POP
+                 // We backtrack to find the start of each digit string, then we
+                 // scan each digit string, ignoring leading zeros to put the two
+                 // strings into alignment with their most significant digits.
+@@ -869,7 +873,11 @@ TfDictionaryLessThan::_LessImpl(const string& lstr, const string& rstr) const
+                 curEnd = lcur + std::min(std::distance(lcur, lend),
+                                          std::distance(rcur, rend));
+             }
++            ARCH_PRAGMA_PUSH
++            ARCH_PRAGMA_BITWISE_INSTEAD_OF_LOGICAL
++             // Intentionally using bitwise operators due to performance critical code path.
+             else if (IsDigit(l) | IsDigit(r)) {
++            ARCH_PRAGMA_POP
+                 if (lcur == lstr.c_str()) {
+                     return l < r;
+                 }
+diff --git a/pxr/base/tf/testenv/error.cpp b/pxr/base/tf/testenv/error.cpp
+index e8eed44a..606b2a94 100644
+--- a/pxr/base/tf/testenv/error.cpp
++++ b/pxr/base/tf/testenv/error.cpp
+@@ -29,7 +29,7 @@
+ 
+ #include "pxr/base/arch/functionLite.h"
+ 
+-#include <tbb/tbb_thread.h>
++#include <thread>
+ 
+ #define FILENAME   "error.cpp"
+ 
+@@ -195,7 +195,7 @@ Test_TfErrorThreadTransport()
+     printf("Creating TfErrorMark\n");
+     TfErrorMark m;
+     printf("Launching thread\n");
+-    tbb::tbb_thread t([&transport]() { _ThreadTask(&transport); });
++    std::thread t([&transport]() { _ThreadTask(&transport); });
+     TF_AXIOM(m.IsClean());
+     t.join();
+     printf("Thread completed, posting error.\n");
+diff --git a/pxr/base/tf/testenv/notice.cpp b/pxr/base/tf/testenv/notice.cpp
+index 797052ea..25c7434f 100644
+--- a/pxr/base/tf/testenv/notice.cpp
++++ b/pxr/base/tf/testenv/notice.cpp
+@@ -40,6 +40,7 @@
+ #include <string>
+ #include <thread>
+ #include <vector>
++#include <algorithm>
+ 
+ using std::cout;
+ using std::endl;
+diff --git a/pxr/base/tf/testenv/scopeDescription.cpp b/pxr/base/tf/testenv/scopeDescription.cpp
+index 21030479..ab2928c4 100644
+--- a/pxr/base/tf/testenv/scopeDescription.cpp
++++ b/pxr/base/tf/testenv/scopeDescription.cpp
+@@ -102,6 +102,7 @@ TestOverhead()
+     } while (sw.GetSeconds() < 0.5);
+     // printf("%zd rand calls in %f seconds: %u\n",
+     //        count, sw.GetSeconds(), val);
++    (void)val;
+     double baseSecsPerCall = sw.GetSeconds() / double(count);
+ 
+     count = 0;
+diff --git a/pxr/base/tf/wrapTestPyStaticTokens.cpp b/pxr/base/tf/wrapTestPyStaticTokens.cpp
+index 41491c90..07a01038 100644
+--- a/pxr/base/tf/wrapTestPyStaticTokens.cpp
++++ b/pxr/base/tf/wrapTestPyStaticTokens.cpp
+@@ -34,7 +34,7 @@ PXR_NAMESPACE_OPEN_SCOPE
+     ((pear, "d'Anjou"))                 \
+     ((apple, ( (Fuji) (Pippin) (McIntosh) )))
+ 
+-TF_DECLARE_PUBLIC_TOKENS(tfTestStaticTokens, TF_API, TF_TEST_TOKENS);
++TF_DECLARE_PUBLIC_TOKENS(tfTestStaticTokens, TF_TEST_TOKENS);
+ TF_DEFINE_PUBLIC_TOKENS(tfTestStaticTokens, TF_TEST_TOKENS);
+ 
+ PXR_NAMESPACE_CLOSE_SCOPE
+diff --git a/pxr/base/tf/wrapTypeHelpers.h b/pxr/base/tf/wrapTypeHelpers.h
+index ad79e175..6d7b0267 100644
+--- a/pxr/base/tf/wrapTypeHelpers.h
++++ b/pxr/base/tf/wrapTypeHelpers.h
+@@ -38,10 +38,11 @@ PXR_NAMESPACE_OPEN_SCOPE
+ namespace TfType_WrapHelpers {
+ 
+     using namespace boost::python;
++    namespace bp = boost::python;
+ 
+     struct _PythonClass : def_visitor<_PythonClass>
+     {
+-        friend class def_visitor_access;
++        friend class bp::def_visitor_access;
+             
+     private:
+         template <class CLS, class T>
+diff --git a/pxr/base/trace/concurrentList.h b/pxr/base/trace/concurrentList.h
+index 0337933a..01886a1b 100644
+--- a/pxr/base/trace/concurrentList.h
++++ b/pxr/base/trace/concurrentList.h
+@@ -111,7 +111,7 @@ public:
+         while (curNode) {
+             Node* nodeToDelete = curNode;
+             curNode = curNode->next;
+-            _alloc.destroy(nodeToDelete);
++            nodeToDelete->~Node();
+             _alloc.deallocate(nodeToDelete, 1);
+         }
+     }
+@@ -130,7 +130,7 @@ public:
+     /// the newly created item.
+     iterator Insert() {
+         Node* newNode = _alloc.allocate(1);
+-        _alloc.construct(newNode);
++        new(newNode) Node();
+ 
+         // Add the node to the linked list in an atomic manner.
+         do {
+diff --git a/pxr/base/trace/pch.h b/pxr/base/trace/pch.h
+index 25f4b5d6..e98e1830 100644
+--- a/pxr/base/trace/pch.h
++++ b/pxr/base/trace/pch.h
+@@ -178,7 +178,6 @@
+ #include <boost/utility.hpp>
+ #include <boost/utility/enable_if.hpp>
+ #include <boost/variant.hpp>
+-#include <tbb/atomic.h>
+ #include <tbb/cache_aligned_allocator.h>
+ #include <tbb/concurrent_queue.h>
+ #include <tbb/concurrent_vector.h>
+diff --git a/pxr/base/vt/array.h b/pxr/base/vt/array.h
+index 113ddec8..e0cfaece 100644
+--- a/pxr/base/vt/array.h
++++ b/pxr/base/vt/array.h
+@@ -130,7 +130,7 @@ protected:
+         return _GetControlBlock(nativeData).capacity;
+     }
+ 
+-    VT_API void _DetachCopyHook(char const *funcName) const;
++    void VT_API _DetachCopyHook(char const *funcName) const;
+ 
+     Vt_ShapeData _shapeData;
+     Vt_ArrayForeignDataSource *_foreignSource;
+@@ -281,7 +281,7 @@ class VtArray : public Vt_ArrayBase {
+ 
+     /// Create an array with foreign source.
+     VtArray(Vt_ArrayForeignDataSource *foreignSrc,
+-            ElementType *data, size_t size, bool addRef = true)
++                             ElementType *data, size_t size, bool addRef = true)
+         : Vt_ArrayBase(foreignSrc)
+         , _data(data) {
+         if (addRef) {
+@@ -292,7 +292,7 @@ class VtArray : public Vt_ArrayBase {
+     
+     /// Copy \p other.  The new array shares underlying data with \p other.
+     VtArray(VtArray const &other) : Vt_ArrayBase(other)
+-                                  , _data(other._data) {
++                             , _data(other._data) {
+         if (!_data)
+             return;
+ 
+@@ -307,7 +307,7 @@ class VtArray : public Vt_ArrayBase {
+     /// Move from \p other.  The new array takes ownership of \p other's
+     /// underlying data.
+     VtArray(VtArray &&other) : Vt_ArrayBase(std::move(other))
+-                             , _data(other._data) {
++                                              , _data(other._data) {
+         other._data = nullptr;
+     }
+ 
+@@ -773,11 +773,11 @@ class VtArray : public Vt_ArrayBase {
+     /// array.assign(list.begin(), list.end());
+     /// \endcode
+     void assign(std::initializer_list<ELEM> initializerList) {
+-	assign(initializerList.begin(), initializerList.end());
++	    assign(initializerList.begin(), initializerList.end());
+     }
+ 
+     /// Swap the contents of this array with \p other.
+-    void swap(VtArray &other) { 
++    void swap(VtArray &other) {
+         std::swap(_data, other._data);
+         std::swap(_shapeData, other._shapeData);
+         std::swap(_foreignSource, other._foreignSource);
+@@ -859,12 +859,12 @@ class VtArray : public Vt_ArrayBase {
+         _data = newData;
+     }
+ 
+-    inline bool _IsUnique() const {
++     bool _IsUnique() const {
+         return !_data ||
+             (ARCH_LIKELY(!_foreignSource) && _GetNativeRefCount(_data) == 1);
+     }
+ 
+-    inline size_t _CapacityForSize(size_t sz) const {
++     size_t _CapacityForSize(size_t sz) const {
+         // Currently just successive powers of two.
+         size_t cap = 1;
+         while (cap < sz) {
+@@ -891,7 +891,7 @@ class VtArray : public Vt_ArrayBase {
+     }
+ 
+     value_type *_AllocateCopy(value_type *src, size_t newCapacity,
+-                              size_t numToCopy) {
++                                               size_t numToCopy) {
+         // Allocate and copy elements.
+         value_type *newData = _AllocateNew(newCapacity);
+         std::uninitialized_copy(src, src + numToCopy, newData);
+@@ -932,9 +932,9 @@ class VtArray : public Vt_ArrayBase {
+ 
+ // Declare basic array instantiations as extern templates.  They are explicitly
+ // instantiated in array.cpp.
+-#define VT_ARRAY_EXTERN_TMPL(r, unused, elem) \
+-    VT_API_TEMPLATE_CLASS(VtArray< VT_TYPE(elem) >);
+-BOOST_PP_SEQ_FOR_EACH(VT_ARRAY_EXTERN_TMPL, ~, VT_SCALAR_VALUE_TYPES)
++//#define VT_ARRAY_EXTERN_TMPL(r, unused, elem) \
++//    VT_API_TEMPLATE_CLASS(VtArray< VT_TYPE(elem) >);
++//BOOST_PP_SEQ_FOR_EACH(VT_ARRAY_EXTERN_TMPL, ~, VT_SCALAR_VALUE_TYPES)
+ 
+ template <class HashState, class ELEM>
+ inline std::enable_if_t<VtIsHashable<ELEM>()>
+diff --git a/pxr/base/vt/pch.h b/pxr/base/vt/pch.h
+index 75f03bee..3924c8f0 100644
+--- a/pxr/base/vt/pch.h
++++ b/pxr/base/vt/pch.h
+@@ -171,7 +171,6 @@
+ #include <boost/type_traits/is_same.hpp>
+ #include <boost/type_traits/remove_reference.hpp>
+ #include <boost/utility/enable_if.hpp>
+-#include <tbb/atomic.h>
+ #include <tbb/cache_aligned_allocator.h>
+ #include <tbb/concurrent_unordered_map.h>
+ #include <tbb/enumerable_thread_specific.h>
+diff --git a/pxr/base/vt/value.cpp b/pxr/base/vt/value.cpp
+index 005b5961..57819c73 100644
+--- a/pxr/base/vt/value.cpp
++++ b/pxr/base/vt/value.cpp
+@@ -94,6 +94,11 @@ _NumericCast(VtValue const &val)
+ {
+     const From x = val.UncheckedGet<From>();
+ 
++    // Fix for strict builds. Somce bools do not have an infinity, this function
++    // should not be compiled. However, that is not the case currently on MSVC.
++    ARCH_PRAGMA_PUSH
++    ARCH_PRAGMA_UNSAFE_USE_OF_BOOL
++
+     // Use 'x == x' to check that x is not NaN.  NaNs don't compare equal to
+     // themselves.
+     if (x == x) {
+@@ -104,6 +109,7 @@ _NumericCast(VtValue const &val)
+             return VtValue(-std::numeric_limits<To>::infinity());
+         }
+     }
++    ARCH_PRAGMA_POP
+ 
+     return _BoostNumericCast<From, To>(x);
+ }
+diff --git a/pxr/base/vt/wrapArrayDualQuaternion.cpp b/pxr/base/vt/wrapArrayDualQuaternion.cpp
+index 36d3ae11..4926b6f7 100644
+--- a/pxr/base/vt/wrapArrayDualQuaternion.cpp
++++ b/pxr/base/vt/wrapArrayDualQuaternion.cpp
+@@ -36,3 +36,14 @@ PXR_NAMESPACE_USING_DIRECTIVE
+ void wrapArrayDualQuaternion() {
+     BOOST_PP_SEQ_FOR_EACH(VT_WRAP_ARRAY, ~, VT_DUALQUATERNION_VALUE_TYPES);
+ }
++
++#if defined(ARCH_COMPILER_CLANG) && defined(ARCH_OS_WINDOWS)
++PXR_NAMESPACE_OPEN_SCOPE
++// On Windows, the VtArray functions are not being defined in the translation
++// unit and are left as undefined symbols during linking. Forcing the
++// instantiation here to force the symbols to be created for linking.
++template class VtArray<GfDualQuath>;
++template class VtArray<GfDualQuatf>;
++template class VtArray<GfDualQuatd>;
++PXR_NAMESPACE_CLOSE_SCOPE
++#endif // defined(ARCH_COMPILER_CLANG) && defined(ARCH_OS_WINDOWS)
+diff --git a/pxr/base/vt/wrapArrayFloat.cpp b/pxr/base/vt/wrapArrayFloat.cpp
+index 027c3bb3..3134c56e 100644
+--- a/pxr/base/vt/wrapArrayFloat.cpp
++++ b/pxr/base/vt/wrapArrayFloat.cpp
+@@ -35,3 +35,14 @@ void wrapArrayFloat() {
+     BOOST_PP_SEQ_FOR_EACH(VT_WRAP_COMPARISON, ~,
+                           VT_FLOATING_POINT_BUILTIN_VALUE_TYPES);
+ }
++
++#if defined(ARCH_COMPILER_CLANG) && defined(ARCH_OS_WINDOWS)
++PXR_NAMESPACE_OPEN_SCOPE
++// On Windows, the VtArray functions are not being defined in the translation
++// unit and are left as undefined symbols during linking. Forcing the
++// instantiation here to force the symbols to be created for linking.
++template class VtArray<double>;
++template class VtArray<float>;
++template class VtArray<GfHalf>;
++PXR_NAMESPACE_CLOSE_SCOPE
++#endif // defined(ARCH_COMPILER_CLANG) && defined(ARCH_OS_WINDOWS)
+diff --git a/pxr/base/vt/wrapArrayIntegral.cpp b/pxr/base/vt/wrapArrayIntegral.cpp
+index 8ed5d322..38837ce2 100644
+--- a/pxr/base/vt/wrapArrayIntegral.cpp
++++ b/pxr/base/vt/wrapArrayIntegral.cpp
+@@ -36,3 +36,20 @@ void wrapArrayIntegral() {
+     BOOST_PP_SEQ_FOR_EACH(VT_WRAP_COMPARISON, ~,
+                           VT_INTEGRAL_BUILTIN_VALUE_TYPES);
+ }
++
++#if defined(ARCH_COMPILER_CLANG) && defined(ARCH_OS_WINDOWS)
++PXR_NAMESPACE_OPEN_SCOPE
++// On Windows, the VtArray functions are not being defined in the translation
++// unit and are left as undefined symbols during linking. Forcing the
++// instantiation here to force the symbols to be created for linking.
++template class VtArray<bool>;
++template class VtArray<char>;
++template class VtArray<unsigned char>;
++template class VtArray<short>;
++template class VtArray<unsigned short>;
++template class VtArray<int>;
++template class VtArray<unsigned int>;
++template class VtArray<__int64>;
++template class VtArray<unsigned __int64>;
++PXR_NAMESPACE_CLOSE_SCOPE
++#endif // defined(ARCH_COMPILER_CLANG) && defined(ARCH_OS_WINDOWS)
+diff --git a/pxr/base/vt/wrapArrayMatrix.cpp b/pxr/base/vt/wrapArrayMatrix.cpp
+index 09043ae8..3e52b39a 100644
+--- a/pxr/base/vt/wrapArrayMatrix.cpp
++++ b/pxr/base/vt/wrapArrayMatrix.cpp
+@@ -33,3 +33,17 @@ PXR_NAMESPACE_USING_DIRECTIVE
+ void wrapArrayMatrix() {
+     BOOST_PP_SEQ_FOR_EACH(VT_WRAP_ARRAY, ~, VT_MATRIX_VALUE_TYPES);
+ }
++
++#if defined(ARCH_COMPILER_CLANG) && defined(ARCH_OS_WINDOWS)
++PXR_NAMESPACE_OPEN_SCOPE
++// On Windows, the VtArray functions are not being defined in the translation
++// unit and are left as undefined symbols during linking. Forcing the
++// instantiation here to force the symbols to be created for linking.
++template class VtArray<GfMatrix4f>;
++template class VtArray<GfMatrix3f>;
++template class VtArray<GfMatrix2f>;
++template class VtArray<GfMatrix4d>;
++template class VtArray<GfMatrix3d>;
++template class VtArray<GfMatrix2d>;
++PXR_NAMESPACE_CLOSE_SCOPE
++#endif // defined(ARCH_COMPILER_CLANG) && defined(ARCH_OS_WINDOWS)
+diff --git a/pxr/base/vt/wrapArrayQuaternion.cpp b/pxr/base/vt/wrapArrayQuaternion.cpp
+index 8c674c02..bf6451ec 100644
+--- a/pxr/base/vt/wrapArrayQuaternion.cpp
++++ b/pxr/base/vt/wrapArrayQuaternion.cpp
+@@ -36,3 +36,15 @@ PXR_NAMESPACE_USING_DIRECTIVE
+ void wrapArrayQuaternion() {
+     BOOST_PP_SEQ_FOR_EACH(VT_WRAP_ARRAY, ~, VT_QUATERNION_VALUE_TYPES);
+ }
++
++#if defined(ARCH_COMPILER_CLANG) && defined(ARCH_OS_WINDOWS)
++PXR_NAMESPACE_OPEN_SCOPE
++// On Windows, the VtArray functions are not being defined in the translation
++// unit and are left as undefined symbols during linking. Forcing the
++// instantiation here to force the symbols to be created for linking.
++template class VtArray<GfQuath>;
++template class VtArray<GfQuatf>;
++template class VtArray<GfQuatd>;
++template class VtArray<GfQuaternion>;
++PXR_NAMESPACE_CLOSE_SCOPE
++#endif // defined(ARCH_COMPILER_CLANG) && defined(ARCH_OS_WINDOWS)
+diff --git a/pxr/base/vt/wrapArrayRange.cpp b/pxr/base/vt/wrapArrayRange.cpp
+index 3a0dfe3e..93b0ab8b 100644
+--- a/pxr/base/vt/wrapArrayRange.cpp
++++ b/pxr/base/vt/wrapArrayRange.cpp
+@@ -32,3 +32,19 @@ PXR_NAMESPACE_USING_DIRECTIVE
+ void wrapArrayRange() {
+     BOOST_PP_SEQ_FOR_EACH(VT_WRAP_ARRAY, ~, VT_RANGE_VALUE_TYPES);
+ }
++
++#if defined(ARCH_COMPILER_CLANG) && defined(ARCH_OS_WINDOWS)
++PXR_NAMESPACE_OPEN_SCOPE
++// On Windows, the VtArray functions are not being defined in the translation
++// unit and are left as undefined symbols during linking. Forcing the
++// instantiation here to force the symbols to be created for linking.
++template class VtArray<GfRange3f>;
++template class VtArray<GfRange3d>;
++template class VtArray<GfRange2f>;
++template class VtArray<GfRange2d>;
++template class VtArray<GfRange1f>;
++template class VtArray<GfRange1d>;
++template class VtArray<GfInterval>;
++template class VtArray<GfRect2i>;
++PXR_NAMESPACE_CLOSE_SCOPE
++#endif // defined(ARCH_COMPILER_CLANG) && defined(ARCH_OS_WINDOWS)
+diff --git a/pxr/base/vt/wrapArrayString.cpp b/pxr/base/vt/wrapArrayString.cpp
+index 6e905a56..c85d7ac0 100644
+--- a/pxr/base/vt/wrapArrayString.cpp
++++ b/pxr/base/vt/wrapArrayString.cpp
+@@ -36,3 +36,12 @@ void wrapArrayString() {
+     VtWrapArray<VtArray<string> >();
+     VtWrapComparisonFunctions<VtArray<string> >();
+ }
++
++#if defined(ARCH_COMPILER_CLANG) && defined(ARCH_OS_WINDOWS)
++PXR_NAMESPACE_OPEN_SCOPE
++// On Windows, the VtArray functions are not being defined in the translation
++// unit and are left as undefined symbols during linking. Forcing the
++// instantiation here to force the symbols to be created for linking.
++template class VtArray<string>;
++PXR_NAMESPACE_CLOSE_SCOPE
++#endif // defined(ARCH_COMPILER_CLANG) && defined(ARCH_OS_WINDOWS)
+diff --git a/pxr/base/vt/wrapArrayToken.cpp b/pxr/base/vt/wrapArrayToken.cpp
+index abfb1b2d..00ac7484 100644
+--- a/pxr/base/vt/wrapArrayToken.cpp
++++ b/pxr/base/vt/wrapArrayToken.cpp
+@@ -32,3 +32,12 @@ void wrapArrayToken() {
+     VtWrapArray<VtArray<TfToken> >();
+     VtWrapComparisonFunctions<VtArray<TfToken> >();
+ }
++
++#if defined(ARCH_COMPILER_CLANG) && defined(ARCH_OS_WINDOWS)
++PXR_NAMESPACE_OPEN_SCOPE
++// On Windows, the VtArray functions are not being defined in the translation
++// unit and are left as undefined symbols during linking. Forcing the
++// instantiation here to force the symbols to be created for linking.
++template class VtArray<TfToken>;
++PXR_NAMESPACE_CLOSE_SCOPE
++#endif // defined(ARCH_COMPILER_CLANG) && defined(ARCH_OS_WINDOWS)
+diff --git a/pxr/base/vt/wrapArrayVec.cpp b/pxr/base/vt/wrapArrayVec.cpp
+index 76d26d4c..7cad308e 100644
+--- a/pxr/base/vt/wrapArrayVec.cpp
++++ b/pxr/base/vt/wrapArrayVec.cpp
+@@ -48,3 +48,23 @@ void wrapArrayVec() {
+     BOOST_PP_SEQ_FOR_EACH(VT_WRAP_ARRAY, ~, VT_VEC_VALUE_TYPES);
+     //BOOST_PP_SEQ_FOR_EACH(VT_WRAP_COMPARISON, ~, VT_VEC_VALUE_TYPES);
+ }
++
++#if defined(ARCH_COMPILER_CLANG) && defined(ARCH_OS_WINDOWS)
++PXR_NAMESPACE_OPEN_SCOPE
++// On Windows, the VtArray functions are not being defined in the translation
++// unit and are left as undefined symbols during linking. Forcing the
++// instantiation here to force the symbols to be created for linking.
++template class VtArray<GfVec4i>;
++template class VtArray<GfVec3i>;
++template class VtArray<GfVec2i>;
++template class VtArray<GfVec4h>;
++template class VtArray<GfVec3h>;
++template class VtArray<GfVec2h>;
++template class VtArray<GfVec4f>;
++template class VtArray<GfVec3f>;
++template class VtArray<GfVec2f>;
++template class VtArray<GfVec4d>;
++template class VtArray<GfVec3d>;
++template class VtArray<GfVec2d>;
++PXR_NAMESPACE_CLOSE_SCOPE
++#endif // defined(ARCH_COMPILER_CLANG) && defined(ARCH_OS_WINDOWS)
+diff --git a/pxr/base/work/dispatcher.cpp b/pxr/base/work/dispatcher.cpp
+index adba7dff..66ca5181 100644
+--- a/pxr/base/work/dispatcher.cpp
++++ b/pxr/base/work/dispatcher.cpp
+@@ -32,27 +32,42 @@ WorkDispatcher::WorkDispatcher()
+         tbb::task_group_context::isolated,
+         tbb::task_group_context::concurrent_wait | 
+         tbb::task_group_context::default_traits)
++#if TBB_INTERFACE_VERSION_MAJOR >= 12
++      , _taskGroup(_context)
++#endif
+ {
+     _waitCleanupFlag.clear();
+-    
++
++#if TBB_INTERFACE_VERSION_MAJOR < 12
+     // The concurrent_wait flag used with the task_group_context ensures
+     // the ref count will remain at 1 after all predecessor tasks are
+     // completed, so we don't need to keep resetting it in Wait().
+     _rootTask = new(tbb::task::allocate_root(_context)) tbb::empty_task;
+     _rootTask->set_ref_count(1);
++#endif
+ }
+ 
+-WorkDispatcher::~WorkDispatcher()
++WorkDispatcher::~WorkDispatcher() noexcept
+ {
+     Wait();
++
++#if TBB_INTERFACE_VERSION_MAJOR < 12
+     tbb::task::destroy(*_rootTask);
++#endif
+ }
+ 
+ void
+ WorkDispatcher::Wait()
+ {
+     // Wait for tasks to complete.
++#if TBB_INTERFACE_VERSION_MAJOR >= 12
++    // The native task_group::wait() has a comment saying its call to the
++    // context reset method is not thread safe. So we bypass that implementation
++    // and do our own synchronization to ensure it is called once.
++    tbb::detail::d1::wait(_taskGroup.get_internal_wait_context(), _context);
++#else
+     _rootTask->wait_for_all();
++#endif
+ 
+     // If we take the flag from false -> true, we do the cleanup.
+     if (_waitCleanupFlag.test_and_set() == false) {
+@@ -73,7 +88,11 @@ WorkDispatcher::Wait()
+ void
+ WorkDispatcher::Cancel()
+ {
++#if TBB_INTERFACE_VERSION_MAJOR >= 12
++    _taskGroup.cancel();
++#else
+     _context.cancel_group_execution();
++#endif
+ }
+ 
+ /* static */
+diff --git a/pxr/base/work/dispatcher.h b/pxr/base/work/dispatcher.h
+index 2c499d6a..62eb7132 100644
+--- a/pxr/base/work/dispatcher.h
++++ b/pxr/base/work/dispatcher.h
+@@ -33,8 +33,15 @@
+ #include "pxr/base/tf/errorMark.h"
+ #include "pxr/base/tf/errorTransport.h"
+ 
++// Blocked range is not used in this file, but this header happens to pull in
++// the TBB version header in a way that works in all TBB versions.
++#include <tbb/blocked_range.h>
+ #include <tbb/concurrent_vector.h>
++#if TBB_INTERFACE_VERSION_MAJOR >= 12
++#include <tbb/task_group.h>
++#else
+ #include <tbb/task.h>
++#endif
+ 
+ #include <functional>
+ #include <type_traits>
+@@ -79,7 +86,7 @@ public:
+     WORK_API WorkDispatcher();
+ 
+     /// Wait() for any pending tasks to complete, then destroy the dispatcher.
+-    WORK_API ~WorkDispatcher();
++    WORK_API ~WorkDispatcher() noexcept; // noexcept needed for tbb::task_group
+ 
+     WorkDispatcher(WorkDispatcher const &) = delete;
+     WorkDispatcher &operator=(WorkDispatcher const &) = delete;
+@@ -103,7 +110,11 @@ public:
+ 
+     template <class Callable>
+     inline void Run(Callable &&c) {
++#if TBB_INTERFACE_VERSION_MAJOR >= 12
++        _taskGroup.run(std::move(_InvokerTask<typename std::remove_reference<Callable>::type>(std::move(c), &_errors)));
++#else
+         _rootTask->spawn(_MakeInvokerTask(std::forward<Callable>(c)));
++#endif
+     }
+ 
+     template <class Callable, class A0, class ... Args>
+@@ -136,12 +147,38 @@ private:
+     // Function invoker helper that wraps the invocation with an ErrorMark so we
+     // can transmit errors that occur back to the thread that Wait() s for tasks
+     // to complete.
++#if TBB_INTERFACE_VERSION_MAJOR >= 12
+     template <class Fn>
+-    struct _InvokerTask : public tbb::task {
++    struct _InvokerTask {
+         explicit _InvokerTask(Fn &&fn, _ErrorTransports *err) 
+-            : _fn(std::move(fn)), _errors(err) {}
++            : _fn(std::make_unique<Fn>(std::move(fn))), _errors(err) {}
+ 
+         explicit _InvokerTask(Fn const &fn, _ErrorTransports *err) 
++            : _fn(std::make_unique<Fn>(std::move(fn))), _errors(err) {}
++
++        // Ensure only moves happen, no copies or assignments.
++        _InvokerTask(_InvokerTask &&other) = default;
++        _InvokerTask(const _InvokerTask &other) = delete;
++        _InvokerTask &operator=(const _InvokerTask &other) = delete;
++        _InvokerTask &operator=(_InvokerTask &&other) = delete;
++
++        void operator()() const {
++            TfErrorMark m;
++            (*_fn)();
++            if (!m.IsClean())
++                WorkDispatcher::_TransportErrors(m, _errors);
++        }
++    private:
++        std::unique_ptr<Fn> _fn;
++        _ErrorTransports *_errors;
++    };
++#else
++    template <class Fn>
++    struct _InvokerTask : public tbb::task {
++        explicit _InvokerTask(Fn &&fn, _ErrorTransports *err)
++            : _fn(std::move(fn)), _errors(err) {}
++
++        explicit _InvokerTask(Fn const &fn, _ErrorTransports *err)
+             : _fn(fn), _errors(err) {}
+ 
+         virtual tbb::task* execute() {
+@@ -164,16 +201,30 @@ private:
+             _InvokerTask<typename std::remove_reference<Fn>::type>(
+                 std::forward<Fn>(fn), &_errors);
+     }
++#endif
+ 
+     // Helper function that removes errors from \p m and stores them in a new
+     // entry in \p errors.
+     WORK_API static void
+     _TransportErrors(const TfErrorMark &m, _ErrorTransports *errors);
+ 
+-    // Task group context and associated root task that allows us to cancel
+-    // tasks invoked directly by this dispatcher.
++    // Task group context to run tasks in.
+     tbb::task_group_context _context;
++#if TBB_INTERFACE_VERSION_MAJOR >= 12
++    // Custom task group that lets us implement thread safe concurrent wait.
++    class _TaskGroup : public tbb::task_group {
++    public:
++        _TaskGroup(tbb::task_group_context& ctx) : tbb::task_group(ctx) {}
++        tbb::detail::d1::wait_context& get_internal_wait_context() {
++            return m_wait_ctx;
++        }
++    };
++
++    _TaskGroup _taskGroup;
++#else
++    // Root task that allows us to cancel tasks invoked directly by this dispatcher.
+     tbb::empty_task* _rootTask;
++#endif
+ 
+     // The error transports we use to transmit errors in other threads back to
+     // this thread.
+diff --git a/pxr/base/work/pch.h b/pxr/base/work/pch.h
+index 228b18d0..2f2e069a 100644
+--- a/pxr/base/work/pch.h
++++ b/pxr/base/work/pch.h
+@@ -110,7 +110,6 @@
+ #include <boost/type_traits/is_enum.hpp>
+ #include <boost/type_traits/is_same.hpp>
+ #include <boost/utility/enable_if.hpp>
+-#include <tbb/atomic.h>
+ #include <tbb/blocked_range.h>
+ #include <tbb/concurrent_queue.h>
+ #include <tbb/concurrent_vector.h>
+@@ -121,4 +120,3 @@
+ #include <tbb/spin_rw_mutex.h>
+ #include <tbb/task.h>
+ #include <tbb/task_arena.h>
+-#include <tbb/task_scheduler_init.h>
+diff --git a/pxr/base/work/testenv/testWorkThreadLimits.cpp b/pxr/base/work/testenv/testWorkThreadLimits.cpp
+index 414bba2c..4c833199 100644
+--- a/pxr/base/work/testenv/testWorkThreadLimits.cpp
++++ b/pxr/base/work/testenv/testWorkThreadLimits.cpp
+@@ -38,6 +38,10 @@
+ #include <set>
+ #include <thread>
+ 
++#if TBB_INTERFACE_VERSION_MAJOR >= 12
++#include <tbb/global_control.h>
++#endif
++
+ using namespace std::placeholders;
+ 
+ PXR_NAMESPACE_USING_DIRECTIVE
+@@ -56,16 +60,41 @@ _CountThreads(size_t begin, size_t end)
+     _uniqueThreads->insert(std::this_thread::get_id());
+ }
+ 
++static unsigned
++_GetConcurrencyLimit()
++{
++#if TBB_INTERFACE_VERSION_MAJOR >= 12
++    // For oneTBB, get limit in an arena with max concurrency as
++    // WorkSetConcurrencyLimit by itself no longer increases the concurrency
++    // beyond the number of cores by itself.
++    unsigned limit;
++    tbb::task_arena arena(tbb::global_control::active_value(tbb::global_control::max_allowed_parallelism));
++    arena.execute([&]() {
++        limit = WorkGetConcurrencyLimit();
++    });
++    return limit;
++#else
++  return WorkGetConcurrencyLimit();
++#endif
++}
++
+ static size_t
+ _ExpectedLimit(const int envVal, const size_t n)
+ {
+     // If envVal is non-zero, it wins over n!
+     // envVal may also be a negative number, which means all but that many
+     // cores.
+-    return envVal ? 
++    const size_t val = envVal ?
+         (envVal < 0 ?
+             std::max<int>(1, envVal+WorkGetPhysicalConcurrencyLimit()) : envVal)
+         : n;
++
++#if TBB_INTERFACE_VERSION_MAJOR >= 12
++    // oneTBB has an internal limit of 256 + 1 threads.
++    return std::min<size_t>(val, 257);
++#else
++    return val;
++#endif
+ }
+ 
+ static void
+@@ -101,41 +130,41 @@ _TestArguments(const int envVal)
+     // Set to maximum concurrency, which should remain within envVal.
+     const int numCores = WorkGetPhysicalConcurrencyLimit();
+     WorkSetConcurrencyLimitArgument(numCores);
+-    TF_AXIOM(WorkGetConcurrencyLimit() == _ExpectedLimit(envVal, numCores));
++    TF_AXIOM(_GetConcurrencyLimit() == _ExpectedLimit(envVal, numCores));
+ 
+     // n = 0, means "no change"
+     WorkSetConcurrencyLimitArgument(0);
+-    TF_AXIOM(WorkGetConcurrencyLimit() == _ExpectedLimit(envVal, numCores));
++    TF_AXIOM(_GetConcurrencyLimit() == _ExpectedLimit(envVal, numCores));
+ 
+     // n = 1 means no threading
+     WorkSetConcurrencyLimitArgument(1);
+-    TF_AXIOM(WorkGetConcurrencyLimit() == _ExpectedLimit(envVal, 1));
++    TF_AXIOM(_GetConcurrencyLimit() == _ExpectedLimit(envVal, 1));
+ 
+     // n = 3 means 3
+     WorkSetConcurrencyLimitArgument(3);
+-    TF_AXIOM(WorkGetConcurrencyLimit() == _ExpectedLimit(envVal, 3));
++    TF_AXIOM(_GetConcurrencyLimit() == _ExpectedLimit(envVal, 3));
+ 
+     // n = 1000 means 1000
+     WorkSetConcurrencyLimitArgument(1000);
+-    TF_AXIOM(WorkGetConcurrencyLimit() == _ExpectedLimit(envVal, 1000));
++    TF_AXIOM(_GetConcurrencyLimit() == _ExpectedLimit(envVal, 1000));
+ 
+     // n = -1 means numCores - 1, with a minimum of 1
+     WorkSetConcurrencyLimitArgument(-1);
+-    TF_AXIOM(WorkGetConcurrencyLimit() == 
++    TF_AXIOM(_GetConcurrencyLimit() ==
+              _ExpectedLimit(envVal, std::max(1, numCores-1)));
+ 
+     // n = -3 means numCores - 3, with a minimum of 1
+     WorkSetConcurrencyLimitArgument(-3);
+-    TF_AXIOM(WorkGetConcurrencyLimit() == 
++    TF_AXIOM(_GetConcurrencyLimit() ==
+              _ExpectedLimit(envVal, std::max(1, numCores-3)));
+ 
+     // n = -numCores means 1 (no threading)
+     WorkSetConcurrencyLimitArgument(-numCores);
+-    TF_AXIOM(WorkGetConcurrencyLimit() == _ExpectedLimit(envVal, 1));
++    TF_AXIOM(_GetConcurrencyLimit() == _ExpectedLimit(envVal, 1));
+ 
+     // n = -numCores*10 means 1 (no threading)
+     WorkSetConcurrencyLimitArgument(-numCores*10);
+-    TF_AXIOM(WorkGetConcurrencyLimit() == _ExpectedLimit(envVal, 1));
++    TF_AXIOM(_GetConcurrencyLimit() == _ExpectedLimit(envVal, 1));
+ }
+ 
+ struct _RawTBBCounter
+@@ -218,35 +247,35 @@ main(int argc, char **argv)
+     // Test with full concurrency.
+     std::cout << "Testing full concurrency...\n";
+     WorkSetMaximumConcurrencyLimit();
+-    TF_AXIOM(WorkGetConcurrencyLimit() == 
++    TF_AXIOM(_GetConcurrencyLimit() ==
+         _ExpectedLimit(envVal, WorkGetPhysicalConcurrencyLimit()));
+     _TestThreadLimit(envVal, WorkGetPhysicalConcurrencyLimit());
+ 
+     // Test with no concurrency.
+     std::cout << "Testing turning off concurrency...\n";
+     WorkSetConcurrencyLimit(1);
+-    TF_AXIOM(WorkGetConcurrencyLimit() == 
++    TF_AXIOM(_GetConcurrencyLimit() ==
+         _ExpectedLimit(envVal, 1));
+     _TestThreadLimit(envVal, 1);
+ 
+     // Test with 2 threads.
+     std::cout << "Testing with 2 threads...\n";
+     WorkSetConcurrencyLimit(2);
+-    TF_AXIOM(WorkGetConcurrencyLimit() == 
++    TF_AXIOM(_GetConcurrencyLimit() ==
+         _ExpectedLimit(envVal, 2));
+     _TestThreadLimit(envVal, 2);
+ 
+     // Test with 4 threads.
+     std::cout << "Testing with 4 threads...\n";
+     WorkSetConcurrencyLimit(4);
+-    TF_AXIOM(WorkGetConcurrencyLimit() ==
++    TF_AXIOM(_GetConcurrencyLimit() ==
+         _ExpectedLimit(envVal, 4));
+     _TestThreadLimit(envVal, 4);
+ 
+     // Test with 1000 threads.
+     std::cout << "Testing with 1000 threads...\n";
+     WorkSetConcurrencyLimit(1000);
+-    TF_AXIOM(WorkGetConcurrencyLimit() ==
++    TF_AXIOM(_GetConcurrencyLimit() ==
+         _ExpectedLimit(envVal, 1000));
+     _TestThreadLimit(envVal, 1000);
+ 
+diff --git a/pxr/base/work/threadLimits.cpp b/pxr/base/work/threadLimits.cpp
+index bc629b81..ad6bae8a 100644
+--- a/pxr/base/work/threadLimits.cpp
++++ b/pxr/base/work/threadLimits.cpp
+@@ -29,9 +29,18 @@
+ 
+ #include "pxr/base/tf/envSetting.h"
+ 
+-#include <tbb/task_scheduler_init.h>
++// Blocked range is not used in this file, but this header happens to pull in
++// the TBB version header in a way that works in all TBB versions.
++#include <tbb/blocked_range.h>
+ #include <tbb/task_arena.h>
+ 
++#if TBB_INTERFACE_VERSION_MAJOR >= 12
++#include <tbb/global_control.h>
++#include <tbb/info.h>
++#else
++#include <tbb/task_scheduler_init.h>
++#endif
++
+ #include <algorithm>
+ #include <atomic>
+ 
+@@ -58,16 +67,25 @@ TF_DEFINE_ENV_SETTING(
+ 
+ PXR_NAMESPACE_OPEN_SCOPE
+ 
+-// We create a task_scheduler_init instance at static initialization time if
+-// PXR_WORK_THREAD_LIMIT is set to a nonzero value.  Otherwise this stays NULL.
+-static tbb::task_scheduler_init *_tbbTaskSchedInit;
++// We create a global_control or task_scheduler_init instance at static
++// initialization time if PXR_WORK_THREAD_LIMIT is set to a nonzero value.
++// Otherwise this stays NULL.
++#if TBB_INTERFACE_VERSION_MAJOR >= 12
++static tbb::global_control *_tbbGlobalControl = nullptr;
++#else
++static tbb::task_scheduler_init *_tbbTaskSchedInit = nullptr;
++#endif
+ 
+ unsigned
+ WorkGetPhysicalConcurrencyLimit()
+ {
+     // Use TBB here, since it pays attention to the affinity mask on Linux and
+     // Windows.
++#if TBB_INTERFACE_VERSION_MAJOR >= 12
++    return tbb::info::default_concurrency();
++#else
+     return tbb::task_scheduler_init::default_num_threads();
++#endif
+ }
+ 
+ // This function always returns an actual thread count >= 1.
+@@ -123,7 +141,11 @@ Work_InitializeThreading()
+     // previously initialized by the hosting environment (e.g. if we are running
+     // as a plugin to another application.)
+     if (settingVal) {
++#if TBB_INTERFACE_VERSION_MAJOR >= 12
++        _tbbGlobalControl = new tbb::global_control(tbb::global_control::max_allowed_parallelism, threadLimit);
++#else
+         _tbbTaskSchedInit = new tbb::task_scheduler_init(threadLimit);
++#endif
+     }
+ }
+ static int _forceInitialization = (Work_InitializeThreading(), 0);
+@@ -153,6 +175,11 @@ WorkSetConcurrencyLimit(unsigned n)
+         threadLimit = WorkGetConcurrencyLimit();
+     }
+ 
++
++#if TBB_INTERFACE_VERSION_MAJOR >= 12
++    delete _tbbGlobalControl;
++    _tbbGlobalControl = new tbb::global_control(tbb::global_control::max_allowed_parallelism, threadLimit);
++#else
+     // Note that we need to do some performance testing and decide if it's
+     // better here to simply delete the task_scheduler_init object instead
+     // of re-initializing it.  If we decide that it's better to re-initialize
+@@ -168,6 +195,7 @@ WorkSetConcurrencyLimit(unsigned n)
+     } else {
+         _tbbTaskSchedInit = new tbb::task_scheduler_init(threadLimit);
+     }
++#endif
+ }
+ 
+ void 
+@@ -185,7 +213,14 @@ WorkSetConcurrencyLimitArgument(int n)
+ unsigned
+ WorkGetConcurrencyLimit()
+ {
++#if TBB_INTERFACE_VERSION_MAJOR >= 12
++    // The effective concurrency requires taking into account both the
++    // task_arena and internal thread pool size set by global_control.
++    // https://github.com/oneapi-src/oneTBB/issues/405
++    return std::min<unsigned>(tbb::global_control::active_value(tbb::global_control::max_allowed_parallelism), tbb::this_task_arena::max_concurrency());
++#else
+     return tbb::this_task_arena::max_concurrency();
++#endif
+ }
+ 
+ bool
+diff --git a/pxr/imaging/garch/pch.h b/pxr/imaging/garch/pch.h
+index 7ef3bd8a..7d13f555 100644
+--- a/pxr/imaging/garch/pch.h
++++ b/pxr/imaging/garch/pch.h
+@@ -145,7 +145,6 @@
+ #include <boost/utility/enable_if.hpp>
+ #include <boost/vmd/is_empty.hpp>
+ #include <boost/vmd/is_tuple.hpp>
+-#include <tbb/atomic.h>
+ #include <tbb/enumerable_thread_specific.h>
+ #include <tbb/spin_rw_mutex.h>
+ #ifdef PXR_PYTHON_SUPPORT_ENABLED
+diff --git a/pxr/imaging/glf/pch.h b/pxr/imaging/glf/pch.h
+index 9a7e85a6..9e396e34 100644
+--- a/pxr/imaging/glf/pch.h
++++ b/pxr/imaging/glf/pch.h
+@@ -199,7 +199,6 @@
+ #include <boost/utility.hpp>
+ #include <boost/utility/enable_if.hpp>
+ #include <boost/weak_ptr.hpp>
+-#include <tbb/atomic.h>
+ #include <tbb/blocked_range.h>
+ #include <tbb/cache_aligned_allocator.h>
+ #include <tbb/concurrent_queue.h>
+diff --git a/pxr/imaging/hd/dependencyForwardingSceneIndex.cpp b/pxr/imaging/hd/dependencyForwardingSceneIndex.cpp
+index 0dcdcac9..e22d89ba 100644
+--- a/pxr/imaging/hd/dependencyForwardingSceneIndex.cpp
++++ b/pxr/imaging/hd/dependencyForwardingSceneIndex.cpp
+@@ -211,7 +211,7 @@ HdDependencyForwardingSceneIndex::_PrimDirtied(
+ void 
+ HdDependencyForwardingSceneIndex::_ClearDependencies(const SdfPath &primPath)
+ {
+-    _AffectedPrimToDependsOnPathsEntryMap::const_iterator it =
++    _AffectedPrimToDependsOnPathsEntryMap::iterator it =
+         _affectedPrimToDependsOnPathsMap.find(primPath);
+     if (it == _affectedPrimToDependsOnPathsMap.end()) {
+         return;
+diff --git a/pxr/imaging/hd/flattenedDataSourceProvider.h b/pxr/imaging/hd/flattenedDataSourceProvider.h
+index 0cf94d9a..18a9dd72 100644
+--- a/pxr/imaging/hd/flattenedDataSourceProvider.h
++++ b/pxr/imaging/hd/flattenedDataSourceProvider.h
+@@ -45,6 +45,8 @@ using HdFlattenedDataSourceProviderSharedPtr =
+ class HdFlattenedDataSourceProvider
+ {
+ public:
++    virtual ~HdFlattenedDataSourceProvider() {};
++
+     class Context
+     {
+     public:
+diff --git a/pxr/imaging/hd/flattenedMaterialBindingsDataSourceProvider.cpp b/pxr/imaging/hd/flattenedMaterialBindingsDataSourceProvider.cpp
+index 5cb4f862..7876c18a 100644
+--- a/pxr/imaging/hd/flattenedMaterialBindingsDataSourceProvider.cpp
++++ b/pxr/imaging/hd/flattenedMaterialBindingsDataSourceProvider.cpp
+@@ -52,7 +52,7 @@ public:
+     TfTokenVector GetNames() override {
+         TfDenseHashSet<TfToken, TfToken::HashFunctor> allNames;
+         {
+-            for (const TfTokenVector names : { _primBindings->GetNames(),
++            for (const TfTokenVector &names : { _primBindings->GetNames(),
+                                                _parentBindings->GetNames() } ) {
+                 allNames.insert(names.begin(), names.end());
+             }
+diff --git a/pxr/imaging/hd/materialNetwork2Interface.cpp b/pxr/imaging/hd/materialNetwork2Interface.cpp
+index 4aeaff7c..f318b226 100644
+--- a/pxr/imaging/hd/materialNetwork2Interface.cpp
++++ b/pxr/imaging/hd/materialNetwork2Interface.cpp
+@@ -74,7 +74,7 @@ HdMaterialNetwork2Interface::GetNodeNames() const
+     TfTokenVector result;
+     if (_materialNetwork) {
+         result.reserve(_materialNetwork->nodes.size());
+-        for (const auto nameNodePair : _materialNetwork->nodes) {
++        for (const auto &nameNodePair : _materialNetwork->nodes) {
+             result.push_back(TfToken(nameNodePair.first.GetString()));
+         }
+     }
+@@ -112,7 +112,7 @@ HdMaterialNetwork2Interface::GetAuthoredNodeParameterNames(
+     TfTokenVector result;
+     if (HdMaterialNode2 *node = _GetNode(nodeName)) {
+         result.reserve(node->parameters.size());
+-        for (const auto nameValuePair : node->parameters) {
++        for (const auto &nameValuePair : node->parameters) {
+             result.push_back(nameValuePair.first);
+         }
+     }
+@@ -141,7 +141,7 @@ HdMaterialNetwork2Interface::GetNodeInputConnectionNames(
+     TfTokenVector result;
+     if (HdMaterialNode2 *node = _GetNode(nodeName)) {
+         result.reserve(node->inputConnections.size());
+-        for (const auto nameConnectionsPair : node->inputConnections) {
++        for (const auto &nameConnectionsPair : node->inputConnections) {
+             result.push_back(nameConnectionsPair.first);
+         }
+     }
+@@ -239,7 +239,7 @@ HdMaterialNetwork2Interface::GetTerminalNames() const
+     TfTokenVector result;
+     if (_materialNetwork) {
+         result.reserve(_materialNetwork->terminals.size());
+-        for (const auto nameConnectionPair : _materialNetwork->terminals) {
++        for (const auto &nameConnectionPair : _materialNetwork->terminals) {
+             result.push_back(nameConnectionPair.first);
+         }
+     }
+diff --git a/pxr/imaging/hd/pch.h b/pxr/imaging/hd/pch.h
+index 604861b7..fe94789a 100644
+--- a/pxr/imaging/hd/pch.h
++++ b/pxr/imaging/hd/pch.h
+@@ -152,7 +152,6 @@
+ #include <boost/unordered_map.hpp>
+ #include <boost/utility/enable_if.hpp>
+ #include <boost/weak_ptr.hpp>
+-#include <tbb/atomic.h>
+ #include <tbb/blocked_range.h>
+ #include <tbb/cache_aligned_allocator.h>
+ #include <tbb/concurrent_queue.h>
+diff --git a/pxr/imaging/hd/perfLog.cpp b/pxr/imaging/hd/perfLog.cpp
+index 635a9e54..460ad562 100644
+--- a/pxr/imaging/hd/perfLog.cpp
++++ b/pxr/imaging/hd/perfLog.cpp
+@@ -63,7 +63,7 @@ HdPerfLog::AddCacheHit(TfToken const& name,
+         return;
+     _Lock lock(_mutex);
+     _cacheMap[name].AddHit();
+-    TF_DEBUG(HD_CACHE_HITS).Msg("Cache hit: %s %s %s hits: %lu\n",
++    TF_DEBUG(HD_CACHE_HITS).Msg("Cache hit: %s %s %s hits: %zu\n",
+             name.GetText(),
+             id.GetText(),
+             tag.GetText(),
+@@ -79,7 +79,7 @@ HdPerfLog::AddCacheMiss(TfToken const& name,
+         return;
+     _Lock lock(_mutex);
+     _cacheMap[name].AddMiss();
+-    TF_DEBUG(HD_CACHE_MISSES).Msg("Cache miss: %s %s %s Total misses: %lu\n",
++    TF_DEBUG(HD_CACHE_MISSES).Msg("Cache miss: %s %s %s Total misses: %zu\n",
+             name.GetText(),
+             id.GetText(),
+             tag.GetText(),
+diff --git a/pxr/imaging/hd/renderSettings.cpp b/pxr/imaging/hd/renderSettings.cpp
+index 87d197dd..48dc5e76 100644
+--- a/pxr/imaging/hd/renderSettings.cpp
++++ b/pxr/imaging/hd/renderSettings.cpp
+@@ -31,44 +31,6 @@
+ 
+ PXR_NAMESPACE_OPEN_SCOPE
+ 
+-namespace {
+-    
+-template <class HashState>
+-void TfHashAppend(
+-        HashState &h,
+-        HdRenderSettings::RenderProduct::RenderVar const &rv)
+-{
+-    h.Append(
+-            rv.varPath,
+-            rv.dataType,
+-            rv.sourceName,
+-            rv.sourceType,
+-            rv.namespacedSettings);
+-}
+-
+-template <class HashState>
+-void TfHashAppend(
+-    HashState &h,
+-    HdRenderSettings::RenderProduct const &rp)
+-{
+-    h.Append(
+-            rp.productPath,
+-            rp.type,
+-            rp.name,
+-            rp.resolution,
+-            rp.renderVars,
+-            rp.cameraPath,
+-            rp.pixelAspectRatio,
+-            rp.aspectRatioConformPolicy,
+-            rp.apertureSize,
+-            rp.dataWindowNDC,
+-            rp.disableMotionBlur,
+-            rp.namespacedSettings);
+-}
+-
+-}
+-// -------------------------------------------------------------------------- //
+-
+ HdRenderSettings::HdRenderSettings(
+     SdfPath const& id)
+     : HdBprim(id)
+diff --git a/pxr/imaging/hd/renderSettings.h b/pxr/imaging/hd/renderSettings.h
+index 294fd5b2..9f2db8de 100644
+--- a/pxr/imaging/hd/renderSettings.h
++++ b/pxr/imaging/hd/renderSettings.h
+@@ -239,6 +239,39 @@ bool operator!=(const HdRenderSettings::RenderProduct::RenderVar& lhs,
+                 const HdRenderSettings::RenderProduct::RenderVar& rhs);
+ 
+ 
++template <class HashState>
++void TfHashAppend(
++        HashState &h,
++        HdRenderSettings::RenderProduct::RenderVar const &rv)
++{
++    h.Append(
++            rv.varPath,
++            rv.dataType,
++            rv.sourceName,
++            rv.sourceType,
++            rv.namespacedSettings);
++}
++
++template <class HashState>
++void TfHashAppend(
++    HashState &h,
++    HdRenderSettings::RenderProduct const &rp)
++{
++    h.Append(
++            rp.productPath,
++            rp.type,
++            rp.name,
++            rp.resolution,
++            rp.renderVars,
++            rp.cameraPath,
++            rp.pixelAspectRatio,
++            rp.aspectRatioConformPolicy,
++            rp.apertureSize,
++            rp.dataWindowNDC,
++            rp.disableMotionBlur,
++            rp.namespacedSettings);
++}
++
+ PXR_NAMESPACE_CLOSE_SCOPE
+ 
+ #endif // PXR_IMAGING_HD_RENDER_SETTINGS_H
+diff --git a/pxr/imaging/hd/testenv/testHdSceneIndex.cpp b/pxr/imaging/hd/testenv/testHdSceneIndex.cpp
+index fe380e60..4d6c4606 100644
+--- a/pxr/imaging/hd/testenv/testHdSceneIndex.cpp
++++ b/pxr/imaging/hd/testenv/testHdSceneIndex.cpp
+@@ -878,7 +878,7 @@ bool TestMergingSceneIndexPrimAddedNotices()
+     };
+ 
+     auto _Compare = [&mergingSceneIndex, &observer, &expectedTypes]() {
+-        for (const RecordingSceneIndexObserver::Event event :
++        for (const RecordingSceneIndexObserver::Event &event :
+                 observer.GetEvents()) {
+ 
+             if (event.eventType !=
+diff --git a/pxr/imaging/hdGp/CMakeLists.txt b/pxr/imaging/hdGp/CMakeLists.txt
+index f7abad70..b1a206a5 100644
+--- a/pxr/imaging/hdGp/CMakeLists.txt
++++ b/pxr/imaging/hdGp/CMakeLists.txt
+@@ -22,6 +22,9 @@ pxr_library(hdGp
+     PUBLIC_HEADERS
+         api.h
+ 
++    PUBLIC_HEADERS
++        api.h
++
+     RESOURCE_FILES
+         plugInfo.json
+ )
+diff --git a/pxr/imaging/hdGp/generativeProceduralPluginRegistry.h b/pxr/imaging/hdGp/generativeProceduralPluginRegistry.h
+index d6205bdc..293a2ba6 100644
+--- a/pxr/imaging/hdGp/generativeProceduralPluginRegistry.h
++++ b/pxr/imaging/hdGp/generativeProceduralPluginRegistry.h
+@@ -28,7 +28,6 @@
+ #include "pxr/base/tf/singleton.h"
+ #include "pxr/imaging/hf/pluginRegistry.h"
+ #include "pxr/imaging/hdGp/api.h"
+-
+ #include "pxr/imaging/hdGp/generativeProceduralPlugin.h"
+ 
+ PXR_NAMESPACE_OPEN_SCOPE
+diff --git a/pxr/imaging/hdGp/pch.h b/pxr/imaging/hdGp/pch.h
+index bf09080c..ad94cf86 100644
+--- a/pxr/imaging/hdGp/pch.h
++++ b/pxr/imaging/hdGp/pch.h
+@@ -120,7 +120,6 @@
+ #include <boost/utility/enable_if.hpp>
+ #include <boost/vmd/is_empty.hpp>
+ #include <boost/vmd/is_tuple.hpp>
+-#include <tbb/atomic.h>
+ #include <tbb/blocked_range.h>
+ #include <tbb/concurrent_queue.h>
+ #include <tbb/concurrent_unordered_map.h>
+diff --git a/pxr/imaging/hdMtlx/pch.h b/pxr/imaging/hdMtlx/pch.h
+index bf8ff6a3..dd22c8c1 100644
+--- a/pxr/imaging/hdMtlx/pch.h
++++ b/pxr/imaging/hdMtlx/pch.h
+@@ -139,7 +139,6 @@
+ #include <boost/utility/enable_if.hpp>
+ #include <boost/vmd/is_empty.hpp>
+ #include <boost/vmd/is_tuple.hpp>
+-#include <tbb/atomic.h>
+ #include <tbb/cache_aligned_allocator.h>
+ #include <tbb/concurrent_hash_map.h>
+ #include <tbb/concurrent_queue.h>
+diff --git a/pxr/imaging/hdSt/bufferArrayRegistry.cpp b/pxr/imaging/hdSt/bufferArrayRegistry.cpp
+index d0a3b164..82dcf337 100644
+--- a/pxr/imaging/hdSt/bufferArrayRegistry.cpp
++++ b/pxr/imaging/hdSt/bufferArrayRegistry.cpp
+@@ -173,8 +173,8 @@ HdStBufferArrayRegistry::ReallocateAll(HdStAggregationStrategy *strategy)
+                 if (numElements > maxTotalElements) {
+                     // Issue a warning and reset number of elements in the BAR.
+                     TF_WARN("Number of elements in the buffer array range "
+-                            "(0x%lx) is _larger_ than the maximum number of "
+-                            "elements in the buffer array (0x%lx). 0x%lx bytes "
++                            "(0x%zx) is _larger_ than the maximum number of "
++                            "elements in the buffer array (0x%zx). 0x%zx bytes "
+                             "of data will be skipped.",
+                             numElements, maxTotalElements,
+                             numElements - maxTotalElements);
+@@ -287,7 +287,6 @@ HdStBufferArrayRegistry::_InsertNewBufferArray(
+ }
+ 
+ 
+-HD_API
+ std::ostream &
+ operator <<(std::ostream &out, const HdStBufferArrayRegistry& self)
+ {
+diff --git a/pxr/imaging/hdSt/commandBuffer.cpp b/pxr/imaging/hdSt/commandBuffer.cpp
+index 436782f0..d8aa3ea9 100644
+--- a/pxr/imaging/hdSt/commandBuffer.cpp
++++ b/pxr/imaging/hdSt/commandBuffer.cpp
+@@ -364,7 +364,7 @@ HdStCommandBuffer::_RebuildDrawBatches(HgiCapabilities const *hgiCapabilities)
+     }
+ 
+     TF_DEBUG(HDST_DRAW_BATCH).Msg(
+-        "   %lu draw batches created for %lu draw items\n", _drawBatches.size(),
++        "   %zu draw batches created for %zu draw items\n", _drawBatches.size(),
+         drawItems.size());
+ }
+ 
+diff --git a/pxr/imaging/hdSt/interleavedMemoryManager.cpp b/pxr/imaging/hdSt/interleavedMemoryManager.cpp
+index c6bc1471..96c3c719 100644
+--- a/pxr/imaging/hdSt/interleavedMemoryManager.cpp
++++ b/pxr/imaging/hdSt/interleavedMemoryManager.cpp
+@@ -683,7 +683,7 @@ HdStInterleavedMemoryManager::_StripedInterleavedBufferRange::Resize(int numElem
+ 
+         if (static_cast<size_t>(numElements) > numMaxElements) {
+             TF_WARN("Attempting to resize the BAR with 0x%x elements when the "
+-                    "max number of elements in the buffer array is 0x%lx. "
++                    "max number of elements in the buffer array is 0x%zx. "
+                     "Clamping BAR size to the latter.",
+                      numElements, numMaxElements);
+ 
+diff --git a/pxr/imaging/hdSt/mesh.cpp b/pxr/imaging/hdSt/mesh.cpp
+index 997b1204..5a3e1378 100644
+--- a/pxr/imaging/hdSt/mesh.cpp
++++ b/pxr/imaging/hdSt/mesh.cpp
+@@ -80,7 +80,6 @@ TF_DEFINE_ENV_SETTING(HD_ENABLE_PACKED_NORMALS, 1,
+ 
+ // Use more recognizable names for each compute queue the mesh computations use.
+ namespace {
+-    constexpr HdStComputeQueue _CopyExtCompQueue = HdStComputeQueueZero;
+     constexpr HdStComputeQueue _RefinePrimvarCompQueue = HdStComputeQueueOne;
+     constexpr HdStComputeQueue _NormalsCompQueue = HdStComputeQueueTwo;
+     constexpr HdStComputeQueue _RefineNormalsCompQueue = HdStComputeQueueThree;
+diff --git a/pxr/imaging/hdSt/pch.h b/pxr/imaging/hdSt/pch.h
+index 196960f7..d4377da1 100644
+--- a/pxr/imaging/hdSt/pch.h
++++ b/pxr/imaging/hdSt/pch.h
+@@ -170,7 +170,6 @@
+ #include <opensubdiv/osd/cpuVertexBuffer.h>
+ #include <opensubdiv/osd/mesh.h>
+ #include <opensubdiv/version.h>
+-#include <tbb/atomic.h>
+ #include <tbb/blocked_range.h>
+ #include <tbb/cache_aligned_allocator.h>
+ #include <tbb/concurrent_queue.h>
+diff --git a/pxr/imaging/hdSt/primUtils.cpp b/pxr/imaging/hdSt/primUtils.cpp
+index 78736c15..b43a9c96 100644
+--- a/pxr/imaging/hdSt/primUtils.cpp
++++ b/pxr/imaging/hdSt/primUtils.cpp
+@@ -659,7 +659,7 @@ HdStUpdateDrawItemBAR(
+         
+         if (newRangeValid) {
+             TfDebug::Helper().Msg(
+-                "Buffer array version for the new range is %lu\n",
++                "Buffer array version for the new range is %zu\n",
+                 newRange->GetVersion());
+         }
+ 
+diff --git a/pxr/imaging/hdSt/renderDelegate.cpp b/pxr/imaging/hdSt/renderDelegate.cpp
+index ab997522..ec7f3847 100644
+--- a/pxr/imaging/hdSt/renderDelegate.cpp
++++ b/pxr/imaging/hdSt/renderDelegate.cpp
+@@ -96,10 +96,13 @@ const TfTokenVector HdStRenderDelegate::SUPPORTED_SPRIM_TYPES =
+ };
+ 
+ #ifdef PXR_MATERIALX_SUPPORT_ENABLED
++ARCH_PRAGMA_PUSH
++ARCH_PRAGMA_UNUSED_VARIABLE
+ TF_DEFINE_PRIVATE_TOKENS(
+     _tokens,
+     (mtlx)
+ );
++ARCH_PRAGMA_POP
+ #endif
+ 
+ using HdStResourceRegistryWeakPtr =  std::weak_ptr<HdStResourceRegistry>;
+diff --git a/pxr/imaging/hdSt/vboMemoryManager.cpp b/pxr/imaging/hdSt/vboMemoryManager.cpp
+index f40fe3cd..5340814e 100644
+--- a/pxr/imaging/hdSt/vboMemoryManager.cpp
++++ b/pxr/imaging/hdSt/vboMemoryManager.cpp
+@@ -607,7 +607,7 @@ HdStVBOMemoryManager::_StripedBufferArrayRange::Resize(int numElements)
+ 
+         if (static_cast<size_t>(numElements) > numMaxElements) {
+             TF_WARN("Attempting to resize the BAR with 0x%x elements when the "
+-                    "max number of elements in the buffer array is 0x%lx. "
++                    "max number of elements in the buffer array is 0x%zx. "
+                     "Clamping BAR size to the latter.",
+                      numElements, numMaxElements);
+ 
+@@ -662,7 +662,7 @@ HdStVBOMemoryManager::_StripedBufferArrayRange::CopyData(
+         bufferSource->GetNumElements() *
+         HdDataSizeOfTupleType(bufferSource->GetTupleType());
+     if (srcSize > dstSize) {
+-        TF_WARN("%s: size %ld is larger than the range (%ld)",
++        TF_WARN("%s: size %zd is larger than the range (%zd)",
+                 bufferSource->GetName().GetText(), srcSize, dstSize);
+         srcSize = dstSize;
+     }
+diff --git a/pxr/imaging/hdSt/vboSimpleMemoryManager.cpp b/pxr/imaging/hdSt/vboSimpleMemoryManager.cpp
+index b004d7cb..aeb0a6e8 100644
+--- a/pxr/imaging/hdSt/vboSimpleMemoryManager.cpp
++++ b/pxr/imaging/hdSt/vboSimpleMemoryManager.cpp
+@@ -455,7 +455,7 @@ HdStVBOSimpleMemoryManager::_SimpleBufferArrayRange::CopyData(
+         bufferSource->GetNumElements() *
+         HdDataSizeOfTupleType(bufferSource->GetTupleType());
+     if (srcSize > dstSize) {
+-        TF_WARN("%s: size %ld is larger than the range (%ld)",
++        TF_WARN("%s: size %zd is larger than the range (%zd)",
+                 bufferSource->GetName().GetText(), srcSize, dstSize);
+         srcSize = dstSize;
+     }
+diff --git a/pxr/imaging/hdar/pch.h b/pxr/imaging/hdar/pch.h
+index 56d867c1..f34080f5 100644
+--- a/pxr/imaging/hdar/pch.h
++++ b/pxr/imaging/hdar/pch.h
+@@ -131,7 +131,6 @@
+ #include <boost/utility/enable_if.hpp>
+ #include <boost/vmd/is_empty.hpp>
+ #include <boost/vmd/is_tuple.hpp>
+-#include <tbb/atomic.h>
+ #include <tbb/cache_aligned_allocator.h>
+ #include <tbb/concurrent_queue.h>
+ #include <tbb/spin_mutex.h>
+diff --git a/pxr/imaging/hdar/systemSchema.h b/pxr/imaging/hdar/systemSchema.h
+index a3c56f05..1811bf3c 100644
+--- a/pxr/imaging/hdar/systemSchema.h
++++ b/pxr/imaging/hdar/systemSchema.h
+@@ -106,7 +106,7 @@ public:
+     /// Otherwise, this returns null.
+     ///
+     /// This operation will be linear in the length of \p fromPath.
+-    HD_API
++    HDAR_API
+     static HdContainerDataSourceHandle GetFromPath(
+             HdSceneIndexBaseRefPtr const &inputScene,
+             SdfPath const &fromPath,
+diff --git a/pxr/imaging/hdsi/coordSysPrimSceneIndex.cpp b/pxr/imaging/hdsi/coordSysPrimSceneIndex.cpp
+index 98eaa671..7e259876 100644
+--- a/pxr/imaging/hdsi/coordSysPrimSceneIndex.cpp
++++ b/pxr/imaging/hdsi/coordSysPrimSceneIndex.cpp
+@@ -302,7 +302,7 @@ HdsiCoordSysPrimSceneIndex::GetChildPrimPaths(const SdfPath &primPath) const
+     if (it == _targetedPrimToNameToRefCount.end()) {
+         return result;
+     }
+-    for (const std::pair<TfToken, size_t> &nameAndRefCount : it->second) {
++    for (const auto &nameAndRefCount : it->second) {
+         const TfToken &coordSysName = nameAndRefCount.first;
+         result.push_back(_PathForCoordSysPrim(primPath, coordSysName));
+     }
+diff --git a/pxr/imaging/hdsi/pch.h b/pxr/imaging/hdsi/pch.h
+index 1662d7e8..1f7c8223 100644
+--- a/pxr/imaging/hdsi/pch.h
++++ b/pxr/imaging/hdsi/pch.h
+@@ -119,7 +119,6 @@
+ #include <boost/utility/enable_if.hpp>
+ #include <boost/vmd/is_empty.hpp>
+ #include <boost/vmd/is_tuple.hpp>
+-#include <tbb/atomic.h>
+ #include <tbb/concurrent_queue.h>
+ #ifdef PXR_PYTHON_SUPPORT_ENABLED
+ #include "pxr/base/tf/pySafePython.h"
+diff --git a/pxr/imaging/hdx/pch.h b/pxr/imaging/hdx/pch.h
+index 33ddb1b5..8fcf02aa 100644
+--- a/pxr/imaging/hdx/pch.h
++++ b/pxr/imaging/hdx/pch.h
+@@ -152,7 +152,6 @@
+ #include <boost/unordered_map.hpp>
+ #include <boost/utility/enable_if.hpp>
+ #include <boost/weak_ptr.hpp>
+-#include <tbb/atomic.h>
+ #include <tbb/blocked_range.h>
+ #include <tbb/cache_aligned_allocator.h>
+ #include <tbb/concurrent_queue.h>
+diff --git a/pxr/imaging/hdx/selectionTracker.cpp b/pxr/imaging/hdx/selectionTracker.cpp
+index 5575e9ba..5d25ad19 100644
+--- a/pxr/imaging/hdx/selectionTracker.cpp
++++ b/pxr/imaging/hdx/selectionTracker.cpp
+@@ -275,7 +275,7 @@ HdxSelectionTracker::GetSelectionOffsetBuffer(
+ 
+             copyOffset += output.size();
+ 
+-            TF_DEBUG(HDX_SELECTION_SETUP).Msg("Highlight mode %d has %lu "
++            TF_DEBUG(HDX_SELECTION_SETUP).Msg("Highlight mode %d has %zu "
+                 "entries\n", mode, output.size());
+         }
+     }
+diff --git a/pxr/imaging/hgiGL/scopedStateHolder.h b/pxr/imaging/hgiGL/scopedStateHolder.h
+index d006480b..f69660eb 100644
+--- a/pxr/imaging/hgiGL/scopedStateHolder.h
++++ b/pxr/imaging/hgiGL/scopedStateHolder.h
+@@ -75,7 +75,6 @@ private:
+     int32_t _restoreStencilReferenceValue[2];
+     int32_t _restoreStencilFail[2];
+     int32_t _restoreStencilReadMask[2];
+-    int32_t _restoreStencilPass[2];
+     int32_t _restoreStencilDepthFail[2];
+     int32_t _restoreStencilDepthPass[2];
+     int32_t _restoreStencilWriteMask[2];
+diff --git a/pxr/imaging/hgiMetal/pch.h b/pxr/imaging/hgiMetal/pch.h
+index 877bc45e..dd9f067d 100644
+--- a/pxr/imaging/hgiMetal/pch.h
++++ b/pxr/imaging/hgiMetal/pch.h
+@@ -141,7 +141,6 @@
+ #include <boost/unordered_map.hpp>
+ #include <boost/utility/enable_if.hpp>
+ #include <boost/weak_ptr.hpp>
+-#include <tbb/atomic.h>
+ #include <tbb/cache_aligned_allocator.h>
+ #include <tbb/concurrent_queue.h>
+ #include <tbb/spin_mutex.h>
+diff --git a/pxr/imaging/hio/OpenEXR/OpenEXRCore/chunk.c b/pxr/imaging/hio/OpenEXR/OpenEXRCore/chunk.c
+index 304a402c..f5983b7e 100644
+--- a/pxr/imaging/hio/OpenEXR/OpenEXRCore/chunk.c
++++ b/pxr/imaging/hio/OpenEXR/OpenEXRCore/chunk.c
+@@ -39,7 +39,7 @@ atomic_compare_exchange_strong (
+     uint64_t volatile* object, uint64_t* expected, uint64_t desired)
+ {
+     uint64_t prev =
+-        (uint64_t) InterlockedCompareExchange64 (object, desired, *expected);
++        (uint64_t) InterlockedCompareExchange64 ((volatile int64_t *)object, desired, *expected);
+     if (prev == *expected) return 1;
+     *expected = prev;
+     return 0;
+diff --git a/pxr/imaging/hio/OpenEXR/OpenEXRCore/encoding.c b/pxr/imaging/hio/OpenEXR/OpenEXRCore/encoding.c
+index b074ccea..b92e0ce3 100644
+--- a/pxr/imaging/hio/OpenEXR/OpenEXRCore/encoding.c
++++ b/pxr/imaging/hio/OpenEXR/OpenEXRCore/encoding.c
+@@ -31,7 +31,7 @@ default_compress_chunk (exr_encode_pipeline_t* encode)
+         return pctxt->print_error (
+             pctxt,
+             rv,
+-            "error allocating buffer %lu",
++            "error allocating buffer %zu",
+             exr_compress_max_buffer_size (encode->packed_bytes));
+     //return rv;
+ 
+diff --git a/pxr/imaging/hio/OpenEXR/deflate/lib/deflate_decompress.c b/pxr/imaging/hio/OpenEXR/deflate/lib/deflate_decompress.c
+index 0074c7a4..1ebeb9c9 100644
+--- a/pxr/imaging/hio/OpenEXR/deflate/lib/deflate_decompress.c
++++ b/pxr/imaging/hio/OpenEXR/deflate/lib/deflate_decompress.c
+@@ -1081,9 +1081,9 @@ typedef enum libdeflate_result (*decompress_func_t)
+ 
+ #ifdef arch_select_decompress_func
+ static enum libdeflate_result
+-dispatch_decomp(struct libdeflate_decompressor *d,
+-		const void *in, size_t in_nbytes,
+-		void *out, size_t out_nbytes_avail,
++dispatch_decomp(struct libdeflate_decompressor * restrict d,
++		const void * restrict in, size_t in_nbytes,
++		void * restrict out, size_t out_nbytes_avail,
+ 		size_t *actual_in_nbytes_ret, size_t *actual_out_nbytes_ret);
+ 
+ static volatile decompress_func_t decompress_impl = dispatch_decomp;
+diff --git a/pxr/imaging/hio/OpenEXR/openexr-c.c b/pxr/imaging/hio/OpenEXR/openexr-c.c
+index 2e8ebe16..5c22a4e3 100644
+--- a/pxr/imaging/hio/OpenEXR/openexr-c.c
++++ b/pxr/imaging/hio/OpenEXR/openexr-c.c
+@@ -31,6 +31,14 @@
+ // defined but not referenced or exported.
+ ARCH_PRAGMA_UNUSED_FUNCTION
+ 
++#if defined(__clang__)
++#pragma clang diagnostic ignored "-Wmacro-redefined"
++#elif defined(__GNUC__)
++#pragma GCC diagnostic ignored "-Wmacro-redefined"
++#elif defined(_MSC_VER)
++#pragma warning(disable: 4005)
++#endif
++
+ #include "OpenEXRCoreUnity.h"
+ 
+ #include <ctype.h>
+diff --git a/pxr/imaging/hio/fieldTextureData.h b/pxr/imaging/hio/fieldTextureData.h
+index 8c426e12..79ca28ad 100644
+--- a/pxr/imaging/hio/fieldTextureData.h
++++ b/pxr/imaging/hio/fieldTextureData.h
+@@ -103,7 +103,7 @@ private:
+ ///
+ /// A base class to make HioFieldTextureData objects, implemented by plugins.
+ ///
+-class HIO_API HioFieldTextureDataFactoryBase : public TfType::FactoryBase
++class HioFieldTextureDataFactoryBase : public TfType::FactoryBase
+ {
+ protected:
+     friend class HioFieldTextureData;
+diff --git a/pxr/imaging/hio/glslfxConfig.cpp b/pxr/imaging/hio/glslfxConfig.cpp
+index f25d9f48..4448bb23 100644
+--- a/pxr/imaging/hio/glslfxConfig.cpp
++++ b/pxr/imaging/hio/glslfxConfig.cpp
+@@ -310,7 +310,7 @@ HioGlslfxConfig::_GetSourceKeyMap(VtDictionary const & dict,
+ 
+     const VtDictionary& specDict = techniqueSpec.UncheckedGet<VtDictionary>();
+     // get all of the shader stages specified in the spec
+-    for (const std::pair<std::string, VtValue>& p : specDict) {
++    for (const auto &p : specDict) {
+         const string& shaderStageKey = p.first;
+         const VtValue& shaderStageSpec = p.second;
+ 
+@@ -438,7 +438,7 @@ HioGlslfxConfig::_GetParameters(VtDictionary const & dict,
+ 
+     const VtDictionary& paramsDict = params.UncheckedGet<VtDictionary>();
+     // pre-process the paramsDict in order to get the merged ordering
+-    for (const std::pair<std::string, VtValue>& p : paramsDict) {
++    for (const auto &p : paramsDict) {
+         string paramName = p.first;
+         if (std::find(paramOrder.begin(), paramOrder.end(), paramName) ==
+                 paramOrder.end()) {
+@@ -546,7 +546,7 @@ HioGlslfxConfig::_GetTextures(VtDictionary const & dict,
+     }
+ 
+     const VtDictionary& texturesDict = textures.UncheckedGet<VtDictionary>();
+-    for (const std::pair<std::string, VtValue>& p : texturesDict) {
++    for (const auto &p : texturesDict) {
+         const string& textureName = p.first;
+         const VtValue& textureData = p.second;
+         if (!textureData.IsHolding<VtDictionary>()) {
+@@ -617,7 +617,7 @@ HioGlslfxConfig::_GetAttributes(VtDictionary const & dict,
+ 
+     const VtDictionary& attributesDict =
+         attributes.UncheckedGet<VtDictionary>();
+-    for (const std::pair<std::string, VtValue>& p : attributesDict) {
++    for (const auto &p : attributesDict) {
+         const string& attributeName = p.first;
+         const VtValue& attributeData = p.second;
+         if (!attributeData.IsHolding<VtDictionary>()) {
+diff --git a/pxr/imaging/hio/image.h b/pxr/imaging/hio/image.h
+index f357e61e..40bd690c 100644
+--- a/pxr/imaging/hio/image.h
++++ b/pxr/imaging/hio/image.h
+@@ -199,7 +199,7 @@ HioImage::GetMetadata(TfToken const & key, T * value) const
+     return true;
+ }
+ 
+-class HIO_API HioImageFactoryBase : public TfType::FactoryBase {
++class HioImageFactoryBase : public TfType::FactoryBase {
+ public:
+     virtual HioImageSharedPtr New() const = 0;
+ };
+diff --git a/pxr/imaging/hio/stb/stb_image.h b/pxr/imaging/hio/stb/stb_image.h
+index 03ccd13d..0d123ffe 100644
+--- a/pxr/imaging/hio/stb/stb_image.h
++++ b/pxr/imaging/hio/stb/stb_image.h
+@@ -4549,12 +4549,12 @@ static int stbi__check_png_header(stbi__context *s)
+    return 1;
+ }
+ 
+-typedef struct
++typedef struct tag_stbi__png
+ {
+    stbi__context *s;
+    stbi_uc *idata, *expanded, *out;
+    int depth;
+-   float gamma = 0;
++   float gamma = 0.0F;
+ } stbi__png;
+ 
+ 
+diff --git a/pxr/imaging/plugin/hdEmbree/pch.h b/pxr/imaging/plugin/hdEmbree/pch.h
+index 77102298..733d83b2 100644
+--- a/pxr/imaging/plugin/hdEmbree/pch.h
++++ b/pxr/imaging/plugin/hdEmbree/pch.h
+@@ -154,7 +154,6 @@
+ #include <embree3/rtcore.h>
+ #include <embree3/rtcore_geometry.h>
+ #include <embree3/rtcore_ray.h>
+-#include <tbb/atomic.h>
+ #include <tbb/blocked_range.h>
+ #include <tbb/cache_aligned_allocator.h>
+ #include <tbb/concurrent_queue.h>
+diff --git a/pxr/imaging/plugin/hdStorm/pch.h b/pxr/imaging/plugin/hdStorm/pch.h
+index 33c5124a..08133813 100644
+--- a/pxr/imaging/plugin/hdStorm/pch.h
++++ b/pxr/imaging/plugin/hdStorm/pch.h
+@@ -141,7 +141,6 @@
+ #include <boost/unordered_map.hpp>
+ #include <boost/utility/enable_if.hpp>
+ #include <boost/weak_ptr.hpp>
+-#include <tbb/atomic.h>
+ #include <tbb/cache_aligned_allocator.h>
+ #include <tbb/concurrent_queue.h>
+ #include <tbb/spin_mutex.h>
+diff --git a/pxr/imaging/plugin/hioOiio/pch.h b/pxr/imaging/plugin/hioOiio/pch.h
+index 9a7e85a6..9e396e34 100644
+--- a/pxr/imaging/plugin/hioOiio/pch.h
++++ b/pxr/imaging/plugin/hioOiio/pch.h
+@@ -199,7 +199,6 @@
+ #include <boost/utility.hpp>
+ #include <boost/utility/enable_if.hpp>
+ #include <boost/weak_ptr.hpp>
+-#include <tbb/atomic.h>
+ #include <tbb/blocked_range.h>
+ #include <tbb/cache_aligned_allocator.h>
+ #include <tbb/concurrent_queue.h>
+diff --git a/pxr/usd/ar/pch.h b/pxr/usd/ar/pch.h
+index b3333376..4f60d1b7 100644
+--- a/pxr/usd/ar/pch.h
++++ b/pxr/usd/ar/pch.h
+@@ -166,7 +166,6 @@
+ #include <boost/type_traits/is_same.hpp>
+ #include <boost/type_traits/remove_reference.hpp>
+ #include <boost/utility/enable_if.hpp>
+-#include <tbb/atomic.h>
+ #include <tbb/concurrent_hash_map.h>
+ #include <tbb/enumerable_thread_specific.h>
+ #include <tbb/spin_rw_mutex.h>
+diff --git a/pxr/usd/ndr/pch.h b/pxr/usd/ndr/pch.h
+index 897ad796..8aefd88e 100644
+--- a/pxr/usd/ndr/pch.h
++++ b/pxr/usd/ndr/pch.h
+@@ -198,7 +198,6 @@
+ #include <boost/type_traits/remove_reference.hpp>
+ #include <boost/utility.hpp>
+ #include <boost/utility/enable_if.hpp>
+-#include <tbb/atomic.h>
+ #include <tbb/blocked_range.h>
+ #include <tbb/cache_aligned_allocator.h>
+ #include <tbb/enumerable_thread_specific.h>
+diff --git a/pxr/usd/pcp/mapExpression.cpp b/pxr/usd/pcp/mapExpression.cpp
+index d8f90d7e..ad8b7df1 100644
+--- a/pxr/usd/pcp/mapExpression.cpp
++++ b/pxr/usd/pcp/mapExpression.cpp
+@@ -238,7 +238,7 @@ PcpMapExpression::_Node::New( _Op op_,
+         // Check for existing instance to re-use
+         _NodeMap::accessor accessor;
+         if (_nodeRegistry->map.insert(accessor, key) ||
+-            accessor->second->_refCount.fetch_and_increment() == 0) {
++            accessor->second->_refCount.fetch_add(1) == 0) {
+             // Either there was no node in the table, or there was but it had
+             // begun dying (another client dropped its refcount to 0).  We have
+             // to create a new node in the table.  When the client that is
+@@ -388,7 +388,7 @@ intrusive_ptr_add_ref(PcpMapExpression::_Node* p)
+ void
+ intrusive_ptr_release(PcpMapExpression::_Node* p)
+ {
+-    if (p->_refCount.fetch_and_decrement() == 1)
++    if (p->_refCount.fetch_sub(1) == 1)
+         delete p;
+ }
+ 
+diff --git a/pxr/usd/pcp/mapExpression.h b/pxr/usd/pcp/mapExpression.h
+index 9c892014..2b346210 100644
+--- a/pxr/usd/pcp/mapExpression.h
++++ b/pxr/usd/pcp/mapExpression.h
+@@ -30,7 +30,6 @@
+ 
+ #include <boost/intrusive_ptr.hpp>
+ 
+-#include <tbb/atomic.h>
+ #include <tbb/spin_mutex.h>
+ 
+ #include <atomic>
+@@ -267,7 +266,7 @@ private: // data
+         struct _NodeMap;
+         static TfStaticData<_NodeMap> _nodeRegistry;
+ 
+-        mutable tbb::atomic<int> _refCount;
++        mutable std::atomic<int> _refCount;
+         mutable Value _cachedValue;
+         mutable std::set<_Node*> _dependentExpressions;
+         Value _valueForVariable;
+diff --git a/pxr/usd/pcp/pch.h b/pxr/usd/pcp/pch.h
+index a7180637..220c3ef3 100644
+--- a/pxr/usd/pcp/pch.h
++++ b/pxr/usd/pcp/pch.h
+@@ -194,7 +194,6 @@
+ #include <boost/unordered_map.hpp>
+ #include <boost/utility.hpp>
+ #include <boost/utility/enable_if.hpp>
+-#include <tbb/atomic.h>
+ #include <tbb/blocked_range.h>
+ #include <tbb/cache_aligned_allocator.h>
+ #include <tbb/concurrent_hash_map.h>
+diff --git a/pxr/usd/plugin/usdAbc/pch.h b/pxr/usd/plugin/usdAbc/pch.h
+index f5c7e6fb..33cc2cac 100644
+--- a/pxr/usd/plugin/usdAbc/pch.h
++++ b/pxr/usd/plugin/usdAbc/pch.h
+@@ -206,7 +206,6 @@
+ #include <boost/utility.hpp>
+ #include <boost/utility/enable_if.hpp>
+ #include <boost/variant.hpp>
+-#include <tbb/atomic.h>
+ #include <tbb/cache_aligned_allocator.h>
+ #include <tbb/concurrent_queue.h>
+ #include <tbb/concurrent_unordered_set.h>
+diff --git a/pxr/usd/plugin/usdDraco/pch.h b/pxr/usd/plugin/usdDraco/pch.h
+index aff99924..ce6d0d11 100644
+--- a/pxr/usd/plugin/usdDraco/pch.h
++++ b/pxr/usd/plugin/usdDraco/pch.h
+@@ -169,7 +169,6 @@
+ #include <draco/compression/encode.h>
+ #include <draco/mesh/mesh.h>
+ #include <draco/mesh/mesh_misc_functions.h>
+-#include <tbb/atomic.h>
+ #include <tbb/cache_aligned_allocator.h>
+ #include <tbb/concurrent_queue.h>
+ #include <tbb/concurrent_unordered_set.h>
+diff --git a/pxr/usd/sdf/changeManager.cpp b/pxr/usd/sdf/changeManager.cpp
+index 9d55d29a..00b90956 100644
+--- a/pxr/usd/sdf/changeManager.cpp
++++ b/pxr/usd/sdf/changeManager.cpp
+@@ -34,7 +34,7 @@
+ #include "pxr/base/tf/instantiateSingleton.h"
+ #include "pxr/base/tf/stackTrace.h"
+ 
+-#include <tbb/atomic.h>
++#include <atomic>
+ 
+ using std::string;
+ using std::vector;
+@@ -150,9 +150,9 @@ Sdf_ChangeManager::_ProcessRemoveIfInert(_Data *data)
+     TF_VERIFY(data->outermostBlock);
+ }
+ 
+-static tbb::atomic<size_t> &
++static std::atomic<size_t> &
+ _InitChangeSerialNumber() {
+-    static tbb::atomic<size_t> value;
++    static std::atomic<size_t> value;
+     value = 1;
+     return value;
+ }
+@@ -191,8 +191,8 @@ Sdf_ChangeManager::_SendNotices(_Data *data)
+     }
+ 
+     // Obtain a serial number for this round of change processing.
+-    static tbb::atomic<size_t> &changeSerialNumber = _InitChangeSerialNumber();
+-    size_t serialNumber = changeSerialNumber.fetch_and_increment();
++    static std::atomic<size_t> &changeSerialNumber = _InitChangeSerialNumber();
++    size_t serialNumber = changeSerialNumber.fetch_add(1);
+ 
+     // Send global notice.
+     SdfNotice::LayersDidChange(changes, serialNumber).Send();
+diff --git a/pxr/usd/sdf/layer.cpp b/pxr/usd/sdf/layer.cpp
+index 6ff2b4dc..9ad0803e 100644
+--- a/pxr/usd/sdf/layer.cpp
++++ b/pxr/usd/sdf/layer.cpp
+@@ -214,7 +214,7 @@ SdfLayer::SdfLayer(
+     _MarkCurrentStateAsClean();
+ }
+ 
+-SdfLayer::~SdfLayer()
++SdfLayer::~SdfLayer() noexcept
+ {
+     TF_PY_ALLOW_THREADS_IN_SCOPE();
+ 
+diff --git a/pxr/usd/sdf/layer.h b/pxr/usd/sdf/layer.h
+index 514f27f3..75f84cbd 100644
+--- a/pxr/usd/sdf/layer.h
++++ b/pxr/usd/sdf/layer.h
+@@ -98,7 +98,7 @@ class SdfLayer
+ public:
+     /// Destructor
+     SDF_API
+-    virtual ~SdfLayer(); 
++    virtual ~SdfLayer() noexcept; // noexcept needed for std::atomic member
+ 
+     /// Noncopyable
+     SdfLayer(const SdfLayer&) = delete;
+diff --git a/pxr/usd/sdf/pch.h b/pxr/usd/sdf/pch.h
+index 0728ebe6..6af480e7 100644
+--- a/pxr/usd/sdf/pch.h
++++ b/pxr/usd/sdf/pch.h
+@@ -225,7 +225,6 @@
+ #include <boost/variant.hpp>
+ #include <boost/vmd/is_empty.hpp>
+ #include <boost/vmd/is_tuple.hpp>
+-#include <tbb/atomic.h>
+ #include <tbb/blocked_range.h>
+ #include <tbb/cache_aligned_allocator.h>
+ #include <tbb/concurrent_hash_map.h>
+diff --git a/pxr/usd/sdf/predicateExpression.cpp b/pxr/usd/sdf/predicateExpression.cpp
+index ab56183c..fe6dce1a 100644
+--- a/pxr/usd/sdf/predicateExpression.cpp
++++ b/pxr/usd/sdf/predicateExpression.cpp
+@@ -177,6 +177,8 @@ SdfPredicateExpression::GetText() const
+ 
+     std::vector<Op> opStack;
+ 
++    ARCH_PRAGMA_PUSH
++    ARCH_PRAGMA_UNUSED_LAMBDA_CAPTURE
+     auto printLogic = [&opName, &opStack, &result](
+         std::vector<std::pair<Op, int>> const &stack) {
+ 
+@@ -206,6 +208,7 @@ SdfPredicateExpression::GetText() const
+             result += ')';
+         }                
+     };
++    ARCH_PRAGMA_POP
+ 
+     auto printCall = [&result](FnCall const &call) {
+         result += call.funcName;
+diff --git a/pxr/usd/sdf/textFileFormat.cpp b/pxr/usd/sdf/textFileFormat.cpp
+index daf0256c..e3b383cd 100644
+--- a/pxr/usd/sdf/textFileFormat.cpp
++++ b/pxr/usd/sdf/textFileFormat.cpp
+@@ -189,7 +189,7 @@ SdfTextFileFormat::_ReadFromAsset(
+     const size_t toMB = 1048576;
+ 
+     if (fileSizeWarning > 0 && asset->GetSize() > (fileSizeWarning * toMB)) {
+-        TF_WARN("Performance warning: reading %lu MB text-based layer <%s>.",
++        TF_WARN("Performance warning: reading %zu MB text-based layer <%s>.",
+                 asset->GetSize() / toMB,
+                 resolvedPath.c_str());
+     }
+diff --git a/pxr/usd/sdf/textFileFormat.tab.cpp b/pxr/usd/sdf/textFileFormat.tab.cpp
+index a148f92a..219f7c7e 100644
+--- a/pxr/usd/sdf/textFileFormat.tab.cpp
++++ b/pxr/usd/sdf/textFileFormat.tab.cpp
+@@ -3197,13 +3197,6 @@ yydestruct (yymsg, yytype, yyvaluep, context)
+   if (!yymsg)
+     yymsg = "Deleting";
+   YY_SYMBOL_PRINT (yymsg, yytype, yyvaluep, yylocationp);
+-
+-  switch (yytype)
+-    {
+-
+-      default:
+-	break;
+-    }
+ }
+ 
+ /* Prevent warnings from -Wmissing-prototypes.  */
+@@ -3259,6 +3252,7 @@ YYSTYPE yylval;
+ 
+     /* Number of syntax errors so far.  */
+     int yynerrs;
++    (void)yynerrs;
+ 
+     int yystate;
+     /* Number of tokens to shift before error messages enabled.  */
+diff --git a/pxr/usd/sdf/wrapArrayAssetPath.cpp b/pxr/usd/sdf/wrapArrayAssetPath.cpp
+index 65af3d25..1372038a 100644
+--- a/pxr/usd/sdf/wrapArrayAssetPath.cpp
++++ b/pxr/usd/sdf/wrapArrayAssetPath.cpp
+@@ -49,3 +49,12 @@ void wrapArrayAssetPath() {
+     VtWrapArray<VtArray<SdfAssetPath> >();
+     VtValueFromPythonLValue<VtArray<SdfAssetPath> >();
+ }
++
++#if defined(ARCH_OS_WINDOWS)
++PXR_NAMESPACE_OPEN_SCOPE
++// On Windows, the VtArray functions are not being defined in the translation
++// unit and are left as undefined symbols during linking. Forcing the
++// instantiation here to force the symbols to be created for linking.
++template class VtArray<SdfAssetPath>;
++PXR_NAMESPACE_CLOSE_SCOPE
++#endif // defined(ARCH_OS_WINDOWS)
+diff --git a/pxr/usd/sdf/wrapPredicateExpression.cpp b/pxr/usd/sdf/wrapPredicateExpression.cpp
+index c3e95e85..447388b2 100644
+--- a/pxr/usd/sdf/wrapPredicateExpression.cpp
++++ b/pxr/usd/sdf/wrapPredicateExpression.cpp
+@@ -96,10 +96,10 @@ void wrapPredicateExpression()
+         .def(self == self)
+         .def(self != self)
+ 
+-        .def("GetParseError",
++        /*.def("GetParseError",
+              static_cast<std::string const &(PredExpr::*)() const &>(
+                  &PredExpr::GetParseError),
+-             return_value_policy<return_by_value>())
++             return_value_policy<return_by_value>())*/
+         ;
+ 
+     TfPyWrapEnum<PredExpr::Op>();
+diff --git a/pxr/usd/usd/clipCache.cpp b/pxr/usd/usd/clipCache.cpp
+index c582e1d8..b8215378 100644
+--- a/pxr/usd/usd/clipCache.cpp
++++ b/pxr/usd/usd/clipCache.cpp
+@@ -218,10 +218,9 @@ Usd_ClipCache::PopulateClipsForPrim(
+     const bool primHasClips = !allClips.empty();
+     if (primHasClips) {
+         TRACE_SCOPE("Usd_ClipCache::PopulateClipsForPrim (primHasClips)");
+-        tbb::mutex::scoped_lock lock;
+-        if (_concurrentPopulationContext) {
+-            lock.acquire(_concurrentPopulationContext->_mutex);
+-        }
++        std::unique_lock<std::mutex> lock = (_concurrentPopulationContext) ?
++            std::unique_lock<std::mutex>(_concurrentPopulationContext->_mutex) :
++            std::unique_lock<std::mutex>();
+ 
+         // Find nearest ancestor with clips specified.
+         const std::vector<Usd_ClipSetRefPtr>* ancestralClips = nullptr;
+@@ -260,10 +259,10 @@ Usd_ClipCache::PopulateClipsForPrim(
+ SdfLayerHandleSet
+ Usd_ClipCache::GetUsedLayers() const
+ {
+-    tbb::mutex::scoped_lock lock;
+-    if (_concurrentPopulationContext) {
+-        lock.acquire(_concurrentPopulationContext->_mutex);
+-    }
++    std::unique_lock<std::mutex> lock = (_concurrentPopulationContext) ?
++        std::unique_lock<std::mutex>(_concurrentPopulationContext->_mutex) :
++        std::unique_lock<std::mutex>();
++
+     SdfLayerHandleSet layers;
+     for (_ClipTable::iterator::value_type const &clipsListIter : _table){
+         for (Usd_ClipSetRefPtr const &clipSet : clipsListIter.second){
+@@ -342,10 +341,9 @@ const std::vector<Usd_ClipSetRefPtr>&
+ Usd_ClipCache::GetClipsForPrim(const SdfPath& path) const
+ {
+     TRACE_FUNCTION();
+-    tbb::mutex::scoped_lock lock;
+-    if (_concurrentPopulationContext) {
+-        lock.acquire(_concurrentPopulationContext->_mutex);
+-    }
++    std::unique_lock<std::mutex> lock = (_concurrentPopulationContext) ?
++        std::unique_lock<std::mutex>(_concurrentPopulationContext->_mutex) :
++        std::unique_lock<std::mutex>();
+     return _GetClipsForPrim_NoLock(path);
+ }
+ 
+diff --git a/pxr/usd/usd/clipCache.h b/pxr/usd/usd/clipCache.h
+index 2bff0833..fbe2ea72 100644
+--- a/pxr/usd/usd/clipCache.h
++++ b/pxr/usd/usd/clipCache.h
+@@ -30,7 +30,7 @@
+ #include "pxr/usd/usd/clipSet.h"
+ #include "pxr/usd/sdf/pathTable.h"
+ 
+-#include <tbb/mutex.h>
++#include <mutex>
+ #include <vector>
+ 
+ PXR_NAMESPACE_OPEN_SCOPE
+@@ -61,7 +61,7 @@ public:
+         explicit ConcurrentPopulationContext(Usd_ClipCache &cache);
+         ~ConcurrentPopulationContext();
+         Usd_ClipCache &_cache;
+-        tbb::mutex _mutex;
++        std::mutex _mutex;
+     };
+ 
+     /// Populate the cache with clips for \p prim. Returns true if clips
+diff --git a/pxr/usd/usd/collectionMembershipQuery.h b/pxr/usd/usd/collectionMembershipQuery.h
+index 65ad2d7d..1a444154 100644
+--- a/pxr/usd/usd/collectionMembershipQuery.h
++++ b/pxr/usd/usd/collectionMembershipQuery.h
+@@ -88,7 +88,7 @@ public:
+         /// construct them directly if one wishes.  Consider calling
+         /// UsdCollectionAPI::ResolveCompleteMembershipExpression() to produce
+         /// an approprate expression.
+-        SDF_API
++        USD_API
+         ExpressionEvaluator(UsdStageWeakPtr const &stage,
+                             SdfPathExpression const &expr);
+ 
+@@ -103,7 +103,7 @@ public:
+         UsdStageWeakPtr const &GetStage() const { return _stage; }
+ 
+         /// Return the result of evaluating the expression against \p object.
+-        SDF_API
++        USD_API
+         SdfPredicateFunctionResult
+         Match(UsdObject const &object) const;
+ 
+@@ -114,7 +114,7 @@ public:
+         /// owned by this UsdCollectionMembershipExpressionEval object.  This
+         /// means that the IncrementalSearcher must not be used after this
+         /// UsdCollectionMembershipExpressionEval object's lifetime ends.
+-        SDF_API
++        USD_API
+         IncrementalSearcher MakeIncrementalSearcher() const;
+         
+     private:
+diff --git a/pxr/usd/usd/collectionPredicateLibrary.h b/pxr/usd/usd/collectionPredicateLibrary.h
+index 5ad6ecbe..84ba3121 100644
+--- a/pxr/usd/usd/collectionPredicateLibrary.h
++++ b/pxr/usd/usd/collectionPredicateLibrary.h
+@@ -90,7 +90,7 @@ using UsdObjectPredicateLibrary = SdfPredicateLibrary<UsdObject>;
+ ///     UsdVariantSets::GetVariantSelection().  If the given object is not a
+ ///     prim, return false.
+ ///
+-SDF_API
++USD_API
+ UsdObjectPredicateLibrary const &
+ UsdGetCollectionPredicateLibrary();
+ 
+diff --git a/pxr/usd/usd/crateFile.cpp b/pxr/usd/usd/crateFile.cpp
+index fa3033dd..fe60e717 100644
+--- a/pxr/usd/usd/crateFile.cpp
++++ b/pxr/usd/usd/crateFile.cpp
+@@ -1725,6 +1725,8 @@ _WritePossiblyCompressedArray(
+         return _WriteUncompressedArray(w, array, ver);
+     }
+ 
++    ARCH_PRAGMA_PUSH
++    ARCH_PRAGMA_INT_FLOAT_CONVERSION
+     // Check to see if all the floats are exactly represented as integers.
+     auto isIntegral = [](T fp) {
+         constexpr int32_t max = std::numeric_limits<int32_t>::max();
+@@ -1732,6 +1734,7 @@ _WritePossiblyCompressedArray(
+         return min <= fp && fp <= max &&
+             static_cast<T>(static_cast<int32_t>(fp)) == fp;
+     };    
++    ARCH_PRAGMA_POP
+     if (std::all_of(array.cdata(), array.cdata() + array.size(), isIntegral)) {
+         // Encode as integers.
+         auto result = ValueRepForArray<T>(w.Tell());
+diff --git a/pxr/usd/usd/crateFile.h b/pxr/usd/usd/crateFile.h
+index 67b1aa38..38f65c68 100644
+--- a/pxr/usd/usd/crateFile.h
++++ b/pxr/usd/usd/crateFile.h
+@@ -349,12 +349,15 @@ private:
+                 bool operator!=(ZeroCopySource const &other) const {
+                     return !(*this == other);
+                 }
+-                friend size_t tbb_hasher(ZeroCopySource const &z) {
+-                    return TfHash::Combine(
+-                        reinterpret_cast<uintptr_t>(z._addr),
+-                        z._numBytes
+-                    );
+-                }
++
++                struct Hash {
++                    inline size_t operator()(const ZeroCopySource& z) const {
++                        return TfHash::Combine(
++                            reinterpret_cast<uintptr_t>(z._addr),
++                            z._numBytes
++                        );
++                    }
++                };
+                 
+                 // Return true if the refcount is nonzero.
+                 bool IsInUse() const { return _refCount; }
+@@ -422,7 +425,7 @@ private:
+             ArchConstFileMapping _mapping;
+             char const *_start;
+             int64_t _length;
+-            tbb::concurrent_unordered_set<ZeroCopySource> _outstandingRanges;
++            tbb::concurrent_unordered_set<ZeroCopySource, ZeroCopySource::Hash> _outstandingRanges;
+         };
+ 
+     public:
+diff --git a/pxr/usd/usd/pch.h b/pxr/usd/usd/pch.h
+index d360999d..f708a4d9 100644
+--- a/pxr/usd/usd/pch.h
++++ b/pxr/usd/usd/pch.h
+@@ -227,7 +227,6 @@
+ #include <boost/utility.hpp>
+ #include <boost/utility/enable_if.hpp>
+ #include <boost/utility/in_place_factory.hpp>
+-#include <tbb/atomic.h>
+ #include <tbb/blocked_range.h>
+ #include <tbb/cache_aligned_allocator.h>
+ #include <tbb/concurrent_hash_map.h>
+diff --git a/pxr/usd/usd/prim.h b/pxr/usd/usd/prim.h
+index 1ed8f46f..e8938b7c 100644
+--- a/pxr/usd/usd/prim.h
++++ b/pxr/usd/usd/prim.h
+@@ -2192,7 +2192,7 @@ private:
+     friend class UsdSchemaBase;
+     friend class UsdAPISchemaBase;
+     friend class UsdStage;
+-    friend class Usd_StageImplAccess;
++    friend struct Usd_StageImplAccess;
+     friend class UsdPrimRange;
+     friend class Usd_PrimData;
+     friend class Usd_PrimFlagsPredicate;
+diff --git a/pxr/usd/usd/primDefinition.cpp b/pxr/usd/usd/primDefinition.cpp
+index 5b360af1..babfd313 100644
+--- a/pxr/usd/usd/primDefinition.cpp
++++ b/pxr/usd/usd/primDefinition.cpp
+@@ -397,8 +397,8 @@ UsdPrimDefinition::_FindOrCreatePropertySpecForComposition(
+     // we create a new layer for this prim definition to write its composed
+     // properties.
+     if (_composedPropertyLayer) {
+-        if (destProp = _composedPropertyLayer->GetPropertyAtPath(
+-                primPath.AppendProperty(propName))) {
++        if ((destProp = _composedPropertyLayer->GetPropertyAtPath(
++                primPath.AppendProperty(propName)))) {
+             return destProp;
+         }
+     } else {
+diff --git a/pxr/usd/usd/stage.cpp b/pxr/usd/usd/stage.cpp
+index fdebb0f2..1d6b612a 100644
+--- a/pxr/usd/usd/stage.cpp
++++ b/pxr/usd/usd/stage.cpp
+@@ -5259,7 +5259,7 @@ _GenerateFlattenedPrototypePath(const std::vector<UsdPrim>& prototypes)
+     size_t primPrototypeId = 1;
+ 
+     const auto generatePathName = [&primPrototypeId]() {
+-        return SdfPath(TfStringPrintf("/Flattened_Prototype_%lu", 
++        return SdfPath(TfStringPrintf("/Flattened_Prototype_%zu",
+                                       primPrototypeId++));
+     };
+ 
+diff --git a/pxr/usd/usd/testenv/testUsdResolveTarget.cpp b/pxr/usd/usd/testenv/testUsdResolveTarget.cpp
+index 1e5e6f8c..c44a68e3 100644
+--- a/pxr/usd/usd/testenv/testUsdResolveTarget.cpp
++++ b/pxr/usd/usd/testenv/testUsdResolveTarget.cpp
+@@ -257,8 +257,8 @@ _MakeAndVerifyQueries(
+         attr.GetPath() << " **" << std::endl;
+ 
+     TF_VERIFY(expectedValues.size() == resolveTargets.size(), 
+-        "Number or resolve targets %lu doesn't match the number of expected "
+-        "values %lu.",
++        "Number or resolve targets %zu doesn't match the number of expected "
++        "values %zu.",
+         resolveTargets.size(), expectedValues.size());
+ 
+     for (size_t i = 0; i < resolveTargets.size(); ++i) {
+@@ -292,7 +292,7 @@ _GetAllResolveTargetsForPrim(
+     for (const UsdPrimCompositionQueryArc &arc : arcs) {
+         const SdfLayerRefPtrVector &layers = 
+             arc.GetTargetNode().GetLayerStack()->GetLayers();
+-        for (const SdfLayerHandle &layer : layers) {
++        for (const SdfLayerHandle layer : layers) {
+ 
+             upToResolveTargets->push_back(
+                 arc.MakeResolveTargetUpTo(layer));
+diff --git a/pxr/usd/usdGeom/bboxCache.cpp b/pxr/usd/usdGeom/bboxCache.cpp
+index 454f97bc..68d2b30d 100644
+--- a/pxr/usd/usdGeom/bboxCache.cpp
++++ b/pxr/usd/usdGeom/bboxCache.cpp
+@@ -46,6 +46,7 @@
+ 
+ #include <tbb/enumerable_thread_specific.h>
+ #include <algorithm>
++#include <atomic>
+ 
+ PXR_NAMESPACE_OPEN_SCOPE
+ 
+@@ -124,11 +125,24 @@ private:
+ 
+     struct _PrototypeTask
+     {
+-        _PrototypeTask() : numDependencies(0) { }
++        _PrototypeTask() noexcept
++            : numDependencies(0) { }
++
++        _PrototypeTask(const _PrototypeTask &other) noexcept
++            : dependentPrototypes(other.dependentPrototypes)
++        {
++            numDependencies.store(other.numDependencies.load());
++        }
++
++        _PrototypeTask(_PrototypeTask &&other) noexcept
++            : dependentPrototypes(std::move(other.dependentPrototypes))
++        {
++            numDependencies.store(other.numDependencies.load());
++        }
+ 
+         // Number of dependencies -- prototype prims that must be resolved
+         // before this prototype can be resolved.
+-        tbb::atomic<size_t> numDependencies;
++        std::atomic<size_t> numDependencies;
+ 
+         // List of prototype prims that depend on this prototype.
+         std::vector<_PrimContext> dependentPrototypes;
+@@ -220,7 +234,7 @@ private:
+             _PrototypeTask& dependentPrototypeData =
+                 prototypeTasks->find(dependentPrototype)->second;
+             if (dependentPrototypeData.numDependencies
+-                .fetch_and_decrement() == 1){
++                .fetch_sub(1) == 1){
+                 dispatcher->Run(
+                     &_PrototypeBBoxResolver::_ExecuteTaskForPrototype,
+                     this, dependentPrototype, prototypeTasks, xfCaches,
+@@ -1522,4 +1536,3 @@ UsdGeomBBoxCache::_PrimContext::ToString() const {
+ }
+ 
+ PXR_NAMESPACE_CLOSE_SCOPE
+-
+diff --git a/pxr/usd/usdGeom/pch.h b/pxr/usd/usdGeom/pch.h
+index 824c5b0f..1a5fd650 100644
+--- a/pxr/usd/usdGeom/pch.h
++++ b/pxr/usd/usdGeom/pch.h
+@@ -181,7 +181,6 @@
+ #include <boost/utility.hpp>
+ #include <boost/utility/enable_if.hpp>
+ #include <boost/variant.hpp>
+-#include <tbb/atomic.h>
+ #include <tbb/blocked_range.h>
+ #include <tbb/cache_aligned_allocator.h>
+ #include <tbb/concurrent_queue.h>
+diff --git a/pxr/usd/usdGeom/primvar.h b/pxr/usd/usdGeom/primvar.h
+index ebf3fbdd..d04b400b 100644
+--- a/pxr/usd/usdGeom/primvar.h
++++ b/pxr/usd/usdGeom/primvar.h
+@@ -865,8 +865,8 @@ UsdGeomPrimvar::_ComputeFlattenedHelper(const VtArray<ScalarType> &authored,
+ 
+         if (errString) {
+             *errString = TfStringPrintf(
+-                "Found %ld invalid indices at positions [%s%s] that are out of "
+-                "range [0,%ld).", invalidIndexPositions.size(), 
++                "Found %zu invalid indices at positions [%s%s] that are out of "
++                "range [0,%zu).", invalidIndexPositions.size(),
+                 TfStringJoin(invalidPositionsStrVec, ", ").c_str(), 
+                 invalidIndexPositions.size() > 5 ? ", ..." : "",
+                 authored.size());
+diff --git a/pxr/usd/usdGeom/subset.cpp b/pxr/usd/usdGeom/subset.cpp
+index 69c163bf..1fc6b2e1 100644
+--- a/pxr/usd/usdGeom/subset.cpp
++++ b/pxr/usd/usdGeom/subset.cpp
+@@ -518,7 +518,7 @@ UsdGeomSubset::ValidateSubsets(
+             valid = false;
+             if (reason) {
+                 *reason += TfStringPrintf("Number of unique indices at time %s "
+-                    "does not match the element count %ld.", 
++                    "does not match the element count %zu.",
+                     TfStringify(t).c_str(), elementCount);
+             }
+         }
+@@ -529,7 +529,7 @@ UsdGeomSubset::ValidateSubsets(
+             valid = false;
+             if (reason) {
+                 *reason += TfStringPrintf("Found one or more indices that are "
+-                    "greater than the element count %ld at time %s.\n", 
++                    "greater than the element count %zu at time %s.\n",
+                     elementCount, TfStringify(t).c_str());
+             }
+         }
+@@ -629,7 +629,7 @@ UsdGeomSubset::ValidateFamily(
+             valid = false;
+             if (reason) {
+                 *reason += TfStringPrintf("Number of unique indices at time %s "
+-                    "does not match the face count %ld.", 
++                    "does not match the face count %zu.",
+                     TfStringify(t).c_str(), faceCount);
+             }
+         }
+@@ -640,7 +640,7 @@ UsdGeomSubset::ValidateFamily(
+             valid = false;
+             if (reason) {
+                 *reason += TfStringPrintf("Found one or more indices that are "
+-                    "greater than the face-count %ld at time %s.\n", 
++                    "greater than the face-count %zu at time %s.\n",
+                     faceCount, TfStringify(t).c_str());
+             }
+         }
+diff --git a/pxr/usd/usdHydra/pch.h b/pxr/usd/usdHydra/pch.h
+index 5ba9df4c..61ffecdf 100644
+--- a/pxr/usd/usdHydra/pch.h
++++ b/pxr/usd/usdHydra/pch.h
+@@ -162,7 +162,6 @@
+ #include <boost/unordered_map.hpp>
+ #include <boost/utility.hpp>
+ #include <boost/utility/enable_if.hpp>
+-#include <tbb/atomic.h>
+ #include <tbb/cache_aligned_allocator.h>
+ #include <tbb/concurrent_queue.h>
+ #include <tbb/concurrent_unordered_set.h>
+diff --git a/pxr/usd/usdLux/pch.h b/pxr/usd/usdLux/pch.h
+index 8fe34cb9..e503ef10 100644
+--- a/pxr/usd/usdLux/pch.h
++++ b/pxr/usd/usdLux/pch.h
+@@ -177,7 +177,6 @@
+ #include <boost/utility.hpp>
+ #include <boost/utility/enable_if.hpp>
+ #include <boost/variant.hpp>
+-#include <tbb/atomic.h>
+ #include <tbb/cache_aligned_allocator.h>
+ #include <tbb/concurrent_queue.h>
+ #include <tbb/concurrent_unordered_set.h>
+diff --git a/pxr/usd/usdMedia/pch.h b/pxr/usd/usdMedia/pch.h
+index 7802ec3e..8388208c 100644
+--- a/pxr/usd/usdMedia/pch.h
++++ b/pxr/usd/usdMedia/pch.h
+@@ -170,7 +170,6 @@
+ #include <boost/utility.hpp>
+ #include <boost/utility/enable_if.hpp>
+ #include <boost/variant.hpp>
+-#include <tbb/atomic.h>
+ #include <tbb/cache_aligned_allocator.h>
+ #include <tbb/concurrent_queue.h>
+ #include <tbb/concurrent_unordered_set.h>
+diff --git a/pxr/usd/usdMtlx/pch.h b/pxr/usd/usdMtlx/pch.h
+index 5eba44e7..88f78723 100644
+--- a/pxr/usd/usdMtlx/pch.h
++++ b/pxr/usd/usdMtlx/pch.h
+@@ -193,7 +193,6 @@
+ #include <boost/unordered_map.hpp>
+ #include <boost/utility.hpp>
+ #include <boost/utility/enable_if.hpp>
+-#include <tbb/atomic.h>
+ #include <tbb/cache_aligned_allocator.h>
+ #include <tbb/concurrent_queue.h>
+ #include <tbb/concurrent_unordered_map.h>
+diff --git a/pxr/usd/usdPhysics/pch.h b/pxr/usd/usdPhysics/pch.h
+index 824c5b0f..1a5fd650 100644
+--- a/pxr/usd/usdPhysics/pch.h
++++ b/pxr/usd/usdPhysics/pch.h
+@@ -181,7 +181,6 @@
+ #include <boost/utility.hpp>
+ #include <boost/utility/enable_if.hpp>
+ #include <boost/variant.hpp>
+-#include <tbb/atomic.h>
+ #include <tbb/blocked_range.h>
+ #include <tbb/cache_aligned_allocator.h>
+ #include <tbb/concurrent_queue.h>
+diff --git a/pxr/usd/usdProc/pch.h b/pxr/usd/usdProc/pch.h
+index f40455a1..fc95220b 100644
+--- a/pxr/usd/usdProc/pch.h
++++ b/pxr/usd/usdProc/pch.h
+@@ -165,7 +165,6 @@
+ #include <boost/variant.hpp>
+ #include <boost/vmd/is_empty.hpp>
+ #include <boost/vmd/is_tuple.hpp>
+-#include <tbb/atomic.h>
+ #include <tbb/cache_aligned_allocator.h>
+ #include <tbb/concurrent_queue.h>
+ #include <tbb/concurrent_unordered_set.h>
+diff --git a/pxr/usd/usdRender/pch.h b/pxr/usd/usdRender/pch.h
+index 7802ec3e..8388208c 100644
+--- a/pxr/usd/usdRender/pch.h
++++ b/pxr/usd/usdRender/pch.h
+@@ -170,7 +170,6 @@
+ #include <boost/utility.hpp>
+ #include <boost/utility/enable_if.hpp>
+ #include <boost/variant.hpp>
+-#include <tbb/atomic.h>
+ #include <tbb/cache_aligned_allocator.h>
+ #include <tbb/concurrent_queue.h>
+ #include <tbb/concurrent_unordered_set.h>
+diff --git a/pxr/usd/usdRi/pch.h b/pxr/usd/usdRi/pch.h
+index 905d2a12..ba6c6098 100644
+--- a/pxr/usd/usdRi/pch.h
++++ b/pxr/usd/usdRi/pch.h
+@@ -173,7 +173,6 @@
+ #include <boost/utility.hpp>
+ #include <boost/utility/enable_if.hpp>
+ #include <boost/variant.hpp>
+-#include <tbb/atomic.h>
+ #include <tbb/cache_aligned_allocator.h>
+ #include <tbb/concurrent_queue.h>
+ #include <tbb/concurrent_unordered_set.h>
+diff --git a/pxr/usd/usdShade/pch.h b/pxr/usd/usdShade/pch.h
+index 698ab0ca..8e0433d3 100644
+--- a/pxr/usd/usdShade/pch.h
++++ b/pxr/usd/usdShade/pch.h
+@@ -179,7 +179,6 @@
+ #include <boost/utility.hpp>
+ #include <boost/utility/enable_if.hpp>
+ #include <boost/variant.hpp>
+-#include <tbb/atomic.h>
+ #include <tbb/blocked_range.h>
+ #include <tbb/cache_aligned_allocator.h>
+ #include <tbb/concurrent_queue.h>
+diff --git a/pxr/usd/usdSkel/animation.cpp b/pxr/usd/usdSkel/animation.cpp
+index e4414b3b..d5795a7e 100644
+--- a/pxr/usd/usdSkel/animation.cpp
++++ b/pxr/usd/usdSkel/animation.cpp
+@@ -282,8 +282,8 @@ UsdSkelAnimation::SetTransforms(const VtMatrix4dArray& xforms,
+     VtVec3hArray scales;
+     if (UsdSkelDecomposeTransforms(xforms, &translations,
+                                    &rotations, &scales)) {
+-        return GetTranslationsAttr().Set(translations, time) &
+-               GetRotationsAttr().Set(rotations, time) &
++        return GetTranslationsAttr().Set(translations, time) &&
++               GetRotationsAttr().Set(rotations, time) &&
+                GetScalesAttr().Set(scales, time);
+     }
+     return false;
+diff --git a/pxr/usd/usdSkel/pch.h b/pxr/usd/usdSkel/pch.h
+index a4205ac4..63975be9 100644
+--- a/pxr/usd/usdSkel/pch.h
++++ b/pxr/usd/usdSkel/pch.h
+@@ -180,7 +180,6 @@
+ #include <boost/utility.hpp>
+ #include <boost/utility/enable_if.hpp>
+ #include <boost/variant.hpp>
+-#include <tbb/atomic.h>
+ #include <tbb/blocked_range.h>
+ #include <tbb/cache_aligned_allocator.h>
+ #include <tbb/concurrent_queue.h>
+diff --git a/pxr/usd/usdUI/pch.h b/pxr/usd/usdUI/pch.h
+index 47666439..ef31dc08 100644
+--- a/pxr/usd/usdUI/pch.h
++++ b/pxr/usd/usdUI/pch.h
+@@ -168,7 +168,6 @@
+ #include <boost/unordered_map.hpp>
+ #include <boost/utility.hpp>
+ #include <boost/utility/enable_if.hpp>
+-#include <tbb/atomic.h>
+ #include <tbb/cache_aligned_allocator.h>
+ #include <tbb/concurrent_queue.h>
+ #include <tbb/concurrent_unordered_set.h>
+diff --git a/pxr/usd/usdUtils/assetLocalizationDelegate.h b/pxr/usd/usdUtils/assetLocalizationDelegate.h
+index e915fefd..6aea0b12 100644
+--- a/pxr/usd/usdUtils/assetLocalizationDelegate.h
++++ b/pxr/usd/usdUtils/assetLocalizationDelegate.h
+@@ -212,7 +212,7 @@ public:
+     virtual void ProcessPayloads(
+         const SdfLayerRefPtr &layer,
+         const SdfPrimSpecHandle &primSpec,
+-        SdfPayloadsProxy *payloads);
++        SdfPayloadsProxy *payloads) override;
+ 
+     virtual void ProcessReferences(
+         const SdfLayerRefPtr &layer,
+diff --git a/pxr/usd/usdUtils/pch.h b/pxr/usd/usdUtils/pch.h
+index 3a108ee5..e7675315 100644
+--- a/pxr/usd/usdUtils/pch.h
++++ b/pxr/usd/usdUtils/pch.h
+@@ -215,7 +215,6 @@
+ #include <boost/unordered_map.hpp>
+ #include <boost/utility.hpp>
+ #include <boost/utility/enable_if.hpp>
+-#include <tbb/atomic.h>
+ #include <tbb/blocked_range.h>
+ #include <tbb/cache_aligned_allocator.h>
+ #include <tbb/concurrent_queue.h>
+diff --git a/pxr/usd/usdUtils/pipeline.cpp b/pxr/usd/usdUtils/pipeline.cpp
+index 261370d8..4e43d423 100644
+--- a/pxr/usd/usdUtils/pipeline.cpp
++++ b/pxr/usd/usdUtils/pipeline.cpp
+@@ -319,7 +319,7 @@ _GetPipelineIdentifierTokens(const TfTokenVector& identifierKeys)
+ 
+     const PlugPluginPtrVector plugs =
+         PlugRegistry::GetInstance().GetAllPlugins();
+-    for (const PlugPluginPtr plug : plugs) {
++    for (const PlugPluginPtr &plug : plugs) {
+         JsObject metadata = plug->GetMetadata();
+         JsValue metadataDictValue;
+         if (!TfMapLookup(metadata, metadataDictKey, &metadataDictValue)) {
+diff --git a/pxr/usd/usdVol/pch.h b/pxr/usd/usdVol/pch.h
+index 7802ec3e..8388208c 100644
+--- a/pxr/usd/usdVol/pch.h
++++ b/pxr/usd/usdVol/pch.h
+@@ -170,7 +170,6 @@
+ #include <boost/utility.hpp>
+ #include <boost/utility/enable_if.hpp>
+ #include <boost/variant.hpp>
+-#include <tbb/atomic.h>
+ #include <tbb/cache_aligned_allocator.h>
+ #include <tbb/concurrent_queue.h>
+ #include <tbb/concurrent_unordered_set.h>
+diff --git a/pxr/usdImaging/plugin/usdShaders/pch.h b/pxr/usdImaging/plugin/usdShaders/pch.h
+index 2037e25b..c5836624 100644
+--- a/pxr/usdImaging/plugin/usdShaders/pch.h
++++ b/pxr/usdImaging/plugin/usdShaders/pch.h
+@@ -160,7 +160,6 @@
+ #include <boost/unordered_map.hpp>
+ #include <boost/utility.hpp>
+ #include <boost/utility/enable_if.hpp>
+-#include <tbb/atomic.h>
+ #include <tbb/cache_aligned_allocator.h>
+ #include <tbb/concurrent_queue.h>
+ #include <tbb/concurrent_unordered_set.h>
+diff --git a/pxr/usdImaging/usdAppUtils/frameRecorder.cpp b/pxr/usdImaging/usdAppUtils/frameRecorder.cpp
+index 47e5ff83..3976c919 100644
+--- a/pxr/usdImaging/usdAppUtils/frameRecorder.cpp
++++ b/pxr/usdImaging/usdAppUtils/frameRecorder.cpp
+@@ -307,7 +307,7 @@ _RenderProductsGenerated(
+     SdfPathVector renderProductTargets;
+     settings.GetProductsRel().GetForwardedTargets(&renderProductTargets);
+ 
+-    for (const auto productPath : renderProductTargets) {
++    for (const auto& productPath : renderProductTargets) {
+         UsdRenderProduct product =
+             UsdRenderProduct(stage->GetPrimAtPath(productPath));
+         TfToken productName;
+diff --git a/pxr/usdImaging/usdAppUtils/pch.h b/pxr/usdImaging/usdAppUtils/pch.h
+index 70b9602d..f403f450 100644
+--- a/pxr/usdImaging/usdAppUtils/pch.h
++++ b/pxr/usdImaging/usdAppUtils/pch.h
+@@ -173,7 +173,6 @@
+ #include <boost/utility/enable_if.hpp>
+ #include <boost/variant.hpp>
+ #include <boost/weak_ptr.hpp>
+-#include <tbb/atomic.h>
+ #include <tbb/cache_aligned_allocator.h>
+ #include <tbb/concurrent_queue.h>
+ #include <tbb/concurrent_unordered_set.h>
+diff --git a/pxr/usdImaging/usdImaging/dataSourceMaterial.cpp b/pxr/usdImaging/usdImaging/dataSourceMaterial.cpp
+index 6f8ffe4f..4d5950d5 100644
+--- a/pxr/usdImaging/usdImaging/dataSourceMaterial.cpp
++++ b/pxr/usdImaging/usdImaging/dataSourceMaterial.cpp
+@@ -207,15 +207,13 @@ public:
+ private:
+     _UsdImagingDataSourceShadingNodeInputs(
+         UsdShadeShader shaderNode,
+-        const UsdImagingDataSourceStageGlobals &stageGlobals,
++        ARCH_UNUSED_ARG const UsdImagingDataSourceStageGlobals &stageGlobals,
+         const SdfPath &materialPrefix)
+     : _shaderNode(shaderNode)
+-    , _stageGlobals(stageGlobals)
+     , _materialPrefix(materialPrefix)
+     {}
+ 
+     UsdShadeShader _shaderNode;
+-    const UsdImagingDataSourceStageGlobals &_stageGlobals;
+     const SdfPath _materialPrefix;
+ };
+ 
+diff --git a/pxr/usdImaging/usdImaging/dataSourcePrim.cpp b/pxr/usdImaging/usdImaging/dataSourcePrim.cpp
+index e0847643..0a86afec 100644
+--- a/pxr/usdImaging/usdImaging/dataSourcePrim.cpp
++++ b/pxr/usdImaging/usdImaging/dataSourcePrim.cpp
+@@ -108,9 +108,8 @@ UsdImagingDataSourceVisibility::Get(const TfToken &name)
+ 
+ UsdImagingDataSourcePurpose::UsdImagingDataSourcePurpose(
+         const UsdAttributeQuery &purposeQuery,
+-        const UsdImagingDataSourceStageGlobals &stageGlobals)
++        ARCH_UNUSED_ARG const UsdImagingDataSourceStageGlobals &stageGlobals)
+     : _purposeQuery(purposeQuery)
+-    , _stageGlobals(stageGlobals)
+ {
+ }
+ 
+@@ -328,9 +327,8 @@ UsdImagingDataSourceExtentsHint::Get(const TfToken &name)
+ 
+ UsdImagingDataSourceXformResetXformStack::UsdImagingDataSourceXformResetXformStack(
+         const UsdGeomXformable::XformQuery &xformQuery,
+-        const UsdImagingDataSourceStageGlobals &stageGlobals)
++        ARCH_UNUSED_ARG const UsdImagingDataSourceStageGlobals &stageGlobals)
+     : _xformQuery(xformQuery)
+-    , _stageGlobals(stageGlobals)
+ {
+ }
+ 
+diff --git a/pxr/usdImaging/usdImaging/dataSourcePrim.h b/pxr/usdImaging/usdImaging/dataSourcePrim.h
+index 31059585..be01bc84 100644
+--- a/pxr/usdImaging/usdImaging/dataSourcePrim.h
++++ b/pxr/usdImaging/usdImaging/dataSourcePrim.h
+@@ -111,7 +111,6 @@ private:
+ 
+ private:
+     UsdAttributeQuery _purposeQuery;
+-    const UsdImagingDataSourceStageGlobals &_stageGlobals;
+ };
+ 
+ HD_DECLARE_DATASOURCE_HANDLES(UsdImagingDataSourcePurpose);
+@@ -289,7 +288,6 @@ private:
+ 
+ private:
+     UsdGeomXformable::XformQuery _xformQuery;
+-    const UsdImagingDataSourceStageGlobals &_stageGlobals;
+ };
+ 
+ HD_DECLARE_DATASOURCE_HANDLES(UsdImagingDataSourceXformResetXformStack);
+diff --git a/pxr/usdImaging/usdImaging/dataSourceVolume.cpp b/pxr/usdImaging/usdImaging/dataSourceVolume.cpp
+index f132df39..0e75eb21 100644
+--- a/pxr/usdImaging/usdImaging/dataSourceVolume.cpp
++++ b/pxr/usdImaging/usdImaging/dataSourceVolume.cpp
+@@ -33,9 +33,8 @@ PXR_NAMESPACE_OPEN_SCOPE
+ UsdImagingDataSourceVolumeFieldBindings
+ ::UsdImagingDataSourceVolumeFieldBindings(
+         UsdVolVolume usdVolume,
+-        const UsdImagingDataSourceStageGlobals &stageGlobals)
++        ARCH_UNUSED_ARG const UsdImagingDataSourceStageGlobals &stageGlobals)
+     : _usdVolume(usdVolume)
+-    , _stageGlobals(stageGlobals)
+ {
+ }
+ 
+diff --git a/pxr/usdImaging/usdImaging/dataSourceVolume.h b/pxr/usdImaging/usdImaging/dataSourceVolume.h
+index 0a0d09f5..645b06c6 100644
+--- a/pxr/usdImaging/usdImaging/dataSourceVolume.h
++++ b/pxr/usdImaging/usdImaging/dataSourceVolume.h
+@@ -55,7 +55,6 @@ private:
+ 
+ private:
+     UsdVolVolume _usdVolume;
+-    const UsdImagingDataSourceStageGlobals &_stageGlobals;
+ };
+ 
+ HD_DECLARE_DATASOURCE_HANDLES(UsdImagingDataSourceVolumeFieldBindings);
+diff --git a/pxr/usdImaging/usdImaging/delegate.cpp b/pxr/usdImaging/usdImaging/delegate.cpp
+index 7cac2f5a..7e438838 100644
+--- a/pxr/usdImaging/usdImaging/delegate.cpp
++++ b/pxr/usdImaging/usdImaging/delegate.cpp
+@@ -995,7 +995,7 @@ UsdImagingDelegate::_GatherDependencies(
+     if (it != cache.end()) {
+         TF_DEBUG(USDIMAGING_CHANGES).Msg(
+             "[_GatherDependencies] Found entry in flattened cache for %s with "
+-            "%lu paths\n", subtree.GetText(), it->second.size());
++            "%zu paths\n", subtree.GetText(), it->second.size());
+ 
+         *affectedCachePaths = it->second;
+         return;
+diff --git a/pxr/usdImaging/usdImaging/drawModeSceneIndex.cpp b/pxr/usdImaging/usdImaging/drawModeSceneIndex.cpp
+index 01b95929..2dbeb9da 100644
+--- a/pxr/usdImaging/usdImaging/drawModeSceneIndex.cpp
++++ b/pxr/usdImaging/usdImaging/drawModeSceneIndex.cpp
+@@ -118,7 +118,7 @@ UsdImagingDrawModeSceneIndex::_FindStandinForPrimOrAncestor(
+     const auto it = std::lower_bound(
+         _prims.rbegin(), _prims.rend(),
+         path, 
+-        [](const value_type &a, const SdfPath &b) { return a.first > b; });
++        [](value_type &a, const SdfPath &b) { return a.first > b; });
+     if (it == _prims.rend()) {
+         return nullptr;
+     }
+diff --git a/pxr/usdImaging/usdImaging/drawModeStandin.cpp b/pxr/usdImaging/usdImaging/drawModeStandin.cpp
+index f1054229..68e95d70 100644
+--- a/pxr/usdImaging/usdImaging/drawModeStandin.cpp
++++ b/pxr/usdImaging/usdImaging/drawModeStandin.cpp
+@@ -59,6 +59,7 @@
+ #include <array>
+ #include <functional>
+ #include <bitset>
++#include <array>
+ 
+ PXR_NAMESPACE_OPEN_SCOPE
+ 
+@@ -1368,6 +1369,7 @@ _CardsDataCache::_CardsData::_ComputePoints(const _SchemaValues &values)
+             { x, 1, 0 } };
+ 
+         static const GfVec3f one(1.0f);
++        (void)one;
+ 
+         // For each pair of opposite faces.
+         for (size_t i = 0; i < 3; i++) {
+diff --git a/pxr/usdImaging/usdImaging/gprimAdapter.cpp b/pxr/usdImaging/usdImaging/gprimAdapter.cpp
+index e065a60e..4993a102 100644
+--- a/pxr/usdImaging/usdImaging/gprimAdapter.cpp
++++ b/pxr/usdImaging/usdImaging/gprimAdapter.cpp
+@@ -908,7 +908,7 @@ UsdImagingGprimAdapter::GetColor(UsdPrim const& prim,
+ 
+                     if (colorInterp == UsdGeomTokens->constant &&
+                         result.size() > 1) {
+-                        TF_WARN("Prim %s has %lu element(s) for %s even "
++                        TF_WARN("Prim %s has %zu element(s) for %s even "
+                                 "though it is marked constant.",
+                                 prim.GetPath().GetText(), result.size(),
+                                 primvar.GetName().GetText());
+@@ -921,7 +921,7 @@ UsdImagingGprimAdapter::GetColor(UsdPrim const& prim,
+ 
+                 if (colorInterp == UsdGeomTokens->constant &&
+                     result.size() > 1) {
+-                    TF_WARN("Prim %s has %lu element(s) for %s even "
++                    TF_WARN("Prim %s has %zu element(s) for %s even "
+                             "though it is marked constant.",
+                             prim.GetPath().GetText(), result.size(),
+                             primvar.GetName().GetText());
+@@ -1021,7 +1021,7 @@ UsdImagingGprimAdapter::GetOpacity(UsdPrim const& prim,
+ 
+                     if (opacityInterp == UsdGeomTokens->constant &&
+                         result.size() > 1) {
+-                        TF_WARN("Prim %s has %lu element(s) for %s even "
++                        TF_WARN("Prim %s has %zu element(s) for %s even "
+                                 "though it is marked constant.",
+                                 prim.GetPath().GetText(), result.size(),
+                                 primvar.GetName().GetText());
+@@ -1034,7 +1034,7 @@ UsdImagingGprimAdapter::GetOpacity(UsdPrim const& prim,
+ 
+                 if (opacityInterp == UsdGeomTokens->constant &&
+                     result.size() > 1) {
+-                    TF_WARN("Prim %s has %lu element(s) for %s even "
++                    TF_WARN("Prim %s has %zu element(s) for %s even "
+                             "though it is marked constant.",
+                             prim.GetPath().GetText(), result.size(),
+                             primvar.GetName().GetText());
+diff --git a/pxr/usdImaging/usdImaging/indexProxy.cpp b/pxr/usdImaging/usdImaging/indexProxy.cpp
+index 0c3f9a40..59054a7e 100644
+--- a/pxr/usdImaging/usdImaging/indexProxy.cpp
++++ b/pxr/usdImaging/usdImaging/indexProxy.cpp
+@@ -57,10 +57,13 @@ UsdImagingIndexProxy::_AddHdPrimInfo(SdfPath const &cachePath,
+         }
+     }
+ 
++    ARCH_PRAGMA_PUSH
++    ARCH_PRAGMA_POTENTIALLY_EVALUATED_EXPRESSION
+     TF_DEBUG(USDIMAGING_CHANGES).Msg(
+         "[Add HdPrim Info] <%s> adapter=%s\n",
+         cachePath.GetText(),
+         TfType::GetCanonicalTypeName(typeid(*(adapterToInsert.get()))).c_str());
++    ARCH_PRAGMA_POP
+ 
+     // Currently, we don't support more than one adapter dependency per usd
+     // prim, but we could relax this restriction if it's useful.
+diff --git a/pxr/usdImaging/usdImaging/instanceAdapter.cpp b/pxr/usdImaging/usdImaging/instanceAdapter.cpp
+index cec69728..978566ef 100644
+--- a/pxr/usdImaging/usdImaging/instanceAdapter.cpp
++++ b/pxr/usdImaging/usdImaging/instanceAdapter.cpp
+@@ -238,7 +238,6 @@ UsdImagingInstanceAdapter::_Populate(UsdPrim const& prim,
+         // prototypes.
+         UsdPrimRange range(prototypePrim, _GetDisplayPredicate());
+         int protoID = 0;
+-        int primCount = 0;
+ 
+         for (auto iter = range.begin(); iter != range.end(); ++iter) {
+             // If we encounter an instance in this USD prototype, save it aside
+@@ -329,7 +328,6 @@ UsdImagingInstanceAdapter::_Populate(UsdPrim const& prim,
+                 proto.path = iter->GetPath();
+             }
+             proto.adapter = primAdapter;
+-            ++primCount;
+ 
+             if (!isLeafInstancer) {
+                 instancerData.childPointInstancers.insert(protoPath);
+@@ -342,6 +340,8 @@ UsdImagingInstanceAdapter::_Populate(UsdPrim const& prim,
+                 }
+             }
+ 
++            ARCH_PRAGMA_PUSH
++            ARCH_PRAGMA_POTENTIALLY_EVALUATED_EXPRESSION
+             TF_DEBUG(USDIMAGING_INSTANCER).Msg(
+                 "[Add Instance NI] <%s>  %s (%s), adapter = %s\n",
+                 instancerPath.GetText(), protoPath.GetText(),
+@@ -349,6 +349,7 @@ UsdImagingInstanceAdapter::_Populate(UsdPrim const& prim,
+                 primAdapter ?
+                     TfType::GetCanonicalTypeName(typeid(*primAdapter)).c_str() :
+                     "none");
++            ARCH_PRAGMA_POP
+         }
+ 
+         UsdPrim instancerPrim = _GetPrim(instancerPath);
+diff --git a/pxr/usdImaging/usdImaging/pch.h b/pxr/usdImaging/usdImaging/pch.h
+index 35ea5620..0419c53e 100644
+--- a/pxr/usdImaging/usdImaging/pch.h
++++ b/pxr/usdImaging/usdImaging/pch.h
+@@ -173,7 +173,6 @@
+ #include <boost/utility/enable_if.hpp>
+ #include <boost/variant.hpp>
+ #include <boost/weak_ptr.hpp>
+-#include <tbb/atomic.h>
+ #include <tbb/blocked_range.h>
+ #include <tbb/cache_aligned_allocator.h>
+ #include <tbb/concurrent_queue.h>
+diff --git a/pxr/usdImaging/usdImaging/pointInstancerAdapter.cpp b/pxr/usdImaging/usdImaging/pointInstancerAdapter.cpp
+index 0bb72034..e86bc2da 100644
+--- a/pxr/usdImaging/usdImaging/pointInstancerAdapter.cpp
++++ b/pxr/usdImaging/usdImaging/pointInstancerAdapter.cpp
+@@ -475,7 +475,7 @@ UsdImagingPointInstancerAdapter::_PopulatePrototype(
+     }
+ 
+     TF_DEBUG(USDIMAGING_POINT_INSTANCER_PROTO_CREATED).Msg(
+-        "Prototype[%d]: <%s>, primCount: %lu, instantiatedPrimCount: %lu\n",
++        "Prototype[%d]: <%s>, primCount: %zu, instantiatedPrimCount: %zu\n",
+         protoIndex,
+         protoRootPrim.GetPath().GetText(),
+         primCount,
+@@ -2219,8 +2219,8 @@ UsdImagingPointInstancerAdapter::GetInstanceIndices(
+                         instancerPrim, time);
+ 
+                 if (pathIndex >= indices.size()) {
+-                    TF_WARN("ProtoIndex %lu out of bounds "
+-                            "(prototypes size = %lu) for (%s, %s)",
++                    TF_WARN("ProtoIndex %zu out of bounds "
++                            "(prototypes size = %zu) for (%s, %s)",
+                                     pathIndex,
+                                     indices.size(),
+                                     instancerCachePath.GetText(),
+diff --git a/pxr/usdImaging/usdImaging/resolvedAttributeCache.h b/pxr/usdImaging/usdImaging/resolvedAttributeCache.h
+index 3e75f6c6..c645579c 100644
+--- a/pxr/usdImaging/usdImaging/resolvedAttributeCache.h
++++ b/pxr/usdImaging/usdImaging/resolvedAttributeCache.h
+@@ -283,22 +283,36 @@ private:
+     // non-time varying data, entries may exist in the cache with invalid
+     // values. The version is used to determine validity.
+     struct _Entry {
+-        _Entry()
++        _Entry() noexcept
+             : value(Strategy::MakeDefault())
+             , version(_GetInitialEntryVersion()) 
+         { }
+ 
+         _Entry(const query_type & query_,
+                const value_type& value_,
+-               unsigned version_)
++               unsigned version_) noexcept
+             : query(query_)
+             , value(value_)
+             , version(version_)
+         { }
+ 
++        _Entry(const _Entry &other) noexcept
++            : query(other.query)
++            , value(other.value)
++        {
++            version.store(other.version.load());
++        }
++
++        _Entry(_Entry &&other) noexcept
++            : query(std::move(other.query))
++            , value(std::move(other.value))
++        {
++            version.store(other.version.load());
++        }
++
+         query_type query;
+         value_type value;
+-        tbb::atomic<unsigned> version;
++        std::atomic<unsigned> version;
+     };
+ 
+     // Returns the version number for a valid cache entry
+@@ -338,7 +352,7 @@ private:
+ 
+     // A serial number indicating the valid state of entries in the cache. When
+     // an entry has an equal or greater value, the entry is valid.
+-    tbb::atomic<unsigned> _cacheVersion;
++    std::atomic<unsigned> _cacheVersion;
+ 
+     // Value overrides for a set of descendents.
+     ValueOverridesMap _valueOverrides;
+@@ -357,7 +371,7 @@ UsdImaging_ResolvedAttributeCache<Strategy,ImplData>::_SetCacheEntryForPrim(
+     // Note: _cacheVersion is not allowed to change during cache access.
+     unsigned v = entry->version;
+     if (v < _cacheVersion 
+-        && entry->version.compare_and_swap(_cacheVersion, v) == v)
++        && entry->version.compare_exchange_strong(v, _cacheVersion.load()))
+     {
+         entry->value = value;
+         entry->version = _GetValidVersion();
+@@ -377,7 +391,7 @@ typename UsdImaging_ResolvedAttributeCache<Strategy, ImplData>::_Entry*
+ UsdImaging_ResolvedAttributeCache<Strategy, ImplData>::_GetCacheEntryForPrim(
+     const UsdPrim &prim) const
+ {
+-    typename _CacheMap::const_iterator it = _cache.find(prim);
++    typename _CacheMap::iterator it = _cache.find(prim);
+     if (it != _cache.end()) {
+         return &it->second;
+     }
+diff --git a/pxr/usdImaging/usdImagingGL/pch.h b/pxr/usdImaging/usdImagingGL/pch.h
+index b9dfa7e4..78b92909 100644
+--- a/pxr/usdImaging/usdImagingGL/pch.h
++++ b/pxr/usdImaging/usdImagingGL/pch.h
+@@ -186,7 +186,6 @@
+ #include <boost/utility/enable_if.hpp>
+ #include <boost/variant.hpp>
+ #include <boost/weak_ptr.hpp>
+-#include <tbb/atomic.h>
+ #include <tbb/cache_aligned_allocator.h>
+ #include <tbb/concurrent_queue.h>
+ #include <tbb/concurrent_unordered_map.h>
+diff --git a/pxr/usdImaging/usdProcImaging/generativeProceduralAdapter.h b/pxr/usdImaging/usdProcImaging/generativeProceduralAdapter.h
+index 9622baa8..fd3aae85 100644
+--- a/pxr/usdImaging/usdProcImaging/generativeProceduralAdapter.h
++++ b/pxr/usdImaging/usdProcImaging/generativeProceduralAdapter.h
+@@ -26,6 +26,7 @@
+ 
+ #include "pxr/usdImaging/usdImaging/primAdapter.h"
+ #include "pxr/usd/usdProc/tokens.h"
++#include "pxr/usdImaging/usdProcImaging/api.h"
+ 
+ PXR_NAMESPACE_OPEN_SCOPE
+ 
+@@ -46,20 +47,20 @@ public:
+     /// \name Scene Index Support
+     // ---------------------------------------------------------------------- //
+ 
+-    USDIMAGING_API
++    USDPROCIMAGING_API
+     TfTokenVector GetImagingSubprims(UsdPrim const& prim) override;
+ 
+-    USDIMAGING_API
++    USDPROCIMAGING_API
+     TfToken GetImagingSubprimType(UsdPrim const& prim, TfToken const& subprim)
+         override;
+ 
+-    USDIMAGING_API
++    USDPROCIMAGING_API
+     HdContainerDataSourceHandle GetImagingSubprimData(
+             UsdPrim const& prim,
+             TfToken const& subprim,
+             const UsdImagingDataSourceStageGlobals &stageGlobals) override;
+ 
+-    USDIMAGING_API
++    USDPROCIMAGING_API
+     HdDataSourceLocatorSet InvalidateImagingSubprim(
+             UsdPrim const& prim,
+             TfToken const& subprim,
+@@ -99,23 +100,23 @@ public:
+         TfToken const& propertyName) override;
+ 
+ 
+-    USDIMAGING_API
++    USDPROCIMAGING_API
+     virtual void MarkDirty(UsdPrim const& prim,
+                            SdfPath const& cachePath,
+                            HdDirtyBits dirty,
+                            UsdImagingIndexProxy* index) override;
+ 
+-    USDIMAGING_API
++    USDPROCIMAGING_API
+     virtual void MarkTransformDirty(UsdPrim const& prim,
+                                     SdfPath const& cachePath,
+                                     UsdImagingIndexProxy* index) override;
+ 
+-    USDIMAGING_API
++    USDPROCIMAGING_API
+     virtual void MarkVisibilityDirty(UsdPrim const& prim,
+                                      SdfPath const& cachePath,
+                                      UsdImagingIndexProxy* index) override;
+ 
+-    USDIMAGING_API
++    USDPROCIMAGING_API
+     void TrackVariability(UsdPrim const& prim,
+                           SdfPath const& cachePath,
+                           HdDirtyBits* timeVaryingBits,
+@@ -124,7 +125,7 @@ public:
+ 
+ protected:
+     
+-    USDIMAGING_API
++    USDPROCIMAGING_API
+     virtual void _RemovePrim(SdfPath const& cachePath,
+         UsdImagingIndexProxy* index) override;
+ 
+diff --git a/pxr/usdImaging/usdProcImaging/pch.h b/pxr/usdImaging/usdProcImaging/pch.h
+index 32358e28..95900985 100644
+--- a/pxr/usdImaging/usdProcImaging/pch.h
++++ b/pxr/usdImaging/usdProcImaging/pch.h
+@@ -161,7 +161,6 @@
+ #include <boost/variant.hpp>
+ #include <boost/vmd/is_empty.hpp>
+ #include <boost/vmd/is_tuple.hpp>
+-#include <tbb/atomic.h>
+ #include <tbb/cache_aligned_allocator.h>
+ #include <tbb/concurrent_hash_map.h>
+ #include <tbb/concurrent_queue.h>
+diff --git a/pxr/usdImaging/usdRiPxrImaging/pch.h b/pxr/usdImaging/usdRiPxrImaging/pch.h
+index 6ad2d403..09a7a06c 100644
+--- a/pxr/usdImaging/usdRiPxrImaging/pch.h
++++ b/pxr/usdImaging/usdRiPxrImaging/pch.h
+@@ -169,7 +169,6 @@
+ #include <boost/utility/enable_if.hpp>
+ #include <boost/variant.hpp>
+ #include <boost/weak_ptr.hpp>
+-#include <tbb/atomic.h>
+ #include <tbb/cache_aligned_allocator.h>
+ #include <tbb/concurrent_queue.h>
+ #include <tbb/concurrent_unordered_map.h>
+diff --git a/pxr/usdImaging/usdRiPxrImaging/pxrDisplayFilterAdapter.h b/pxr/usdImaging/usdRiPxrImaging/pxrDisplayFilterAdapter.h
+index 271d61e4..2e39a22a 100644
+--- a/pxr/usdImaging/usdRiPxrImaging/pxrDisplayFilterAdapter.h
++++ b/pxr/usdImaging/usdRiPxrImaging/pxrDisplayFilterAdapter.h
+@@ -53,21 +53,21 @@ public:
+     /// \name Scene Index Support
+     // ---------------------------------------------------------------------- //
+ 
+-    USDIMAGING_API
++    USDRIPXRIMAGING_API
+     TfTokenVector GetImagingSubprims(UsdPrim const& prim) override;
+ 
+-    USDIMAGING_API
++    USDRIPXRIMAGING_API
+     TfToken GetImagingSubprimType(
+             UsdPrim const& prim,
+             TfToken const& subprim) override;
+ 
+-    USDIMAGING_API
++    USDRIPXRIMAGING_API
+     HdContainerDataSourceHandle GetImagingSubprimData(
+             UsdPrim const& prim,
+             TfToken const& subprim,
+             const UsdImagingDataSourceStageGlobals &stageGlobals) override;
+ 
+-    USDIMAGING_API
++    USDRIPXRIMAGING_API
+     HdDataSourceLocatorSet InvalidateImagingSubprim(
+             UsdPrim const& prim,
+             TfToken const& subprim,
+diff --git a/pxr/usdImaging/usdRiPxrImaging/pxrIntegratorAdapter.h b/pxr/usdImaging/usdRiPxrImaging/pxrIntegratorAdapter.h
+index c9f71e36..41134ba3 100644
+--- a/pxr/usdImaging/usdRiPxrImaging/pxrIntegratorAdapter.h
++++ b/pxr/usdImaging/usdRiPxrImaging/pxrIntegratorAdapter.h
+@@ -53,21 +53,21 @@ public:
+     /// \name Scene Index Support
+     // ---------------------------------------------------------------------- //
+ 
+-    USDIMAGING_API
++    USDRIPXRIMAGING_API
+     TfTokenVector GetImagingSubprims(UsdPrim const& prim) override;
+ 
+-    USDIMAGING_API
++    USDRIPXRIMAGING_API
+     TfToken GetImagingSubprimType(
+             UsdPrim const& prim,
+             TfToken const& subprim) override;
+ 
+-    USDIMAGING_API
++    USDRIPXRIMAGING_API
+     HdContainerDataSourceHandle GetImagingSubprimData(
+             UsdPrim const& prim,
+             TfToken const& subprim,
+             const UsdImagingDataSourceStageGlobals &stageGlobals) override;
+ 
+-    USDIMAGING_API
++    USDRIPXRIMAGING_API
+     HdDataSourceLocatorSet InvalidateImagingSubprim(
+             UsdPrim const& prim,
+             TfToken const& subprim,
+diff --git a/pxr/usdImaging/usdRiPxrImaging/pxrSampleFilterAdapter.h b/pxr/usdImaging/usdRiPxrImaging/pxrSampleFilterAdapter.h
+index 5d48e010..84922c59 100644
+--- a/pxr/usdImaging/usdRiPxrImaging/pxrSampleFilterAdapter.h
++++ b/pxr/usdImaging/usdRiPxrImaging/pxrSampleFilterAdapter.h
+@@ -53,21 +53,21 @@ public:
+     /// \name Scene Index Support
+     // ---------------------------------------------------------------------- //
+ 
+-    USDIMAGING_API
++    USDRIPXRIMAGING_API
+     TfTokenVector GetImagingSubprims(UsdPrim const& prim) override;
+ 
+-    USDIMAGING_API
++    USDRIPXRIMAGING_API
+     TfToken GetImagingSubprimType(
+             UsdPrim const& prim,
+             TfToken const& subprim) override;
+ 
+-    USDIMAGING_API
++    USDRIPXRIMAGING_API
+     HdContainerDataSourceHandle GetImagingSubprimData(
+             UsdPrim const& prim,
+             TfToken const& subprim,
+             const UsdImagingDataSourceStageGlobals &stageGlobals) override;
+ 
+-    USDIMAGING_API
++    USDRIPXRIMAGING_API
+     HdDataSourceLocatorSet InvalidateImagingSubprim(
+             UsdPrim const& prim,
+             TfToken const& subprim,
+diff --git a/pxr/usdImaging/usdSkelImaging/pch.h b/pxr/usdImaging/usdSkelImaging/pch.h
+index 69caaac2..7086fc41 100644
+--- a/pxr/usdImaging/usdSkelImaging/pch.h
++++ b/pxr/usdImaging/usdSkelImaging/pch.h
+@@ -169,7 +169,6 @@
+ #include <boost/utility/enable_if.hpp>
+ #include <boost/variant.hpp>
+ #include <boost/weak_ptr.hpp>
+-#include <tbb/atomic.h>
+ #include <tbb/blocked_range.h>
+ #include <tbb/cache_aligned_allocator.h>
+ #include <tbb/concurrent_queue.h>
+diff --git a/pxr/usdImaging/usdSkelImaging/skeletonAdapter.h b/pxr/usdImaging/usdSkelImaging/skeletonAdapter.h
+index 0b262041..e4dbbe06 100644
+--- a/pxr/usdImaging/usdSkelImaging/skeletonAdapter.h
++++ b/pxr/usdImaging/usdSkelImaging/skeletonAdapter.h
+@@ -223,7 +223,7 @@ public:
+             HdInterpolation interpolation,
+             const UsdImagingInstancerContext* instancerContext) const override;
+ 
+-    USDIMAGING_API
++    USDSKELIMAGING_API
+     VtValue 
+     GetExtComputationInput(
+             UsdPrim const& prim,
+@@ -232,7 +232,7 @@ public:
+             UsdTimeCode time,
+             const UsdImagingInstancerContext* instancerContext) const override;
+ 
+-    USDIMAGING_API
++    USDSKELIMAGING_API
+     size_t
+     SampleExtComputationInput(
+             UsdPrim const& prim,
+@@ -244,7 +244,7 @@ public:
+             float *sampleTimes,
+             VtValue *sampleValues) override;
+ 
+-    USDIMAGING_API
++    USDSKELIMAGING_API
+     std::string 
+     GetExtComputationKernel(
+             UsdPrim const& prim,
+diff --git a/pxr/usdImaging/usdVolImaging/field3dAssetAdapter.h b/pxr/usdImaging/usdVolImaging/field3dAssetAdapter.h
+index 1592a7a5..422d90d9 100644
+--- a/pxr/usdImaging/usdVolImaging/field3dAssetAdapter.h
++++ b/pxr/usdImaging/usdVolImaging/field3dAssetAdapter.h
+@@ -54,14 +54,14 @@ public:
+     /// \name Scene Index Support
+     // ---------------------------------------------------------------------- //
+ 
+-    USDIMAGING_API
++    USDVOLIMAGING_API
+     TfTokenVector GetImagingSubprims(UsdPrim const& prim) override;
+ 
+-    USDIMAGING_API
++    USDVOLIMAGING_API
+     TfToken GetImagingSubprimType(UsdPrim const& prim, TfToken const& subprim)
+         override;
+ 
+-    USDIMAGING_API
++    USDVOLIMAGING_API
+     HdContainerDataSourceHandle GetImagingSubprimData(
+             UsdPrim const& prim,
+             TfToken const& subprim,
+diff --git a/pxr/usdImaging/usdVolImaging/openvdbAssetAdapter.h b/pxr/usdImaging/usdVolImaging/openvdbAssetAdapter.h
+index daaf153f..b7261aac 100644
+--- a/pxr/usdImaging/usdVolImaging/openvdbAssetAdapter.h
++++ b/pxr/usdImaging/usdVolImaging/openvdbAssetAdapter.h
+@@ -54,14 +54,14 @@ public:
+     /// \name Scene Index Support
+     // ---------------------------------------------------------------------- //
+ 
+-    USDIMAGING_API
++    USDVOLIMAGING_API
+     TfTokenVector GetImagingSubprims(UsdPrim const& prim) override;
+ 
+-    USDIMAGING_API
++    USDVOLIMAGING_API
+     TfToken GetImagingSubprimType(UsdPrim const& prim, TfToken const& subprim)
+         override;
+ 
+-    USDIMAGING_API
++    USDVOLIMAGING_API
+     HdContainerDataSourceHandle GetImagingSubprimData(
+             UsdPrim const& prim,
+             TfToken const& subprim,
+diff --git a/pxr/usdImaging/usdVolImaging/pch.h b/pxr/usdImaging/usdVolImaging/pch.h
+index 0fd54d57..b286bc75 100644
+--- a/pxr/usdImaging/usdVolImaging/pch.h
++++ b/pxr/usdImaging/usdVolImaging/pch.h
+@@ -167,7 +167,6 @@
+ #include <boost/utility/enable_if.hpp>
+ #include <boost/variant.hpp>
+ #include <boost/weak_ptr.hpp>
+-#include <tbb/atomic.h>
+ #include <tbb/cache_aligned_allocator.h>
+ #include <tbb/concurrent_queue.h>
+ #include <tbb/concurrent_unordered_map.h>
+diff --git a/pxr/usdImaging/usdviewq/pch.h b/pxr/usdImaging/usdviewq/pch.h
+index 2b6f4d78..d14b76bf 100644
+--- a/pxr/usdImaging/usdviewq/pch.h
++++ b/pxr/usdImaging/usdviewq/pch.h
+@@ -164,7 +164,6 @@
+ #include <boost/variant.hpp>
+ #include <boost/vmd/is_empty.hpp>
+ #include <boost/vmd/is_tuple.hpp>
+-#include <tbb/atomic.h>
+ #include <tbb/cache_aligned_allocator.h>
+ #include <tbb/concurrent_hash_map.h>
+ #include <tbb/concurrent_queue.h>
+-- 
+2.40.1.windows.1
+
