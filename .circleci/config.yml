@@ -1,0 +1,266 @@
+version: 2.1
+
+orbs:
+    windows: circleci/windows@5.0.0
+    macos: circleci/macos@2.3.6
+
+commands:
+
+  command_host_windows_build:
+    description: "Host Windows and Build"
+    parameters:
+      configuration:
+        type: string
+        default: "Debug"
+    steps:
+
+      - restore_cache:
+          keys:
+            - &source-cache source-v1-{{ .Branch }}-{{ .Revision }}
+            - source-v1-{{ .Branch }}-
+            - source-v1-
+      - checkout
+      - save_cache:
+          key: *source-cache
+          paths:
+            - ".git"
+
+      - restore_cache:
+          keys:
+            - &externalsource-cache externalsource-v1-{{ .Branch }}-{{ .Revision }}
+            - externalsource-v1-{{ .Branch }}-
+            - externalsource-v1-
+
+      - run:
+          name: Install Software
+          command: |
+            cd build_scripts
+            .\install_software.ps1
+
+      - run:
+          name: Build teikitu
+          command: |
+            $env:Path+=";$Env:ProgramFiles\CMake\bin"
+            $env:Path+=";$Env:ProgramFiles\LLVM\bin"
+            cd build_scripts
+
+            .\windows_cmake_command.ps1 -VERBOSE -CICD_BUILD -LOG_STATUS -THREAD:WIN -OS:WIN -DEVICE:DESKTOP -CPU:C17_X64 -COMPILER:CLANG -BUILD_TYPE:<< parameters.configuration >> -GPU:NONE -OS_WIDE -IDE:Ninja
+            .\windows_cmake_command.ps1 -VERBOSE -CICD_BUILD -LOG_STATUS -THREAD:WIN -OS:WIN -DEVICE:DESKTOP -CPU:C17_X64 -COMPILER:CLANG -BUILD_TYPE:<< parameters.configuration >> -GPU:REF  -OS_WIDE -IDE:Ninja
+            .\windows_cmake_command.ps1 -VERBOSE -CICD_BUILD -LOG_STATUS -THREAD:WIN -OS:WIN -DEVICE:DESKTOP -CPU:C17_X64 -COMPILER:CLANG -BUILD_TYPE:<< parameters.configuration >> -GPU:DX12 -OS_WIDE -IDE:Ninja
+            
+            git push --tags
+
+      - save_cache:
+          key: *externalsource-cache
+          paths:
+            - "teikitu_external/_repo_clone"
+
+
+
+  command_host_mac_build:
+    description: "Host Apple and Build"
+    parameters:
+      configuration:
+        type: string
+        default: "Debug"
+    steps:
+
+      - restore_cache:
+          keys:
+            - &source-cache source-v1-{{ .Branch }}-{{ .Revision }}
+            - source-v1-{{ .Branch }}-
+            - source-v1-
+      - checkout
+      - save_cache:
+          key: *source-cache
+          paths:
+            - ".git"
+
+      - restore_cache:
+          keys:
+            - &externalsource-cache externalsource-v1-{{ .Branch }}-{{ .Revision }}
+            - externalsource-v1-{{ .Branch }}-
+            - externalsource-v1-
+
+      - run:
+          name: Install Software
+          command: |
+            brew update
+
+            brew install cmake
+            brew install ninja
+            brew install python3
+
+            pip3 install jinja2
+            pip3 install PyOpenGL
+            pip3 install pyside6==6.5.1.1 --ignore-installed
+
+            git config --global user.email "andrew.aye@gmail.com"
+            git config --global user.name "Andrew Aye"
+
+      - run:
+          name: Build teikitu
+          command: |
+            cd build_scripts
+            sudo chmod +x ./macos_cmake_command.sh
+            bash macos_cmake_command.sh --CICD_BUILD --LOG_STATUS --BUILD --PARALLEL 4 --THREAD POSIX --OS POSIX --DEVICE DESKTOP --CPU C17_ARM --COMPILER XCODE --BUILD_TYPE << parameters.configuration >> --GPU NONE --IDE Xcode
+            #.\macos_cmake_command.sh -VERBOSE -DEBUG -CICD_BUILD -LOG_STATUS -BUILD -PARALLEL:4 -THREAD:WIN -OS:WIN -DEVICE:DESKTOP -CPU:C17_X64 -COMPILER:CLANG -BUILD_TYPE:<< parameters.configuration >> -GPU:NONE -OS_WIDE -IDE:Ninja
+            #.\macos_cmake_command.sh -VERBOSE -DEBUG -CICD_BUILD -LOG_STATUS -BUILD -PARALLEL:4 -THREAD:WIN -OS:WIN -DEVICE:DESKTOP -CPU:C17_X64 -COMPILER:CLANG -BUILD_TYPE:<< parameters.configuration >> -GPU:REF  -OS_WIDE -IDE:Ninja
+            #.\macos_cmake_command.sh -VERBOSE -DEBUG -CICD_BUILD -LOG_STATUS -BUILD -PARALLEL:4 -THREAD:WIN -OS:WIN -DEVICE:DESKTOP -CPU:C17_X64 -COMPILER:CLANG -BUILD_TYPE:<< parameters.configuration >> -GPU:METAL -OS_WIDE -IDE:Ninja
+
+      - save_cache:
+          key: *externalsource-cache
+          paths:
+            - "teikitu_external/_repo_clone"
+
+
+
+  command_host_linux_build:
+    description: "Host Linux and Build"
+    parameters:
+      configuration:
+        type: string
+        default: "Debug"
+    steps:
+
+      - restore_cache:
+          keys:
+            - &source-cache source-v1-{{ .Branch }}-{{ .Revision }}
+            - source-v1-{{ .Branch }}-
+            - source-v1-
+      - checkout
+      - save_cache:
+          key: *source-cache
+          paths:
+            - ".git"
+
+      - restore_cache:
+          keys:
+            - &externalsource-cache externalsource-v1-{{ .Branch }}-{{ .Revision }}
+            - externalsource-v1-{{ .Branch }}-
+            - externalsource-v1-
+
+      - run:
+          name: Install Software
+          command: |
+            sudo apt-get update
+            sudo apt-get install cmake
+            sudo apt-get install python3.10
+            sudo apt-get install python3-pyside2.*
+
+            pip3 install --upgrade pip
+            pip3 install jinja2
+            pip3 install PyOpenGL
+
+            git config --global user.email "andrew.aye@gmail.com"
+            git config --global user.name "Andrew Aye"
+
+      - run:
+          name: Build teikitu
+          command: |
+            cd build_scripts
+            sudo chmod +x ./linux_cmake_command.sh
+            bash linux_cmake_command.sh --CICD_BUILD --LOG_STATUS --BUILD --PARALLEL 4 --THREAD POSIX --OS POSIX --DEVICE DESKTOP --CPU C17_ARM --COMPILER CLANG --BUILD_TYPE << parameters.configuration >> --GPU NONE --IDE UNIX
+            #.\linux_cmake_command.sh -VERBOSE -DEBUG -CICD_BUILD -LOG_STATUS -BUILD -PARALLEL:4 -THREAD:WIN -OS:WIN -DEVICE:DESKTOP -CPU:C17_X64 -COMPILER:CLANG -BUILD_TYPE:<< parameters.configuration >> -GPU:REF  -OS_WIDE -IDE:Ninja
+
+      - save_cache:
+          key: *externalsource-cache
+          paths:
+            - "teikitu_external/_repo_clone"
+
+
+
+
+jobs:
+  build___hwin_debug:
+    executor:
+      name: windows/server-2022
+      size: large
+    steps:
+      - command_host_windows_build:
+          configuration: DEBUG
+
+  build___hwin_release:
+    executor:
+      name: windows/server-2022
+      size: large
+    steps:
+      - command_host_windows_build:
+          configuration: RELEASE
+
+  build___hwin_final:
+    executor:
+      name: windows/server-2022
+      size: large
+    steps:
+      - command_host_windows_build:
+          configuration: FINAL
+
+  build___hwin_tools:
+    executor:
+      name: windows/server-2022
+      size: large
+    steps:
+      - command_host_windows_build:
+          configuration: TOOLS
+
+  build___hmac_debug:
+    macos:
+      xcode: "14.2.0"
+    resource_class: macos.m1.medium.gen1
+    steps:
+      - command_host_mac_build:
+          configuration: DEBUG
+
+  build___hlnx_debug:
+    machine:
+      image: ubuntu-2204:2023.07.2
+    resource_class: arm.medium
+    steps:
+      - command_host_linux_build:
+          configuration: DEBUG
+
+workflows:
+
+  workflow-hwin_debug:
+    jobs:
+      - build___hwin_debug:
+          filters:
+            branches:
+              only: master
+
+  workflow-hwin_release:
+    jobs:
+      - build___hwin_release:
+          filters:
+            branches:
+              only: master
+
+  workflow-hwin_final:
+    jobs:
+      - build___hwin_final:
+          filters:
+            branches:
+              only: master
+
+  workflow-hwin_tools:
+    jobs:
+      - build___hwin_tools:
+          filters:
+            branches:
+              only: master
+
+  workflow-hmac_debug:
+    jobs:
+      - build___hmac_debug:
+          filters:
+            branches:
+              only: master
+
+  workflow-hlnx_debug:
+    jobs:
+      - build___hlnx_debug:
+          filters:
+            branches:
+              only: master
+

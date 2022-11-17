@@ -1,0 +1,1128 @@
+From ea0d926ef2b5bf872aec79426baabbe668e451bb Mon Sep 17 00:00:00 2001
+From: Andrew Aye <andrew.aye@gmail.com>
+Date: Sat, 16 Sep 2023 16:26:29 -0700
+Subject: [PATCH] 3
+
+---
+ cmake/defaults/CXXDefaults.cmake        |   4 +
+ cmake/defaults/msvcdefaults.cmake       |  39 ------
+ cmake/defaults/windefaults.cmake        |  62 ++++++++++
+ cmake/macros/Private.cmake              |   6 +-
+ cmake/macros/Public.cmake               |  15 ++-
+ pxr/base/arch/attributes.cpp            |   1 +
+ pxr/base/arch/demangle.cpp              |   4 +-
+ pxr/base/arch/env.cpp                   |   2 +-
+ pxr/base/arch/errno.cpp                 |   2 +-
+ pxr/base/arch/pragmas.h                 |   7 ++
+ pxr/base/plug/CMakeLists.txt            |  15 ++-
+ pxr/base/tf/stringUtils.cpp             |   6 +
+ pxr/base/vt/array.h                     | 150 ++++++++++++------------
+ pxr/base/vt/wrapArrayDualQuaternion.cpp |  11 ++
+ pxr/base/vt/wrapArrayFloat.cpp          |  11 ++
+ pxr/base/vt/wrapArrayIntegral.cpp       |  17 +++
+ pxr/base/vt/wrapArrayMatrix.cpp         |  14 +++
+ pxr/base/vt/wrapArrayQuaternion.cpp     |  12 ++
+ pxr/base/vt/wrapArrayRange.cpp          |  16 +++
+ pxr/base/vt/wrapArrayString.cpp         |   9 ++
+ pxr/base/vt/wrapArrayToken.cpp          |   9 ++
+ pxr/base/vt/wrapArrayVec.cpp            |  20 ++++
+ pxr/imaging/hd/renderSettings.cpp       |  38 ------
+ pxr/imaging/hd/renderSettings.h         |  33 ++++++
+ 24 files changed, 338 insertions(+), 165 deletions(-)
+ create mode 100644 cmake/defaults/windefaults.cmake
+
+diff --git a/cmake/defaults/CXXDefaults.cmake b/cmake/defaults/CXXDefaults.cmake
+index e970dfbe..069e38fc 100644
+--- a/cmake/defaults/CXXDefaults.cmake
++++ b/cmake/defaults/CXXDefaults.cmake
+@@ -38,6 +38,10 @@ elseif(MSVC)
+     include(msvcdefaults)
+ endif()
+ 
++if(WIN32)
++    include(windefaults)
++endif()
++
+ _add_define(GL_GLEXT_PROTOTYPES)
+ _add_define(GLX_GLXEXT_PROTOTYPES)
+ 
+diff --git a/cmake/defaults/msvcdefaults.cmake b/cmake/defaults/msvcdefaults.cmake
+index cd0a9405..413f88ce 100644
+--- a/cmake/defaults/msvcdefaults.cmake
++++ b/cmake/defaults/msvcdefaults.cmake
+@@ -99,45 +99,6 @@ _disable_warning("4180")
+ # tbb/enumerable_thread_specific.h
+ _disable_warning("4334")
+ 
+-# Disable warning C4996 regarding fopen(), strcpy(), etc.
+-_add_define("_CRT_SECURE_NO_WARNINGS")
+-
+-# Disable warning C4996 regarding unchecked iterators for std::transform,
+-# std::copy, std::equal, et al.
+-_add_define("_SCL_SECURE_NO_WARNINGS")
+-
+-# Make sure WinDef.h does not define min and max macros which
+-# will conflict with std::min() and std::max().
+-_add_define("NOMINMAX")
+-
+-# Needed to prevent YY files trying to include unistd.h
+-# (which doesn't exist on Windows)
+-_add_define("YY_NO_UNISTD_H")
+-
+-# Forces all libraries that have separate source to be linked as
+-# DLL's rather than static libraries on Microsoft Windows, unless
+-# explicitly told otherwise.
+-if (NOT Boost_USE_STATIC_LIBS)
+-    _add_define("BOOST_ALL_DYN_LINK")
+-endif()
+-
+-# Suppress automatic boost linking via pragmas, as we must not rely on
+-# a heuristic, but upon the tool set we have specified in our build.
+-_add_define("BOOST_ALL_NO_LIB")
+-
+-if(${PXR_USE_DEBUG_PYTHON})
+-    _add_define("BOOST_DEBUG_PYTHON")
+-    _add_define("BOOST_LINKING_PYTHON")
+-endif()
+-
+-# Need half::_toFloat and half::_eLut.
+-_add_define("OPENEXR_DLL")
+-
+-# Exclude headers from unnecessary Windows APIs to improve build
+-# times and avoid annoying conflicts with macros defined in those
+-# headers.
+-_add_define("WIN32_LEAN_AND_MEAN")
+-
+ # These files require /bigobj compiler flag
+ #   Vt/arrayPyBuffer.cpp
+ #   Usd/crateFile.cpp
+diff --git a/cmake/defaults/windefaults.cmake b/cmake/defaults/windefaults.cmake
+new file mode 100644
+index 00000000..0de3da6b
+--- /dev/null
++++ b/cmake/defaults/windefaults.cmake
+@@ -0,0 +1,62 @@
++#
++# Copyright 2016 Pixar
++#
++# Licensed under the Apache License, Version 2.0 (the "Apache License")
++# with the following modification; you may not use this file except in
++# compliance with the Apache License and the following modification to it:
++# Section 6. Trademarks. is deleted and replaced with:
++#
++# 6. Trademarks. This License does not grant permission to use the trade
++#    names, trademarks, service marks, or product names of the Licensor
++#    and its affiliates, except as required to comply with Section 4(c) of
++#    the License and to reproduce the content of the NOTICE file.
++#
++# You may obtain a copy of the Apache License at
++#
++#     http://www.apache.org/licenses/LICENSE-2.0
++#
++# Unless required by applicable law or agreed to in writing, software
++# distributed under the Apache License with the above modification is
++# distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
++# KIND, either express or implied. See the Apache License for the specific
++# language governing permissions and limitations under the Apache License.
++#
++
++# Disable warning C4996 regarding fopen(), strcpy(), etc.
++_add_define("_CRT_SECURE_NO_WARNINGS")
++
++# Disable warning C4996 regarding unchecked iterators for std::transform,
++# std::copy, std::equal, et al.
++_add_define("_SCL_SECURE_NO_WARNINGS")
++
++# Make sure WinDef.h does not define min and max macros which
++# will conflict with std::min() and std::max().
++_add_define("NOMINMAX")
++
++# Needed to prevent YY files trying to include unistd.h
++# (which doesn't exist on Windows)
++_add_define("YY_NO_UNISTD_H")
++
++# Forces all libraries that have separate source to be linked as
++# DLL's rather than static libraries on Microsoft Windows, unless
++# explicitly told otherwise.
++if (NOT Boost_USE_STATIC_LIBS)
++    _add_define("BOOST_ALL_DYN_LINK")
++endif()
++
++# Suppress automatic boost linking via pragmas, as we must not rely on
++# a heuristic, but upon the tool set we have specified in our build.
++_add_define("BOOST_ALL_NO_LIB")
++
++if(${PXR_USE_DEBUG_PYTHON})
++    _add_define("BOOST_DEBUG_PYTHON")
++    _add_define("BOOST_LINKING_PYTHON")
++endif()
++
++# Need half::_toFloat and half::_eLut.
++_add_define("OPENEXR_DLL")
++
++# Exclude headers from unnecessary Windows APIs to improve build
++# times and avoid annoying conflicts with macros defined in those
++# headers.
++_add_define("WIN32_LEAN_AND_MEAN")
+diff --git a/cmake/macros/Private.cmake b/cmake/macros/Private.cmake
+index e3551ab1..85478089 100644
+--- a/cmake/macros/Private.cmake
++++ b/cmake/macros/Private.cmake
+@@ -874,7 +874,11 @@ function(_pxr_target_link_libraries NAME)
+                 elseif(CMAKE_COMPILER_IS_GNUCXX)
+                     list(APPEND final -Wl,--whole-archive ${lib} -Wl,--no-whole-archive)
+                 elseif("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")
+-                    list(APPEND final -Wl,-force_load ${lib})
++                    if (WIN32) #lld-link does not have a consistent set of arguments
++                        list(APPEND final -Wl,-wholearchive:$<TARGET_FILE:${lib}>)
++                    else()
++                        list(APPEND final -Wl,-force_load ${lib})
++                    endif()
+                 else()
+                     # Unknown platform.
+                     list(APPEND final ${lib})
+diff --git a/cmake/macros/Public.cmake b/cmake/macros/Public.cmake
+index a1734b6a..459ff62e 100644
+--- a/cmake/macros/Public.cmake
++++ b/cmake/macros/Public.cmake
+@@ -1055,10 +1055,17 @@ function(pxr_toplevel_epilogue)
+                     -Wl,--whole-archive $<BUILD_INTERFACE:$<TARGET_FILE:usd_m>> -Wl,--no-whole-archive
+             )
+         elseif("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")
+-            target_link_libraries(usd_ms
+-                PRIVATE
+-                    -Wl,-force_load $<BUILD_INTERFACE:$<TARGET_FILE:usd_m>>
+-            )
++            if (WIN32) #lld-link does not have a consistent set of arguments
++                target_link_libraries(usd_ms
++                    PRIVATE
++                        -Wl,-wholearchive $<BUILD_INTERFACE:$<TARGET_FILE:usd_m>>
++                )
++            else()
++                target_link_libraries(usd_ms
++                    PRIVATE
++                        -Wl,-force_load $<BUILD_INTERFACE:$<TARGET_FILE:usd_m>>
++                )
++            endif()
+         endif()
+ 
+         # Since we didn't add a dependency to usd_ms on usd_m above, we
+diff --git a/pxr/base/arch/attributes.cpp b/pxr/base/arch/attributes.cpp
+index dc75c200..7d409ce1 100644
+--- a/pxr/base/arch/attributes.cpp
++++ b/pxr/base/arch/attributes.cpp
+@@ -269,6 +269,7 @@ static void InstallDyldCallbacks()
+ 
+ PXR_NAMESPACE_CLOSE_SCOPE
+ 
++#elif defined(ARCH_COMPILER_GCC) || defined(ARCH_COMPILER_CLANG)
+ #elif defined(ARCH_OS_WINDOWS)
+ 
+ #include <Windows.h>
+diff --git a/pxr/base/arch/demangle.cpp b/pxr/base/arch/demangle.cpp
+index 4a7e5025..337efbd5 100644
+--- a/pxr/base/arch/demangle.cpp
++++ b/pxr/base/arch/demangle.cpp
+@@ -33,8 +33,8 @@
+ 
+ using std::string;
+ 
+-#if (ARCH_COMPILER_GCC_MAJOR == 3 && ARCH_COMPILER_GCC_MINOR >= 1) || \
+-    ARCH_COMPILER_GCC_MAJOR > 3 || defined(ARCH_COMPILER_CLANG)
++#if ((ARCH_COMPILER_GCC_MAJOR == 3 && ARCH_COMPILER_GCC_MINOR >= 1) || \
++    ARCH_COMPILER_GCC_MAJOR > 3 || defined(ARCH_COMPILER_CLANG)) && !defined(ARCH_OS_WINDOWS)
+ #define _AT_LEAST_GCC_THREE_ONE_OR_CLANG
+ #endif
+ 
+diff --git a/pxr/base/arch/env.cpp b/pxr/base/arch/env.cpp
+index a0f5ae75..a914f369 100644
+--- a/pxr/base/arch/env.cpp
++++ b/pxr/base/arch/env.cpp
+@@ -36,7 +36,7 @@
+ 
+ #if defined(ARCH_OS_DARWIN)
+ #include <crt_externs.h>
+-#else
++#elif !defined(ARCH_OS_WINDOWS)
+ extern "C" char** environ;
+ #endif
+ 
+diff --git a/pxr/base/arch/errno.cpp b/pxr/base/arch/errno.cpp
+index 7dcae283..dfa7ac4f 100644
+--- a/pxr/base/arch/errno.cpp
++++ b/pxr/base/arch/errno.cpp
+@@ -55,7 +55,7 @@ ArchStrerror(int errorCode)
+     //   unknown). The string always includes a terminating null byte.
+     //
+     return strerror_r(errorCode, msg_buf, 256);
+-#elif !defined(ARCH_COMPILER_MSVC)
++#elif !defined(ARCH_OS_WINDOWS)
+     strerror_r(errorCode, msg_buf, 256);
+ #else
+     strerror_s(msg_buf, 256, errorCode);
+diff --git a/pxr/base/arch/pragmas.h b/pxr/base/arch/pragmas.h
+index 283bfa79..33db50fa 100644
+--- a/pxr/base/arch/pragmas.h
++++ b/pxr/base/arch/pragmas.h
+@@ -120,6 +120,9 @@
+     #define ARCH_PRAGMA_UNUSED_VARIABLE
+         _Pragma("clang diagnostic ignored \"-Wunused-variable\"")
+ 
++    #define ARCH_PRAGMA_BITWISE_INSTEAD_OF_LOGICAL
++        _Pragma("clang diagnostic ignored \"-Wbitwise-instead-of-logical\"")
++
+ #elif defined(ARCH_COMPILER_MSVC)
+ 
+     #define ARCH_PRAGMA_PUSH \
+@@ -304,4 +307,8 @@
+     #define ARCH_PRAGMA_UNUSED_VARIABLE
+ #endif
+ 
++#if !defined(ARCH_PRAGMA_BITWISE_INSTEAD_OF_LOGICAL)
++    #define ARCH_PRAGMA_BITWISE_INSTEAD_OF_LOGICAL
++#endif
++
+ #endif // PXR_BASE_ARCH_PRAGMAS_H
+diff --git a/pxr/base/plug/CMakeLists.txt b/pxr/base/plug/CMakeLists.txt
+index 79406475..3578f2ed 100644
+--- a/pxr/base/plug/CMakeLists.txt
++++ b/pxr/base/plug/CMakeLists.txt
+@@ -104,10 +104,17 @@ pxr_build_test_shared_lib(TestPlugDsoUnloadable
+ # link flag to force these symbols to be looked up at runtime.
+ if (TARGET TestPlugDsoUnloadable)
+     if ("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")
+-        set_target_properties(TestPlugDsoUnloadable
+-            PROPERTIES
+-            LINK_FLAGS "-undefined dynamic_lookup"
+-        )
++        if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
++            set_target_properties(TestPlugDsoUnloadable
++                PROPERTIES
++                LINK_FLAGS "-Wl,/force:unresolved -Wl,/ignore:4088 -Wl,/ignore:2019"
++            )
++        else()
++            set_target_properties(TestPlugDsoUnloadable
++                PROPERTIES
++                LINK_FLAGS "-undefined dynamic_lookup"
++            )
++        endif()
+     elseif (CMAKE_SYSTEM_NAME STREQUAL "Windows")
+         # This forces the link to complete but the linker will still
+         # report the missing symbol as an error and will also emit a
+diff --git a/pxr/base/tf/stringUtils.cpp b/pxr/base/tf/stringUtils.cpp
+index bf4eb896..f5606700 100644
+--- a/pxr/base/tf/stringUtils.cpp
++++ b/pxr/base/tf/stringUtils.cpp
+@@ -806,9 +806,12 @@ TfDictionaryLessThan::_LessImpl(const string& lstr, const string& rstr) const
+             // Add 5 mod 32 makes '_' sort before all letters.
+             return ((l + 5) & 31) < ((r + 5) & 31);
+         }
++        ARCH_PRAGMA_PUSH
++        ARCH_PRAGMA_BITWISE_INSTEAD_OF_LOGICAL
+         // Intentionally using bitwise operators due to performance critical code path.
+          else if (IsDigit(l) | IsDigit(r)) {
+             if (IsDigit(l) & IsDigit(r)) {
++        ARCH_PRAGMA_POP
+                 // We backtrack to find the start of each digit string, then we
+                 // scan each digit string, ignoring leading zeros to put the two
+                 // strings into alignment with their most significant digits.
+@@ -870,8 +873,11 @@ TfDictionaryLessThan::_LessImpl(const string& lstr, const string& rstr) const
+                 curEnd = lcur + std::min(std::distance(lcur, lend),
+                                          std::distance(rcur, rend));
+             }
++            ARCH_PRAGMA_PUSH
++            ARCH_PRAGMA_BITWISE_INSTEAD_OF_LOGICAL
+              // Intentionally using bitwise operators due to performance critical code path.
+             else if (IsDigit(l) | IsDigit(r)) {
++            ARCH_PRAGMA_POP
+                 if (lcur == lstr.c_str()) {
+                     return l < r;
+                 }
+diff --git a/pxr/base/vt/array.h b/pxr/base/vt/array.h
+index d98a1450..1e6cd1a2 100644
+--- a/pxr/base/vt/array.h
++++ b/pxr/base/vt/array.h
+@@ -258,7 +258,7 @@ class VtArray : public Vt_ArrayBase {
+     /// @}
+ 
+     /// Create an empty array.
+-    VtArray() : _data(nullptr) {}
++    ARCH_FORCEINLINE VtArray() : _data(nullptr) {}
+ 
+     /// Create an array from a pair of iterators
+     ///
+@@ -272,7 +272,7 @@ class VtArray : public Vt_ArrayBase {
+     /// with our other constructor with the following signature:
+     ///
+     /// VtArray(size_t n, value_type const &value = value_type())
+-    template <typename LegacyInputIterator>
++    template <typename LegacyInputIterator> ARCH_FORCEINLINE
+     VtArray(LegacyInputIterator first, LegacyInputIterator last,
+             typename std::enable_if<
+                 !std::is_integral<LegacyInputIterator>::value, 
+@@ -282,8 +282,8 @@ class VtArray : public Vt_ArrayBase {
+     }
+ 
+     /// Create an array with foreign source.
+-    VtArray(Vt_ArrayForeignDataSource *foreignSrc,
+-            ElementType *data, size_t size, bool addRef = true)
++    ARCH_FORCEINLINE VtArray(Vt_ArrayForeignDataSource *foreignSrc,
++                             ElementType *data, size_t size, bool addRef = true)
+         : Vt_ArrayBase(foreignSrc)
+         , _data(data) {
+         if (addRef) {
+@@ -293,8 +293,8 @@ class VtArray : public Vt_ArrayBase {
+     }
+     
+     /// Copy \p other.  The new array shares underlying data with \p other.
+-    VtArray(VtArray const &other) : Vt_ArrayBase(other)
+-                                  , _data(other._data) {
++    ARCH_FORCEINLINE VtArray(VtArray const &other) : Vt_ArrayBase(other)
++                             , _data(other._data) {
+         if (!_data)
+             return;
+ 
+@@ -308,32 +308,32 @@ class VtArray : public Vt_ArrayBase {
+     
+     /// Move from \p other.  The new array takes ownership of \p other's
+     /// underlying data.
+-    VtArray(VtArray &&other) : Vt_ArrayBase(std::move(other))
+-                             , _data(other._data) {
++    ARCH_FORCEINLINE VtArray(VtArray &&other) : Vt_ArrayBase(std::move(other))
++                                              , _data(other._data) {
+         other._data = nullptr;
+     }
+ 
+     /// Initialize array from the contents of a \p initializerList.
+-    VtArray(std::initializer_list<ELEM> initializerList)
++    ARCH_FORCEINLINE VtArray(std::initializer_list<ELEM> initializerList)
+         : VtArray() {
+         assign(initializerList);
+     }
+ 
+     /// Create an array filled with \p n value-initialized elements.
+-    explicit VtArray(size_t n)
++    ARCH_FORCEINLINE explicit VtArray(size_t n)
+         : VtArray() {
+         assign(n, value_type());
+     }
+ 
+     /// Create an array filled with \p n copies of \p value.
+-    explicit VtArray(size_t n, value_type const &value)
++    ARCH_FORCEINLINE explicit VtArray(size_t n, value_type const &value)
+         : VtArray() {
+         assign(n, value);
+     }
+ 
+     /// Copy assign from \p other.  This array shares underlying data with
+     /// \p other.
+-    VtArray &operator=(VtArray const &other) {
++    ARCH_FORCEINLINE VtArray &operator=(VtArray const &other) {
+         // This might look recursive but it's really invoking move-assign, since
+         // we create a temporary copy (an rvalue).
+         if (this != &other)
+@@ -343,7 +343,7 @@ class VtArray : public Vt_ArrayBase {
+ 
+     /// Move assign from \p other.  This array takes ownership of \p other's
+     /// underlying data.
+-    VtArray &operator=(VtArray &&other) {
++    ARCH_FORCEINLINE VtArray &operator=(VtArray &&other) {
+         if (this == &other)
+             return *this;
+         _DecRef();
+@@ -354,12 +354,12 @@ class VtArray : public Vt_ArrayBase {
+     }
+ 
+     /// Replace current array contents with those in \p initializerList 
+-    VtArray &operator=(std::initializer_list<ELEM> initializerList) {
++    ARCH_FORCEINLINE VtArray &operator=(std::initializer_list<ELEM> initializerList) {
+         this->assign(initializerList.begin(), initializerList.end());
+         return *this;
+     }
+ 
+-    ~VtArray() { _DecRef(); }
++    ARCH_FORCEINLINE ~VtArray() { _DecRef(); }
+     
+     /// Return *this as a const reference.  This ensures that all operations on
+     /// the result do not mutate and thus are safe to invoke concurrently with
+@@ -369,7 +369,7 @@ class VtArray : public Vt_ArrayBase {
+     /// Note that the return is a const reference to this object, so it is only
+     /// valid within the lifetime of this array object.  Take special care
+     /// invoking AsConst() on VtArray temporaries/rvalues.
+-    VtArray const &AsConst() const noexcept {
++    ARCH_FORCEINLINE VtArray const &AsConst() const noexcept {
+         return *this;
+     }
+ 
+@@ -378,56 +378,56 @@ class VtArray : public Vt_ArrayBase {
+     
+     /// Return a non-const iterator to the start of the array.  The underlying
+     /// data is copied if it is not uniquely owned.
+-    iterator begin() { return iterator(data()); }
++    ARCH_FORCEINLINE iterator begin() { return iterator(data()); }
+     /// Returns a non-const iterator to the end of the array.  The underlying
+     /// data is copied if it is not uniquely owned.
+-    iterator end() { return iterator(data() + size()); }
++    ARCH_FORCEINLINE iterator end() { return iterator(data() + size()); }
+ 
+     /// Return a const iterator to the start of the array.
+-    const_iterator begin() const { return const_iterator(data()); }
++    ARCH_FORCEINLINE const_iterator begin() const { return const_iterator(data()); }
+     /// Return a const iterator to the end of the array.
+-    const_iterator end() const { return const_iterator(data() + size()); }
++    ARCH_FORCEINLINE const_iterator end() const { return const_iterator(data() + size()); }
+ 
+     /// Return a const iterator to the start of the array.
+-    const_iterator cbegin() const { return begin(); }
++    ARCH_FORCEINLINE const_iterator cbegin() const { return begin(); }
+     /// Return a const iterator to the end of the array.
+-    const_iterator cend() const { return end(); }
++    ARCH_FORCEINLINE const_iterator cend() const { return end(); }
+ 
+     /// Return a non-const reverse iterator to the end of the array.  The
+     /// underlying data is copied if it is not uniquely owned.
+-    reverse_iterator rbegin() { return reverse_iterator(end()); }
++    ARCH_FORCEINLINE reverse_iterator rbegin() { return reverse_iterator(end()); }
+     /// Return a reverse iterator to the start of the array.  The underlying
+     /// data is copied if it is not uniquely owned.
+-    reverse_iterator rend() { return reverse_iterator(begin()); }
++    ARCH_FORCEINLINE reverse_iterator rend() { return reverse_iterator(begin()); }
+ 
+     /// Return a const reverse iterator to the end of the array.
+-    const_reverse_iterator rbegin() const {
++    ARCH_FORCEINLINE const_reverse_iterator rbegin() const {
+         return const_reverse_iterator(end());
+     }
+     /// Return a const reverse iterator to the start of the array.
+-    const_reverse_iterator rend() const {
++    ARCH_FORCEINLINE const_reverse_iterator rend() const {
+         return const_reverse_iterator(begin());
+     }
+ 
+     /// Return a const reverse iterator to the end of the array.
+-    const_reverse_iterator crbegin() const { return rbegin(); }
++    ARCH_FORCEINLINE const_reverse_iterator crbegin() const { return rbegin(); }
+     /// Return a const reverse iterator to the start of the array.
+-    const_reverse_iterator crend() const { return rend(); }
++    ARCH_FORCEINLINE const_reverse_iterator crend() const { return rend(); }
+ 
+     /// Return a non-const pointer to this array's data.  The underlying data is
+     /// copied if it is not uniquely owned.
+-    pointer data() { _DetachIfNotUnique(); return _data; }
++    ARCH_FORCEINLINE pointer data() { _DetachIfNotUnique(); return _data; }
+     /// Return a const pointer to this array's data.
+-    const_pointer data() const { return _data; }
++    ARCH_FORCEINLINE const_pointer data() const { return _data; }
+     /// Return a const pointer to the data held by this array.
+-    const_pointer cdata() const { return _data; }
++    ARCH_FORCEINLINE const_pointer cdata() const { return _data; }
+ 
+     /// Initializes a new element at the end of the array. The underlying data
+     /// is first copied if it is not uniquely owned.
+     ///
+     /// \sa push_back(ElementType const&)
+     /// \sa push_back(ElementType&&)
+-    template <typename... Args>
++    template <typename... Args> ARCH_FORCEINLINE
+     void emplace_back(Args&&... args) {
+         // If this is a non-pxr array with rank > 1, disallow push_back.
+         if (ARCH_UNLIKELY(_shapeData.otherDims[0])) {
+@@ -458,7 +458,7 @@ class VtArray : public Vt_ArrayBase {
+     ///
+     /// \sa emplace_back
+     /// \sa push_back(ElementType&&)
+-    void push_back(ElementType const& element) {
++    ARCH_FORCEINLINE void push_back(ElementType const& element) {
+         emplace_back(element);
+     }
+ 
+@@ -467,13 +467,13 @@ class VtArray : public Vt_ArrayBase {
+     ///
+     /// \sa emplace_back
+     /// \sa push_back(ElementType const&)
+-    void push_back(ElementType&& element) {
++    ARCH_FORCEINLINE void push_back(ElementType&& element) {
+         emplace_back(std::move(element));
+     }
+ 
+     /// Remove the last element of an array.  The underlying data is first
+     /// copied if it is not uniquely owned.
+-    void pop_back() {
++    ARCH_FORCEINLINE void pop_back() {
+         // If this is a presto array with rank > 1, disallow push_back.
+         if (ARCH_UNLIKELY(_shapeData.otherDims[0])) {
+             TF_CODING_ERROR("Array rank %u != 1", _shapeData.GetRank());
+@@ -487,13 +487,13 @@ class VtArray : public Vt_ArrayBase {
+     }
+ 
+     /// Return the total number of elements in this array.
+-    size_t size() const { return _shapeData.totalSize; }
++    ARCH_FORCEINLINE size_t size() const { return _shapeData.totalSize; }
+ 
+     /// Return the number of items this container can grow to hold without
+     /// triggering a (re)allocation.  Note that if the underlying data is not
+     /// uniquely owned, a reallocation can occur upon object insertion even if
+     /// there is remaining capacity.
+-    size_t capacity() const {
++    ARCH_FORCEINLINE size_t capacity() const {
+         if (!_data) {
+             return 0;
+         }
+@@ -505,7 +505,7 @@ class VtArray : public Vt_ArrayBase {
+     /// Return a theoretical maximum size limit for the container.  In practice
+     /// this size is unachievable due to the amount of available memory or other
+     /// system limitations.
+-    constexpr size_t max_size() const {
++    ARCH_FORCEINLINE constexpr size_t max_size() const {
+         // The number of value_type elements that can be fit into maximum size_t
+         // bytes minus the size of _ControlBlock.
+         return (std::numeric_limits<size_t>::max() - sizeof(_ControlBlock))
+@@ -513,12 +513,12 @@ class VtArray : public Vt_ArrayBase {
+     }
+ 
+     /// Return true if this array contains no elements, false otherwise.
+-    bool empty() const { return size() == 0; }
++    ARCH_FORCEINLINE bool empty() const { return size() == 0; }
+     
+     /// Ensure enough memory is allocated to hold \p num elements.  Note that
+     /// this currently does not ensure that the underlying data is uniquely
+     /// owned.  If that is desired, invoke a method like data() first.
+-    void reserve(size_t num) {
++    ARCH_FORCEINLINE void reserve(size_t num) {
+         if (num <= capacity())
+             return;
+         
+@@ -532,37 +532,37 @@ class VtArray : public Vt_ArrayBase {
+     /// Return a non-const reference to the first element in this array.  The
+     /// underlying data is copied if it is not uniquely owned.  Invokes
+     /// undefined behavior if the array is empty.
+-    reference front() { return *begin(); }
++    ARCH_FORCEINLINE reference front() { return *begin(); }
+     /// Return a const reference to the first element in this array.  Invokes
+     /// undefined behavior if the array is empty.
+-    const_reference front() const { return *begin(); }
++    ARCH_FORCEINLINE const_reference front() const { return *begin(); }
+     /// Return a const reference to the first element in this array.  Invokes
+     /// undefined behavior if the array is empty.
+-    const_reference cfront() const { return *begin(); }
++    ARCH_FORCEINLINE const_reference cfront() const { return *begin(); }
+ 
+     /// Return a reference to the last element in this array.  The underlying
+     /// data is copied if it is not uniquely owned.  Invokes undefined behavior
+     /// if the array is empty.
+-    reference back() { return *rbegin(); }
++    ARCH_FORCEINLINE reference back() { return *rbegin(); }
+     /// Return a const reference to the last element in this array.  Invokes
+     /// undefined behavior if the array is empty.
+-    const_reference back() const { return *rbegin(); }
++    ARCH_FORCEINLINE const_reference back() const { return *rbegin(); }
+     /// Return a const reference to the last element in this array.  Invokes
+     /// undefined behavior if the array is empty.
+-    const_reference cback() const { return *rbegin(); }
++    ARCH_FORCEINLINE const_reference cback() const { return *rbegin(); }
+ 
+     /// Resize this array.  Preserve existing elements that remain,
+     /// value-initialize any newly added elements.  For example, calling
+     /// resize(10) on an array of size 5 would change the size to 10, the first
+     /// 5 elements would be left unchanged and the last 5 elements would be
+     /// value-initialized.
+-    void resize(size_t newSize) {
++    ARCH_FORCEINLINE void resize(size_t newSize) {
+         return resize(newSize, value_type());
+     }
+ 
+     /// Resize this array.  Preserve existing elements that remain, initialize
+     /// any newly added elements by copying \p value.
+-    void resize(size_t newSize, value_type const &value) {
++    ARCH_FORCEINLINE void resize(size_t newSize, value_type const &value) {
+         return resize(newSize,
+                       [&value](pointer b, pointer e) {
+                           std::uninitialized_fill(b, e, value);
+@@ -571,13 +571,13 @@ class VtArray : public Vt_ArrayBase {
+ 
+     /// Resize this array.  Preserve existing elements that remain, initialize
+     /// any newly added elements by copying \p value.
+-    void resize(size_t newSize, value_type &value) {
++    ARCH_FORCEINLINE void resize(size_t newSize, value_type &value) {
+         return resize(newSize, const_cast<value_type const &>(value));
+     }
+ 
+     /// Resize this array.  Preserve existing elements that remain, initialize
+     /// any newly added elements by copying \p value.
+-    void resize(size_t newSize, value_type &&value) {
++    ARCH_FORCEINLINE void resize(size_t newSize, value_type &&value) {
+         return resize(newSize, const_cast<value_type const &>(value));
+     }
+ 
+@@ -585,7 +585,7 @@ class VtArray : public Vt_ArrayBase {
+     /// any newly added elements by calling \p fillElems(first, last).  Note
+     /// that this function is passed pointers to uninitialized memory, so the
+     /// elements must be filled with something like placement-new.
+-    template <class FillElemsFn>
++    template <class FillElemsFn> ARCH_FORCEINLINE
+     void resize(size_t newSize, FillElemsFn &&fillElems) {
+         const size_t oldSize = size();
+         if (oldSize == newSize) {
+@@ -641,7 +641,7 @@ class VtArray : public Vt_ArrayBase {
+     }
+ 
+     /// Equivalent to resize(0).
+-    void clear() {
++    ARCH_FORCEINLINE void clear() {
+         if (!_data)
+             return;
+         if (_IsUnique()) {
+@@ -669,7 +669,7 @@ class VtArray : public Vt_ArrayBase {
+     /// where iterators prior to \p pos remain valid).
+     ///
+     /// \sa erase(const_iterator, const_iterator)
+-    iterator erase(const_iterator pos) {
++    ARCH_FORCEINLINE iterator erase(const_iterator pos) {
+         TF_DEV_AXIOM(pos != cend());
+         return erase(pos, pos+1);
+     }
+@@ -689,7 +689,7 @@ class VtArray : public Vt_ArrayBase {
+     /// where iterators prior to \p first remain valid).
+     ///
+     /// \sa erase(const_iterator)
+-    iterator erase(const_iterator first, const_iterator last) {
++    ARCH_FORCEINLINE iterator erase(const_iterator first, const_iterator last) {
+         if (first == last){
+             return std::next(begin(), std::distance(cbegin(), last));
+         }
+@@ -739,7 +739,7 @@ class VtArray : public Vt_ArrayBase {
+     /// array.resize(std::distance(first, last));
+     /// std::copy(first, last, array.begin());
+     /// \endcode
+-    template <class ForwardIter>
++    template <class ForwardIter> ARCH_FORCEINLINE
+     typename std::enable_if<!std::is_integral<ForwardIter>::value>::type
+     assign(ForwardIter first, ForwardIter last) {
+         struct _Copier {
+@@ -758,7 +758,7 @@ class VtArray : public Vt_ArrayBase {
+     /// array.resize(n);
+     /// std::fill(array.begin(), array.end(), fill);
+     /// \endcode
+-    void assign(size_t n, const value_type &fill) {
++    ARCH_FORCEINLINE void assign(size_t n, const value_type &fill) {
+         struct _Filler {
+             void operator()(pointer b, pointer e) const {
+                 std::uninitialized_fill(b, e, fill);
+@@ -774,12 +774,12 @@ class VtArray : public Vt_ArrayBase {
+     /// \code
+     /// array.assign(list.begin(), list.end());
+     /// \endcode
+-    void assign(std::initializer_list<ELEM> initializerList) {
+-	assign(initializerList.begin(), initializerList.end());
++    ARCH_FORCEINLINE void assign(std::initializer_list<ELEM> initializerList) {
++	    assign(initializerList.begin(), initializerList.end());
+     }
+ 
+     /// Swap the contents of this array with \p other.
+-    void swap(VtArray &other) { 
++    ARCH_FORCEINLINE void swap(VtArray &other) {
+         std::swap(_data, other._data);
+         std::swap(_shapeData, other._shapeData);
+         std::swap(_foreignSource, other._foreignSource);
+@@ -788,18 +788,18 @@ class VtArray : public Vt_ArrayBase {
+     /// @}
+ 
+     /// Allows usage of [i].
+-    ElementType &operator[](size_t index) {
++    ARCH_FORCEINLINE ElementType &operator[](size_t index) {
+         return data()[index];
+     }
+ 
+     /// Allows usage of [i].
+-    ElementType const &operator[](size_t index) const {
++    ARCH_FORCEINLINE ElementType const &operator[](size_t index) const {
+         return data()[index];
+     }
+ 
+     /// Tests if two arrays are identical, i.e. that they share
+     /// the same underlying copy-on-write data.  See also operator==().
+-    bool IsIdentical(VtArray const & other) const {
++    ARCH_FORCEINLINE bool IsIdentical(VtArray const & other) const {
+         return
+             _data == other._data &&
+             _shapeData == other._shapeData &&
+@@ -807,23 +807,23 @@ class VtArray : public Vt_ArrayBase {
+     }
+ 
+     /// Tests two arrays for equality.  See also IsIdentical().
+-    bool operator == (VtArray const & other) const {
++    ARCH_FORCEINLINE bool operator == (VtArray const & other) const {
+         return IsIdentical(other) ||
+             (*_GetShapeData() == *other._GetShapeData() &&
+              std::equal(cbegin(), cend(), other.cbegin()));
+     }
+ 
+     /// Tests two arrays for inequality.
+-    bool operator != (VtArray const &other) const {
++    ARCH_FORCEINLINE bool operator != (VtArray const &other) const {
+         return !(*this == other);
+     }
+ 
+   public:
+     // XXX -- Public so VtValue::_ArrayHelper<T,U>::GetShapeData() has access.
+-    Vt_ShapeData const *_GetShapeData() const {
++    ARCH_FORCEINLINE Vt_ShapeData const *_GetShapeData() const {
+         return &_shapeData;
+     }
+-    Vt_ShapeData *_GetShapeData() {
++    ARCH_FORCEINLINE Vt_ShapeData *_GetShapeData() {
+         return &_shapeData;
+     }
+ 
+@@ -840,18 +840,18 @@ class VtArray : public Vt_ArrayBase {
+     };
+ 
+     /// Outputs a comma-separated list of the values in the array.
+-    friend std::ostream &operator <<(std::ostream &out, const VtArray &self) {
++    ARCH_FORCEINLINE friend std::ostream &operator <<(std::ostream &out, const VtArray &self) {
+         VtArray::_Streamer streamer(self.cdata());
+         VtStreamOutArray(out, self._GetShapeData(), streamer);
+         return out;
+     }
+ 
+     /// Swap array contents.
+-    friend void swap(VtArray &lhs, VtArray &rhs) {
++    ARCH_FORCEINLINE friend void swap(VtArray &lhs, VtArray &rhs) {
+         lhs.swap(rhs);
+     }
+ 
+-    void _DetachIfNotUnique() {
++    ARCH_FORCEINLINE void _DetachIfNotUnique() {
+         if (_IsUnique())
+             return;
+         // Copy to local.
+@@ -861,12 +861,12 @@ class VtArray : public Vt_ArrayBase {
+         _data = newData;
+     }
+ 
+-    inline bool _IsUnique() const {
++    ARCH_FORCEINLINE  bool _IsUnique() const {
+         return !_data ||
+             (ARCH_LIKELY(!_foreignSource) && _GetNativeRefCount(_data) == 1);
+     }
+ 
+-    inline size_t _CapacityForSize(size_t sz) const {
++    ARCH_FORCEINLINE  size_t _CapacityForSize(size_t sz) const {
+         // Currently just successive powers of two.
+         size_t cap = 1;
+         while (cap < sz) {
+@@ -875,7 +875,7 @@ class VtArray : public Vt_ArrayBase {
+         return cap;
+     }
+ 
+-    value_type *_AllocateNew(size_t capacity) {
++    ARCH_FORCEINLINE value_type *_AllocateNew(size_t capacity) {
+         TfAutoMallocTag2 tag("VtArray::_AllocateNew", __ARCH_PRETTY_FUNCTION__);
+         // Need space for the control block and capacity elements.
+         // Exceptionally large capacity requests can overflow the arithmetic
+@@ -892,15 +892,15 @@ class VtArray : public Vt_ArrayBase {
+             static_cast<_ControlBlock *>(data) + 1);
+     }
+ 
+-    value_type *_AllocateCopy(value_type *src, size_t newCapacity,
+-                              size_t numToCopy) {
++    ARCH_FORCEINLINE value_type *_AllocateCopy(value_type *src, size_t newCapacity,
++                                               size_t numToCopy) {
+         // Allocate and copy elements.
+         value_type *newData = _AllocateNew(newCapacity);
+         std::uninitialized_copy(src, src + numToCopy, newData);
+         return newData;
+     }
+ 
+-    void _DecRef() {
++    ARCH_FORCEINLINE void _DecRef() {
+         if (!_data)
+             return;
+         if (ARCH_LIKELY(!_foreignSource)) {
+diff --git a/pxr/base/vt/wrapArrayDualQuaternion.cpp b/pxr/base/vt/wrapArrayDualQuaternion.cpp
+index 36d3ae11..4926b6f7 100644
+--- a/pxr/base/vt/wrapArrayDualQuaternion.cpp
++++ b/pxr/base/vt/wrapArrayDualQuaternion.cpp
+@@ -36,3 +36,14 @@ PXR_NAMESPACE_USING_DIRECTIVE
+ void wrapArrayDualQuaternion() {
+     BOOST_PP_SEQ_FOR_EACH(VT_WRAP_ARRAY, ~, VT_DUALQUATERNION_VALUE_TYPES);
+ }
++
++#if defined(ARCH_COMPILER_CLANG) && defined(ARCH_OS_WINDOWS)
++PXR_NAMESPACE_OPEN_SCOPE
++// On Windows, the VtArray functions are not being defined in the translation
++// unit and are left as undefined symbols during linking. Forcing the
++// instantiation here to force the symbols to be created for linking.
++template class VtArray<GfDualQuath>;
++template class VtArray<GfDualQuatf>;
++template class VtArray<GfDualQuatd>;
++PXR_NAMESPACE_CLOSE_SCOPE
++#endif // defined(ARCH_COMPILER_CLANG) && defined(ARCH_OS_WINDOWS)
+diff --git a/pxr/base/vt/wrapArrayFloat.cpp b/pxr/base/vt/wrapArrayFloat.cpp
+index 027c3bb3..3134c56e 100644
+--- a/pxr/base/vt/wrapArrayFloat.cpp
++++ b/pxr/base/vt/wrapArrayFloat.cpp
+@@ -35,3 +35,14 @@ void wrapArrayFloat() {
+     BOOST_PP_SEQ_FOR_EACH(VT_WRAP_COMPARISON, ~,
+                           VT_FLOATING_POINT_BUILTIN_VALUE_TYPES);
+ }
++
++#if defined(ARCH_COMPILER_CLANG) && defined(ARCH_OS_WINDOWS)
++PXR_NAMESPACE_OPEN_SCOPE
++// On Windows, the VtArray functions are not being defined in the translation
++// unit and are left as undefined symbols during linking. Forcing the
++// instantiation here to force the symbols to be created for linking.
++template class VtArray<double>;
++template class VtArray<float>;
++template class VtArray<GfHalf>;
++PXR_NAMESPACE_CLOSE_SCOPE
++#endif // defined(ARCH_COMPILER_CLANG) && defined(ARCH_OS_WINDOWS)
+diff --git a/pxr/base/vt/wrapArrayIntegral.cpp b/pxr/base/vt/wrapArrayIntegral.cpp
+index 8ed5d322..38837ce2 100644
+--- a/pxr/base/vt/wrapArrayIntegral.cpp
++++ b/pxr/base/vt/wrapArrayIntegral.cpp
+@@ -36,3 +36,20 @@ void wrapArrayIntegral() {
+     BOOST_PP_SEQ_FOR_EACH(VT_WRAP_COMPARISON, ~,
+                           VT_INTEGRAL_BUILTIN_VALUE_TYPES);
+ }
++
++#if defined(ARCH_COMPILER_CLANG) && defined(ARCH_OS_WINDOWS)
++PXR_NAMESPACE_OPEN_SCOPE
++// On Windows, the VtArray functions are not being defined in the translation
++// unit and are left as undefined symbols during linking. Forcing the
++// instantiation here to force the symbols to be created for linking.
++template class VtArray<bool>;
++template class VtArray<char>;
++template class VtArray<unsigned char>;
++template class VtArray<short>;
++template class VtArray<unsigned short>;
++template class VtArray<int>;
++template class VtArray<unsigned int>;
++template class VtArray<__int64>;
++template class VtArray<unsigned __int64>;
++PXR_NAMESPACE_CLOSE_SCOPE
++#endif // defined(ARCH_COMPILER_CLANG) && defined(ARCH_OS_WINDOWS)
+diff --git a/pxr/base/vt/wrapArrayMatrix.cpp b/pxr/base/vt/wrapArrayMatrix.cpp
+index 09043ae8..3e52b39a 100644
+--- a/pxr/base/vt/wrapArrayMatrix.cpp
++++ b/pxr/base/vt/wrapArrayMatrix.cpp
+@@ -33,3 +33,17 @@ PXR_NAMESPACE_USING_DIRECTIVE
+ void wrapArrayMatrix() {
+     BOOST_PP_SEQ_FOR_EACH(VT_WRAP_ARRAY, ~, VT_MATRIX_VALUE_TYPES);
+ }
++
++#if defined(ARCH_COMPILER_CLANG) && defined(ARCH_OS_WINDOWS)
++PXR_NAMESPACE_OPEN_SCOPE
++// On Windows, the VtArray functions are not being defined in the translation
++// unit and are left as undefined symbols during linking. Forcing the
++// instantiation here to force the symbols to be created for linking.
++template class VtArray<GfMatrix4f>;
++template class VtArray<GfMatrix3f>;
++template class VtArray<GfMatrix2f>;
++template class VtArray<GfMatrix4d>;
++template class VtArray<GfMatrix3d>;
++template class VtArray<GfMatrix2d>;
++PXR_NAMESPACE_CLOSE_SCOPE
++#endif // defined(ARCH_COMPILER_CLANG) && defined(ARCH_OS_WINDOWS)
+diff --git a/pxr/base/vt/wrapArrayQuaternion.cpp b/pxr/base/vt/wrapArrayQuaternion.cpp
+index 8c674c02..bf6451ec 100644
+--- a/pxr/base/vt/wrapArrayQuaternion.cpp
++++ b/pxr/base/vt/wrapArrayQuaternion.cpp
+@@ -36,3 +36,15 @@ PXR_NAMESPACE_USING_DIRECTIVE
+ void wrapArrayQuaternion() {
+     BOOST_PP_SEQ_FOR_EACH(VT_WRAP_ARRAY, ~, VT_QUATERNION_VALUE_TYPES);
+ }
++
++#if defined(ARCH_COMPILER_CLANG) && defined(ARCH_OS_WINDOWS)
++PXR_NAMESPACE_OPEN_SCOPE
++// On Windows, the VtArray functions are not being defined in the translation
++// unit and are left as undefined symbols during linking. Forcing the
++// instantiation here to force the symbols to be created for linking.
++template class VtArray<GfQuath>;
++template class VtArray<GfQuatf>;
++template class VtArray<GfQuatd>;
++template class VtArray<GfQuaternion>;
++PXR_NAMESPACE_CLOSE_SCOPE
++#endif // defined(ARCH_COMPILER_CLANG) && defined(ARCH_OS_WINDOWS)
+diff --git a/pxr/base/vt/wrapArrayRange.cpp b/pxr/base/vt/wrapArrayRange.cpp
+index 3a0dfe3e..93b0ab8b 100644
+--- a/pxr/base/vt/wrapArrayRange.cpp
++++ b/pxr/base/vt/wrapArrayRange.cpp
+@@ -32,3 +32,19 @@ PXR_NAMESPACE_USING_DIRECTIVE
+ void wrapArrayRange() {
+     BOOST_PP_SEQ_FOR_EACH(VT_WRAP_ARRAY, ~, VT_RANGE_VALUE_TYPES);
+ }
++
++#if defined(ARCH_COMPILER_CLANG) && defined(ARCH_OS_WINDOWS)
++PXR_NAMESPACE_OPEN_SCOPE
++// On Windows, the VtArray functions are not being defined in the translation
++// unit and are left as undefined symbols during linking. Forcing the
++// instantiation here to force the symbols to be created for linking.
++template class VtArray<GfRange3f>;
++template class VtArray<GfRange3d>;
++template class VtArray<GfRange2f>;
++template class VtArray<GfRange2d>;
++template class VtArray<GfRange1f>;
++template class VtArray<GfRange1d>;
++template class VtArray<GfInterval>;
++template class VtArray<GfRect2i>;
++PXR_NAMESPACE_CLOSE_SCOPE
++#endif // defined(ARCH_COMPILER_CLANG) && defined(ARCH_OS_WINDOWS)
+diff --git a/pxr/base/vt/wrapArrayString.cpp b/pxr/base/vt/wrapArrayString.cpp
+index 6e905a56..c85d7ac0 100644
+--- a/pxr/base/vt/wrapArrayString.cpp
++++ b/pxr/base/vt/wrapArrayString.cpp
+@@ -36,3 +36,12 @@ void wrapArrayString() {
+     VtWrapArray<VtArray<string> >();
+     VtWrapComparisonFunctions<VtArray<string> >();
+ }
++
++#if defined(ARCH_COMPILER_CLANG) && defined(ARCH_OS_WINDOWS)
++PXR_NAMESPACE_OPEN_SCOPE
++// On Windows, the VtArray functions are not being defined in the translation
++// unit and are left as undefined symbols during linking. Forcing the
++// instantiation here to force the symbols to be created for linking.
++template class VtArray<string>;
++PXR_NAMESPACE_CLOSE_SCOPE
++#endif // defined(ARCH_COMPILER_CLANG) && defined(ARCH_OS_WINDOWS)
+diff --git a/pxr/base/vt/wrapArrayToken.cpp b/pxr/base/vt/wrapArrayToken.cpp
+index abfb1b2d..00ac7484 100644
+--- a/pxr/base/vt/wrapArrayToken.cpp
++++ b/pxr/base/vt/wrapArrayToken.cpp
+@@ -32,3 +32,12 @@ void wrapArrayToken() {
+     VtWrapArray<VtArray<TfToken> >();
+     VtWrapComparisonFunctions<VtArray<TfToken> >();
+ }
++
++#if defined(ARCH_COMPILER_CLANG) && defined(ARCH_OS_WINDOWS)
++PXR_NAMESPACE_OPEN_SCOPE
++// On Windows, the VtArray functions are not being defined in the translation
++// unit and are left as undefined symbols during linking. Forcing the
++// instantiation here to force the symbols to be created for linking.
++template class VtArray<TfToken>;
++PXR_NAMESPACE_CLOSE_SCOPE
++#endif // defined(ARCH_COMPILER_CLANG) && defined(ARCH_OS_WINDOWS)
+diff --git a/pxr/base/vt/wrapArrayVec.cpp b/pxr/base/vt/wrapArrayVec.cpp
+index 76d26d4c..7cad308e 100644
+--- a/pxr/base/vt/wrapArrayVec.cpp
++++ b/pxr/base/vt/wrapArrayVec.cpp
+@@ -48,3 +48,23 @@ void wrapArrayVec() {
+     BOOST_PP_SEQ_FOR_EACH(VT_WRAP_ARRAY, ~, VT_VEC_VALUE_TYPES);
+     //BOOST_PP_SEQ_FOR_EACH(VT_WRAP_COMPARISON, ~, VT_VEC_VALUE_TYPES);
+ }
++
++#if defined(ARCH_COMPILER_CLANG) && defined(ARCH_OS_WINDOWS)
++PXR_NAMESPACE_OPEN_SCOPE
++// On Windows, the VtArray functions are not being defined in the translation
++// unit and are left as undefined symbols during linking. Forcing the
++// instantiation here to force the symbols to be created for linking.
++template class VtArray<GfVec4i>;
++template class VtArray<GfVec3i>;
++template class VtArray<GfVec2i>;
++template class VtArray<GfVec4h>;
++template class VtArray<GfVec3h>;
++template class VtArray<GfVec2h>;
++template class VtArray<GfVec4f>;
++template class VtArray<GfVec3f>;
++template class VtArray<GfVec2f>;
++template class VtArray<GfVec4d>;
++template class VtArray<GfVec3d>;
++template class VtArray<GfVec2d>;
++PXR_NAMESPACE_CLOSE_SCOPE
++#endif // defined(ARCH_COMPILER_CLANG) && defined(ARCH_OS_WINDOWS)
+diff --git a/pxr/imaging/hd/renderSettings.cpp b/pxr/imaging/hd/renderSettings.cpp
+index 55330991..87e3c626 100644
+--- a/pxr/imaging/hd/renderSettings.cpp
++++ b/pxr/imaging/hd/renderSettings.cpp
+@@ -31,44 +31,6 @@
+ 
+ PXR_NAMESPACE_OPEN_SCOPE
+ 
+-namespace {
+-    
+-template <class HashState>
+-void TfHashAppend(
+-        HashState &h,
+-        HdRenderSettings::RenderProduct::RenderVar const &rv)
+-{
+-    h.Append(
+-            rv.varPath,
+-            rv.dataType,
+-            rv.sourceName,
+-            rv.sourceType,
+-            rv.namespacedSettings);
+-}
+-
+-template <class HashState>
+-void TfHashAppend(
+-    HashState &h,
+-    HdRenderSettings::RenderProduct const &rp)
+-{
+-    h.Append(
+-            rp.productPath,
+-            rp.type,
+-            rp.name,
+-            rp.resolution,
+-            rp.renderVars,
+-            rp.cameraPath,
+-            rp.pixelAspectRatio,
+-            rp.aspectRatioConformPolicy,
+-            rp.apertureSize,
+-            rp.dataWindowNDC,
+-            rp.disableMotionBlur,
+-            rp.namespacedSettings);
+-}
+-
+-}
+-// -------------------------------------------------------------------------- //
+-
+ HdRenderSettings::HdRenderSettings(
+     SdfPath const& id)
+     : HdBprim(id)
+diff --git a/pxr/imaging/hd/renderSettings.h b/pxr/imaging/hd/renderSettings.h
+index b4322fac..7b87744e 100644
+--- a/pxr/imaging/hd/renderSettings.h
++++ b/pxr/imaging/hd/renderSettings.h
+@@ -234,6 +234,39 @@ bool operator!=(const HdRenderSettings::RenderProduct::RenderVar& lhs,
+                 const HdRenderSettings::RenderProduct::RenderVar& rhs);
+ 
+ 
++template <class HashState>
++void TfHashAppend(
++        HashState &h,
++        HdRenderSettings::RenderProduct::RenderVar const &rv)
++{
++    h.Append(
++            rv.varPath,
++            rv.dataType,
++            rv.sourceName,
++            rv.sourceType,
++            rv.namespacedSettings);
++}
++
++template <class HashState>
++void TfHashAppend(
++    HashState &h,
++    HdRenderSettings::RenderProduct const &rp)
++{
++    h.Append(
++            rp.productPath,
++            rp.type,
++            rp.name,
++            rp.resolution,
++            rp.renderVars,
++            rp.cameraPath,
++            rp.pixelAspectRatio,
++            rp.aspectRatioConformPolicy,
++            rp.apertureSize,
++            rp.dataWindowNDC,
++            rp.disableMotionBlur,
++            rp.namespacedSettings);
++}
++
+ PXR_NAMESPACE_CLOSE_SCOPE
+ 
+ #endif // PXR_IMAGING_HD_RENDER_SETTINGS_H
+-- 
+2.40.1.windows.1
+

@@ -1,0 +1,63 @@
+From 744bd265377b02c652251af6430eb2193b453d22 Mon Sep 17 00:00:00 2001
+From: Andrew Aye <andrew.aye@gmail.com>
+Date: Thu, 14 Sep 2023 15:19:36 -0700
+Subject: [PATCH 5/5] HACK
+
+---
+ pxr/base/gf/ilmbase_half.cpp            | 4 ++--
+ pxr/imaging/hio/OpenEXR/openexr-c.c     | 8 ++++++++
+ pxr/usd/sdf/wrapPredicateExpression.cpp | 4 ++--
+ 3 files changed, 12 insertions(+), 4 deletions(-)
+
+diff --git a/pxr/base/gf/ilmbase_half.cpp b/pxr/base/gf/ilmbase_half.cpp
+index 2b1dcfa06..0edaa3ec8 100644
+--- a/pxr/base/gf/ilmbase_half.cpp
++++ b/pxr/base/gf/ilmbase_half.cpp
+@@ -79,8 +79,8 @@ half::overflow ()
+     volatile float f = 1e10;
+ 
+     for (int i = 0; i < 10; i++)	
+-	f *= f;				// this will overflow before
+-					// the for­loop terminates
++        f *= f;         // this will overflow before
++                        // the for loop terminates
+     return f;
+ }
+ 
+diff --git a/pxr/imaging/hio/OpenEXR/openexr-c.c b/pxr/imaging/hio/OpenEXR/openexr-c.c
+index 0bb36c9a5..829647364 100644
+--- a/pxr/imaging/hio/OpenEXR/openexr-c.c
++++ b/pxr/imaging/hio/OpenEXR/openexr-c.c
+@@ -22,4 +22,12 @@
+ #pragma GCC diagnostic ignored "-Wunused-function"
+ #endif
+ 
++#if defined(__clang__)
++#pragma clang diagnostic ignored "-Wmacro-redefined"
++#elif defined(__GNUC__)
++#pragma GCC diagnostic ignored "-Wmacro-redefined"
++#elif defined(_MSC_VER)
++#pragma warning(disable: 4005)
++#endif
++
+ #include "OpenEXRCoreUnity.h"
+diff --git a/pxr/usd/sdf/wrapPredicateExpression.cpp b/pxr/usd/sdf/wrapPredicateExpression.cpp
+index 3da01166a..165e4a505 100644
+--- a/pxr/usd/sdf/wrapPredicateExpression.cpp
++++ b/pxr/usd/sdf/wrapPredicateExpression.cpp
+@@ -92,10 +92,10 @@ void wrapPredicateExpression()
+         .def("__bool__", &PredExpr::operator bool)
+         .def("__repr__", &_Repr)
+ 
+-        .def("GetParseError",
++        /*.def("GetParseError",
+              static_cast<std::string const &(PredExpr::*)() const &>(
+                  &PredExpr::GetParseError),
+-             return_value_policy<return_by_value>())
++             return_value_policy<return_by_value>())*/
+         ;
+ 
+     TfPyWrapEnum<PredExpr::Op>();
+-- 
+2.40.1.windows.1
+

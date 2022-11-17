@@ -1,0 +1,2008 @@
+From 8b7e64573f254c80a3a70a80e095323d0fea3d22 Mon Sep 17 00:00:00 2001
+From: Andrew Aye <andrew.aye@gmail.com>
+Date: Fri, 15 Sep 2023 19:28:21 -0700
+Subject: [PATCH] Stuff
+
+---
+ cmake/defaults/clangdefaults.cmake            |  2 +
+ cmake/defaults/msvcdefaults.cmake             | 26 +++++++++-
+ cmake/macros/Private.cmake                    |  2 +-
+ extras/imaging/examples/CMakeLists.txt        |  4 +-
+ pxr/base/arch/attributes.h                    |  2 +
+ pxr/base/arch/fileSystem.cpp                  |  1 +
+ pxr/base/arch/fileSystem.h                    |  4 ++
+ pxr/base/arch/library.cpp                     |  4 ++
+ pxr/base/arch/pragmas.h                       | 42 +++++++++++++++++
+ pxr/base/arch/stackTrace.cpp                  |  4 +-
+ pxr/base/arch/symbols.cpp                     |  2 +-
+ pxr/base/arch/testenv/testArchPRead.cpp       |  1 +
+ pxr/base/arch/testenv/testArchUtil.cpp        |  6 ++-
+ pxr/base/tf/fileUtils.cpp                     |  2 +-
+ pxr/base/tf/mallocTag.cpp                     |  6 +--
+ pxr/base/tf/pyClassMethod.h                   |  3 +-
+ pxr/base/tf/pyPtrHelpers.h                    |  5 +-
+ pxr/base/tf/refPtr.h                          |  4 ++
+ pxr/base/tf/singleton.h                       |  4 +-
+ pxr/base/tf/stringUtils.cpp                   |  4 +-
+ pxr/base/tf/testenv/notice.cpp                |  3 +-
+ pxr/base/tf/testenv/scopeDescription.cpp      |  1 +
+ pxr/base/tf/wrapTestPyStaticTokens.cpp        |  2 +-
+ pxr/base/tf/wrapTypeHelpers.h                 |  3 +-
+ pxr/base/vt/value.cpp                         |  6 +++
+ pxr/imaging/hd/flattenedDataSourceProvider.h  |  2 +
+ ...enedMaterialBindingsDataSourceProvider.cpp |  2 +-
+ pxr/imaging/hd/materialNetwork2Interface.cpp  |  8 ++--
+ pxr/imaging/hd/perfLog.cpp                    |  4 +-
+ pxr/imaging/hd/testenv/testHdSceneIndex.cpp   |  2 +-
+ pxr/imaging/hdGp/CMakeLists.txt               |  3 ++
+ pxr/imaging/hdGp/api.h                        | 47 +++++++++++++++++++
+ pxr/imaging/hdGp/generativeProceduralPlugin.h |  7 +--
+ .../hdGp/generativeProceduralPluginRegistry.h |  6 +--
+ pxr/imaging/hdSt/bufferArrayRegistry.cpp      |  5 +-
+ pxr/imaging/hdSt/commandBuffer.cpp            |  2 +-
+ pxr/imaging/hdSt/interleavedMemoryManager.cpp |  2 +-
+ pxr/imaging/hdSt/mesh.cpp                     |  1 -
+ pxr/imaging/hdSt/primUtils.cpp                |  2 +-
+ pxr/imaging/hdSt/renderDelegate.cpp           |  3 ++
+ pxr/imaging/hdSt/vboMemoryManager.cpp         |  4 +-
+ pxr/imaging/hdSt/vboSimpleMemoryManager.cpp   |  2 +-
+ pxr/imaging/hdar/systemSchema.h               |  2 +-
+ pxr/imaging/hdsi/coordSysPrimSceneIndex.cpp   |  2 +-
+ pxr/imaging/hdx/selectionTracker.cpp          |  2 +-
+ pxr/imaging/hgiGL/scopedStateHolder.h         |  1 -
+ pxr/imaging/hio/OpenEXR/OpenEXRCore/chunk.c   |  2 +-
+ .../hio/OpenEXR/OpenEXRCore/encoding.c        |  2 +-
+ .../OpenEXR/deflate/lib/deflate_decompress.c  |  6 +--
+ pxr/imaging/hio/fieldTextureData.h            |  2 +-
+ pxr/imaging/hio/glslfxConfig.cpp              |  8 ++--
+ pxr/imaging/hio/image.h                       |  2 +-
+ pxr/imaging/hio/stb/stb_image.h               |  4 +-
+ pxr/usd/pcp/cache.cpp                         |  2 +-
+ pxr/usd/sdf/layer.cpp                         |  2 +-
+ pxr/usd/sdf/pathExpressionEval.h              |  2 +-
+ pxr/usd/sdf/predicateExpression.cpp           |  3 ++
+ pxr/usd/sdf/textFileFormat.cpp                |  2 +-
+ pxr/usd/sdf/textFileFormat.tab.cpp            |  8 +---
+ pxr/usd/usd/crateFile.cpp                     |  3 ++
+ pxr/usd/usd/primDefinition.cpp                |  6 +--
+ pxr/usd/usd/stage.cpp                         |  2 +-
+ pxr/usd/usd/testenv/testUsdResolveTarget.cpp  |  6 +--
+ pxr/usd/usdGeom/primvar.h                     |  4 +-
+ pxr/usd/usdGeom/subset.cpp                    |  8 ++--
+ pxr/usd/usdSkel/animation.cpp                 |  4 +-
+ pxr/usd/usdUtils/pipeline.cpp                 |  2 +-
+ .../usdImaging/dataSourceMaterial.cpp         |  4 +-
+ pxr/usdImaging/usdImaging/dataSourcePrim.cpp  |  6 +--
+ pxr/usdImaging/usdImaging/dataSourcePrim.h    |  2 -
+ .../usdImaging/dataSourceVolume.cpp           |  3 +-
+ pxr/usdImaging/usdImaging/dataSourceVolume.h  |  1 -
+ pxr/usdImaging/usdImaging/delegate.cpp        |  2 +-
+ pxr/usdImaging/usdImaging/domeLightAdapter.h  |  4 +-
+ .../usdImaging/drawModeSceneIndex.cpp         |  2 +-
+ pxr/usdImaging/usdImaging/drawModeStandin.cpp |  1 +
+ pxr/usdImaging/usdImaging/gprimAdapter.cpp    |  8 ++--
+ pxr/usdImaging/usdImaging/indexProxy.cpp      |  3 ++
+ pxr/usdImaging/usdImaging/instanceAdapter.cpp |  5 +-
+ pxr/usdImaging/usdImaging/materialAdapter.h   |  2 +-
+ .../usdImaging/pluginLightAdapter.h           |  4 +-
+ .../usdImaging/pointInstancerAdapter.cpp      |  6 +--
+ pxr/usdImaging/usdImaging/rectLightAdapter.h  |  4 +-
+ .../usdImaging/renderSettingsAdapter.cpp      |  2 +-
+ .../usdImaging/sphereLightAdapter.h           |  4 +-
+ .../generativeProceduralAdapter.h             | 19 ++++----
+ .../usdRiImaging/pxrDisplayFilterAdapter.h    |  8 ++--
+ .../usdRiImaging/pxrIntegratorAdapter.h       |  8 ++--
+ .../usdRiImaging/pxrSampleFilterAdapter.h     |  8 ++--
+ .../usdSkelImaging/skeletonAdapter.h          |  6 +--
+ .../usdVolImaging/field3dAssetAdapter.h       |  6 +--
+ .../usdVolImaging/openvdbAssetAdapter.h       |  6 +--
+ 92 files changed, 304 insertions(+), 152 deletions(-)
+ create mode 100644 pxr/imaging/hdGp/api.h
+
+diff --git a/cmake/defaults/clangdefaults.cmake b/cmake/defaults/clangdefaults.cmake
+index 4e20af32..1c30f5e6 100644
+--- a/cmake/defaults/clangdefaults.cmake
++++ b/cmake/defaults/clangdefaults.cmake
+@@ -36,3 +36,5 @@ endif()
+ if(CMAKE_USE_PTHREADS_INIT)
+     _disable_warning("unused-command-line-argument")
+ endif()
++
++set(_PXR_CXX_FLAGS "${_PXR_CXX_FLAGS} -Werror")
+diff --git a/cmake/defaults/msvcdefaults.cmake b/cmake/defaults/msvcdefaults.cmake
+index 1c4cb369..cd0a9405 100644
+--- a/cmake/defaults/msvcdefaults.cmake
++++ b/cmake/defaults/msvcdefaults.cmake
+@@ -25,8 +25,30 @@
+ # Enable exception handling.
+ set(_PXR_CXX_FLAGS "${_PXR_CXX_FLAGS} /EHsc")
+ 
+-# Standards compliant.
+-set(_PXR_CXX_FLAGS "${_PXR_CXX_FLAGS} /Zc:rvalueCast /Zc:strictStrings")
++# Standards conformance: This option disables permissive behaviors, and sets
++# the /Zc compiler options for strict conformance
++set(_PXR_CXX_FLAGS "${_PXR_CXX_FLAGS} /permissive-")
++
++# Standards conformance: Enforce Standard C++ explicit type conversion rules.
++# Enabled automatically by permissive-
++# set(_PXR_CXX_FLAGS "${_PXR_CXX_FLAGS} /Zc:rvalueCast")
++
++# Standards conformance: Disable string-literal to char* or wchar_t* conversion.
++# Enabled automatically by permissive-
++# set(_PXR_CXX_FLAGS "${_PXR_CXX_FLAGS} /Zc:strictStrings")
++
++# Standards conformance: Standard compliant preprocessor
++set(_PXR_CXX_FLAGS "${_PXR_CXX_FLAGS} /Zc:preprocessor")
++
++# Standards conformance: MSVC stores the C++ standard version in _MSVC_LANG and
++# __cplusplus was stuck on an early standard version. This will force
++# __cplusplus == _MSVC_LANG which conforms to the standard.
++set(_PXR_CXX_FLAGS "${_PXR_CXX_FLAGS} /Zc:__cplusplus")
++
++# Standards conformance: This causes the class-level dllexport and dllimport
++# attributes to not apply to inline member functions, as they otherwise would.
++# Only available with Clang-CL
++# set(_PXR_CXX_FLAGS "${_PXR_CXX_FLAGS} /Zc:dllexportInlines-")
+ 
+ # The /Zc:inline option strips out the "arch_ctor_<name>" symbols used for
+ # library initialization by ARCH_CONSTRUCTOR starting in Visual Studio 2019, 
+diff --git a/cmake/macros/Private.cmake b/cmake/macros/Private.cmake
+index 23172745..e3551ab1 100644
+--- a/cmake/macros/Private.cmake
++++ b/cmake/macros/Private.cmake
+@@ -480,7 +480,7 @@ function(_pxr_enable_precompiled_header TARGET_NAME)
+     # Headers live in subdirectories.
+     set(rel_output_header_path "${PXR_PREFIX}/${TARGET_NAME}/${output_header_name}")
+     set(abs_output_header_path "${PROJECT_BINARY_DIR}/include/${rel_output_header_path}")
+-    set(abs_precompiled_path ${PROJECT_BINARY_DIR}/include/${PXR_PREFIX}/${TARGET_NAME}/${precompiled_name})
++    set(abs_precompiled_path ${PROJECT_BINARY_DIR}/include/${PXR_PREFIX}/${TARGET_NAME}/${CMAKE_BUILD_TYPE}${precompiled_name})
+ 
+     # Additional compile flags to use precompiled header.  This will be
+     set(compile_flags "")
+diff --git a/extras/imaging/examples/CMakeLists.txt b/extras/imaging/examples/CMakeLists.txt
+index 40887be9..c33e188c 100644
+--- a/extras/imaging/examples/CMakeLists.txt
++++ b/extras/imaging/examples/CMakeLists.txt
+@@ -1,4 +1,6 @@
+ set(PXR_PREFIX examples)
+ set(PXR_INSTALL_SUBDIR share/usd/examples)
+ 
+-add_subdirectory(hdTiny)
++if (${PXR_BUILD_GPU_SUPPORT})
++    add_subdirectory(hdTiny)
++endif()
+diff --git a/pxr/base/arch/attributes.h b/pxr/base/arch/attributes.h
+index 0df315f8..58329ca9 100644
+--- a/pxr/base/arch/attributes.h
++++ b/pxr/base/arch/attributes.h
+@@ -175,6 +175,7 @@ PXR_NAMESPACE_OPEN_SCOPE
+         __attribute__((format(printf, _fmt, _firstArg)))
+ #   define ARCH_SCANF_FUNCTION(_fmt, _firstArg)	\
+         __attribute__((format(scanf, _fmt, _firstArg)))
++#   define ARCH_FORCEINLINE __attribute__((always_inline))
+ #   define ARCH_NOINLINE __attribute__((noinline))
+ #   define ARCH_UNUSED_ARG   __attribute__ ((unused))
+ #   define ARCH_UNUSED_FUNCTION __attribute__((unused))
+@@ -185,6 +186,7 @@ PXR_NAMESPACE_OPEN_SCOPE
+ 
+ #   define ARCH_PRINTF_FUNCTION(_fmt, _firstArg)
+ #   define ARCH_SCANF_FUNCTION(_fmt, _firstArg)
++#   define ARCH_FORCEINLINE
+ #   define ARCH_NOINLINE // __declspec(noinline)
+ #   define ARCH_UNUSED_ARG
+ #   define ARCH_UNUSED_FUNCTION
+diff --git a/pxr/base/arch/fileSystem.cpp b/pxr/base/arch/fileSystem.cpp
+index e2d5db44..98c729cb 100644
+--- a/pxr/base/arch/fileSystem.cpp
++++ b/pxr/base/arch/fileSystem.cpp
+@@ -615,6 +615,7 @@ MakeUnique(
+     int maxRetry = 1000)
+ {
+     static const bool init = (srand(GetTickCount()), true);
++    (void)init;
+ 
+     // Copy template to a writable buffer.
+     const auto length = sTemplate.size();
+diff --git a/pxr/base/arch/fileSystem.h b/pxr/base/arch/fileSystem.h
+index cc08b716..66fbe82b 100644
+--- a/pxr/base/arch/fileSystem.h
++++ b/pxr/base/arch/fileSystem.h
+@@ -66,6 +66,10 @@ PXR_NAMESPACE_OPEN_SCOPE
+         #include <sys/param.h>                  /* for MAXPATHLEN */
+     #endif
+ #else
++    // S_ISDIR may be previously defined in pyport.h
++    #if defined(S_ISDIR)
++        #undef S_ISDIR
++    #endif
+     // XXX -- Should probably have ARCH_ macro for this.
+     #define S_ISDIR(m) (((m) & S_IFMT) == S_IFDIR)
+ 
+diff --git a/pxr/base/arch/library.cpp b/pxr/base/arch/library.cpp
+index 65e6b4bd..0d12768a 100644
+--- a/pxr/base/arch/library.cpp
++++ b/pxr/base/arch/library.cpp
+@@ -23,6 +23,7 @@
+ //
+ 
+ #include "pxr/pxr.h"
++#include "pxr/base/arch/pragmas.h"
+ #include "pxr/base/arch/library.h"
+ #include "pxr/base/arch/errno.h"
+ 
+@@ -88,7 +89,10 @@ int ArchLibraryClose(void* handle)
+ void* ArchLibraryGetSymbolAddress(void* handle, const char* name)
+ {
+ #if defined(ARCH_OS_WINDOWS)
++    ARCH_PRAGMA_PUSH
++    ARCH_PRAGMA_MICROSOFT_CAST
+     return GetProcAddress(reinterpret_cast<HMODULE>(handle), name);
++    ARCH_PRAGMA_POP
+ #else
+     return dlsym(handle, name);
+ #endif
+diff --git a/pxr/base/arch/pragmas.h b/pxr/base/arch/pragmas.h
+index ce9e15e3..283bfa79 100644
+--- a/pxr/base/arch/pragmas.h
++++ b/pxr/base/arch/pragmas.h
+@@ -102,6 +102,24 @@
+     #define ARCH_PRAGMA_INSTANCE_METHOD_NOT_FOUND \
+         _Pragma("clang diagnostic ignored \"-Wobjc-method-access\"")
+ 
++    #define ARCH_PRAGMA_INT_FLOAT_CONVERSION
++        _Pragma("clang diagnostic ignored \"-Wimplicit-const-int-float-conversion\"")
++
++    #define ARCH_PRAGMA_POTENTIALLY_EVALUATED_EXPRESSION
++        _Pragma("clang diagnostic ignored \"-Wpotentially-evaluated-expression\"")
++
++    #define ARCH_PRAGMA_REINTERPRET_BASE_CLASS
++        _Pragma("clang diagnostic ignored \"-Wreinterpret-base-class\"")
++
++    #define ARCH_PRAGMA_MICROSOFT_CAST
++        _Pragma("clang diagnostic ignored \"-Wmicrosoft-cast\"")
++
++    #define ARCH_PRAGMA_UNUSED_LAMBDA_CAPTURE
++        _Pragma("clang diagnostic ignored \"-Wunused-lambda-capture\"")
++
++    #define ARCH_PRAGMA_UNUSED_VARIABLE
++        _Pragma("clang diagnostic ignored \"-Wunused-variable\"")
++
+ #elif defined(ARCH_COMPILER_MSVC)
+ 
+     #define ARCH_PRAGMA_PUSH \
+@@ -262,4 +280,28 @@
+     #define ARCH_PRAGMA_INSTANCE_METHOD_NOT_FOUND
+ #endif
+ 
++#if !defined ARCH_PRAGMA_INT_FLOAT_CONVERSION
++    #define ARCH_PRAGMA_INT_FLOAT_CONVERSION
++#endif
++
++#if !defined ARCH_PRAGMA_POTENTIALLY_EVALUATED_EXPRESSION
++    #define ARCH_PRAGMA_POTENTIALLY_EVALUATED_EXPRESSION
++#endif
++
++#if !defined(ARCH_PRAGMA_REINTERPRET_BASE_CLASS)
++    #define ARCH_PRAGMA_REINTERPRET_BASE_CLASS
++#endif
++
++#if !defined(ARCH_PRAGMA_MICROSOFT_CAST)
++    #define ARCH_PRAGMA_MICROSOFT_CAST
++#endif
++
++#if !defined(ARCH_PRAGMA_UNUSED_LAMBDA_CAPTURE)
++    #define ARCH_PRAGMA_UNUSED_LAMBDA_CAPTURE
++#endif
++
++#if !defined(ARCH_PRAGMA_UNUSED_VARIABLE)
++    #define ARCH_PRAGMA_UNUSED_VARIABLE
++#endif
++
+ #endif // PXR_BASE_ARCH_PRAGMAS_H
+diff --git a/pxr/base/arch/stackTrace.cpp b/pxr/base/arch/stackTrace.cpp
+index 1d75c779..e2414753 100644
+--- a/pxr/base/arch/stackTrace.cpp
++++ b/pxr/base/arch/stackTrace.cpp
+@@ -1462,7 +1462,7 @@ Arch_DefaultStackTraceCallback(uintptr_t address)
+         Arch_DemangleFunctionName(&symbolName);
+         const uintptr_t symbolOffset =
+             (uint64_t)(address - (uintptr_t)symbolAddress);
+-        return ArchStringPrintf("%s+%#0lx", symbolName.c_str(), symbolOffset);
++        return ArchStringPrintf("%s+%#0zx", symbolName.c_str(), symbolOffset);
+     }
+     else {
+         return "<unknown>";
+@@ -1531,7 +1531,7 @@ Arch_GetStackTrace(const vector<uintptr_t> &frames,
+         if (skipUnknownFrames && symbolic == "<unknown>") {
+             continue;
+         }
+-        rv.push_back(ArchStringPrintf(" #%-3i 0x%016lx in %s",
++        rv.push_back(ArchStringPrintf(" #%-3i 0x%016zx in %s",
+                                       n++, frames[i], symbolic.c_str()));
+     }
+ 
+diff --git a/pxr/base/arch/symbols.cpp b/pxr/base/arch/symbols.cpp
+index 2c6bf030..69bba7d2 100644
+--- a/pxr/base/arch/symbols.cpp
++++ b/pxr/base/arch/symbols.cpp
+@@ -127,7 +127,7 @@ ArchGetAddressInfo(
+         }
+ 
+         if (symbolName) {
+-            *symbolName = symbol->Name ? symbol->Name : "";
++            *symbolName = symbol->NameLen > 0 ? symbol->Name : "";
+         }
+ 
+         if (symbolAddress) {
+diff --git a/pxr/base/arch/testenv/testArchPRead.cpp b/pxr/base/arch/testenv/testArchPRead.cpp
+index 70f8502a..18b1c0e8 100644
+--- a/pxr/base/arch/testenv/testArchPRead.cpp
++++ b/pxr/base/arch/testenv/testArchPRead.cpp
+@@ -46,6 +46,7 @@ int main(int argc, char** argv)
+     }
+     catch (const std::exception& e) {
+         printf("ERROR: Invalid number of bytes specified\n");
++        (void)e;
+         return 1;
+     }
+ 
+diff --git a/pxr/base/arch/testenv/testArchUtil.cpp b/pxr/base/arch/testenv/testArchUtil.cpp
+index 17415633..2210df4e 100644
+--- a/pxr/base/arch/testenv/testArchUtil.cpp
++++ b/pxr/base/arch/testenv/testArchUtil.cpp
+@@ -21,7 +21,9 @@
+ // KIND, either express or implied. See the Apache License for the specific
+ // language governing permissions and limitations under the Apache License.
+ //
+-#define _CRT_SECURE_NO_WARNINGS
++#if !defined(_CRT_SECURE_NO_WARNINGS)
++    #define _CRT_SECURE_NO_WARNINGS
++#endif
+ 
+ #include "pxr/pxr.h"
+ #include "pxr/base/arch/testArchUtil.h"
+@@ -87,7 +89,7 @@ Arch_ReadInvalidAddresses(bool spawnthread)
+     for (size_t i = 0; i != ~0ull; ++i) {
+         // This will eventually give us NULL in a way that the compiler probably
+         // cannot prove at compile-time.
+-        char const *ptr = reinterpret_cast<char const *>(rand() & 7);
++        char const *ptr = reinterpret_cast<char const *>((intptr_t)rand() & 7);
+         printf("byte %p = %d\n", ptr, *ptr);
+     }
+ 
+diff --git a/pxr/base/tf/fileUtils.cpp b/pxr/base/tf/fileUtils.cpp
+index d9dff3a1..761968db 100644
+--- a/pxr/base/tf/fileUtils.cpp
++++ b/pxr/base/tf/fileUtils.cpp
+@@ -358,7 +358,7 @@ TfReadDir(
+     if((hFind = FindFirstFileW(szPath, &fdFile)) == INVALID_HANDLE_VALUE)
+     {
+         if (errMsg) {
+-            *errMsg = TfStringPrintf("Path not found: %s", szPath);
++            *errMsg = TfStringPrintf("Path not found: %ls", szPath);
+         }
+         return false;
+     }
+diff --git a/pxr/base/tf/mallocTag.cpp b/pxr/base/tf/mallocTag.cpp
+index 3fd235e9..dcfe9702 100644
+--- a/pxr/base/tf/mallocTag.cpp
++++ b/pxr/base/tf/mallocTag.cpp
+@@ -1231,7 +1231,7 @@ _GetAsCommaSeparatedString(size_t number)
+ {
+     string result;
+ 
+-    string str = TfStringPrintf("%ld", number);
++    string str = TfStringPrintf("%zu", number);
+     size_t n = str.size();
+ 
+     TF_FOR_ALL(it, str) {
+@@ -1361,7 +1361,7 @@ _PrintMallocCallSites(
+     const size_t maxPercentageWidth = 15;
+ 
+     string fmt = TfStringPrintf(
+-        "%%-%lds %%%lds %%%lds\n",
++        "%%-%zus %%%zus %%%zus\n",
+         maxNameWidth, maxBytesWidth, maxPercentageWidth);
+ 
+     *rpt += TfStringPrintf(fmt.c_str(), "NAME", "BYTES", "%ROOT");
+@@ -1442,7 +1442,7 @@ _ReportMallocNode(
+     }
+ 
+     out << TfStringPrintf(
+-        "%13s B %13s B %7ld samples    ",
++        "%13s B %13s B %7zu samples    ",
+         _GetAsCommaSeparatedString(node.nBytes).c_str(),
+         _GetAsCommaSeparatedString(node.nBytesDirect).c_str(),
+         node.nAllocations);
+diff --git a/pxr/base/tf/pyClassMethod.h b/pxr/base/tf/pyClassMethod.h
+index 569e1740..37267319 100644
+--- a/pxr/base/tf/pyClassMethod.h
++++ b/pxr/base/tf/pyClassMethod.h
+@@ -36,6 +36,7 @@ PXR_NAMESPACE_OPEN_SCOPE
+ namespace Tf_PyClassMethod {
+ 
+ using namespace boost::python;
++namespace bp = boost::python;
+ 
+ // Visitor for wrapping functions as Python class methods.
+ // See typedef below for docs.
+@@ -43,7 +44,7 @@ using namespace boost::python;
+ // except it uses PyClassMethod_New() instead of PyStaticMethod_New().
+ struct _TfPyClassMethod : def_visitor<_TfPyClassMethod>
+ {
+-    friend class def_visitor_access;
++    friend class bp::def_visitor_access;
+ 
+     _TfPyClassMethod(const std::string &methodName) :
+         _methodName(methodName) {}
+diff --git a/pxr/base/tf/pyPtrHelpers.h b/pxr/base/tf/pyPtrHelpers.h
+index 066ead2d..a6fd0b19 100644
+--- a/pxr/base/tf/pyPtrHelpers.h
++++ b/pxr/base/tf/pyPtrHelpers.h
+@@ -110,6 +110,7 @@ struct TfMakePyPtr {
+ namespace Tf_PyDefHelpers {
+ 
+ using namespace boost::python;
++namespace bp = boost::python;
+ 
+ template <typename Ptr>
+ struct _PtrInterface {
+@@ -309,7 +310,7 @@ converter::to_python_function_t
+ _PtrToPythonWrapper<T>::_originalConverter = 0;
+ 
+ struct WeakPtr : def_visitor<WeakPtr> {
+-    friend class def_visitor_access;
++    friend class bp::def_visitor_access;
+ 
+     template <typename WrapperPtrType, typename Wrapper, typename T>
+     static void _RegisterConversions(Wrapper *, T *) {
+@@ -405,7 +406,7 @@ struct WeakPtr : def_visitor<WeakPtr> {
+ };
+ 
+ struct RefAndWeakPtr : def_visitor<RefAndWeakPtr> {
+-    friend class def_visitor_access;
++    friend class bp::def_visitor_access;
+ 
+     template <typename CLS, typename Wrapper, typename T>
+     static void _AddAPI(Wrapper *, T *) {
+diff --git a/pxr/base/tf/refPtr.h b/pxr/base/tf/refPtr.h
+index a6ea42c4..3d3c3bf6 100644
+--- a/pxr/base/tf/refPtr.h
++++ b/pxr/base/tf/refPtr.h
+@@ -425,6 +425,7 @@
+ ///
+ 
+ #include "pxr/pxr.h"
++#include "pxr/base/arch/pragmas.h"
+ 
+ #include "pxr/base/tf/diagnosticLite.h"
+ #include "pxr/base/tf/hash.h"
+@@ -1079,9 +1080,12 @@ private:
+     // not the first base class of T then the resulting pointer may
+     // not point to a T.  Nevertheless, it should be consistent to
+     // all calls to the tracking functions.
++    ARCH_PRAGMA_PUSH
++    ARCH_PRAGMA_REINTERPRET_BASE_CLASS
+     T* _GetObjectForTracking() const {
+         return reinterpret_cast<T*>(const_cast<TfRefBase*>(_refBase));
+     }
++    ARCH_PRAGMA_POP
+ 
+     /// Call \c typeid on the object pointed to by a \c TfRefPtr.
+     ///
+diff --git a/pxr/base/tf/singleton.h b/pxr/base/tf/singleton.h
+index 326782e2..2709b626 100644
+--- a/pxr/base/tf/singleton.h
++++ b/pxr/base/tf/singleton.h
+@@ -194,8 +194,10 @@ public:
+     
+ private:
+     static T *_CreateInstance(std::atomic<T *> &instance);
+-    
++    ARCH_PRAGMA_PUSH
++    ARCH_PRAGMA_NEEDS_EXPORT_INTERFACE
+     static std::atomic<T *> _instance;
++    ARCH_PRAGMA_POP
+ };
+ 
+ PXR_NAMESPACE_CLOSE_SCOPE
+diff --git a/pxr/base/tf/stringUtils.cpp b/pxr/base/tf/stringUtils.cpp
+index 044c55ae..bf4eb896 100644
+--- a/pxr/base/tf/stringUtils.cpp
++++ b/pxr/base/tf/stringUtils.cpp
+@@ -806,7 +806,8 @@ TfDictionaryLessThan::_LessImpl(const string& lstr, const string& rstr) const
+             // Add 5 mod 32 makes '_' sort before all letters.
+             return ((l + 5) & 31) < ((r + 5) & 31);
+         }
+-        else if (IsDigit(l) | IsDigit(r)) {
++        // Intentionally using bitwise operators due to performance critical code path.
++         else if (IsDigit(l) | IsDigit(r)) {
+             if (IsDigit(l) & IsDigit(r)) {
+                 // We backtrack to find the start of each digit string, then we
+                 // scan each digit string, ignoring leading zeros to put the two
+@@ -869,6 +870,7 @@ TfDictionaryLessThan::_LessImpl(const string& lstr, const string& rstr) const
+                 curEnd = lcur + std::min(std::distance(lcur, lend),
+                                          std::distance(rcur, rend));
+             }
++             // Intentionally using bitwise operators due to performance critical code path.
+             else if (IsDigit(l) | IsDigit(r)) {
+                 if (lcur == lstr.c_str()) {
+                     return l < r;
+diff --git a/pxr/base/tf/testenv/notice.cpp b/pxr/base/tf/testenv/notice.cpp
+index f20d5040..7c4eb732 100644
+--- a/pxr/base/tf/testenv/notice.cpp
++++ b/pxr/base/tf/testenv/notice.cpp
+@@ -39,6 +39,7 @@
+ #include <string>
+ #include <thread>
+ #include <vector>
++#include <algorithm>
+ 
+ using std::cout;
+ using std::endl;
+@@ -112,7 +113,7 @@ std::mutex mainThreadLock;
+ static void 
+ _DumpLog(ostream *log, vector<string> *li, std::mutex *mutex) {
+     std::lock_guard<std::mutex> lock(*mutex);
+-    sort(li->begin(), li->end());
++    std::sort(li->begin(), li->end());
+     for(vector<string>::const_iterator n = li->begin(); 
+         n != li->end(); ++ n) {
+         *log << *n << endl;
+diff --git a/pxr/base/tf/testenv/scopeDescription.cpp b/pxr/base/tf/testenv/scopeDescription.cpp
+index 21030479..ab2928c4 100644
+--- a/pxr/base/tf/testenv/scopeDescription.cpp
++++ b/pxr/base/tf/testenv/scopeDescription.cpp
+@@ -102,6 +102,7 @@ TestOverhead()
+     } while (sw.GetSeconds() < 0.5);
+     // printf("%zd rand calls in %f seconds: %u\n",
+     //        count, sw.GetSeconds(), val);
++    (void)val;
+     double baseSecsPerCall = sw.GetSeconds() / double(count);
+ 
+     count = 0;
+diff --git a/pxr/base/tf/wrapTestPyStaticTokens.cpp b/pxr/base/tf/wrapTestPyStaticTokens.cpp
+index 41491c90..07a01038 100644
+--- a/pxr/base/tf/wrapTestPyStaticTokens.cpp
++++ b/pxr/base/tf/wrapTestPyStaticTokens.cpp
+@@ -34,7 +34,7 @@ PXR_NAMESPACE_OPEN_SCOPE
+     ((pear, "d'Anjou"))                 \
+     ((apple, ( (Fuji) (Pippin) (McIntosh) )))
+ 
+-TF_DECLARE_PUBLIC_TOKENS(tfTestStaticTokens, TF_API, TF_TEST_TOKENS);
++TF_DECLARE_PUBLIC_TOKENS(tfTestStaticTokens, TF_TEST_TOKENS);
+ TF_DEFINE_PUBLIC_TOKENS(tfTestStaticTokens, TF_TEST_TOKENS);
+ 
+ PXR_NAMESPACE_CLOSE_SCOPE
+diff --git a/pxr/base/tf/wrapTypeHelpers.h b/pxr/base/tf/wrapTypeHelpers.h
+index ad79e175..6d7b0267 100644
+--- a/pxr/base/tf/wrapTypeHelpers.h
++++ b/pxr/base/tf/wrapTypeHelpers.h
+@@ -38,10 +38,11 @@ PXR_NAMESPACE_OPEN_SCOPE
+ namespace TfType_WrapHelpers {
+ 
+     using namespace boost::python;
++    namespace bp = boost::python;
+ 
+     struct _PythonClass : def_visitor<_PythonClass>
+     {
+-        friend class def_visitor_access;
++        friend class bp::def_visitor_access;
+             
+     private:
+         template <class CLS, class T>
+diff --git a/pxr/base/vt/value.cpp b/pxr/base/vt/value.cpp
+index 005b5961..57819c73 100644
+--- a/pxr/base/vt/value.cpp
++++ b/pxr/base/vt/value.cpp
+@@ -94,6 +94,11 @@ _NumericCast(VtValue const &val)
+ {
+     const From x = val.UncheckedGet<From>();
+ 
++    // Fix for strict builds. Somce bools do not have an infinity, this function
++    // should not be compiled. However, that is not the case currently on MSVC.
++    ARCH_PRAGMA_PUSH
++    ARCH_PRAGMA_UNSAFE_USE_OF_BOOL
++
+     // Use 'x == x' to check that x is not NaN.  NaNs don't compare equal to
+     // themselves.
+     if (x == x) {
+@@ -104,6 +109,7 @@ _NumericCast(VtValue const &val)
+             return VtValue(-std::numeric_limits<To>::infinity());
+         }
+     }
++    ARCH_PRAGMA_POP
+ 
+     return _BoostNumericCast<From, To>(x);
+ }
+diff --git a/pxr/imaging/hd/flattenedDataSourceProvider.h b/pxr/imaging/hd/flattenedDataSourceProvider.h
+index 0cf94d9a..18a9dd72 100644
+--- a/pxr/imaging/hd/flattenedDataSourceProvider.h
++++ b/pxr/imaging/hd/flattenedDataSourceProvider.h
+@@ -45,6 +45,8 @@ using HdFlattenedDataSourceProviderSharedPtr =
+ class HdFlattenedDataSourceProvider
+ {
+ public:
++    virtual ~HdFlattenedDataSourceProvider() {};
++
+     class Context
+     {
+     public:
+diff --git a/pxr/imaging/hd/flattenedMaterialBindingsDataSourceProvider.cpp b/pxr/imaging/hd/flattenedMaterialBindingsDataSourceProvider.cpp
+index 5cb4f862..7876c18a 100644
+--- a/pxr/imaging/hd/flattenedMaterialBindingsDataSourceProvider.cpp
++++ b/pxr/imaging/hd/flattenedMaterialBindingsDataSourceProvider.cpp
+@@ -52,7 +52,7 @@ public:
+     TfTokenVector GetNames() override {
+         TfDenseHashSet<TfToken, TfToken::HashFunctor> allNames;
+         {
+-            for (const TfTokenVector names : { _primBindings->GetNames(),
++            for (const TfTokenVector &names : { _primBindings->GetNames(),
+                                                _parentBindings->GetNames() } ) {
+                 allNames.insert(names.begin(), names.end());
+             }
+diff --git a/pxr/imaging/hd/materialNetwork2Interface.cpp b/pxr/imaging/hd/materialNetwork2Interface.cpp
+index 4aeaff7c..f318b226 100644
+--- a/pxr/imaging/hd/materialNetwork2Interface.cpp
++++ b/pxr/imaging/hd/materialNetwork2Interface.cpp
+@@ -74,7 +74,7 @@ HdMaterialNetwork2Interface::GetNodeNames() const
+     TfTokenVector result;
+     if (_materialNetwork) {
+         result.reserve(_materialNetwork->nodes.size());
+-        for (const auto nameNodePair : _materialNetwork->nodes) {
++        for (const auto &nameNodePair : _materialNetwork->nodes) {
+             result.push_back(TfToken(nameNodePair.first.GetString()));
+         }
+     }
+@@ -112,7 +112,7 @@ HdMaterialNetwork2Interface::GetAuthoredNodeParameterNames(
+     TfTokenVector result;
+     if (HdMaterialNode2 *node = _GetNode(nodeName)) {
+         result.reserve(node->parameters.size());
+-        for (const auto nameValuePair : node->parameters) {
++        for (const auto &nameValuePair : node->parameters) {
+             result.push_back(nameValuePair.first);
+         }
+     }
+@@ -141,7 +141,7 @@ HdMaterialNetwork2Interface::GetNodeInputConnectionNames(
+     TfTokenVector result;
+     if (HdMaterialNode2 *node = _GetNode(nodeName)) {
+         result.reserve(node->inputConnections.size());
+-        for (const auto nameConnectionsPair : node->inputConnections) {
++        for (const auto &nameConnectionsPair : node->inputConnections) {
+             result.push_back(nameConnectionsPair.first);
+         }
+     }
+@@ -239,7 +239,7 @@ HdMaterialNetwork2Interface::GetTerminalNames() const
+     TfTokenVector result;
+     if (_materialNetwork) {
+         result.reserve(_materialNetwork->terminals.size());
+-        for (const auto nameConnectionPair : _materialNetwork->terminals) {
++        for (const auto &nameConnectionPair : _materialNetwork->terminals) {
+             result.push_back(nameConnectionPair.first);
+         }
+     }
+diff --git a/pxr/imaging/hd/perfLog.cpp b/pxr/imaging/hd/perfLog.cpp
+index 635a9e54..460ad562 100644
+--- a/pxr/imaging/hd/perfLog.cpp
++++ b/pxr/imaging/hd/perfLog.cpp
+@@ -63,7 +63,7 @@ HdPerfLog::AddCacheHit(TfToken const& name,
+         return;
+     _Lock lock(_mutex);
+     _cacheMap[name].AddHit();
+-    TF_DEBUG(HD_CACHE_HITS).Msg("Cache hit: %s %s %s hits: %lu\n",
++    TF_DEBUG(HD_CACHE_HITS).Msg("Cache hit: %s %s %s hits: %zu\n",
+             name.GetText(),
+             id.GetText(),
+             tag.GetText(),
+@@ -79,7 +79,7 @@ HdPerfLog::AddCacheMiss(TfToken const& name,
+         return;
+     _Lock lock(_mutex);
+     _cacheMap[name].AddMiss();
+-    TF_DEBUG(HD_CACHE_MISSES).Msg("Cache miss: %s %s %s Total misses: %lu\n",
++    TF_DEBUG(HD_CACHE_MISSES).Msg("Cache miss: %s %s %s Total misses: %zu\n",
+             name.GetText(),
+             id.GetText(),
+             tag.GetText(),
+diff --git a/pxr/imaging/hd/testenv/testHdSceneIndex.cpp b/pxr/imaging/hd/testenv/testHdSceneIndex.cpp
+index fe380e60..4d6c4606 100644
+--- a/pxr/imaging/hd/testenv/testHdSceneIndex.cpp
++++ b/pxr/imaging/hd/testenv/testHdSceneIndex.cpp
+@@ -878,7 +878,7 @@ bool TestMergingSceneIndexPrimAddedNotices()
+     };
+ 
+     auto _Compare = [&mergingSceneIndex, &observer, &expectedTypes]() {
+-        for (const RecordingSceneIndexObserver::Event event :
++        for (const RecordingSceneIndexObserver::Event &event :
+                 observer.GetEvents()) {
+ 
+             if (event.eventType !=
+diff --git a/pxr/imaging/hdGp/CMakeLists.txt b/pxr/imaging/hdGp/CMakeLists.txt
+index d5bae8f5..b92d6902 100644
+--- a/pxr/imaging/hdGp/CMakeLists.txt
++++ b/pxr/imaging/hdGp/CMakeLists.txt
+@@ -19,6 +19,9 @@ pxr_library(hdGp
+         generativeProceduralResolvingSceneIndex
+         sceneIndexPlugin
+ 
++    PUBLIC_HEADERS
++        api.h
++
+     RESOURCE_FILES
+         plugInfo.json
+ )
+diff --git a/pxr/imaging/hdGp/api.h b/pxr/imaging/hdGp/api.h
+new file mode 100644
+index 00000000..d397789f
+--- /dev/null
++++ b/pxr/imaging/hdGp/api.h
+@@ -0,0 +1,47 @@
++//
++// Copyright 2017 Pixar
++//
++// Licensed under the Apache License, Version 2.0 (the "Apache License")
++// with the following modification; you may not use this file except in
++// compliance with the Apache License and the following modification to it:
++// Section 6. Trademarks. is deleted and replaced with:
++//
++// 6. Trademarks. This License does not grant permission to use the trade
++//    names, trademarks, service marks, or product names of the Licensor
++//    and its affiliates, except as required to comply with Section 4(c) of
++//    the License and to reproduce the content of the NOTICE file.
++//
++// You may obtain a copy of the Apache License at
++//
++//     http://www.apache.org/licenses/LICENSE-2.0
++//
++// Unless required by applicable law or agreed to in writing, software
++// distributed under the Apache License with the above modification is
++// distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
++// KIND, either express or implied. See the Apache License for the specific
++// language governing permissions and limitations under the Apache License.
++//
++#ifndef PXR_IMAGING_HDGP_API_H
++#define PXR_IMAGING_HDGP_API_H
++
++#include "pxr/base/arch/export.h"
++
++#if defined(PXR_STATIC)
++#   define HDGP_API
++#   define HDGP_API_TEMPLATE_CLASS(...)
++#   define HDGP_API_TEMPLATE_STRUCT(...)
++#   define HDGP_LOCAL
++#else
++#   if defined(HDGP_EXPORTS)
++#       define HDGP_API ARCH_EXPORT
++#       define HDGP_API_TEMPLATE_CLASS(...) ARCH_EXPORT_TEMPLATE(class, __VA_ARGS__)
++#       define HDGP_API_TEMPLATE_STRUCT(...) ARCH_EXPORT_TEMPLATE(struct, __VA_ARGS__)
++#   else
++#       define HDGP_API ARCH_IMPORT
++#       define HDGP_API_TEMPLATE_CLASS(...) ARCH_IMPORT_TEMPLATE(class, __VA_ARGS__)
++#       define HDGP_API_TEMPLATE_STRUCT(...) ARCH_IMPORT_TEMPLATE(struct, __VA_ARGS__)
++#   endif
++#   define HDGP_LOCAL ARCH_HIDDEN
++#endif
++
++#endif // PXR_IMAGING_HDGP_API_H
+diff --git a/pxr/imaging/hdGp/generativeProceduralPlugin.h b/pxr/imaging/hdGp/generativeProceduralPlugin.h
+index 46f0a5ee..8db0a511 100644
+--- a/pxr/imaging/hdGp/generativeProceduralPlugin.h
++++ b/pxr/imaging/hdGp/generativeProceduralPlugin.h
+@@ -27,9 +27,10 @@
+ #include "pxr/imaging/hdGp/generativeProcedural.h"
+ 
+ #include "pxr/pxr.h"
+-#include "pxr/imaging/hd/api.h"
+ #include "pxr/imaging/hf/pluginBase.h"
+ 
++#include "pxr/imaging/hdGp/api.h"
++
+ PXR_NAMESPACE_OPEN_SCOPE
+ 
+ /// \class HdGpGenerativeProceduralPlugin
+@@ -43,7 +44,7 @@ public:
+ 
+     /// Subclasses implement this to instantiate an HdGpGenerativeProcedural
+     /// at a given prim path.
+-    HD_API
++    HDGP_API
+     virtual HdGpGenerativeProcedural *Construct(
+         const SdfPath &proceduralPrimPath);
+ 
+@@ -51,7 +52,7 @@ protected:
+ 
+     HdGpGenerativeProceduralPlugin();
+ 
+-    HD_API
++    HDGP_API
+     ~HdGpGenerativeProceduralPlugin() override;
+ };
+ 
+diff --git a/pxr/imaging/hdGp/generativeProceduralPluginRegistry.h b/pxr/imaging/hdGp/generativeProceduralPluginRegistry.h
+index 88dda8f3..e7be636e 100644
+--- a/pxr/imaging/hdGp/generativeProceduralPluginRegistry.h
++++ b/pxr/imaging/hdGp/generativeProceduralPluginRegistry.h
+@@ -27,8 +27,8 @@
+ #include "pxr/pxr.h"
+ #include "pxr/base/tf/singleton.h"
+ #include "pxr/imaging/hf/pluginRegistry.h"
+-#include "pxr/imaging/hd/api.h"
+ 
++#include "pxr/imaging/hdGp/api.h"
+ #include "pxr/imaging/hdGp/generativeProceduralPlugin.h"
+ 
+ PXR_NAMESPACE_OPEN_SCOPE
+@@ -39,7 +39,7 @@ public:
+     ///
+     /// Returns the singleton registry for \c HdSceneIndexPlugin
+     ///
+-    HD_API
++    HDGP_API
+     static HdGpGenerativeProceduralPluginRegistry &GetInstance();
+ 
+     ///
+@@ -48,7 +48,7 @@ public:
+     template<typename T, typename... Bases>
+     static void Define();
+ 
+-    HD_API
++    HDGP_API
+     HdGpGenerativeProcedural *ConstructProcedural(
+         const TfToken &proceduralTypeName,
+         const SdfPath &proceduralPrimPath);
+diff --git a/pxr/imaging/hdSt/bufferArrayRegistry.cpp b/pxr/imaging/hdSt/bufferArrayRegistry.cpp
+index d0a3b164..82dcf337 100644
+--- a/pxr/imaging/hdSt/bufferArrayRegistry.cpp
++++ b/pxr/imaging/hdSt/bufferArrayRegistry.cpp
+@@ -173,8 +173,8 @@ HdStBufferArrayRegistry::ReallocateAll(HdStAggregationStrategy *strategy)
+                 if (numElements > maxTotalElements) {
+                     // Issue a warning and reset number of elements in the BAR.
+                     TF_WARN("Number of elements in the buffer array range "
+-                            "(0x%lx) is _larger_ than the maximum number of "
+-                            "elements in the buffer array (0x%lx). 0x%lx bytes "
++                            "(0x%zx) is _larger_ than the maximum number of "
++                            "elements in the buffer array (0x%zx). 0x%zx bytes "
+                             "of data will be skipped.",
+                             numElements, maxTotalElements,
+                             numElements - maxTotalElements);
+@@ -287,7 +287,6 @@ HdStBufferArrayRegistry::_InsertNewBufferArray(
+ }
+ 
+ 
+-HD_API
+ std::ostream &
+ operator <<(std::ostream &out, const HdStBufferArrayRegistry& self)
+ {
+diff --git a/pxr/imaging/hdSt/commandBuffer.cpp b/pxr/imaging/hdSt/commandBuffer.cpp
+index 436782f0..d8aa3ea9 100644
+--- a/pxr/imaging/hdSt/commandBuffer.cpp
++++ b/pxr/imaging/hdSt/commandBuffer.cpp
+@@ -364,7 +364,7 @@ HdStCommandBuffer::_RebuildDrawBatches(HgiCapabilities const *hgiCapabilities)
+     }
+ 
+     TF_DEBUG(HDST_DRAW_BATCH).Msg(
+-        "   %lu draw batches created for %lu draw items\n", _drawBatches.size(),
++        "   %zu draw batches created for %zu draw items\n", _drawBatches.size(),
+         drawItems.size());
+ }
+ 
+diff --git a/pxr/imaging/hdSt/interleavedMemoryManager.cpp b/pxr/imaging/hdSt/interleavedMemoryManager.cpp
+index c6bc1471..96c3c719 100644
+--- a/pxr/imaging/hdSt/interleavedMemoryManager.cpp
++++ b/pxr/imaging/hdSt/interleavedMemoryManager.cpp
+@@ -683,7 +683,7 @@ HdStInterleavedMemoryManager::_StripedInterleavedBufferRange::Resize(int numElem
+ 
+         if (static_cast<size_t>(numElements) > numMaxElements) {
+             TF_WARN("Attempting to resize the BAR with 0x%x elements when the "
+-                    "max number of elements in the buffer array is 0x%lx. "
++                    "max number of elements in the buffer array is 0x%zx. "
+                     "Clamping BAR size to the latter.",
+                      numElements, numMaxElements);
+ 
+diff --git a/pxr/imaging/hdSt/mesh.cpp b/pxr/imaging/hdSt/mesh.cpp
+index b92b6743..bf34f7fc 100644
+--- a/pxr/imaging/hdSt/mesh.cpp
++++ b/pxr/imaging/hdSt/mesh.cpp
+@@ -80,7 +80,6 @@ TF_DEFINE_ENV_SETTING(HD_ENABLE_PACKED_NORMALS, 1,
+ 
+ // Use more recognizable names for each compute queue the mesh computations use.
+ namespace {
+-    constexpr HdStComputeQueue _CopyExtCompQueue = HdStComputeQueueZero;
+     constexpr HdStComputeQueue _RefinePrimvarCompQueue = HdStComputeQueueOne;
+     constexpr HdStComputeQueue _NormalsCompQueue = HdStComputeQueueTwo;
+     constexpr HdStComputeQueue _RefineNormalsCompQueue = HdStComputeQueueThree;
+diff --git a/pxr/imaging/hdSt/primUtils.cpp b/pxr/imaging/hdSt/primUtils.cpp
+index 78736c15..b43a9c96 100644
+--- a/pxr/imaging/hdSt/primUtils.cpp
++++ b/pxr/imaging/hdSt/primUtils.cpp
+@@ -659,7 +659,7 @@ HdStUpdateDrawItemBAR(
+         
+         if (newRangeValid) {
+             TfDebug::Helper().Msg(
+-                "Buffer array version for the new range is %lu\n",
++                "Buffer array version for the new range is %zu\n",
+                 newRange->GetVersion());
+         }
+ 
+diff --git a/pxr/imaging/hdSt/renderDelegate.cpp b/pxr/imaging/hdSt/renderDelegate.cpp
+index 2c2e7fe1..02082cba 100644
+--- a/pxr/imaging/hdSt/renderDelegate.cpp
++++ b/pxr/imaging/hdSt/renderDelegate.cpp
+@@ -93,10 +93,13 @@ const TfTokenVector HdStRenderDelegate::SUPPORTED_SPRIM_TYPES =
+     HdPrimTypeTokens->sphereLight
+ };
+ 
++ARCH_PRAGMA_PUSH
++ARCH_PRAGMA_UNUSED_VARIABLE
+ TF_DEFINE_PRIVATE_TOKENS(
+     _tokens,
+     (mtlx)
+ );
++ARCH_PRAGMA_POP
+ 
+ using HdStResourceRegistryWeakPtr =  std::weak_ptr<HdStResourceRegistry>;
+ 
+diff --git a/pxr/imaging/hdSt/vboMemoryManager.cpp b/pxr/imaging/hdSt/vboMemoryManager.cpp
+index f40fe3cd..5340814e 100644
+--- a/pxr/imaging/hdSt/vboMemoryManager.cpp
++++ b/pxr/imaging/hdSt/vboMemoryManager.cpp
+@@ -607,7 +607,7 @@ HdStVBOMemoryManager::_StripedBufferArrayRange::Resize(int numElements)
+ 
+         if (static_cast<size_t>(numElements) > numMaxElements) {
+             TF_WARN("Attempting to resize the BAR with 0x%x elements when the "
+-                    "max number of elements in the buffer array is 0x%lx. "
++                    "max number of elements in the buffer array is 0x%zx. "
+                     "Clamping BAR size to the latter.",
+                      numElements, numMaxElements);
+ 
+@@ -662,7 +662,7 @@ HdStVBOMemoryManager::_StripedBufferArrayRange::CopyData(
+         bufferSource->GetNumElements() *
+         HdDataSizeOfTupleType(bufferSource->GetTupleType());
+     if (srcSize > dstSize) {
+-        TF_WARN("%s: size %ld is larger than the range (%ld)",
++        TF_WARN("%s: size %zd is larger than the range (%zd)",
+                 bufferSource->GetName().GetText(), srcSize, dstSize);
+         srcSize = dstSize;
+     }
+diff --git a/pxr/imaging/hdSt/vboSimpleMemoryManager.cpp b/pxr/imaging/hdSt/vboSimpleMemoryManager.cpp
+index b004d7cb..aeb0a6e8 100644
+--- a/pxr/imaging/hdSt/vboSimpleMemoryManager.cpp
++++ b/pxr/imaging/hdSt/vboSimpleMemoryManager.cpp
+@@ -455,7 +455,7 @@ HdStVBOSimpleMemoryManager::_SimpleBufferArrayRange::CopyData(
+         bufferSource->GetNumElements() *
+         HdDataSizeOfTupleType(bufferSource->GetTupleType());
+     if (srcSize > dstSize) {
+-        TF_WARN("%s: size %ld is larger than the range (%ld)",
++        TF_WARN("%s: size %zd is larger than the range (%zd)",
+                 bufferSource->GetName().GetText(), srcSize, dstSize);
+         srcSize = dstSize;
+     }
+diff --git a/pxr/imaging/hdar/systemSchema.h b/pxr/imaging/hdar/systemSchema.h
+index a3c56f05..1811bf3c 100644
+--- a/pxr/imaging/hdar/systemSchema.h
++++ b/pxr/imaging/hdar/systemSchema.h
+@@ -106,7 +106,7 @@ public:
+     /// Otherwise, this returns null.
+     ///
+     /// This operation will be linear in the length of \p fromPath.
+-    HD_API
++    HDAR_API
+     static HdContainerDataSourceHandle GetFromPath(
+             HdSceneIndexBaseRefPtr const &inputScene,
+             SdfPath const &fromPath,
+diff --git a/pxr/imaging/hdsi/coordSysPrimSceneIndex.cpp b/pxr/imaging/hdsi/coordSysPrimSceneIndex.cpp
+index 837ed111..68ebebac 100644
+--- a/pxr/imaging/hdsi/coordSysPrimSceneIndex.cpp
++++ b/pxr/imaging/hdsi/coordSysPrimSceneIndex.cpp
+@@ -302,7 +302,7 @@ HdsiCoordSysPrimSceneIndex::GetChildPrimPaths(const SdfPath &primPath) const
+     if (it == _targetedPrimToNameToRefCount.end()) {
+         return result;
+     }
+-    for (const std::pair<TfToken, size_t> &nameAndRefCount : it->second) {
++    for (const std::pair<TfToken, size_t> nameAndRefCount : it->second) {
+         const TfToken &coordSysName = nameAndRefCount.first;
+         result.push_back(_PathForCoordSysPrim(primPath, coordSysName));
+     }
+diff --git a/pxr/imaging/hdx/selectionTracker.cpp b/pxr/imaging/hdx/selectionTracker.cpp
+index c3fb08ca..00cf3c47 100644
+--- a/pxr/imaging/hdx/selectionTracker.cpp
++++ b/pxr/imaging/hdx/selectionTracker.cpp
+@@ -260,7 +260,7 @@ HdxSelectionTracker::GetSelectionOffsetBuffer(const HdRenderIndex * const index,
+ 
+             copyOffset += output.size();
+ 
+-            TF_DEBUG(HDX_SELECTION_SETUP).Msg("Highlight mode %d has %lu "
++            TF_DEBUG(HDX_SELECTION_SETUP).Msg("Highlight mode %d has %zu "
+                 "entries\n", mode, output.size());
+         }
+     }
+diff --git a/pxr/imaging/hgiGL/scopedStateHolder.h b/pxr/imaging/hgiGL/scopedStateHolder.h
+index d006480b..f69660eb 100644
+--- a/pxr/imaging/hgiGL/scopedStateHolder.h
++++ b/pxr/imaging/hgiGL/scopedStateHolder.h
+@@ -75,7 +75,6 @@ private:
+     int32_t _restoreStencilReferenceValue[2];
+     int32_t _restoreStencilFail[2];
+     int32_t _restoreStencilReadMask[2];
+-    int32_t _restoreStencilPass[2];
+     int32_t _restoreStencilDepthFail[2];
+     int32_t _restoreStencilDepthPass[2];
+     int32_t _restoreStencilWriteMask[2];
+diff --git a/pxr/imaging/hio/OpenEXR/OpenEXRCore/chunk.c b/pxr/imaging/hio/OpenEXR/OpenEXRCore/chunk.c
+index 304a402c..f5983b7e 100644
+--- a/pxr/imaging/hio/OpenEXR/OpenEXRCore/chunk.c
++++ b/pxr/imaging/hio/OpenEXR/OpenEXRCore/chunk.c
+@@ -39,7 +39,7 @@ atomic_compare_exchange_strong (
+     uint64_t volatile* object, uint64_t* expected, uint64_t desired)
+ {
+     uint64_t prev =
+-        (uint64_t) InterlockedCompareExchange64 (object, desired, *expected);
++        (uint64_t) InterlockedCompareExchange64 ((volatile int64_t *)object, desired, *expected);
+     if (prev == *expected) return 1;
+     *expected = prev;
+     return 0;
+diff --git a/pxr/imaging/hio/OpenEXR/OpenEXRCore/encoding.c b/pxr/imaging/hio/OpenEXR/OpenEXRCore/encoding.c
+index b074ccea..b92e0ce3 100644
+--- a/pxr/imaging/hio/OpenEXR/OpenEXRCore/encoding.c
++++ b/pxr/imaging/hio/OpenEXR/OpenEXRCore/encoding.c
+@@ -31,7 +31,7 @@ default_compress_chunk (exr_encode_pipeline_t* encode)
+         return pctxt->print_error (
+             pctxt,
+             rv,
+-            "error allocating buffer %lu",
++            "error allocating buffer %zu",
+             exr_compress_max_buffer_size (encode->packed_bytes));
+     //return rv;
+ 
+diff --git a/pxr/imaging/hio/OpenEXR/deflate/lib/deflate_decompress.c b/pxr/imaging/hio/OpenEXR/deflate/lib/deflate_decompress.c
+index 0074c7a4..1ebeb9c9 100644
+--- a/pxr/imaging/hio/OpenEXR/deflate/lib/deflate_decompress.c
++++ b/pxr/imaging/hio/OpenEXR/deflate/lib/deflate_decompress.c
+@@ -1081,9 +1081,9 @@ typedef enum libdeflate_result (*decompress_func_t)
+ 
+ #ifdef arch_select_decompress_func
+ static enum libdeflate_result
+-dispatch_decomp(struct libdeflate_decompressor *d,
+-		const void *in, size_t in_nbytes,
+-		void *out, size_t out_nbytes_avail,
++dispatch_decomp(struct libdeflate_decompressor * restrict d,
++		const void * restrict in, size_t in_nbytes,
++		void * restrict out, size_t out_nbytes_avail,
+ 		size_t *actual_in_nbytes_ret, size_t *actual_out_nbytes_ret);
+ 
+ static volatile decompress_func_t decompress_impl = dispatch_decomp;
+diff --git a/pxr/imaging/hio/fieldTextureData.h b/pxr/imaging/hio/fieldTextureData.h
+index 8c426e12..79ca28ad 100644
+--- a/pxr/imaging/hio/fieldTextureData.h
++++ b/pxr/imaging/hio/fieldTextureData.h
+@@ -103,7 +103,7 @@ private:
+ ///
+ /// A base class to make HioFieldTextureData objects, implemented by plugins.
+ ///
+-class HIO_API HioFieldTextureDataFactoryBase : public TfType::FactoryBase
++class HioFieldTextureDataFactoryBase : public TfType::FactoryBase
+ {
+ protected:
+     friend class HioFieldTextureData;
+diff --git a/pxr/imaging/hio/glslfxConfig.cpp b/pxr/imaging/hio/glslfxConfig.cpp
+index f25d9f48..16e47ce7 100644
+--- a/pxr/imaging/hio/glslfxConfig.cpp
++++ b/pxr/imaging/hio/glslfxConfig.cpp
+@@ -310,7 +310,7 @@ HioGlslfxConfig::_GetSourceKeyMap(VtDictionary const & dict,
+ 
+     const VtDictionary& specDict = techniqueSpec.UncheckedGet<VtDictionary>();
+     // get all of the shader stages specified in the spec
+-    for (const std::pair<std::string, VtValue>& p : specDict) {
++    for (const std::pair<std::string, VtValue> p : specDict) {
+         const string& shaderStageKey = p.first;
+         const VtValue& shaderStageSpec = p.second;
+ 
+@@ -438,7 +438,7 @@ HioGlslfxConfig::_GetParameters(VtDictionary const & dict,
+ 
+     const VtDictionary& paramsDict = params.UncheckedGet<VtDictionary>();
+     // pre-process the paramsDict in order to get the merged ordering
+-    for (const std::pair<std::string, VtValue>& p : paramsDict) {
++    for (const std::pair<std::string, VtValue> p : paramsDict) {
+         string paramName = p.first;
+         if (std::find(paramOrder.begin(), paramOrder.end(), paramName) ==
+                 paramOrder.end()) {
+@@ -546,7 +546,7 @@ HioGlslfxConfig::_GetTextures(VtDictionary const & dict,
+     }
+ 
+     const VtDictionary& texturesDict = textures.UncheckedGet<VtDictionary>();
+-    for (const std::pair<std::string, VtValue>& p : texturesDict) {
++    for (const std::pair<std::string, VtValue> p : texturesDict) {
+         const string& textureName = p.first;
+         const VtValue& textureData = p.second;
+         if (!textureData.IsHolding<VtDictionary>()) {
+@@ -617,7 +617,7 @@ HioGlslfxConfig::_GetAttributes(VtDictionary const & dict,
+ 
+     const VtDictionary& attributesDict =
+         attributes.UncheckedGet<VtDictionary>();
+-    for (const std::pair<std::string, VtValue>& p : attributesDict) {
++    for (const std::pair<std::string, VtValue> p : attributesDict) {
+         const string& attributeName = p.first;
+         const VtValue& attributeData = p.second;
+         if (!attributeData.IsHolding<VtDictionary>()) {
+diff --git a/pxr/imaging/hio/image.h b/pxr/imaging/hio/image.h
+index f357e61e..40bd690c 100644
+--- a/pxr/imaging/hio/image.h
++++ b/pxr/imaging/hio/image.h
+@@ -199,7 +199,7 @@ HioImage::GetMetadata(TfToken const & key, T * value) const
+     return true;
+ }
+ 
+-class HIO_API HioImageFactoryBase : public TfType::FactoryBase {
++class HioImageFactoryBase : public TfType::FactoryBase {
+ public:
+     virtual HioImageSharedPtr New() const = 0;
+ };
+diff --git a/pxr/imaging/hio/stb/stb_image.h b/pxr/imaging/hio/stb/stb_image.h
+index 03ccd13d..0d123ffe 100644
+--- a/pxr/imaging/hio/stb/stb_image.h
++++ b/pxr/imaging/hio/stb/stb_image.h
+@@ -4549,12 +4549,12 @@ static int stbi__check_png_header(stbi__context *s)
+    return 1;
+ }
+ 
+-typedef struct
++typedef struct tag_stbi__png
+ {
+    stbi__context *s;
+    stbi_uc *idata, *expanded, *out;
+    int depth;
+-   float gamma = 0;
++   float gamma = 0.0F;
+ } stbi__png;
+ 
+ 
+diff --git a/pxr/usd/pcp/cache.cpp b/pxr/usd/pcp/cache.cpp
+index a0df6ffd..7370f03e 100644
+--- a/pxr/usd/pcp/cache.cpp
++++ b/pxr/usd/pcp/cache.cpp
+@@ -1229,7 +1229,7 @@ PcpCache::ReloadReferences(PcpChanges* changes, const SdfPath& primPath)
+     // local layers.
+     SdfLayerHandleSet layersToReload;
+     for (const PcpLayerStackPtr& layerStack: layerStacksAtOrUnderPrim) {
+-        for (const SdfLayerHandle& layer: layerStack->GetLayers()) {
++        for (const SdfLayerHandle layer: layerStack->GetLayers()) {
+             if (!_layerStack->HasLayer(layer)) {
+                 layersToReload.insert(layer);
+             }
+diff --git a/pxr/usd/sdf/layer.cpp b/pxr/usd/sdf/layer.cpp
+index 458924e5..32db049f 100644
+--- a/pxr/usd/sdf/layer.cpp
++++ b/pxr/usd/sdf/layer.cpp
+@@ -4120,7 +4120,7 @@ SdfLayer::_SetData(const SdfAbstractDataPtr &newData,
+         if (!updater.unrecognizedFields.empty()) {
+             vector<string> fieldDescrs;
+             fieldDescrs.reserve(updater.unrecognizedFields.size());
+-            for (std::pair<TfToken, SdfPath> const &tokenPath:
++            for (std::pair<TfToken, SdfPath> const tokenPath:
+                      updater.unrecognizedFields) {
+                 fieldDescrs.push_back(
+                     TfStringPrintf("'%s' first seen at <%s>",
+diff --git a/pxr/usd/sdf/pathExpressionEval.h b/pxr/usd/sdf/pathExpressionEval.h
+index b53b9bca..ae5351c0 100644
+--- a/pxr/usd/sdf/pathExpressionEval.h
++++ b/pxr/usd/sdf/pathExpressionEval.h
+@@ -69,7 +69,7 @@ class Sdf_PathExpressionEvalBase
+ {
+ public:
+     friend bool
+-    Sdf_MakePathExpressionEvalImpl(
++    SDF_API Sdf_MakePathExpressionEvalImpl(
+         Sdf_PathExpressionEvalBase &eval,
+         SdfPathExpression const &expr,
+         TfFunctionRef<
+diff --git a/pxr/usd/sdf/predicateExpression.cpp b/pxr/usd/sdf/predicateExpression.cpp
+index e79cc7de..8ae56a4b 100644
+--- a/pxr/usd/sdf/predicateExpression.cpp
++++ b/pxr/usd/sdf/predicateExpression.cpp
+@@ -177,6 +177,8 @@ SdfPredicateExpression::GetText() const
+ 
+     std::vector<Op> opStack;
+ 
++    ARCH_PRAGMA_PUSH
++    ARCH_PRAGMA_UNUSED_LAMBDA_CAPTURE
+     auto printLogic = [&opName, &opStack, &result](
+         std::vector<std::pair<Op, int>> const &stack) {
+ 
+@@ -206,6 +208,7 @@ SdfPredicateExpression::GetText() const
+             result += ')';
+         }                
+     };
++    ARCH_PRAGMA_POP
+ 
+     auto printCall = [&result](FnCall const &call) {
+         result += call.funcName;
+diff --git a/pxr/usd/sdf/textFileFormat.cpp b/pxr/usd/sdf/textFileFormat.cpp
+index daf0256c..e3b383cd 100644
+--- a/pxr/usd/sdf/textFileFormat.cpp
++++ b/pxr/usd/sdf/textFileFormat.cpp
+@@ -189,7 +189,7 @@ SdfTextFileFormat::_ReadFromAsset(
+     const size_t toMB = 1048576;
+ 
+     if (fileSizeWarning > 0 && asset->GetSize() > (fileSizeWarning * toMB)) {
+-        TF_WARN("Performance warning: reading %lu MB text-based layer <%s>.",
++        TF_WARN("Performance warning: reading %zu MB text-based layer <%s>.",
+                 asset->GetSize() / toMB,
+                 resolvedPath.c_str());
+     }
+diff --git a/pxr/usd/sdf/textFileFormat.tab.cpp b/pxr/usd/sdf/textFileFormat.tab.cpp
+index 4aaffede..ca09b044 100644
+--- a/pxr/usd/sdf/textFileFormat.tab.cpp
++++ b/pxr/usd/sdf/textFileFormat.tab.cpp
+@@ -3167,13 +3167,6 @@ yydestruct (yymsg, yytype, yyvaluep, context)
+   if (!yymsg)
+     yymsg = "Deleting";
+   YY_SYMBOL_PRINT (yymsg, yytype, yyvaluep, yylocationp);
+-
+-  switch (yytype)
+-    {
+-
+-      default:
+-	break;
+-    }
+ }
+ 
+ /* Prevent warnings from -Wmissing-prototypes.  */
+@@ -3229,6 +3222,7 @@ YYSTYPE yylval;
+ 
+     /* Number of syntax errors so far.  */
+     int yynerrs;
++    (void)yynerrs;
+ 
+     int yystate;
+     /* Number of tokens to shift before error messages enabled.  */
+diff --git a/pxr/usd/usd/crateFile.cpp b/pxr/usd/usd/crateFile.cpp
+index 2e1aed22..2372a06e 100644
+--- a/pxr/usd/usd/crateFile.cpp
++++ b/pxr/usd/usd/crateFile.cpp
+@@ -1713,6 +1713,8 @@ _WritePossiblyCompressedArray(
+         return _WriteUncompressedArray(w, array, ver);
+     }
+ 
++    ARCH_PRAGMA_PUSH
++    ARCH_PRAGMA_INT_FLOAT_CONVERSION
+     // Check to see if all the floats are exactly represented as integers.
+     auto isIntegral = [](T fp) {
+         constexpr int32_t max = std::numeric_limits<int32_t>::max();
+@@ -1720,6 +1722,7 @@ _WritePossiblyCompressedArray(
+         return min <= fp && fp <= max &&
+             static_cast<T>(static_cast<int32_t>(fp)) == fp;
+     };    
++    ARCH_PRAGMA_POP
+     if (std::all_of(array.cdata(), array.cdata() + array.size(), isIntegral)) {
+         // Encode as integers.
+         auto result = ValueRepForArray<T>(w.Tell());
+diff --git a/pxr/usd/usd/primDefinition.cpp b/pxr/usd/usd/primDefinition.cpp
+index e4ee6557..babfd313 100644
+--- a/pxr/usd/usd/primDefinition.cpp
++++ b/pxr/usd/usd/primDefinition.cpp
+@@ -397,8 +397,8 @@ UsdPrimDefinition::_FindOrCreatePropertySpecForComposition(
+     // we create a new layer for this prim definition to write its composed
+     // properties.
+     if (_composedPropertyLayer) {
+-        if (destProp = _composedPropertyLayer->GetPropertyAtPath(
+-                primPath.AppendProperty(propName))) {
++        if ((destProp = _composedPropertyLayer->GetPropertyAtPath(
++                primPath.AppendProperty(propName)))) {
+             return destProp;
+         }
+     } else {
+@@ -520,7 +520,7 @@ UsdPrimDefinition::_ComposeOverAndReplaceExistingProperty(
+     // get the property spec with the overrides applied. Any fields that
+     // are defined in the override spec are stronger so we copy the defined
+     // spec fields that aren't already in the override spec.
+-    for (const TfToken srcField : defProp.ListMetadataFields()) {
++    for (const TfToken &srcField : defProp.ListMetadataFields()) {
+         if (!overLayerAndPath.HasField<VtValue>(srcField, nullptr)) {
+             VtValue value;
+             if (defLayerAndPath->HasField(srcField, &value)) {
+diff --git a/pxr/usd/usd/stage.cpp b/pxr/usd/usd/stage.cpp
+index 9af401fc..e0d59298 100644
+--- a/pxr/usd/usd/stage.cpp
++++ b/pxr/usd/usd/stage.cpp
+@@ -5095,7 +5095,7 @@ _GenerateFlattenedPrototypePath(const std::vector<UsdPrim>& prototypes)
+     size_t primPrototypeId = 1;
+ 
+     const auto generatePathName = [&primPrototypeId]() {
+-        return SdfPath(TfStringPrintf("/Flattened_Prototype_%lu", 
++        return SdfPath(TfStringPrintf("/Flattened_Prototype_%zu",
+                                       primPrototypeId++));
+     };
+ 
+diff --git a/pxr/usd/usd/testenv/testUsdResolveTarget.cpp b/pxr/usd/usd/testenv/testUsdResolveTarget.cpp
+index 1e5e6f8c..c44a68e3 100644
+--- a/pxr/usd/usd/testenv/testUsdResolveTarget.cpp
++++ b/pxr/usd/usd/testenv/testUsdResolveTarget.cpp
+@@ -257,8 +257,8 @@ _MakeAndVerifyQueries(
+         attr.GetPath() << " **" << std::endl;
+ 
+     TF_VERIFY(expectedValues.size() == resolveTargets.size(), 
+-        "Number or resolve targets %lu doesn't match the number of expected "
+-        "values %lu.",
++        "Number or resolve targets %zu doesn't match the number of expected "
++        "values %zu.",
+         resolveTargets.size(), expectedValues.size());
+ 
+     for (size_t i = 0; i < resolveTargets.size(); ++i) {
+@@ -292,7 +292,7 @@ _GetAllResolveTargetsForPrim(
+     for (const UsdPrimCompositionQueryArc &arc : arcs) {
+         const SdfLayerRefPtrVector &layers = 
+             arc.GetTargetNode().GetLayerStack()->GetLayers();
+-        for (const SdfLayerHandle &layer : layers) {
++        for (const SdfLayerHandle layer : layers) {
+ 
+             upToResolveTargets->push_back(
+                 arc.MakeResolveTargetUpTo(layer));
+diff --git a/pxr/usd/usdGeom/primvar.h b/pxr/usd/usdGeom/primvar.h
+index ebf3fbdd..d04b400b 100644
+--- a/pxr/usd/usdGeom/primvar.h
++++ b/pxr/usd/usdGeom/primvar.h
+@@ -865,8 +865,8 @@ UsdGeomPrimvar::_ComputeFlattenedHelper(const VtArray<ScalarType> &authored,
+ 
+         if (errString) {
+             *errString = TfStringPrintf(
+-                "Found %ld invalid indices at positions [%s%s] that are out of "
+-                "range [0,%ld).", invalidIndexPositions.size(), 
++                "Found %zu invalid indices at positions [%s%s] that are out of "
++                "range [0,%zu).", invalidIndexPositions.size(),
+                 TfStringJoin(invalidPositionsStrVec, ", ").c_str(), 
+                 invalidIndexPositions.size() > 5 ? ", ..." : "",
+                 authored.size());
+diff --git a/pxr/usd/usdGeom/subset.cpp b/pxr/usd/usdGeom/subset.cpp
+index 69c163bf..1fc6b2e1 100644
+--- a/pxr/usd/usdGeom/subset.cpp
++++ b/pxr/usd/usdGeom/subset.cpp
+@@ -518,7 +518,7 @@ UsdGeomSubset::ValidateSubsets(
+             valid = false;
+             if (reason) {
+                 *reason += TfStringPrintf("Number of unique indices at time %s "
+-                    "does not match the element count %ld.", 
++                    "does not match the element count %zu.",
+                     TfStringify(t).c_str(), elementCount);
+             }
+         }
+@@ -529,7 +529,7 @@ UsdGeomSubset::ValidateSubsets(
+             valid = false;
+             if (reason) {
+                 *reason += TfStringPrintf("Found one or more indices that are "
+-                    "greater than the element count %ld at time %s.\n", 
++                    "greater than the element count %zu at time %s.\n",
+                     elementCount, TfStringify(t).c_str());
+             }
+         }
+@@ -629,7 +629,7 @@ UsdGeomSubset::ValidateFamily(
+             valid = false;
+             if (reason) {
+                 *reason += TfStringPrintf("Number of unique indices at time %s "
+-                    "does not match the face count %ld.", 
++                    "does not match the face count %zu.",
+                     TfStringify(t).c_str(), faceCount);
+             }
+         }
+@@ -640,7 +640,7 @@ UsdGeomSubset::ValidateFamily(
+             valid = false;
+             if (reason) {
+                 *reason += TfStringPrintf("Found one or more indices that are "
+-                    "greater than the face-count %ld at time %s.\n", 
++                    "greater than the face-count %zu at time %s.\n",
+                     faceCount, TfStringify(t).c_str());
+             }
+         }
+diff --git a/pxr/usd/usdSkel/animation.cpp b/pxr/usd/usdSkel/animation.cpp
+index e4414b3b..d5795a7e 100644
+--- a/pxr/usd/usdSkel/animation.cpp
++++ b/pxr/usd/usdSkel/animation.cpp
+@@ -282,8 +282,8 @@ UsdSkelAnimation::SetTransforms(const VtMatrix4dArray& xforms,
+     VtVec3hArray scales;
+     if (UsdSkelDecomposeTransforms(xforms, &translations,
+                                    &rotations, &scales)) {
+-        return GetTranslationsAttr().Set(translations, time) &
+-               GetRotationsAttr().Set(rotations, time) &
++        return GetTranslationsAttr().Set(translations, time) &&
++               GetRotationsAttr().Set(rotations, time) &&
+                GetScalesAttr().Set(scales, time);
+     }
+     return false;
+diff --git a/pxr/usd/usdUtils/pipeline.cpp b/pxr/usd/usdUtils/pipeline.cpp
+index 261370d8..4e43d423 100644
+--- a/pxr/usd/usdUtils/pipeline.cpp
++++ b/pxr/usd/usdUtils/pipeline.cpp
+@@ -319,7 +319,7 @@ _GetPipelineIdentifierTokens(const TfTokenVector& identifierKeys)
+ 
+     const PlugPluginPtrVector plugs =
+         PlugRegistry::GetInstance().GetAllPlugins();
+-    for (const PlugPluginPtr plug : plugs) {
++    for (const PlugPluginPtr &plug : plugs) {
+         JsObject metadata = plug->GetMetadata();
+         JsValue metadataDictValue;
+         if (!TfMapLookup(metadata, metadataDictKey, &metadataDictValue)) {
+diff --git a/pxr/usdImaging/usdImaging/dataSourceMaterial.cpp b/pxr/usdImaging/usdImaging/dataSourceMaterial.cpp
+index 6f8ffe4f..4d5950d5 100644
+--- a/pxr/usdImaging/usdImaging/dataSourceMaterial.cpp
++++ b/pxr/usdImaging/usdImaging/dataSourceMaterial.cpp
+@@ -207,15 +207,13 @@ public:
+ private:
+     _UsdImagingDataSourceShadingNodeInputs(
+         UsdShadeShader shaderNode,
+-        const UsdImagingDataSourceStageGlobals &stageGlobals,
++        ARCH_UNUSED_ARG const UsdImagingDataSourceStageGlobals &stageGlobals,
+         const SdfPath &materialPrefix)
+     : _shaderNode(shaderNode)
+-    , _stageGlobals(stageGlobals)
+     , _materialPrefix(materialPrefix)
+     {}
+ 
+     UsdShadeShader _shaderNode;
+-    const UsdImagingDataSourceStageGlobals &_stageGlobals;
+     const SdfPath _materialPrefix;
+ };
+ 
+diff --git a/pxr/usdImaging/usdImaging/dataSourcePrim.cpp b/pxr/usdImaging/usdImaging/dataSourcePrim.cpp
+index 2285bde0..674a9e8f 100644
+--- a/pxr/usdImaging/usdImaging/dataSourcePrim.cpp
++++ b/pxr/usdImaging/usdImaging/dataSourcePrim.cpp
+@@ -106,9 +106,8 @@ UsdImagingDataSourceVisibility::Get(const TfToken &name)
+ 
+ UsdImagingDataSourcePurpose::UsdImagingDataSourcePurpose(
+         const UsdAttributeQuery &purposeQuery,
+-        const UsdImagingDataSourceStageGlobals &stageGlobals)
++        ARCH_UNUSED_ARG const UsdImagingDataSourceStageGlobals &stageGlobals)
+     : _purposeQuery(purposeQuery)
+-    , _stageGlobals(stageGlobals)
+ {
+ }
+ 
+@@ -288,9 +287,8 @@ UsdImagingDataSourceExtentsHint::GetElement(const size_t element)
+ 
+ UsdImagingDataSourceXformResetXformStack::UsdImagingDataSourceXformResetXformStack(
+         const UsdGeomXformable::XformQuery &xformQuery,
+-        const UsdImagingDataSourceStageGlobals &stageGlobals)
++        ARCH_UNUSED_ARG const UsdImagingDataSourceStageGlobals &stageGlobals)
+     : _xformQuery(xformQuery)
+-    , _stageGlobals(stageGlobals)
+ {
+ }
+ 
+diff --git a/pxr/usdImaging/usdImaging/dataSourcePrim.h b/pxr/usdImaging/usdImaging/dataSourcePrim.h
+index 3082a6c2..ca82b9a6 100644
+--- a/pxr/usdImaging/usdImaging/dataSourcePrim.h
++++ b/pxr/usdImaging/usdImaging/dataSourcePrim.h
+@@ -112,7 +112,6 @@ private:
+ 
+ private:
+     UsdAttributeQuery _purposeQuery;
+-    const UsdImagingDataSourceStageGlobals &_stageGlobals;
+ };
+ 
+ HD_DECLARE_DATASOURCE_HANDLES(UsdImagingDataSourcePurpose);
+@@ -286,7 +285,6 @@ private:
+ 
+ private:
+     UsdGeomXformable::XformQuery _xformQuery;
+-    const UsdImagingDataSourceStageGlobals &_stageGlobals;
+ };
+ 
+ HD_DECLARE_DATASOURCE_HANDLES(UsdImagingDataSourceXformResetXformStack);
+diff --git a/pxr/usdImaging/usdImaging/dataSourceVolume.cpp b/pxr/usdImaging/usdImaging/dataSourceVolume.cpp
+index f132df39..0e75eb21 100644
+--- a/pxr/usdImaging/usdImaging/dataSourceVolume.cpp
++++ b/pxr/usdImaging/usdImaging/dataSourceVolume.cpp
+@@ -33,9 +33,8 @@ PXR_NAMESPACE_OPEN_SCOPE
+ UsdImagingDataSourceVolumeFieldBindings
+ ::UsdImagingDataSourceVolumeFieldBindings(
+         UsdVolVolume usdVolume,
+-        const UsdImagingDataSourceStageGlobals &stageGlobals)
++        ARCH_UNUSED_ARG const UsdImagingDataSourceStageGlobals &stageGlobals)
+     : _usdVolume(usdVolume)
+-    , _stageGlobals(stageGlobals)
+ {
+ }
+ 
+diff --git a/pxr/usdImaging/usdImaging/dataSourceVolume.h b/pxr/usdImaging/usdImaging/dataSourceVolume.h
+index 0a0d09f5..645b06c6 100644
+--- a/pxr/usdImaging/usdImaging/dataSourceVolume.h
++++ b/pxr/usdImaging/usdImaging/dataSourceVolume.h
+@@ -55,7 +55,6 @@ private:
+ 
+ private:
+     UsdVolVolume _usdVolume;
+-    const UsdImagingDataSourceStageGlobals &_stageGlobals;
+ };
+ 
+ HD_DECLARE_DATASOURCE_HANDLES(UsdImagingDataSourceVolumeFieldBindings);
+diff --git a/pxr/usdImaging/usdImaging/delegate.cpp b/pxr/usdImaging/usdImaging/delegate.cpp
+index 0e5eae4f..cab88368 100644
+--- a/pxr/usdImaging/usdImaging/delegate.cpp
++++ b/pxr/usdImaging/usdImaging/delegate.cpp
+@@ -994,7 +994,7 @@ UsdImagingDelegate::_GatherDependencies(
+     if (it != cache.end()) {
+         TF_DEBUG(USDIMAGING_CHANGES).Msg(
+             "[_GatherDependencies] Found entry in flattened cache for %s with "
+-            "%lu paths\n", subtree.GetText(), it->second.size());
++            "%zu paths\n", subtree.GetText(), it->second.size());
+ 
+         *affectedCachePaths = it->second;
+         return;
+diff --git a/pxr/usdImaging/usdImaging/domeLightAdapter.h b/pxr/usdImaging/usdImaging/domeLightAdapter.h
+index 08b761e3..8d645636 100644
+--- a/pxr/usdImaging/usdImaging/domeLightAdapter.h
++++ b/pxr/usdImaging/usdImaging/domeLightAdapter.h
+@@ -66,10 +66,10 @@ public:
+     USDIMAGING_API
+     virtual SdfPath Populate(UsdPrim const& prim,
+                      UsdImagingIndexProxy* index,
+-                     UsdImagingInstancerContext const* instancerContext = NULL);
++                     UsdImagingInstancerContext const* instancerContext = NULL) override;
+ 
+     USDIMAGING_API
+-    virtual bool IsSupported(UsdImagingIndexProxy const* index) const;
++    virtual bool IsSupported(UsdImagingIndexProxy const* index) const override;
+     
+ protected:
+     USDIMAGING_API
+diff --git a/pxr/usdImaging/usdImaging/drawModeSceneIndex.cpp b/pxr/usdImaging/usdImaging/drawModeSceneIndex.cpp
+index c82da598..385addcb 100644
+--- a/pxr/usdImaging/usdImaging/drawModeSceneIndex.cpp
++++ b/pxr/usdImaging/usdImaging/drawModeSceneIndex.cpp
+@@ -95,7 +95,7 @@ UsdImagingDrawModeSceneIndex::_FindStandinForPrimOrAncestor(
+     const auto it = std::lower_bound(
+         _prims.rbegin(), _prims.rend(),
+         path, 
+-        [](const value_type &a, const SdfPath &b) { return a.first > b; });
++        [](value_type &a, const SdfPath &b) { return a.first > b; });
+     if (it == _prims.rend()) {
+         return nullptr;
+     }
+diff --git a/pxr/usdImaging/usdImaging/drawModeStandin.cpp b/pxr/usdImaging/usdImaging/drawModeStandin.cpp
+index b0596c37..2b6675fa 100644
+--- a/pxr/usdImaging/usdImaging/drawModeStandin.cpp
++++ b/pxr/usdImaging/usdImaging/drawModeStandin.cpp
+@@ -1343,6 +1343,7 @@ _CardsDataCache::_CardsData::_ComputePoints(const _SchemaValues &values)
+             { x, 1, 0 } };
+ 
+         static const GfVec3f one(1.0f);
++        (void)one;
+ 
+         // For each pair of opposite faces.
+         for (size_t i = 0; i < 3; i++) {
+diff --git a/pxr/usdImaging/usdImaging/gprimAdapter.cpp b/pxr/usdImaging/usdImaging/gprimAdapter.cpp
+index e065a60e..4993a102 100644
+--- a/pxr/usdImaging/usdImaging/gprimAdapter.cpp
++++ b/pxr/usdImaging/usdImaging/gprimAdapter.cpp
+@@ -908,7 +908,7 @@ UsdImagingGprimAdapter::GetColor(UsdPrim const& prim,
+ 
+                     if (colorInterp == UsdGeomTokens->constant &&
+                         result.size() > 1) {
+-                        TF_WARN("Prim %s has %lu element(s) for %s even "
++                        TF_WARN("Prim %s has %zu element(s) for %s even "
+                                 "though it is marked constant.",
+                                 prim.GetPath().GetText(), result.size(),
+                                 primvar.GetName().GetText());
+@@ -921,7 +921,7 @@ UsdImagingGprimAdapter::GetColor(UsdPrim const& prim,
+ 
+                 if (colorInterp == UsdGeomTokens->constant &&
+                     result.size() > 1) {
+-                    TF_WARN("Prim %s has %lu element(s) for %s even "
++                    TF_WARN("Prim %s has %zu element(s) for %s even "
+                             "though it is marked constant.",
+                             prim.GetPath().GetText(), result.size(),
+                             primvar.GetName().GetText());
+@@ -1021,7 +1021,7 @@ UsdImagingGprimAdapter::GetOpacity(UsdPrim const& prim,
+ 
+                     if (opacityInterp == UsdGeomTokens->constant &&
+                         result.size() > 1) {
+-                        TF_WARN("Prim %s has %lu element(s) for %s even "
++                        TF_WARN("Prim %s has %zu element(s) for %s even "
+                                 "though it is marked constant.",
+                                 prim.GetPath().GetText(), result.size(),
+                                 primvar.GetName().GetText());
+@@ -1034,7 +1034,7 @@ UsdImagingGprimAdapter::GetOpacity(UsdPrim const& prim,
+ 
+                 if (opacityInterp == UsdGeomTokens->constant &&
+                     result.size() > 1) {
+-                    TF_WARN("Prim %s has %lu element(s) for %s even "
++                    TF_WARN("Prim %s has %zu element(s) for %s even "
+                             "though it is marked constant.",
+                             prim.GetPath().GetText(), result.size(),
+                             primvar.GetName().GetText());
+diff --git a/pxr/usdImaging/usdImaging/indexProxy.cpp b/pxr/usdImaging/usdImaging/indexProxy.cpp
+index 0c3f9a40..59054a7e 100644
+--- a/pxr/usdImaging/usdImaging/indexProxy.cpp
++++ b/pxr/usdImaging/usdImaging/indexProxy.cpp
+@@ -57,10 +57,13 @@ UsdImagingIndexProxy::_AddHdPrimInfo(SdfPath const &cachePath,
+         }
+     }
+ 
++    ARCH_PRAGMA_PUSH
++    ARCH_PRAGMA_POTENTIALLY_EVALUATED_EXPRESSION
+     TF_DEBUG(USDIMAGING_CHANGES).Msg(
+         "[Add HdPrim Info] <%s> adapter=%s\n",
+         cachePath.GetText(),
+         TfType::GetCanonicalTypeName(typeid(*(adapterToInsert.get()))).c_str());
++    ARCH_PRAGMA_POP
+ 
+     // Currently, we don't support more than one adapter dependency per usd
+     // prim, but we could relax this restriction if it's useful.
+diff --git a/pxr/usdImaging/usdImaging/instanceAdapter.cpp b/pxr/usdImaging/usdImaging/instanceAdapter.cpp
+index 310bafb3..d95a7586 100644
+--- a/pxr/usdImaging/usdImaging/instanceAdapter.cpp
++++ b/pxr/usdImaging/usdImaging/instanceAdapter.cpp
+@@ -238,7 +238,6 @@ UsdImagingInstanceAdapter::_Populate(UsdPrim const& prim,
+         // prototypes.
+         UsdPrimRange range(prototypePrim, _GetDisplayPredicate());
+         int protoID = 0;
+-        int primCount = 0;
+ 
+         for (auto iter = range.begin(); iter != range.end(); ++iter) {
+             // If we encounter an instance in this USD prototype, save it aside
+@@ -329,7 +328,6 @@ UsdImagingInstanceAdapter::_Populate(UsdPrim const& prim,
+                 proto.path = iter->GetPath();
+             }
+             proto.adapter = primAdapter;
+-            ++primCount;
+ 
+             if (!isLeafInstancer) {
+                 instancerData.childPointInstancers.insert(protoPath);
+@@ -342,6 +340,8 @@ UsdImagingInstanceAdapter::_Populate(UsdPrim const& prim,
+                 }
+             }
+ 
++            ARCH_PRAGMA_PUSH
++            ARCH_PRAGMA_POTENTIALLY_EVALUATED_EXPRESSION
+             TF_DEBUG(USDIMAGING_INSTANCER).Msg(
+                 "[Add Instance NI] <%s>  %s (%s), adapter = %s\n",
+                 instancerPath.GetText(), protoPath.GetText(),
+@@ -349,6 +349,7 @@ UsdImagingInstanceAdapter::_Populate(UsdPrim const& prim,
+                 primAdapter ?
+                     TfType::GetCanonicalTypeName(typeid(*primAdapter)).c_str() :
+                     "none");
++            ARCH_PRAGMA_POP
+         }
+ 
+         UsdPrim instancerPrim = _GetPrim(instancerPath);
+diff --git a/pxr/usdImaging/usdImaging/materialAdapter.h b/pxr/usdImaging/usdImaging/materialAdapter.h
+index e9a70145..b5e0e09a 100644
+--- a/pxr/usdImaging/usdImaging/materialAdapter.h
++++ b/pxr/usdImaging/usdImaging/materialAdapter.h
+@@ -87,7 +87,7 @@ public:
+             UsdPrim const& descendentPrim,
+             TfToken const& subprim,
+             TfTokenVector const& properties,
+-            UsdImagingPropertyInvalidationType invalidationType);
++            UsdImagingPropertyInvalidationType invalidationType) override;
+ 
+     // ---------------------------------------------------------------------- //
+     /// \name Initialization
+diff --git a/pxr/usdImaging/usdImaging/pluginLightAdapter.h b/pxr/usdImaging/usdImaging/pluginLightAdapter.h
+index a4e53ef6..17381674 100644
+--- a/pxr/usdImaging/usdImaging/pluginLightAdapter.h
++++ b/pxr/usdImaging/usdImaging/pluginLightAdapter.h
+@@ -66,10 +66,10 @@ public:
+     USDIMAGING_API
+     virtual SdfPath Populate(UsdPrim const& prim,
+                      UsdImagingIndexProxy* index,
+-                     UsdImagingInstancerContext const* instancerContext = NULL);
++                     UsdImagingInstancerContext const* instancerContext = NULL) override;
+ 
+     USDIMAGING_API
+-    virtual bool IsSupported(UsdImagingIndexProxy const* index) const;
++    virtual bool IsSupported(UsdImagingIndexProxy const* index) const override;
+ 
+ protected:
+     virtual void _RemovePrim(SdfPath const& cachePath,
+diff --git a/pxr/usdImaging/usdImaging/pointInstancerAdapter.cpp b/pxr/usdImaging/usdImaging/pointInstancerAdapter.cpp
+index 0bb72034..e86bc2da 100644
+--- a/pxr/usdImaging/usdImaging/pointInstancerAdapter.cpp
++++ b/pxr/usdImaging/usdImaging/pointInstancerAdapter.cpp
+@@ -475,7 +475,7 @@ UsdImagingPointInstancerAdapter::_PopulatePrototype(
+     }
+ 
+     TF_DEBUG(USDIMAGING_POINT_INSTANCER_PROTO_CREATED).Msg(
+-        "Prototype[%d]: <%s>, primCount: %lu, instantiatedPrimCount: %lu\n",
++        "Prototype[%d]: <%s>, primCount: %zu, instantiatedPrimCount: %zu\n",
+         protoIndex,
+         protoRootPrim.GetPath().GetText(),
+         primCount,
+@@ -2219,8 +2219,8 @@ UsdImagingPointInstancerAdapter::GetInstanceIndices(
+                         instancerPrim, time);
+ 
+                 if (pathIndex >= indices.size()) {
+-                    TF_WARN("ProtoIndex %lu out of bounds "
+-                            "(prototypes size = %lu) for (%s, %s)",
++                    TF_WARN("ProtoIndex %zu out of bounds "
++                            "(prototypes size = %zu) for (%s, %s)",
+                                     pathIndex,
+                                     indices.size(),
+                                     instancerCachePath.GetText(),
+diff --git a/pxr/usdImaging/usdImaging/rectLightAdapter.h b/pxr/usdImaging/usdImaging/rectLightAdapter.h
+index ee8f4fcc..108f51e2 100644
+--- a/pxr/usdImaging/usdImaging/rectLightAdapter.h
++++ b/pxr/usdImaging/usdImaging/rectLightAdapter.h
+@@ -67,10 +67,10 @@ public:
+     USDIMAGING_API
+     virtual SdfPath Populate(UsdPrim const& prim,
+                      UsdImagingIndexProxy* index,
+-                     UsdImagingInstancerContext const* instancerContext = NULL);
++                     UsdImagingInstancerContext const* instancerContext = NULL) override;
+ 
+     USDIMAGING_API
+-    virtual bool IsSupported(UsdImagingIndexProxy const* index) const;
++    virtual bool IsSupported(UsdImagingIndexProxy const* index) const override;
+     
+ protected:
+     virtual void _RemovePrim(SdfPath const& cachePath,
+diff --git a/pxr/usdImaging/usdImaging/renderSettingsAdapter.cpp b/pxr/usdImaging/usdImaging/renderSettingsAdapter.cpp
+index e496b98c..1efe1446 100644
+--- a/pxr/usdImaging/usdImaging/renderSettingsAdapter.cpp
++++ b/pxr/usdImaging/usdImaging/renderSettingsAdapter.cpp
+@@ -176,7 +176,7 @@ UsdImagingRenderSettingsAdapter::Populate(
+             _tokens->outputsRiDisplayFilters
+         };
+ 
+-        for (const auto token : outputTokens) {
++        for (const auto &token : outputTokens) {
+             SdfPathVector connections;
+             prim.GetAttribute(token).GetConnections(&connections);
+             for (auto const& connPath : connections) {
+diff --git a/pxr/usdImaging/usdImaging/sphereLightAdapter.h b/pxr/usdImaging/usdImaging/sphereLightAdapter.h
+index ad84638c..9eb15d21 100644
+--- a/pxr/usdImaging/usdImaging/sphereLightAdapter.h
++++ b/pxr/usdImaging/usdImaging/sphereLightAdapter.h
+@@ -68,10 +68,10 @@ public:
+     USDIMAGING_API
+     virtual SdfPath Populate(UsdPrim const& prim,
+                      UsdImagingIndexProxy* index,
+-                     UsdImagingInstancerContext const* instancerContext = NULL);
++                     UsdImagingInstancerContext const* instancerContext = NULL) override;
+ 
+     USDIMAGING_API
+-    virtual bool IsSupported(UsdImagingIndexProxy const* index) const;
++    virtual bool IsSupported(UsdImagingIndexProxy const* index) const override;
+ 
+ protected:
+     virtual void _RemovePrim(SdfPath const& cachePath,
+diff --git a/pxr/usdImaging/usdProcImaging/generativeProceduralAdapter.h b/pxr/usdImaging/usdProcImaging/generativeProceduralAdapter.h
+index 9622baa8..fd3aae85 100644
+--- a/pxr/usdImaging/usdProcImaging/generativeProceduralAdapter.h
++++ b/pxr/usdImaging/usdProcImaging/generativeProceduralAdapter.h
+@@ -26,6 +26,7 @@
+ 
+ #include "pxr/usdImaging/usdImaging/primAdapter.h"
+ #include "pxr/usd/usdProc/tokens.h"
++#include "pxr/usdImaging/usdProcImaging/api.h"
+ 
+ PXR_NAMESPACE_OPEN_SCOPE
+ 
+@@ -46,20 +47,20 @@ public:
+     /// \name Scene Index Support
+     // ---------------------------------------------------------------------- //
+ 
+-    USDIMAGING_API
++    USDPROCIMAGING_API
+     TfTokenVector GetImagingSubprims(UsdPrim const& prim) override;
+ 
+-    USDIMAGING_API
++    USDPROCIMAGING_API
+     TfToken GetImagingSubprimType(UsdPrim const& prim, TfToken const& subprim)
+         override;
+ 
+-    USDIMAGING_API
++    USDPROCIMAGING_API
+     HdContainerDataSourceHandle GetImagingSubprimData(
+             UsdPrim const& prim,
+             TfToken const& subprim,
+             const UsdImagingDataSourceStageGlobals &stageGlobals) override;
+ 
+-    USDIMAGING_API
++    USDPROCIMAGING_API
+     HdDataSourceLocatorSet InvalidateImagingSubprim(
+             UsdPrim const& prim,
+             TfToken const& subprim,
+@@ -99,23 +100,23 @@ public:
+         TfToken const& propertyName) override;
+ 
+ 
+-    USDIMAGING_API
++    USDPROCIMAGING_API
+     virtual void MarkDirty(UsdPrim const& prim,
+                            SdfPath const& cachePath,
+                            HdDirtyBits dirty,
+                            UsdImagingIndexProxy* index) override;
+ 
+-    USDIMAGING_API
++    USDPROCIMAGING_API
+     virtual void MarkTransformDirty(UsdPrim const& prim,
+                                     SdfPath const& cachePath,
+                                     UsdImagingIndexProxy* index) override;
+ 
+-    USDIMAGING_API
++    USDPROCIMAGING_API
+     virtual void MarkVisibilityDirty(UsdPrim const& prim,
+                                      SdfPath const& cachePath,
+                                      UsdImagingIndexProxy* index) override;
+ 
+-    USDIMAGING_API
++    USDPROCIMAGING_API
+     void TrackVariability(UsdPrim const& prim,
+                           SdfPath const& cachePath,
+                           HdDirtyBits* timeVaryingBits,
+@@ -124,7 +125,7 @@ public:
+ 
+ protected:
+     
+-    USDIMAGING_API
++    USDPROCIMAGING_API
+     virtual void _RemovePrim(SdfPath const& cachePath,
+         UsdImagingIndexProxy* index) override;
+ 
+diff --git a/pxr/usdImaging/usdRiImaging/pxrDisplayFilterAdapter.h b/pxr/usdImaging/usdRiImaging/pxrDisplayFilterAdapter.h
+index 20915a4a..562903df 100644
+--- a/pxr/usdImaging/usdRiImaging/pxrDisplayFilterAdapter.h
++++ b/pxr/usdImaging/usdRiImaging/pxrDisplayFilterAdapter.h
+@@ -53,21 +53,21 @@ public:
+     /// \name Scene Index Support
+     // ---------------------------------------------------------------------- //
+ 
+-    USDIMAGING_API
++    USDRIIMAGING_API
+     TfTokenVector GetImagingSubprims(UsdPrim const& prim) override;
+ 
+-    USDIMAGING_API
++    USDRIIMAGING_API
+     TfToken GetImagingSubprimType(
+             UsdPrim const& prim,
+             TfToken const& subprim) override;
+ 
+-    USDIMAGING_API
++    USDRIIMAGING_API
+     HdContainerDataSourceHandle GetImagingSubprimData(
+             UsdPrim const& prim,
+             TfToken const& subprim,
+             const UsdImagingDataSourceStageGlobals &stageGlobals) override;
+ 
+-    USDIMAGING_API
++    USDRIIMAGING_API
+     HdDataSourceLocatorSet InvalidateImagingSubprim(
+             UsdPrim const& prim,
+             TfToken const& subprim,
+diff --git a/pxr/usdImaging/usdRiImaging/pxrIntegratorAdapter.h b/pxr/usdImaging/usdRiImaging/pxrIntegratorAdapter.h
+index 26ab86e5..0a00ccee 100644
+--- a/pxr/usdImaging/usdRiImaging/pxrIntegratorAdapter.h
++++ b/pxr/usdImaging/usdRiImaging/pxrIntegratorAdapter.h
+@@ -53,21 +53,21 @@ public:
+     /// \name Scene Index Support
+     // ---------------------------------------------------------------------- //
+ 
+-    USDIMAGING_API
++    USDRIIMAGING_API
+     TfTokenVector GetImagingSubprims(UsdPrim const& prim) override;
+ 
+-    USDIMAGING_API
++    USDRIIMAGING_API
+     TfToken GetImagingSubprimType(
+             UsdPrim const& prim,
+             TfToken const& subprim) override;
+ 
+-    USDIMAGING_API
++    USDRIIMAGING_API
+     HdContainerDataSourceHandle GetImagingSubprimData(
+             UsdPrim const& prim,
+             TfToken const& subprim,
+             const UsdImagingDataSourceStageGlobals &stageGlobals) override;
+ 
+-    USDIMAGING_API
++    USDRIIMAGING_API
+     HdDataSourceLocatorSet InvalidateImagingSubprim(
+             UsdPrim const& prim,
+             TfToken const& subprim,
+diff --git a/pxr/usdImaging/usdRiImaging/pxrSampleFilterAdapter.h b/pxr/usdImaging/usdRiImaging/pxrSampleFilterAdapter.h
+index f4515fa9..b272c787 100644
+--- a/pxr/usdImaging/usdRiImaging/pxrSampleFilterAdapter.h
++++ b/pxr/usdImaging/usdRiImaging/pxrSampleFilterAdapter.h
+@@ -53,21 +53,21 @@ public:
+     /// \name Scene Index Support
+     // ---------------------------------------------------------------------- //
+ 
+-    USDIMAGING_API
++    USDRIIMAGING_API
+     TfTokenVector GetImagingSubprims(UsdPrim const& prim) override;
+ 
+-    USDIMAGING_API
++    USDRIIMAGING_API
+     TfToken GetImagingSubprimType(
+             UsdPrim const& prim,
+             TfToken const& subprim) override;
+ 
+-    USDIMAGING_API
++    USDRIIMAGING_API
+     HdContainerDataSourceHandle GetImagingSubprimData(
+             UsdPrim const& prim,
+             TfToken const& subprim,
+             const UsdImagingDataSourceStageGlobals &stageGlobals) override;
+ 
+-    USDIMAGING_API
++    USDRIIMAGING_API
+     HdDataSourceLocatorSet InvalidateImagingSubprim(
+             UsdPrim const& prim,
+             TfToken const& subprim,
+diff --git a/pxr/usdImaging/usdSkelImaging/skeletonAdapter.h b/pxr/usdImaging/usdSkelImaging/skeletonAdapter.h
+index 8752a642..8a405217 100644
+--- a/pxr/usdImaging/usdSkelImaging/skeletonAdapter.h
++++ b/pxr/usdImaging/usdSkelImaging/skeletonAdapter.h
+@@ -223,7 +223,7 @@ public:
+             HdInterpolation interpolation,
+             const UsdImagingInstancerContext* instancerContext) const override;
+ 
+-    USDIMAGING_API
++    USDSKELIMAGING_API
+     VtValue 
+     GetExtComputationInput(
+             UsdPrim const& prim,
+@@ -232,7 +232,7 @@ public:
+             UsdTimeCode time,
+             const UsdImagingInstancerContext* instancerContext) const override;
+ 
+-    USDIMAGING_API
++    USDSKELIMAGING_API
+     size_t
+     SampleExtComputationInput(
+             UsdPrim const& prim,
+@@ -244,7 +244,7 @@ public:
+             float *sampleTimes,
+             VtValue *sampleValues) override;
+ 
+-    USDIMAGING_API
++    USDSKELIMAGING_API
+     std::string 
+     GetExtComputationKernel(
+             UsdPrim const& prim,
+diff --git a/pxr/usdImaging/usdVolImaging/field3dAssetAdapter.h b/pxr/usdImaging/usdVolImaging/field3dAssetAdapter.h
+index 1592a7a5..422d90d9 100644
+--- a/pxr/usdImaging/usdVolImaging/field3dAssetAdapter.h
++++ b/pxr/usdImaging/usdVolImaging/field3dAssetAdapter.h
+@@ -54,14 +54,14 @@ public:
+     /// \name Scene Index Support
+     // ---------------------------------------------------------------------- //
+ 
+-    USDIMAGING_API
++    USDVOLIMAGING_API
+     TfTokenVector GetImagingSubprims(UsdPrim const& prim) override;
+ 
+-    USDIMAGING_API
++    USDVOLIMAGING_API
+     TfToken GetImagingSubprimType(UsdPrim const& prim, TfToken const& subprim)
+         override;
+ 
+-    USDIMAGING_API
++    USDVOLIMAGING_API
+     HdContainerDataSourceHandle GetImagingSubprimData(
+             UsdPrim const& prim,
+             TfToken const& subprim,
+diff --git a/pxr/usdImaging/usdVolImaging/openvdbAssetAdapter.h b/pxr/usdImaging/usdVolImaging/openvdbAssetAdapter.h
+index daaf153f..b7261aac 100644
+--- a/pxr/usdImaging/usdVolImaging/openvdbAssetAdapter.h
++++ b/pxr/usdImaging/usdVolImaging/openvdbAssetAdapter.h
+@@ -54,14 +54,14 @@ public:
+     /// \name Scene Index Support
+     // ---------------------------------------------------------------------- //
+ 
+-    USDIMAGING_API
++    USDVOLIMAGING_API
+     TfTokenVector GetImagingSubprims(UsdPrim const& prim) override;
+ 
+-    USDIMAGING_API
++    USDVOLIMAGING_API
+     TfToken GetImagingSubprimType(UsdPrim const& prim, TfToken const& subprim)
+         override;
+ 
+-    USDIMAGING_API
++    USDVOLIMAGING_API
+     HdContainerDataSourceHandle GetImagingSubprimData(
+             UsdPrim const& prim,
+             TfToken const& subprim,
+-- 
+2.40.1.windows.1
+

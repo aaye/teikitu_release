@@ -1,0 +1,25 @@
+From 5f85b98be9d86177be9e2dc244c625ae01f3f0f6 Mon Sep 17 00:00:00 2001
+From: Andrew Aye <andrew.aye@gmail.com>
+Date: Sun, 17 Sep 2023 13:50:40 -0700
+Subject: [PATCH] Warning Fix
+
+---
+ CMakeLists.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 2bcd1ef..e488478 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -255,7 +255,7 @@ if(MI_USE_CXX)
+   set_source_files_properties(${mi_sources} PROPERTIES LANGUAGE CXX )
+   set_source_files_properties(src/static.c test/test-api.c test/test-api-fill test/test-stress PROPERTIES LANGUAGE CXX )
+   if(CMAKE_CXX_COMPILER_ID MATCHES "AppleClang|Clang")
+-    list(APPEND mi_cflags -Wno-deprecated)
++    list(APPEND mi_cflags -Wno-deprecated -Wno-strict-prototypes)
+   endif()
+   if(CMAKE_CXX_COMPILER_ID MATCHES "Intel" AND NOT CMAKE_CXX_COMPILER_ID MATCHES "IntelLLVM")
+     list(APPEND mi_cflags -Kc++)
+-- 
+2.40.1.windows.1
+

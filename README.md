@@ -1,78 +1,129 @@
 
-# Personal Project by Andrew Aye
+<h1 align="center">Teikitu: Real-Time Interactive Engine</h1>
+<p align="center">
+  A low-level real-time interactive engine written in C, and a game platform written in C++.<br>
+  <a href="https://aaye.github.io/projects/teikitu/documentation"><strong>Explore Teikitu documentation »</strong></a><br><br>
+  <a href="https://github.com/aaye/teikitu_release/issues/new?template=bug_report.md">Report bug</a> · <a href="https://github.com/aaye/teikitu_release/issues/new?template=feature_request.md">Request feature</a>
+</p>
 
-## Teikitu: Real-Time Interactive Engine
+## Personal Project by Andrew Aye
+Contact: [`GitHub`][rep-url], [`LinkedIn`][linkedin-url], [`Mail`][mail], [`Personal Page`][personal-page-url], [`Blog`][blog-url]
 
-### Release Snap Shot
+## Table of Contents
 
-Public (release) copy of the Teikitu engine project
+- [Project Status](#project-status)
+- [Project History](#quick-start)
+- [Author History](#quick-start)
+- [Quick Start](#quick-start)
+- [Repo Structure](#repo-structure)
+- [Prerequisites and Dependencies](#prerequisites-and-dependencies)
+- [Known Issues and Workflow Improvements](#known-issues-and-workflow-improvements)
+- [Copyright and license](#copyright-and-license)
 
-### Status
+## Project Status
 
-![Build Status](https://github.com/aaye/teikitu_release/actions/workflows/ninja-clang.yml/badge.svg) <sup><sub>| Ninja, Clang | Windows OS | Windows Threading | C11 Vector | No GPU / REF GPU / DX12 GPU |</sub></sup>
+[![CodeFactor Grade][codefactor-badge]][codefactor-url]
+[![Documentation][documentation-badge]][documentation-url]
+[![License: CC BY-NC-SA 4.0][license-badge]][license-url]
+![GitHub Sponsors](https://img.shields.io/github/sponsors/aaye)
 
-### Project History
+### Internal Development Build Status
 
-I started the version revision of this code base while I was still at the University of Waterloo. Since 
-then it has seen over eight significant refactors and drastic overhauls. The original implementation was
-an object-oriented windows com-compliant implementation. The current is written in a functional style
-using C17. I am aware that there are many advantages to modern C++, and I am also aware how difficult
-it would be to create efficient and effective optimizers for the resulting compilation. I once had a
- revision of the code base that had the entire math and geometry library implemented as templates to
- facilitate an easy way to test both 32bit and 64bit floats (for simulation issues and inconsistencies).
- The release build failed to finish after running for 24 hours. The current implementation, with even
- more lines of code than that previous version, can compiled in seconds (under a minute).
+<sub>
+    
+| Build |   Host   |  GPU  |  Audio  |  SIMD  |  Thread  |    OS    | CPU | Debug | Release | Final | Tools |
+|:--------:|:--------:|:-----:|:-------:|:------:|:--------:|:--------:|:---:|:-----:|:-------:|:-----:|:-----:|
+| Ninja | Windows  | None  | None    | C17    | Windows  | Windows  | Intel  | ![CircleCI](https://circleci.com/gh/aaye/teikitu.svg?style=svg&branch=build___win_ninja_clang_c17_x64_win_win_desktop_none_none_debug&circle-token=de43df1f4dfd9a6428a778c0bcd118f6b57ea7fd) | ![CircleCI](https://circleci.com/gh/aaye/teikitu.svg?style=svg&branch=build___win_ninja_clang_c17_x64_win_win_desktop_none_none_release&circle-token=de43df1f4dfd9a6428a778c0bcd118f6b57ea7fd) | ![CircleCI](https://circleci.com/gh/aaye/teikitu.svg?style=svg&branch=build___win_ninja_clang_c17_x64_win_win_desktop_none_none_final&circle-token=de43df1f4dfd9a6428a778c0bcd118f6b57ea7fd) | ![CircleCI](https://circleci.com/gh/aaye/teikitu.svg?style=svg&branch=build___win_ninja_clang_c17_x64_win_win_desktop_none_none_tools&circle-token=de43df1f4dfd9a6428a778c0bcd118f6b57ea7fd) |
+| Ninja | Windows  | REF   | None    | C17    | Windows  | Windows  | Intel  | ![CircleCI](https://circleci.com/gh/aaye/teikitu.svg?style=svg&branch=build___win_ninja_clang_c17_x64_win_win_desktop_ref_none_debug&circle-token=de43df1f4dfd9a6428a778c0bcd118f6b57ea7fd) | ![CircleCI](https://circleci.com/gh/aaye/teikitu.svg?style=svg&branch=build___win_ninja_clang_c17_x64_win_win_desktop_ref_none_release&circle-token=de43df1f4dfd9a6428a778c0bcd118f6b57ea7fd) | ![CircleCI](https://circleci.com/gh/aaye/teikitu.svg?style=svg&branch=build___win_ninja_clang_c17_x64_win_win_desktop_ref_none_final&circle-token=de43df1f4dfd9a6428a778c0bcd118f6b57ea7fd) | ![CircleCI](https://circleci.com/gh/aaye/teikitu.svg?style=svg&branch=build___win_ninja_clang_c17_x64_win_win_desktop_ref_none_tools&circle-token=de43df1f4dfd9a6428a778c0bcd118f6b57ea7fd) |
+| Ninja | Windows  | DX12  | None    | C17    | Windows  | Windows  | Intel  | ![CircleCI](https://circleci.com/gh/aaye/teikitu.svg?style=svg&branch=build___win_ninja_clang_c17_x64_win_win_desktop_dx12_none_debug&circle-token=de43df1f4dfd9a6428a778c0bcd118f6b57ea7fd) | ![CircleCI](https://circleci.com/gh/aaye/teikitu.svg?style=svg&branch=build___win_ninja_clang_c17_x64_win_win_desktop_dx12_none_release&circle-token=de43df1f4dfd9a6428a778c0bcd118f6b57ea7fd) | ![CircleCI](https://circleci.com/gh/aaye/teikitu.svg?style=svg&branch=build___win_ninja_clang_c17_x64_win_win_desktop_dx12_none_final&circle-token=de43df1f4dfd9a6428a778c0bcd118f6b57ea7fd) | ![CircleCI](https://circleci.com/gh/aaye/teikitu.svg?style=svg&branch=build___win_ninja_clang_c17_x64_win_win_desktop_dx12_none_tools&circle-token=de43df1f4dfd9a6428a778c0bcd118f6b57ea7fd) |
+| Ninja | Windows  | VLKN  | None    | C17    | Windows  | Windows  | Intel  | ![CircleCI](https://circleci.com/gh/aaye/teikitu.svg?style=svg&branch=ninja_debug_clang_c17_x64_win_win_desktop_dx12_none&circle-token=de43df1f4dfd9a6428a778c0bcd118f6b57ea7fd) | ![CircleCI](https://circleci.com/gh/aaye/teikitu.svg?style=svg&branch=ninja_release_clang_c17_x64_win_win_desktop_dx12_none&circle-token=de43df1f4dfd9a6428a778c0bcd118f6b57ea7fd) | ![CircleCI](https://circleci.com/gh/aaye/teikitu.svg?style=svg&branch=ninja_final_clang_c17_x64_win_win_desktop_dx12_none&circle-token=de43df1f4dfd9a6428a778c0bcd118f6b57ea7fd) | ![CircleCI](https://circleci.com/gh/aaye/teikitu.svg?style=svg&branch=ninja_tools_clang_c17_x64_win_win_desktop_dx12_none&circle-token=de43df1f4dfd9a6428a778c0bcd118f6b57ea7fd) |
+| Xcode | Mac OS   | None  | None    | C17    | POSIX    | POSIX    | ARM    | ![CircleCI](https://circleci.com/gh/aaye/teikitu.svg?style=svg&branch=build___mac_xcode_clang_c17_x64_win_win_desktop_dx12_none&circle-token=de43df1f4dfd9a6428a778c0bcd118f6b57ea7fd) | ![CircleCI](https://circleci.com/gh/aaye/teikitu.svg?style=svg&branch=build___mac_xcode_clang_c17_x64_win_win_desktop_dx12_none&circle-token=de43df1f4dfd9a6428a778c0bcd118f6b57ea7fd) | ![CircleCI](https://circleci.com/gh/aaye/teikitu.svg?style=svg&branch=build___mac_xcode_clang_c17_x64_win_win_desktop_dx12_none&circle-token=de43df1f4dfd9a6428a778c0bcd118f6b57ea7fd) | ![CircleCI](https://circleci.com/gh/aaye/teikitu.svg?style=svg&branch=build___mac_xcode_clang_c17_x64_win_win_desktop_dx12_none&circle-token=de43df1f4dfd9a6428a778c0bcd118f6b57ea7fd) |
+| Xcode | Mac OS   | Metal | None    | C17    | POSIX    | POSIX    | ARM    | ![CircleCI](https://circleci.com/gh/aaye/teikitu.svg?style=svg&branch=build___mac_xcode_clang_c17_x64_win_win_desktop_dx12_none&circle-token=de43df1f4dfd9a6428a778c0bcd118f6b57ea7fd) | ![CircleCI](https://circleci.com/gh/aaye/teikitu.svg?style=svg&branch=build___mac_xcode_clang_c17_x64_win_win_desktop_dx12_none&circle-token=de43df1f4dfd9a6428a778c0bcd118f6b57ea7fd) | ![CircleCI](https://circleci.com/gh/aaye/teikitu.svg?style=svg&branch=build___mac_xcode_clang_c17_x64_win_win_desktop_dx12_none&circle-token=de43df1f4dfd9a6428a778c0bcd118f6b57ea7fd) | ![CircleCI](https://circleci.com/gh/aaye/teikitu.svg?style=svg&branch=build___mac_xcode_clang_c17_x64_win_win_desktop_dx12_none&circle-token=de43df1f4dfd9a6428a778c0bcd118f6b57ea7fd) |
+| Make  | Linux    | None  | None    | C17    | POSIX    | POSIX    | ARM    | ![CircleCI](https://circleci.com/gh/aaye/teikitu.svg?style=svg&branch=build___mac_xcode_clang_c17_x64_win_win_desktop_dx12_none&circle-token=de43df1f4dfd9a6428a778c0bcd118f6b57ea7fd) | ![CircleCI](https://circleci.com/gh/aaye/teikitu.svg?style=svg&branch=build___mac_xcode_clang_c17_x64_win_win_desktop_dx12_none&circle-token=de43df1f4dfd9a6428a778c0bcd118f6b57ea7fd) | ![CircleCI](https://circleci.com/gh/aaye/teikitu.svg?style=svg&branch=build___mac_xcode_clang_c17_x64_win_win_desktop_dx12_none&circle-token=de43df1f4dfd9a6428a778c0bcd118f6b57ea7fd) | ![CircleCI](https://circleci.com/gh/aaye/teikitu.svg?style=svg&branch=build___mac_xcode_clang_c17_x64_win_win_desktop_dx12_none&circle-token=de43df1f4dfd9a6428a778c0bcd118f6b57ea7fd) |
 
-### Author History
+</sub>
 
-**Andrew Aye** has been working in the game industry since March 2001. His responsibilities were first
-focused on creating significant game engine features (for example a modern simulation on the PS2) evolving
-to creating and modifying all aspects of a game engine (real-time interactive). Along the way, he became
-responsible for growing other engineers and then organizations. He always took a collaborative and
-partnership stance with cross-functional partners. The highlight (to date) of this career was owning the
-responsibility for leading and managing two Call of Duty projects (Modern Warfare 3, and Ghosts). In 2017
-he transitioned into a traditional tech company (Amazon) and helped to bootstrap the Amazon Pharmacy
-project. In his role on the leadership team of North America Consumables, he helped navigate the pandemic
-for the engineering teams (remote work) and collaborated on creative solutions for the excessive demand
-that was placed on the amazon.com site.
+### Public Release Build Status
 
-He is currently taking a break and looking forward to his next challenge. It is an open question if this
-will be another role to feed, drive, and grow an organization, or if he will dive back into code to drive
-impact for the next generation of real-time interactive software.
+<sub>
+    
+| Build |   Host   |  GPU  |  Audio  |  SIMD  |  Thread  |    OS    | CPU | Debug | Release | Final | Tools |
+|:--------:|:--------:|:-----:|:-------:|:------:|:--------:|:--------:|:---:|:-----:|:-------:|:-----:|:-----:|
+| Ninja | Windows  | None  | None    | C17    | Windows  | Windows  | Intel  | ![CircleCI](https://circleci.com/gh/aaye/teikitu_release.svg?style=svg&branch=build___win_ninja_clang_c17_x64_win_win_desktop_none_none_debug) | ![CircleCI](https://circleci.com/gh/aaye/teikitu_release.svg?style=svg&branch=build___win_ninja_clang_c17_x64_win_win_desktop_none_none_release) | ![CircleCI](https://circleci.com/gh/aaye/teikitu_release.svg?style=svg&branch=build___win_ninja_clang_c17_x64_win_win_desktop_none_none_final) | ![CircleCI](https://circleci.com/gh/aaye/teikitu_release.svg?style=svg&branch=build___win_ninja_clang_c17_x64_win_win_desktop_none_none_tools) |
+| Ninja | Windows  | REF   | None    | C17    | Windows  | Windows  | Intel  | ![CircleCI](https://circleci.com/gh/aaye/teikitu_release.svg?style=svg&branch=build___win_ninja_clang_c17_x64_win_win_desktop_ref_none_debug) | ![CircleCI](https://circleci.com/gh/aaye/teikitu_release.svg?style=svg&branch=build___win_ninja_clang_c17_x64_win_win_desktop_ref_none_release) | ![CircleCI](https://circleci.com/gh/aaye/teikitu_release.svg?style=svg&branch=build___win_ninja_clang_c17_x64_win_win_desktop_ref_none_final) | ![CircleCI](https://circleci.com/gh/aaye/teikitu_release.svg?style=svg&branch=build___win_ninja_clang_c17_x64_win_win_desktop_ref_none_tools) |
+| Ninja | Windows  | DX12  | None    | C17    | Windows  | Windows  | Intel  | ![CircleCI](https://circleci.com/gh/aaye/teikitu_release.svg?style=svg&branch=build___win_ninja_clang_c17_x64_win_win_desktop_dx12_none_debug) | ![CircleCI](https://circleci.com/gh/aaye/teikitu_release.svg?style=svg&branch=build___win_ninja_clang_c17_x64_win_win_desktop_dx12_none_release) | ![CircleCI](https://circleci.com/gh/aaye/teikitu_release.svg?style=svg&branch=build___win_ninja_clang_c17_x64_win_win_desktop_dx12_none_final) | ![CircleCI](https://circleci.com/gh/aaye/teikitu_release.svg?style=svg&branch=build___win_ninja_clang_c17_x64_win_win_desktop_dx12_none_tools) |
+| Ninja | Windows  | VLKN  | None    | C17    | Windows  | Windows  | Intel  | ![CircleCI](https://circleci.com/gh/aaye/teikitu_release.svg?style=svg&branch=ninja_debug_clang_c17_x64_win_win_desktop_dx12_none) | ![CircleCI](https://circleci.com/gh/aaye/teikitu_release.svg?style=svg&branch=ninja_release_clang_c17_x64_win_win_desktop_dx12_none) | ![CircleCI](https://circleci.com/gh/aaye/teikitu_release.svg?style=svg&branch=ninja_final_clang_c17_x64_win_win_desktop_dx12_none) | ![CircleCI](https://circleci.com/gh/aaye/teikitu_release.svg?style=svg&branch=ninja_tools_clang_c17_x64_win_win_desktop_dx12_none) |
+| MSVC | Windows  | DX12  | None    | C17    | Windows  | Windows  | Intel  | ![CircleCI](https://circleci.com/gh/aaye/teikitu_release.svg?style=svg&branch=build___win_msvc_17_msvc_c17_x64_win_win_wc_desktop_dx12_none) | ![CircleCI](https://circleci.com/gh/aaye/teikitu_release.svg?style=svg&branch=build___win_msvc_17_msvc_c17_x64_win_win_wc_desktop_dx12_none) | ![CircleCI](https://circleci.com/gh/aaye/teikitu_release.svg?style=svg&branch=build___win_msvc_17_msvc_c17_x64_win_win_wc_desktop_dx12_none) | ![CircleCI](https://circleci.com/gh/aaye/teikitu_release.svg?style=svg&branch=build___win_msvc_17_msvc_c17_x64_win_win_wc_desktop_dx12_none) |
+| Xcode | Mac OS   | None  | None    | C17    | POSIX    | Mac      | ARM    | ![CircleCI](https://circleci.com/gh/aaye/teikitu_release.svg?style=svg&branch=build___mac_xcode_clang_c17_x64_win_win_desktop_dx12_none) | ![CircleCI](https://circleci.com/gh/aaye/teikitu_release.svg?style=svg&branch=build___mac_xcode_clang_c17_x64_win_win_desktop_dx12_none) | ![CircleCI](https://circleci.com/gh/aaye/teikitu_release.svg?style=svg&branch=build___mac_xcode_clang_c17_x64_win_win_desktop_dx12_none) | ![CircleCI](https://circleci.com/gh/aaye/teikitu_release.svg?style=svg&branch=build___mac_xcode_clang_c17_x64_win_win_desktop_dx12_none) |
 
-### License
+</sub>
 
-The source code snippets posted or attached to this blog are subject to the [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License](http://creativecommons.org/licenses/by-nc-sa/4.0/) unless otherwise stated.
+## Project History
 
-### Installation of the Teikitu Real-Time Interactive Engine
+I started this code base at the University of Waterloo (1993-2000). Since then, it has seen over eight significant refactors. The original implementation was object-oriented and Windows com-compliant. The current version is written in a functional style using C17. I am aware that there are many advantages to modern C++. However, when using C++, authors tend to adopt object-orientated paradigms, which, in my opinion, are not a good match for an engine. I have also found that the coding flexibility I adopt in coding this engine has crushed C++ compilers and optimizers. I once had a  revision of the code base with the entire math and geometry library implemented as templates to facilitate an easy way to test 32bit and 64bit floats (for simulation issues and inconsistencies). The release build failed to finish after running for 24 hours. The current implementation, which uses the C pre-processor language for code generation to replace the use of templates, compiles in seconds (under a minute).
 
-I wish I could tell you that this will be entirely turn key. Unfortunately, it is close - but not quite that easy on Windows PCs.
-1. MSBuild v1.70 which is used by Visual Studio 2022 has an issue (bug). See addendum 1.
-2. For the cleanest version of the install, I made a couple changes to CMake. They are not necessary, however for consideration:
-    a) Allowed myself to select the LLVM version to be used. I have tested against 14.0.5.
-    b) Modified to allow me to set the intermediate directory.
-3. I have not implemented a robust compilation test (yet) for the different configurations. My core PC test uses,
-    MSVC IDE, clang compiler (clang-cl), windows os, windows threading, C11 vector support.
-    I have compiled it on Mac OS using Xcode. In Phase 2, will setup CI with my github to validate the compilation of as many builds as is reasonable.
+## Author History
 
-### Build Notes for the Teikitu Real-Time Interactive Engine
+**Andrew Aye** has worked in the game industry since March 2001. His responsibilities were first to create significant game engine features (for example, a modern simulation on the PS2) and then to create and modify all aspects of a game engine (real-time interactive). Along the way, he became responsible for growing other engineers and organizations. The highlight (to date) of this career was owning the responsibility for leading and managing two Call of Duty projects (Modern Warfare 3, and Ghosts). In 2017, he transitioned into a traditional tech company (Amazon) and helped to bootstrap the Amazon Pharmacy project. In his role on the leadership team of North America Consumables, he helped navigate the pandemic for the engineering teams (remote work) and collaborated on creative solutions for the excessive demand placed on the amazon.com site. He then spent a brief period in an SMS Ad startup (Attentive) as their first Senior Director to support their hyper-scale growth. He later transitioned to Meta in the Instagram Ads organization and, most recently, into the Developer Relations organization for Reality Labs.
 
-1. Using windows Terminal, you can use the example script file setup_msvc_17.ps1 to create a VS 2022 solution.
-2. MSVC will compile all of the C code as CXX, due to the lack of a stdatomic implementation. Clang will compile the code using the correct compilers.
+## Quick Start
 
-### Addendums to the Installtion and Build Notes for Teikitu Real-Time Interactive Engine
+Several quick start options are available:
+- Tested (supported) generators are Visual Studio 2022, Xcode, Unix Makefiles, Ninja (Windows)
+- Teikitu currently uses the superbuild process using CMake
+  - The root CMakeLists.txt file contains only a list of external projects (including Teikitu)
+  - Most of the projects are Teikitu dependencies
+  - Once all the projects have been successfully built and installed, you can iterate only on Teikitu (or your personal project) without running cmake on the root.
+- On a Windows host computer, clone the repo: `git clone https://github.com/aaye/teikitu_release.git`
+  - Create a Visual Studio solution using the MSVC compiler and a project using LLVM and Clang
+    - Iterating is faster with the Visual Studio solution/project. However, it is not an approved build format since we are forced to use the C++ compiler.
+    - `cd build_scripts` (or equivalent)
+    - `.\make_windows.ps1 -GPU:DX12`
+    - Visual Studio solution file will be in ***//build/msvc17_msvc_c17_x64_win_win_wc_desktop_dx12_none***
+    - Ninja Clang project will be in ***//build/msvc17_msvc_c17_x64_win_win_wc_desktop_dx12_none***
+  - Compile the matrix of supported configurations
+    - `cd build_scripts` (or equivalent)
+    - `.\test_windows.ps1`
+    - Build results will be in ***//build/ninja_xxx***
+- On a Mac host computer (preferably Apple hardware / ARM), clone the repo: `git clone https://github.com/aaye/teikitu_release.git`
+  - Work in Progress [Tested - Issue for script to automate the process](https://github.com/aaye/teikitu/issues/22)
+- On a Linux host computer, clone the repo: `git clone https://github.com/aaye/teikitu_release.git`
+  - Work in Progress [Tested on WSL (Windows Linux Environment) - Issue for script to automate the process](https://github.com/aaye/teikitu/issues/23)
 
-**Addendum 1 - MSBuild Fixes**
+## Repo Structure
 
-**ISSUE #1**
+```text
+teikitu
+├──build_scripts/ - START HERE - contains scripts for creating IDE project files or building the project.
+├──cmake/ - the core cmake files.
+├──teikitu_assets/ - location is created during the build process to store reference data assets.
+│  ├──images/ - contains reference images used in the unit tests.
+├──teikitu_external/ - location for external dependencies, including git submodules (please read quick start).
+├──teikitu_ide/ - contains files needed when generating ide specific project files.
+├──teikitu_private/ - contains the source code for the project, including the unit tests.
+│  ├──src/ - contains the source code of the project.
+│  └──tests/ - contains the unit tests for validating the project.
+├──teikitu_samples/ - contains some basic games and applications using Teikitu.
+├──teikitu_sdk/ - contains the public include and inline files for using Teikitu.
+└──teikitu_tools/ - contains some basic tools created to work with Teikitu.
+```
+      
+## Prerequisites and Dependencies
 
-C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild\Microsoft\VC\v170\Microsoft.Cpp.ClangCl.Common.targets
+- [cmake][cmake-url] – Open-Source, cross-platform build tool
 
-If EnableFiberSafeOptimizations is enabled (/GT on the command line) it causes Clang-CL to issue a warning about an unused command-line argument. I suggest adding the following after a similar block that is used to clear out Multiprocessor Compilation (/MP)
+## Known Issues and Workflow Improvements
 
+**1. Microsoft Visual Studio Compiler (only) will compile all files as CXX**
+<details><summary>2. Standard atomic header for the Microsoft Visual Studio Compiler</summary>
+The header file has an error in its 16-byte template overrides. I fixed the defect and validated the change by both the removal of a deadlock that the locking version created and by a size comparison of the atomic 16-byte data structures. If it is not using the 16-byte CAS instructions, the structure will pad to 32 bytes instead of 16. The corrected file was placed into the Teikitu external directory and is used instead of the standard (included) file.
+</details>
+<details><summary>3. Microsoft Visual Studio Clang-CL (no longer supported)</summary>
+    
+***C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild\Microsoft\VC\v170\Microsoft.Cpp.ClangCl.Common.targets*** updated to prevent a Clang warning-as-error issue. If EnableFiberSafeOptimizations is enabled (/GT on the command line) it causes Clang-CL to issue a warning about an unused command-line argument. I suggest adding the following after a similar block that is used to clear out Multiprocessor Compilation (/MP)
 ```
 <!-- copy EnableFiberSafeOptimizations to _EnableFiberSafeOptimizations.
-     EnableFiberSafeOptimizations is cleared to avoid passing /GT to clang-cl which generates a warning -->
+     EnableFiberSafeOptimizations is cleared to avoid passing /GT to clang-cl, which generates a warning -->
 
 <ItemGroup>
   <ClCompile Condition="'%(ClCompile.EnableFiberSafeOptimizations)' == 'true'">
@@ -82,9 +133,8 @@ If EnableFiberSafeOptimizations is enabled (/GT on the command line) it causes C
 </ItemGroup>`
 ```
 
-**ISSUE #2**
+***C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild\Microsoft\VC\v170\Microsoft.Cpp.ClangCl.Common.targets*** updated to prevent a critical issue where Clang-CL is not passing through the C-standard flag to Clang. The result caused PCH and compilation mis-matches (the PCH was not compiled using the same C-standard flags as the C source files).
 
-C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild\Microsoft\VC\v170\Microsoft.Cpp.ClangCl.Common.targets
 Object created near line 132 (<!-- Precompiled headers - need to build them first -->)
 Missing an assignment for
 
@@ -92,10 +142,33 @@ Missing an assignment for
 LanguageStandard_C =“%(ClCompile.LanguageStandard_C)”
 ```
 
-Causing PCH and compilation mis-matches
+</details>
+<details><summary>4. CMake Improvements when generating Visual Studio project files. (Personal preference change, not necessary by others)</summary>
+Modified to allow me to set the intermediate directory.
+</details>
 
-**ISSUE #3**
 
-MSFT standard atomic header has an error in its 16 byte template overrides. I fixed this (and validated by both the removal a dead lock that the locking-version created, and by a size comparison of the atomic 16 byte data structures. If it is not using the 16 byte CAS instructions, the structure will pad to 32 bytes instead of 16.)
 
-I copied the MSFT header file and made the needed changes, and added it into the external folder for compilation.
+
+## Copyright and License
+
+Teikitu is subject to the [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License](http://creativecommons.org/licenses/by-nc-sa/4.0/) unless otherwise stated.
+
+
+[bug-report-url]: https://github.com/twbs/bootstrap/issues/new?template=bug_report.md
+[feature-request-url]: https://github.com/twbs/bootstrap/issues/new?template=feature_request.md
+
+[rep-url]: https://github.com/aaye
+[linkedin-url]: https://www.linkedin.com/in/andrew-aye/
+[mail]: andrew.aye@gmail.com
+[personal-page-url]: https://andrew.aye.page
+[blog-url]: https://aaye.github.io/professional/blog/
+
+[codefactor-badge]: https://img.shields.io/codefactor/grade/github/aaye/teikitu_release
+[codefactor-url]: https://www.codefactor.io/repository/github/aaye/teikitu_release
+[documentation-badge]: https://github.com/aaye/teikitu/actions/workflows/documentation.yml/badge.svg
+[documentation-url]: https://aaye.github.io/projects/
+[license-badge]: https://img.shields.io/badge/License-CC_BY--NC--SA_4.0-lightgrey.svg
+[license-url]: http://creativecommons.org/licenses/by-nc-sa/4.0/
+
+[cmake-url]: https://cmake.org/

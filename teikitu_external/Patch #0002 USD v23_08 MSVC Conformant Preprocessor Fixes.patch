@@ -1,0 +1,91 @@
+From 24a713885ea6af7161021e690e4268e0fec080d9 Mon Sep 17 00:00:00 2001
+From: Andrew Aye <andrew.aye@gmail.com>
+Date: Thu, 14 Sep 2023 15:27:18 -0700
+Subject: [PATCH 2/5] Conformant
+
+---
+ pxr/base/arch/defines.h             | 4 ++++
+ pxr/base/tf/preprocessorUtils.h     | 4 ++--
+ pxr/base/tf/preprocessorUtilsLite.h | 8 ++++----
+ 3 files changed, 10 insertions(+), 6 deletions(-)
+
+diff --git a/pxr/base/arch/defines.h b/pxr/base/arch/defines.h
+index b8efcd824..1cdbae406 100644
+--- a/pxr/base/arch/defines.h
++++ b/pxr/base/arch/defines.h
+@@ -108,6 +108,10 @@ PXR_NAMESPACE_OPEN_SCOPE
+ #define ARCH_HAS_MMAP_MAP_POPULATE
+ #endif
+ 
++#if defined(ARCH_COMPILER_MSVC) && (!defined(_MSVC_TRADITIONAL) || _MSVC_TRADITIONAL)
++#define ARCH_MSVC_TRADITIONAL_PREPROCESSOR
++#endif
++
+ PXR_NAMESPACE_CLOSE_SCOPE
+ 
+ #endif // PXR_BASE_ARCH_DEFINES_H 
+diff --git a/pxr/base/tf/preprocessorUtils.h b/pxr/base/tf/preprocessorUtils.h
+index c0d3a10ed..701d504b4 100644
+--- a/pxr/base/tf/preprocessorUtils.h
++++ b/pxr/base/tf/preprocessorUtils.h
+@@ -64,7 +64,7 @@ ARCH_PRAGMA_MACRO_TOO_FEW_ARGUMENTS
+ ///
+ /// \ingroup group_tf_Preprocessor
+ /// \hideinitializer
+-#if defined(ARCH_COMPILER_MSVC)
++#if defined(ARCH_MSVC_TRADITIONAL_PREPROCESSOR)
+ #define TF_NUM_ARGS(...) \
+     BOOST_PP_IIF(BOOST_VMD_IS_EMPTY(__VA_ARGS__),\
+         0, BOOST_PP_VARIADIC_SIZE(__VA_ARGS__))
+@@ -187,7 +187,7 @@ ARCH_PRAGMA_MACRO_TOO_FEW_ARGUMENTS
+ /// Exapnds to 1 if the argument is a tuple, and 0 otherwise.
+ /// \ingroup group_tf_Preprocessor
+ /// \hideinitializer
+-#if defined(ARCH_COMPILER_MSVC)
++#if defined(ARCH_MSVC_TRADITIONAL_PREPROCESSOR)
+     #define TF_PP_IS_TUPLE(sequence) \
+         BOOST_VMD_IS_TUPLE(sequence)
+ #else
+diff --git a/pxr/base/tf/preprocessorUtilsLite.h b/pxr/base/tf/preprocessorUtilsLite.h
+index bc77bfe8f..7b45d8314 100644
+--- a/pxr/base/tf/preprocessorUtilsLite.h
++++ b/pxr/base/tf/preprocessorUtilsLite.h
+@@ -45,7 +45,7 @@
+ /// Expand and convert the argument to a string, using a most minimal macro.
+ #define TF_PP_STRINGIZE(x) TF_PP_STRINGIZE_IMPL(x)
+ 
+-#ifdef ARCH_COMPILER_MSVC
++#if defined(ARCH_MSVC_TRADITIONAL_PREPROCESSOR)
+ 
+ /// Expand to the number of arguments passed.  For example,
+ /// TF_PP_VARIADIC_SIZE(foo, bar, baz) expands to 3.  Supports up to 64
+@@ -70,7 +70,7 @@
+ /// and TF_PP_VARIADIC_ELEM(1, a, b, c) expands to b.
+ #define TF_PP_VARIADIC_ELEM(n, ...) TF_PP_CAT(TF_PP_VAE_, n)(__VA_ARGS__,)
+ 
+-#endif // ARCH_COMPILER_MSVC
++#endif // defined(ARCH_MSVC_TRADITIONAL_PREPROCESSOR)
+ 
+ #define TF_PP_VARIADIC_SIZE_IMPL(a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13, a14, a15, a16, a17, a18, a19, a20, a21, a22, a23, a24, a25, a26, a27, a28, a29, a30, a31, a32, a33, a34, a35, a36, a37, a38, a39, a40, a41, a42, a43, a44, a45, a46, a47, a48, a49, a50, a51, a52, a53, a54, a55, a56, a57, a58, a59, a60, a61, a62, a63, size, ...) size
+ 
+@@ -139,7 +139,7 @@
+ #define TF_PP_VAE_62(a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13, a14, a15, a16, a17, a18, a19, a20, a21, a22, a23, a24, a25, a26, a27, a28, a29, a30, a31, a32, a33, a34, a35, a36, a37, a38, a39, a40, a41, a42, a43, a44, a45, a46, a47, a48, a49, a50, a51, a52, a53, a54, a55, a56, a57, a58, a59, a60, a61, a62, ...) a62
+ #define TF_PP_VAE_63(a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13, a14, a15, a16, a17, a18, a19, a20, a21, a22, a23, a24, a25, a26, a27, a28, a29, a30, a31, a32, a33, a34, a35, a36, a37, a38, a39, a40, a41, a42, a43, a44, a45, a46, a47, a48, a49, a50, a51, a52, a53, a54, a55, a56, a57, a58, a59, a60, a61, a62, a63, ...) a63
+ 
+-#ifdef ARCH_COMPILER_MSVC
++#if defined(ARCH_MSVC_TRADITIONAL_PREPROCESSOR)
+ 
+ #define TF_PP_FE_0(_macro, ...)
+ #define TF_PP_FE_1(_macro, a) _macro(a)
+@@ -275,7 +275,7 @@
+ 
+ #endif
+ 
+-#ifdef ARCH_COMPILER_MSVC
++#if defined(ARCH_MSVC_TRADITIONAL_PREPROCESSOR)
+ 
+ /// Expand the macro \p x on every variadic argument.  For example
+ /// TF_PP_FOR_EACH(MACRO, foo, bar, baz) expands to MACRO(foo) MACRO(bar)
+-- 
+2.40.1.windows.1
+
