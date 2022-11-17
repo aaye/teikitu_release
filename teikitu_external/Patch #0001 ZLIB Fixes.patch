@@ -1,0 +1,22 @@
+From f020ea70b1e4cd443bb27ff29998d17d6e6af798 Mon Sep 17 00:00:00 2001
+From: Andrew Aye <andrew.aye@gmail.com>
+Date: Sun, 17 Sep 2023 14:01:14 -0700
+Subject: [PATCH] Fix
+
+---
+ CMakeLists.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index b412dc7..b5ad9c0 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1,4 +1,4 @@
+-cmake_minimum_required(VERSION 2.4.4)
++cmake_minimum_required(VERSION 3.5.0)
+ set(CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS ON)
+ 
+ project(zlib C)
+-- 
+2.40.1.windows.1
+

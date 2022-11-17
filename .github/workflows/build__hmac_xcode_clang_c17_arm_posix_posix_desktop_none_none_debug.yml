@@ -1,0 +1,25 @@
+name: Debug
+on:
+  push:
+  workflow_dispatch:
+
+env:
+  BUILD_URL: "https://${{ secrets.PAT }}@github.com/${{ github.repository }}.git"
+  
+jobs:
+  tagcheck:
+    name: check tag
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check to see if the SHAs match
+        run: |
+          echo $BUILD_URL
+          test_head=$(git ls-remote $BUILD_URL --verify 'HEAD')
+          test_head="${test_head%\HEAD*}"
+          echo $test_head
+          test_tag=$(git ls-remote $BUILD_URL --verify 'build__hmac_xcode_clang_c17_arm_posix_posix_desktop_none_none_debug^{}')
+          test_tag="${test_tag%\refs/tags/build__hmac_xcode_clang_c17_arm_posix_posix_desktop_none_none_debug*}"
+          echo $test_tag
+          if test "$test_head" != "$test_tag"; then
+            exit 1
+          fi
