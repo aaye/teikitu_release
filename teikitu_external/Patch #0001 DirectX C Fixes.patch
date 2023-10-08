@@ -1,0 +1,332 @@
+From 8ac8594149c30bfff427db9171bab89898bb42f3 Mon Sep 17 00:00:00 2001
+From: Andrew Aye <andrew.aye@gmail.com>
+Date: Tue, 12 Sep 2023 00:58:10 -0700
+Subject: [PATCH] Fixes for a C compilation.
+
+---
+ include/directx/dxcore.h           |   2 +
+ include/directx/dxcore_interface.h |  24 ++--
+ include/directx/minwindefine.h     | 198 +++++++++++++++++++++++++++++
+ 3 files changed, 212 insertions(+), 12 deletions(-)
+ create mode 100644 include/directx/minwindefine.h
+
+diff --git a/include/directx/dxcore.h b/include/directx/dxcore.h
+index 26b2d21..b8c9e74 100644
+--- a/include/directx/dxcore.h
++++ b/include/directx/dxcore.h
+@@ -22,6 +22,7 @@ DXCoreCreateAdapterFactory(
+     _COM_Outptr_ void** ppvFactory
+ );
+ 
++#if defined(__cplusplus) && !defined(CINTERFACE)
+ template <class T>
+ HRESULT
+ DXCoreCreateAdapterFactory(
+@@ -30,6 +31,7 @@ DXCoreCreateAdapterFactory(
+ {
+     return DXCoreCreateAdapterFactory(IID_PPV_ARGS(ppvFactory));
+ }
++#endif // defined(__cplusplus) && !defined(CINTERFACE)
+ 
+ #endif // (_WIN32_WINNT >= _WIN32_WINNT_WIN10)
+ 
+diff --git a/include/directx/dxcore_interface.h b/include/directx/dxcore_interface.h
+index f01d203..22cb32b 100644
+--- a/include/directx/dxcore_interface.h
++++ b/include/directx/dxcore_interface.h
+@@ -14,12 +14,10 @@
+ 
+ #include <stdint.h>
+ 
+-#ifdef __cplusplus
+-
+ #define _FACDXCORE    0x880
+ #define MAKE_DXCORE_HRESULT( code )     MAKE_HRESULT( 1, _FACDXCORE, code )
+ 
+-enum class DXCoreAdapterProperty : uint32_t
++enum DXCoreAdapterProperty
+ {
+     InstanceLuid = 0,
+     DriverVersion = 1,
+@@ -38,19 +36,19 @@ enum class DXCoreAdapterProperty : uint32_t
+     HardwareIDParts = 14
+ };
+ 
+-enum class DXCoreAdapterState : uint32_t
++enum DXCoreAdapterState
+ {
+     IsDriverUpdateInProgress = 0,
+     AdapterMemoryBudget = 1
+ };
+ 
+-enum class DXCoreSegmentGroup : uint32_t
++enum DXCoreSegmentGroup
+ {
+     Local = 0,
+     NonLocal = 1
+ };
+ 
+-enum class DXCoreNotificationType : uint32_t
++enum DXCoreNotificationType
+ {
+     AdapterListStale = 0,
+     AdapterNoLongerValid = 1,
+@@ -58,7 +56,7 @@ enum class DXCoreNotificationType : uint32_t
+     AdapterHardwareContentProtectionTeardown = 3
+ };
+ 
+-enum class DXCoreAdapterPreference : uint32_t
++enum DXCoreAdapterPreference
+ {
+     Hardware = 0,
+     MinimumPower = 1,
+@@ -85,7 +83,7 @@ struct DXCoreHardwareIDParts
+ struct DXCoreAdapterMemoryBudgetNodeSegmentGroup
+ {
+     uint32_t nodeIndex;
+-    DXCoreSegmentGroup segmentGroup;
++    enum DXCoreSegmentGroup segmentGroup;
+ };
+ 
+ struct DXCoreAdapterMemoryBudget
+@@ -97,12 +95,10 @@ struct DXCoreAdapterMemoryBudget
+ };
+ 
+ typedef void (STDMETHODCALLTYPE *PFN_DXCORE_NOTIFICATION_CALLBACK)(
+-    DXCoreNotificationType notificationType,
++    enum DXCoreNotificationType notificationType,
+     _In_ IUnknown *object,
+     _In_opt_ void *context);
+ 
+-static_assert(sizeof(bool) == 1, "bool assumed as one byte");
+-
+ DEFINE_GUID(IID_IDXCoreAdapterFactory, 0x78ee5945, 0xc36e, 0x4b13, 0xa6, 0x69, 0x00, 0x5d, 0xd1, 0x1c, 0x0f, 0x06);
+ DEFINE_GUID(IID_IDXCoreAdapterList, 0x526c7776, 0x40e9, 0x459b, 0xb7, 0x11, 0xf3, 0x2a, 0xd7, 0x6d, 0xfc, 0x28);
+ DEFINE_GUID(IID_IDXCoreAdapter, 0xf0db4c7f, 0xfe5a, 0x42a2, 0xbd, 0x62, 0xf2, 0xa6, 0xcf, 0x6f, 0xc8, 0x3e);
+@@ -110,6 +106,10 @@ DEFINE_GUID(DXCORE_ADAPTER_ATTRIBUTE_D3D11_GRAPHICS, 0x8c47866b, 0x7583, 0x450d,
+ DEFINE_GUID(DXCORE_ADAPTER_ATTRIBUTE_D3D12_GRAPHICS, 0x0c9ece4d, 0x2f6e, 0x4f01, 0x8c, 0x96, 0xe8, 0x9e, 0x33, 0x1b, 0x47, 0xb1);
+ DEFINE_GUID(DXCORE_ADAPTER_ATTRIBUTE_D3D12_CORE_COMPUTE, 0x248e2800, 0xa793, 0x4724, 0xab, 0xaa, 0x23, 0xa6, 0xde, 0x1b, 0xe0, 0x90);
+ 
++#if defined(__cplusplus) && !defined(CINTERFACE)
++
++static_assert(sizeof(bool) == 1, "bool assumed as one byte");
++
+ /* interface IDXCoreAdapter */
+ MIDL_INTERFACE("f0db4c7f-fe5a-42a2-bd62-f2a6cf6fc83e")
+ IDXCoreAdapter : public IUnknown
+@@ -309,7 +309,7 @@ public:
+         uint32_t eventCookie) = 0;
+ };
+ 
+-#endif // __cplusplus
++#endif // defined(__cplusplus) && !defined(CINTERFACE)
+ 
+ #endif // __dxcore_interface_h__
+ 
+diff --git a/include/directx/minwindefine.h b/include/directx/minwindefine.h
+new file mode 100644
+index 0000000..bc10126
+--- /dev/null
++++ b/include/directx/minwindefine.h
+@@ -0,0 +1,198 @@
++#pragma once
++
++/****** Interface Declaration ***********************************************/
++
++/*
++ *      These are macros for declaring interfaces.  They exist so that
++ *      a single definition of the interface is simulataneously a proper
++ *      declaration of the interface structures (C++ abstract classes)
++ *      for both C and C++.
++ *
++ *      DECLARE_INTERFACE(iface) is used to declare an interface that does
++ *      not derive from a base interface.
++ *      DECLARE_INTERFACE_(iface, baseiface) is used to declare an interface
++ *      that does derive from a base interface.
++ *
++ *      By default if the source file has a .c extension the C version of
++ *      the interface declaratations will be expanded; if it has a .cpp
++ *      extension the C++ version will be expanded. if you want to force
++ *      the C version expansion even though the source file has a .cpp
++ *      extension, then define the macro "CINTERFACE".
++ *      eg.     cl -DCINTERFACE file.cpp
++ *
++ *      Example Interface declaration:
++ *
++ *          #undef  INTERFACE
++ *          #define INTERFACE   IClassFactory
++ *
++ *          DECLARE_INTERFACE_(IClassFactory, IUnknown)
++ *          {
++ *              // *** IUnknown methods ***
++ *              STDMETHOD(QueryInterface) (THIS_
++ *                                        REFIID riid,
++ *                                        LPVOID FAR* ppvObj) PURE;
++ *              STDMETHOD_(ULONG,AddRef) (THIS) PURE;
++ *              STDMETHOD_(ULONG,Release) (THIS) PURE;
++ *
++ *              // *** IClassFactory methods ***
++ *              STDMETHOD(CreateInstance) (THIS_
++ *                                        LPUNKNOWN pUnkOuter,
++ *                                        REFIID riid,
++ *                                        LPVOID FAR* ppvObject) PURE;
++ *          };
++ *
++ *      Example C++ expansion:
++ *
++ *          struct FAR IClassFactory : public IUnknown
++ *          {
++ *              virtual HRESULT STDMETHODCALLTYPE QueryInterface(
++ *                                                  IID FAR& riid,
++ *                                                  LPVOID FAR* ppvObj) = 0;
++ *              virtual HRESULT STDMETHODCALLTYPE AddRef(void) = 0;
++ *              virtual HRESULT STDMETHODCALLTYPE Release(void) = 0;
++ *              virtual HRESULT STDMETHODCALLTYPE CreateInstance(
++ *                                              LPUNKNOWN pUnkOuter,
++ *                                              IID FAR& riid,
++ *                                              LPVOID FAR* ppvObject) = 0;
++ *          };
++ *
++ *          NOTE: Our documentation says '#define interface class' but we use
++ *          'struct' instead of 'class' to keep a lot of 'public:' lines
++ *          out of the interfaces.  The 'FAR' forces the 'this' pointers to
++ *          be far, which is what we need.
++ *
++ *      Example C expansion:
++ *
++ *          typedef struct IClassFactory
++ *          {
++ *              const struct IClassFactoryVtbl FAR* lpVtbl;
++ *          } IClassFactory;
++ *
++ *          typedef struct IClassFactoryVtbl IClassFactoryVtbl;
++ *
++ *          struct IClassFactoryVtbl
++ *          {
++ *              HRESULT (STDMETHODCALLTYPE * QueryInterface) (
++ *                                                  IClassFactory FAR* This,
++ *                                                  IID FAR* riid,
++ *                                                  LPVOID FAR* ppvObj) ;
++ *              HRESULT (STDMETHODCALLTYPE * AddRef) (IClassFactory FAR* This) ;
++ *              HRESULT (STDMETHODCALLTYPE * Release) (IClassFactory FAR* This) ;
++ *              HRESULT (STDMETHODCALLTYPE * CreateInstance) (
++ *                                                  IClassFactory FAR* This,
++ *                                                  LPUNKNOWN pUnkOuter,
++ *                                                  IID FAR* riid,
++ *                                                  LPVOID FAR* ppvObject);
++ *              HRESULT (STDMETHODCALLTYPE * LockServer) (
++ *                                                  IClassFactory FAR* This,
++ *                                                  BOOL fLock);
++ *          };
++ */
++
++#if defined(__cplusplus) && !defined(CINTERFACE)
++//#define interface               struct FAR
++
++#ifdef COM_STDMETHOD_CAN_THROW
++#define COM_DECLSPEC_NOTHROW
++#else
++#define COM_DECLSPEC_NOTHROW DECLSPEC_NOTHROW
++#endif
++
++#define __STRUCT__ struct
++#define interface __STRUCT__
++#define STDMETHOD(method)        virtual COM_DECLSPEC_NOTHROW HRESULT STDMETHODCALLTYPE method
++#define STDMETHOD_(type,method)  virtual COM_DECLSPEC_NOTHROW type STDMETHODCALLTYPE method
++#define STDMETHODV(method)       virtual COM_DECLSPEC_NOTHROW HRESULT STDMETHODVCALLTYPE method
++#define STDMETHODV_(type,method) virtual COM_DECLSPEC_NOTHROW type STDMETHODVCALLTYPE method
++#define PURE                    = 0
++#define THIS_
++#define THIS                    void
++#define DECLARE_INTERFACE(iface)                        interface DECLSPEC_NOVTABLE iface
++#define DECLARE_INTERFACE_(iface, baseiface)            interface DECLSPEC_NOVTABLE iface : public baseiface
++#define DECLARE_INTERFACE_IID(iface, iid)               interface DECLSPEC_UUID(iid) DECLSPEC_NOVTABLE iface
++#define DECLARE_INTERFACE_IID_(iface, baseiface, iid)   interface DECLSPEC_UUID(iid) DECLSPEC_NOVTABLE iface : public baseiface
++
++#define IFACEMETHOD(method)         __override STDMETHOD(method)
++#define IFACEMETHOD_(type,method)   __override STDMETHOD_(type,method)
++#define IFACEMETHODV(method)        __override STDMETHODV(method)
++#define IFACEMETHODV_(type,method)  __override STDMETHODV_(type,method)
++
++#if !defined(BEGIN_INTERFACE)
++#if defined(_MPPC_) && ((defined(_MSC_VER) || defined(__SC__) || defined(__MWERKS__)) && !defined(NO_NULL_VTABLE_ENTRY))
++   #define BEGIN_INTERFACE virtual void a() {}
++   #define END_INTERFACE
++#else
++   #define BEGIN_INTERFACE
++   #define END_INTERFACE
++#endif
++#endif
++
++#ifndef SORTPP_PASS
++
++// This forward declaration has been left where this type was previously defined, to preserve ordering.
++extern "C++"
++{
++    template<typename T> _Post_equal_to_(pp) _Post_satisfies_(return == pp) void** IID_PPV_ARGS_Helper(T** pp);
++}
++
++#endif  // !SORTPP_PASS
++
++#define IID_PPV_ARGS(ppType) __uuidof(**(ppType)), IID_PPV_ARGS_Helper(ppType)
++
++#else
++
++#define interface               struct
++
++#define STDMETHOD(method)       HRESULT (STDMETHODCALLTYPE * method)
++#define STDMETHOD_(type,method) type (STDMETHODCALLTYPE * method)
++#define STDMETHODV(method)       HRESULT (STDMETHODVCALLTYPE * method)
++#define STDMETHODV_(type,method) type (STDMETHODVCALLTYPE * method)
++
++#define IFACEMETHOD(method)         __override STDMETHOD(method)
++#define IFACEMETHOD_(type,method)   __override STDMETHOD_(type,method)
++#define IFACEMETHODV(method)        __override STDMETHODV(method)
++#define IFACEMETHODV_(type,method)  __override STDMETHODV_(type,method)
++
++#if !defined(BEGIN_INTERFACE)
++#if defined(_MPPC_)
++    #define BEGIN_INTERFACE       void    *b;
++    #define END_INTERFACE
++#else
++    #define BEGIN_INTERFACE
++    #define END_INTERFACE
++#endif
++#endif
++
++#define PURE
++#define THIS_                   INTERFACE FAR* This,
++#define THIS                    INTERFACE FAR* This
++#ifdef CONST_VTABLE
++#undef CONST_VTBL
++#define CONST_VTBL const
++#define DECLARE_INTERFACE(iface)    typedef interface iface { \
++                                    const struct iface##Vtbl FAR* lpVtbl; \
++                                } iface; \
++                                typedef const struct iface##Vtbl iface##Vtbl; \
++                                const struct iface##Vtbl
++#else
++#undef CONST_VTBL
++#define CONST_VTBL
++#define DECLARE_INTERFACE(iface)    typedef interface iface { \
++                                    struct iface##Vtbl FAR* lpVtbl; \
++                                } iface; \
++                                typedef struct iface##Vtbl iface##Vtbl; \
++                                struct iface##Vtbl
++#endif
++#define DECLARE_INTERFACE_(iface, baseiface)    DECLARE_INTERFACE(iface)
++#define DECLARE_INTERFACE_IID(iface, iid)               DECLARE_INTERFACE(iface)
++#define DECLARE_INTERFACE_IID_(iface, baseiface, iid)   DECLARE_INTERFACE_(iface, baseiface)
++#endif
++
++#ifndef __IUnknown_FWD_DEFINED__
++#define __IUnknown_FWD_DEFINED__
++typedef interface IUnknown IUnknown;
++typedef /* [unique] */ IUnknown *LPUNKNOWN;
++#endif 	/* __IUnknown_FWD_DEFINED__ */
++
++
++#define MIDL_INTERFACE(x)   struct DECLSPEC_UUID(x) DECLSPEC_NOVTABLE
+-- 
+2.40.1.windows.1
+

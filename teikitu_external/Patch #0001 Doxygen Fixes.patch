@@ -1,0 +1,377 @@
+From bd6333f82e1b5e0f65acd58328bfb51a1e118e38 Mon Sep 17 00:00:00 2001
+From: Andrew Aye <andrew.aye@gmail.com>
+Date: Sat, 16 Sep 2023 17:07:34 -0700
+Subject: [PATCH] Fixes for a C compilation.
+
+---
+ CMakeLists.txt                                |  18 +--
+ cmake/FindIconv.cmake                         | 135 ------------------
+ deps/filesystem/filesystem.hpp                |   8 +-
+ deps/libmscgen/mscgen_adraw_int.h             |   2 +-
+ deps/spdlog/cmake/utils.cmake                 |   3 +-
+ deps/spdlog/include/spdlog/details/os-inl.h   |   2 +-
+ .../include/spdlog/sinks/daily_file_sink.h    |   4 +-
+ deps/sqlite3/sqlite3.h                        |   2 +-
+ src/CMakeLists.txt                            |  12 +-
+ src/dispatcher.h                              |   2 +-
+ src/message.h                                 |   2 +-
+ 11 files changed, 34 insertions(+), 156 deletions(-)
+ delete mode 100644 cmake/FindIconv.cmake
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 4957c34c..5cb0eaf8 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -11,7 +11,10 @@
+ # Documents produced by Doxygen are derivative works derived from the
+ # input used in their production; they are not affected by this license.
+ 
+-cmake_minimum_required(VERSION 3.12)
++cmake_minimum_required(VERSION 3.25)
++Include(CheckFunctionExists)
++include(CheckCXXSourceCompiles)
++
+ project(doxygen)
+ 
+ option(build_wizard    "Build the GUI frontend for doxygen." OFF)
+@@ -91,13 +94,9 @@ endif()
+ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DSQLITE_OMIT_LOAD_EXTENSION=1")
+ 
+ if (WIN32)
++    add_definitions(-DLIBICONV_STATIC -D_CRT_SECURE_NO_WARNINGS)
+     if (MSVC)
+-        if (NOT ICONV_DIR)
+-          set(ICONV_DIR "${PROJECT_SOURCE_DIR}/winbuild")
+-        endif()
+-        set(CMAKE_REQUIRED_DEFINITIONS "-DLIBICONV_STATIC")
+         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /bigobj") # needed for language.cpp on 64bit
+-        add_definitions(-DLIBICONV_STATIC -D_CRT_SECURE_NO_WARNINGS)
+         set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /LARGEADDRESSAWARE")
+     endif()
+     if (CMAKE_GENERATOR MATCHES "NMake Makefiles")
+@@ -165,8 +164,11 @@ if ((CMAKE_BUILD_TYPE STREQUAL "Debug") OR enable_lex_debug)
+ endif()
+ 
+ find_package(Iconv REQUIRED)
+-include_directories(${ICONV_INCLUDE_DIR})
+-
++include_directories(${Iconv_INCLUDE_DIRS})
++CMAKE_PATH (GET Iconv_LIBRARIES PARENT_PATH Iconv_LIBRARY_PATH)
++link_directories(${Iconv_LIBRARY_PATH})
++list(APPEND Iconv_LIBRARIES "${Iconv_LIBRARY_PATH}/libcharset.lib")
++set(ICONV_LIBRARIES ${Iconv_LIBRARIES})
+ 
+ #set(DOXYDOCS ${PROJECT_SOURCE_DIR}/doc CACHE INTERNAL "Path to doxygen docs")
+ set(DOXYDOCS ${PROJECT_BINARY_DIR}/doc)
+diff --git a/cmake/FindIconv.cmake b/cmake/FindIconv.cmake
+deleted file mode 100644
+index a77e3a14..00000000
+--- a/cmake/FindIconv.cmake
++++ /dev/null
+@@ -1,135 +0,0 @@
+-# vim:ts=4:sw=4:expandtab:autoindent:
+-#
+-# The MIT License
+-#
+-# Copyright (c) 2008, 2009 Flusspferd contributors (see "CONTRIBUTORS" or
+-#                                      http://flusspferd.org/contributors.txt)
+-#
+-# Permission is hereby granted, free of charge, to any person obtaining a copy
+-# of this software and associated documentation files (the "Software"), to deal
+-# in the Software without restriction, including without limitation the rights
+-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+-# copies of the Software, and to permit persons to whom the Software is
+-# furnished to do so, subject to the following conditions:
+-#
+-# The above copyright notice and this permission notice shall be included in
+-# all copies or substantial portions of the Software.
+-#
+-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+-# THE SOFTWARE.
+-#
+-
+-Include(CheckFunctionExists)
+-include(CheckCXXSourceCompiles)
+-
+-if(ICONV_INCLUDE_DIR)
+-  set(ICONV_FIND_QUIETLY TRUE)
+-endif()
+-
+-find_path(ICONV_INCLUDE_DIR iconv.h
+-    HINTS
+-    ${CMAKE_PREFIX_PATH}
+-    ${ICONV_DIR}
+-    $ENV{ICONV_DIR}
+-    PATH_SUFFIXES include
+-)
+-
+-if(NOT ICONV_INCLUDE_DIR STREQUAL "ICONV_INCLUDE_DIR-NOTFOUND")
+-    set(CMAKE_REQUIRED_INCLUDES ${ICONV_INCLUDE_DIR})
+-    check_function_exists(iconv_open ICONV_IN_GLIBC)
+-endif()
+-
+-if(NOT ICONV_IN_GLIBC)
+-    if (CMAKE_CL_64)
+-        find_library(ICONV_LIBRARY
+-            NAMES iconv64
+-            HINTS
+-            ${CMAKE_PREFIX_PATH}
+-            ${ICONV_DIR}
+-            $ENV{ICONV_DIR}
+-            PATH_SUFFIXES lib64 lib
+-            )
+-    else()
+-        find_library(ICONV_LIBRARY
+-            NAMES iconv
+-            HINTS
+-            ${CMAKE_PREFIX_PATH}
+-            ${ICONV_DIR}
+-            $ENV{ICONV_DIR}
+-            PATH_SUFFIXES lib64 lib
+-            )
+-    endif()
+-    set(ICONV_TEST ${ICONV_LIBRARY})
+-else()
+-    set(ICONV_TEST "In glibc")
+-endif()
+-
+-set(CMAKE_REQUIRED_INCLUDES ${ICONV_INCLUDE_DIR})
+-set(CMAKE_REQUIRED_LIBRARIES ${ICONV_LIBRARY})
+-
+-if(MSVC_VERSION GREATER 1800)
+-    set(CMAKE_REQUIRED_LIBRARIES ${CMAKE_REQUIRED_LIBRARIES} legacy_stdio_definitions.lib)
+-endif()
+-
+-check_cxx_source_compiles(
+-    "#include <iconv.h>
+-     int main() {
+-        iconv(iconv_t(-1), 0, 0, 0, 0);
+-     }"
+-    ICONV_COMPILES)
+-
+-include(FindPackageHandleStandardArgs)
+-find_package_handle_standard_args(Iconv DEFAULT_MSG ICONV_TEST ICONV_INCLUDE_DIR ICONV_COMPILES)
+-
+-if(ICONV_FOUND)
+-  set(ICONV_LIBRARIES ${ICONV_LIBRARY})
+-else(ICONV_FOUND)
+-  set(ICONV_LIBRARIES)
+-endif(ICONV_FOUND)
+-
+-if(ICONV_FOUND)
+-    set(CMAKE_REQUIRED_INCLUDES ${ICONV_INCLUDE_DIR})
+-    set(CMAKE_REQUIRED_LIBRARIES ${ICONV_LIBRARIES})
+-
+-    if(MSVC_VERSION GREATER 1800)
+-        set(CMAKE_REQUIRED_LIBRARIES ${CMAKE_REQUIRED_LIBRARIES} legacy_stdio_definitions.lib)
+-    endif()
+-
+-    if (NOT DEFINED ICONV_ACCEPTS_NONCONST_INPUT)
+-        # Display a useful message first time we come through here
+-        message(STATUS "One (and only one) of the ICONV_ACCEPTS_... tests must pass")
+-    endif()
+-    check_cxx_source_compiles(
+-        "#include <iconv.h>
+-         int main() {
+-            char *p = 0;
+-            iconv(iconv_t(-1), &p, 0, 0, 0);
+-         }"
+-        ICONV_ACCEPTS_NONCONST_INPUT)
+-
+-    check_cxx_source_compiles(
+-        "#include <iconv.h>
+-         int main() {
+-            char const *p = 0;
+-            iconv(iconv_t(-1), &p, 0, 0, 0);
+-         }"
+-        ICONV_ACCEPTS_CONST_INPUT)
+-
+-    if (ICONV_LIBRARY)
+-        list(REMOVE_ITEM CMAKE_REQUIRED_LIBRARIES ${ICONV_LIBRARY})
+-        list(REMOVE_DUPLICATES CMAKE_REQUIRED_LIBRARIES)
+-    endif()
+-endif()
+-
+-if(NOT ICONV_ACCEPTS_CONST_INPUT AND NOT ICONV_ACCEPTS_NONCONST_INPUT)
+-  MESSAGE(FATAL_ERROR "Unable to determine iconv() signature")
+-elseif(ICONV_ACCEPTS_CONST_INPUT AND ICONV_ACCEPTS_NONCONST_INPUT)
+-  MESSAGE(FATAL_ERROR "Unable to determine iconv() signature - both test cases passed!")
+-endif()
+-
+-mark_as_advanced(ICONV_LIBRARY ICONV_INCLUDE_DIR)
+diff --git a/deps/filesystem/filesystem.hpp b/deps/filesystem/filesystem.hpp
+index 53f4ad4e..9673a923 100644
+--- a/deps/filesystem/filesystem.hpp
++++ b/deps/filesystem/filesystem.hpp
+@@ -1954,7 +1954,7 @@ GHC_INLINE void create_symlink(const path& target_name, const path& new_symlink,
+         ec = detail::make_error_code(detail::portable_error::not_supported);
+         return;
+     }
+-#if defined(__GNUC__) && __GNUC__ >= 8
++#if (defined(__GNUC__) && __GNUC__ >= 8) || defined(__clang__)
+ #pragma GCC diagnostic push
+ #pragma GCC diagnostic ignored "-Wcast-function-type"
+ #elif defined(_MSC_VER) && !defined(__INTEL_COMPILER) && !defined(__clang__)
+@@ -1962,7 +1962,7 @@ GHC_INLINE void create_symlink(const path& target_name, const path& new_symlink,
+ #pragma warning(disable : 4191)
+ #endif
+     static CreateSymbolicLinkW_fp api_call = reinterpret_cast<CreateSymbolicLinkW_fp>(GetProcAddress(GetModuleHandleW(L"kernel32.dll"), "CreateSymbolicLinkW"));
+-#if defined(__GNUC__) && __GNUC__ >= 8
++#if (defined(__GNUC__) && __GNUC__ >= 8) || defined(__clang__)
+ #pragma GCC diagnostic pop
+ #elif defined(_MSC_VER) && !defined(__INTEL_COMPILER) && !defined(__clang__)
+ #pragma warning(pop)
+@@ -1983,7 +1983,7 @@ GHC_INLINE void create_symlink(const path& target_name, const path& new_symlink,
+ 
+ GHC_INLINE void create_hardlink(const path& target_name, const path& new_hardlink, std::error_code& ec)
+ {
+-#if defined(__GNUC__) && __GNUC__ >= 8
++#if (defined(__GNUC__) && __GNUC__ >= 8) || defined(__clang__)
+ #pragma GCC diagnostic push
+ #pragma GCC diagnostic ignored "-Wcast-function-type"
+ #elif defined(_MSC_VER) && !defined(__INTEL_COMPILER) && !defined(__clang__)
+@@ -1991,7 +1991,7 @@ GHC_INLINE void create_hardlink(const path& target_name, const path& new_hardlin
+ #pragma warning(disable : 4191)
+ #endif
+     static CreateHardLinkW_fp api_call = reinterpret_cast<CreateHardLinkW_fp>(GetProcAddress(GetModuleHandleW(L"kernel32.dll"), "CreateHardLinkW"));
+-#if defined(__GNUC__) && __GNUC__ >= 8
++#if (defined(__GNUC__) && __GNUC__ >= 8) || defined(__clang__)
+ #pragma GCC diagnostic pop
+ #elif defined(_MSC_VER) && !defined(__INTEL_COMPILER) && !defined(__clang__)
+ #pragma warning(pop)
+diff --git a/deps/libmscgen/mscgen_adraw_int.h b/deps/libmscgen/mscgen_adraw_int.h
+index 1912fe1e..74a5cdcd 100644
+--- a/deps/libmscgen/mscgen_adraw_int.h
++++ b/deps/libmscgen/mscgen_adraw_int.h
+@@ -31,7 +31,7 @@
+ 
+ /* Define macro to suppress unused parameter warnings */
+ #ifndef UNUSED
+-# ifdef __GNUC__
++# if defined(__GNUC__) || defined(__clang__)
+ #  define UNUSED __attribute__((unused))
+ # else
+ #  define UNUSED
+diff --git a/deps/spdlog/cmake/utils.cmake b/deps/spdlog/cmake/utils.cmake
+index 85fcd80f..648e3e56 100644
+--- a/deps/spdlog/cmake/utils.cmake
++++ b/deps/spdlog/cmake/utils.cmake
+@@ -43,7 +43,8 @@ function(spdlog_enable_warnings target_name)
+                     -Wconversion
+                     -pedantic
+                     -Werror
+-                    -Wfatal-errors>
++                    -Wfatal-errors
++                    -Wno-language-extension-token>
+                     $<$<CXX_COMPILER_ID:MSVC>:${MSVC_OPTIONS}>)
+     endif()
+ endfunction()
+diff --git a/deps/spdlog/include/spdlog/details/os-inl.h b/deps/spdlog/include/spdlog/details/os-inl.h
+index b9bab53c..7c8c7e88 100644
+--- a/deps/spdlog/include/spdlog/details/os-inl.h
++++ b/deps/spdlog/include/spdlog/details/os-inl.h
+@@ -215,7 +215,7 @@ SPDLOG_INLINE size_t filesize(FILE *f)
+ #if defined(_WIN32) && !defined(__CYGWIN__)
+     int fd = ::_fileno(f);
+ #    if defined(_WIN64) // 64 bits
+-    __int64 ret = ::_filelengthi64(fd);
++    int64_t ret = ::_filelengthi64(fd);
+     if (ret >= 0)
+     {
+         return static_cast<size_t>(ret);
+diff --git a/deps/spdlog/include/spdlog/sinks/daily_file_sink.h b/deps/spdlog/include/spdlog/sinks/daily_file_sink.h
+index f6f1bb1d..f4c2a159 100644
+--- a/deps/spdlog/include/spdlog/sinks/daily_file_sink.h
++++ b/deps/spdlog/include/spdlog/sinks/daily_file_sink.h
+@@ -89,7 +89,7 @@ struct daily_filename_format_calculator
+     }
+ 
+ private:
+-#if defined __GNUC__
++#if defined(__GNUC__) || defined(__clang__)
+ #    pragma GCC diagnostic push
+ #    pragma GCC diagnostic ignored "-Wformat-nonliteral"
+ #endif
+@@ -104,7 +104,7 @@ private:
+         return std::wcsftime(str, count, format, time);
+     }
+ 
+-#if defined(__GNUC__)
++#if defined(__GNUC__) || defined(__clang__)
+ #    pragma GCC diagnostic pop
+ #endif
+ };
+diff --git a/deps/sqlite3/sqlite3.h b/deps/sqlite3/sqlite3.h
+index 48effe20..4bf3c392 100644
+--- a/deps/sqlite3/sqlite3.h
++++ b/deps/sqlite3/sqlite3.h
+@@ -294,7 +294,7 @@ typedef struct sqlite3 sqlite3;
+ # else
+     typedef unsigned SQLITE_INT64_TYPE sqlite_uint64;
+ # endif
+-#elif defined(_MSC_VER) || defined(__BORLANDC__)
++#elif (defined(_MSC_VER) || defined(__BORLANDC__)) && !defined(__clang__)
+   typedef __int64 sqlite_int64;
+   typedef unsigned __int64 sqlite_uint64;
+ #else
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 78a55c3f..7f6b6a57 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -336,6 +336,12 @@ if (NOT MSVC)
+ set_source_files_properties(clangparser.cpp PROPERTIES COMPILE_FLAGS "-Wno-shadow -Wno-cast-align -Wno-bitfield-enum-conversion")
+ endif()
+ 
++if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
++    foreach(lex_cpp_file ${LEX_FILES_CPP})
++        set_source_files_properties(${lex_cpp_file} PROPERTIES COMPILE_FLAGS "-Wno-misleading-indentation")
++    endforeach()
++endif()
++
+ ##foreach(lex_file ${LEX_FILES})
+ ##add_library(doxymain STATIC ${GENERATED_SRC}/${lex_file}.l.h)
+ ##endforeach()
+@@ -409,4 +415,8 @@ set_project_coverage(doxycfg)
+ set_project_coverage(doxymain)
+ set_project_coverage(doxygen)
+ 
+-install(TARGETS doxygen DESTINATION bin)
++if(CMAKE_BUILD_TYPE STREQUAL "Debug")
++    install(TARGETS doxygen DESTINATION bin/DEBUG)
++else()
++    install(TARGETS doxygen DESTINATION bin)
++endif()
+diff --git a/src/dispatcher.h b/src/dispatcher.h
+index 2f4191d5..e0eed7c2 100644
+--- a/src/dispatcher.h
++++ b/src/dispatcher.h
+@@ -29,7 +29,7 @@ namespace detail
+ {
+ 
+ //! Represents an unreachable piece of code
+-#ifdef __GNUC__ // GCC 4.8+, Clang, Intel and other compilers compatible with GCC (-std=c++0x or above)
++#if defined(__GNUC__) || defined(__clang__) // GCC 4.8+, Clang, Intel and other compilers compatible with GCC (-std=c++0x or above)
+ [[noreturn]] inline __attribute__((always_inline)) void unreachable() { __builtin_unreachable(); }
+ #elif defined(_MSC_VER) // MSVC
+ [[noreturn]] __forceinline void unreachable() { __assume(false); }
+diff --git a/src/message.h b/src/message.h
+index bb824c85..3b0567dc 100644
+--- a/src/message.h
++++ b/src/message.h
+@@ -19,7 +19,7 @@
+ #include <cstdarg>
+ #include "qcstring.h"
+ 
+-#ifdef __GNUC__
++#if defined(__GNUC__) || defined(__clang__)
+ #define PRINTFLIKE(FORMAT, PARAM ) __attribute__((format(printf, FORMAT, PARAM)))
+ #else
+ #define PRINTFLIKE(FORMAT, PARAM )
+-- 
+2.40.1.windows.1
+
