@@ -1,0 +1,27 @@
+name: Final
+on:
+  push:
+  workflow_dispatch:
+
+env:
+  BUILD_URL: "${{ github.server_url }}/${{ github.repository }}"
+  
+jobs:
+  tagcheck:
+    name: check tag
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check to see if the SHAs match
+        run: |
+          echo $BUILD_URL.git
+          test_head=$(git ls-remote $BUILD_URL.git --verify 'HEAD')
+          test_head="${test_head%\HEAD*}"
+          echo $test_head
+          test_tag=$(git ls-remote $BUILD_URL.git --verify 'build__hwin_ninja_clang_c17_x64_win_win_wc_desktop_none_none_final^{}')
+          test_tag="${test_tag%\refs/tags/build__hwin_ninja_clang_c17_x64_win_win_wc_desktop_none_none_final*}"
+          echo $test_tag
+          if test "$test_head" = "$test_tag"; then
+            exit 0
+          else
+            exit 1
+          fi
