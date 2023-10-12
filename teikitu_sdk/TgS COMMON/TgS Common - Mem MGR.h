@@ -142,7 +142,7 @@ tgMM_Commit_With_Trace(
     @param [in] ARG3 Line number in the file of the call. */
 TgEXTN TgVOID
 tgMM_Free_With_Trace(
-    ETgMM_ALLOCATOR_C ARG0, TgVOID_PC NONULL ARG1, TgCHAR_U8_CPC ARG2, TgUINT_E32_C ARG3 );
+    ETgMM_ALLOCATOR_C ARG0, TgVOID_PC TgANALYSIS_NO_NULL ARG1, TgCHAR_U8_CPC ARG2, TgUINT_E32_C ARG3 );
 
 /** @brief Reallocate the memory at ARG1 to a size of ARG2.
     @param [in] ARG0 Memory allocator to be used for the function call.

@@ -75,6 +75,6 @@ TgTYPE_HLSL_STRUCT( STg2_KN_GPU_HLSL_CB_Debug_Model_Instance, )
     TgVEC_S_F32_04_1                            m_vLight_Direction_Colour;
     TgVEC_S_F32_04_1                            m_vLight_Direction;
     TgVEC_S_F32_04_1                            m_vLight_Ambient;
-    TgVEC_S_F32_04_4                            m_vModel_Transform[KTgMACRO_KN_GPU_HLSL_DEBUG_MAX_MODEL_INSTANCE];
-    TgVEC_S_F32_04_1                            m_vModel_Colour[KTgMACRO_KN_GPU_HLSL_DEBUG_MAX_MODEL_INSTANCE];
+    TgVEC_S_F32_04_4                            m_avModel_Transform[KTgMACRO_KN_GPU_HLSL_DEBUG_MAX_MODEL_INSTANCE];
+    TgVEC_S_F32_04_1                            m_avModel_Colour[KTgMACRO_KN_GPU_HLSL_DEBUG_MAX_MODEL_INSTANCE];
 };

@@ -53,13 +53,13 @@ FOREACH (MK_LIST_ITEM__OS_NAME IN LISTS MK_GENERATE_LIST__OS_NAMES)
 
 ENDFOREACH ()
 
-TGS_ADD_SOURCE_FILE( lib_os_source_files lib_os_header_files "WIN" "${MK_BUILD__OS_NAME}" "SDK/Source Files/@Specialization" "${MK_BUILD_MODULE__SRC_DIR}/TgS (WIN) Input - Fcn Bind.cpp")
-TGS_ADD_SOURCE_FILE( lib_os_source_files lib_os_header_files "WIN" "${MK_BUILD__OS_NAME}" "SDK/Source Files/@Specialization" "${MK_BUILD_MODULE__SRC_DIR}/TgS (XINPUT) Input - GamePad.cpp")
+TGS_ADD_SOURCE_FILE( lib_os_source_files lib_os_header_files "WINDOWS" "${MK_BUILD__OS_NAME}" "SDK/Source Files/@Specialization" "${MK_BUILD_MODULE__SRC_DIR}/TgS (WINDOWS) Input - Fcn Bind.cpp")
+TGS_ADD_SOURCE_FILE( lib_os_source_files lib_os_header_files "WINDOWS" "${MK_BUILD__OS_NAME}" "SDK/Source Files/@Specialization" "${MK_BUILD_MODULE__SRC_DIR}/TgS (XINPUT) Input - GamePad.cpp")
 
-TGS_ADD_SOURCE_FILE( lib_os_source_files lib_os_header_files "WIN" "${MK_BUILD__OS_NAME}" "SDK/Source Files/@Specialization" "${MK_BUILD_MODULE__SRC_DIR}/TgS (WIN) Input - GUI Keyboard.c")
-TGS_ADD_SOURCE_FILE( lib_os_source_files lib_os_header_files "WIN" "${MK_BUILD__OS_NAME}" "SDK/Source Files/@Specialization" "${MK_BUILD_MODULE__SRC_DIR}/TgS (WIN) Input - GUI Mouse.c")
-TGS_ADD_SOURCE_FILE( lib_os_source_files lib_os_header_files "WIN" "${MK_BUILD__OS_NAME}" "SDK/Source Files/@Specialization" "${MK_BUILD_MODULE__SRC_DIR}/TgS (WIN) Input - Keyboard.c")
-TGS_ADD_SOURCE_FILE( lib_os_source_files lib_os_header_files "WIN" "${MK_BUILD__OS_NAME}" "SDK/Source Files/@Specialization" "${MK_BUILD_MODULE__SRC_DIR}/TgS (WIN) Input - Mouse.c")
+TGS_ADD_SOURCE_FILE( lib_os_source_files lib_os_header_files "WINDOWS" "${MK_BUILD__OS_NAME}" "SDK/Source Files/@Specialization" "${MK_BUILD_MODULE__SRC_DIR}/TgS (WINDOWS) Input - GUI Keyboard.c")
+TGS_ADD_SOURCE_FILE( lib_os_source_files lib_os_header_files "WINDOWS" "${MK_BUILD__OS_NAME}" "SDK/Source Files/@Specialization" "${MK_BUILD_MODULE__SRC_DIR}/TgS (WINDOWS) Input - GUI Mouse.c")
+TGS_ADD_SOURCE_FILE( lib_os_source_files lib_os_header_files "WINDOWS" "${MK_BUILD__OS_NAME}" "SDK/Source Files/@Specialization" "${MK_BUILD_MODULE__SRC_DIR}/TgS (WINDOWS) Input - Keyboard.c")
+TGS_ADD_SOURCE_FILE( lib_os_source_files lib_os_header_files "WINDOWS" "${MK_BUILD__OS_NAME}" "SDK/Source Files/@Specialization" "${MK_BUILD_MODULE__SRC_DIR}/TgS (WINDOWS) Input - Mouse.c")
 
 
 

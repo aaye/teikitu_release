@@ -41,31 +41,34 @@ TgRESULT FCN_VO(tgCO_SP_Penetrate_BX)( VEC_OBJ_T(STg2_CO_Packet,PC) psPacket, VE
     else
     {
         VEC_OBJ_T(STg2_CO_Contact,P)        psContact;
+        VEC_T(1)                            vBX0_U0, vBX0_U1, vBX0_U2, vBX0_OG;
+        TgRESULT                            iResult = FCN_V(tgMH_Query_Reference_Frame,3)( &vBX0_U0, &vBX0_U1, &vBX0_U2, &vBX0_OG, &psBX0->m_mReference_Frame );
 
-        VEC_T(1,C)                          vBX0_OG = FCN_VO(tgGM_BX_Query_Origin)( psBX0 );
         VEC_T(1,C)                          vDS = FCN_V(tgMH_SUB)( psSP0->m_vOrigin, vBX0_OG );
 
         /* Determine the point that is contained within the box that is closest to the sphere origin. This is done by projecting the difference between the two primitives' origins
            along the box reference frame, and limiting the projection to the limits of the box along each axis. If projection is further than a radius away from the box surface
            then the axis is a separating axis, and there is no contact between the primitives. */
 
-        VEC_T(1,C)                          vDS__BX0_U0 = FCN_V(tgMH_DOT)( vDS, FCN_VO(tgGM_BX_Query_Axis_Unit_0)( psBX0 ) );
+        VEC_T(1,C)                          vDS__BX0_U0 = FCN_V(tgMH_DOT)( vDS, vBX0_U0 );
         VEC_T(1,C)                          vEXT__DS__BX0_U0 = FCN_V(tgMH_ABS)( vDS__BX0_U0 );
         VEC_T(1,C)                          vEXT__BX0_U0 = FCN_V(tgMH_SPX)( psBX0->m_vExtent );
         TgBOOL_C                            bExceed_BX0_E0 = FCN_V(tgMH_CMP_ALL_TO_BOOL)( FCN_V(tgMH_CMP_GT)( vEXT__DS__BX0_U0, vEXT__BX0_U0 ) );
         VEC_T(1,C)                          vP0 = FCN_V(tgMH_CP_SGN)( FCN_V(tgMH_MIN)( vEXT__DS__BX0_U0, vEXT__BX0_U0 ), vDS__BX0_U0 );
 
-        VEC_T(1,C)                          vDS__BX0_U1 = FCN_V(tgMH_DOT)( vDS, FCN_VO(tgGM_BX_Query_Axis_Unit_1)( psBX0 ) );
+        VEC_T(1,C)                          vDS__BX0_U1 = FCN_V(tgMH_DOT)( vDS, vBX0_U1 );
         VEC_T(1,C)                          vEXT__DS__BX0_U1 = FCN_V(tgMH_ABS)( vDS__BX0_U1 );
         VEC_T(1,C)                          vEXT__BX0_U1 = FCN_V(tgMH_SPY)( psBX0->m_vExtent );
         TgBOOL_C                            bExceed_BX0_E1 = FCN_V(tgMH_CMP_ALL_TO_BOOL)( FCN_V(tgMH_CMP_GT)( vEXT__DS__BX0_U1, vEXT__BX0_U1 ) );
         VEC_T(1,C)                          vP1 = FCN_V(tgMH_CP_SGN)( FCN_V(tgMH_MIN)( vEXT__DS__BX0_U1, vEXT__BX0_U1 ), vDS__BX0_U1 );
 
-        VEC_T(1,C)                          vDS__BX0_U2 = FCN_V(tgMH_DOT)( vDS, FCN_VO(tgGM_BX_Query_Axis_Unit_2)( psBX0 ) );
+        VEC_T(1,C)                          vDS__BX0_U2 = FCN_V(tgMH_DOT)( vDS, vBX0_U2 );
         VEC_T(1,C)                          vEXT__DS__BX0_U2 = FCN_V(tgMH_ABS)( vDS__BX0_U2 );
         VEC_T(1,C)                          vEXT__BX0_U2 = FCN_V(tgMH_SPZ)( psBX0->m_vExtent );
         TgBOOL_C                            bExceed_BX0_E2 = FCN_V(tgMH_CMP_ALL_TO_BOOL)( FCN_V(tgMH_CMP_GT)( vEXT__DS__BX0_U2, vEXT__BX0_U2 ) );
         VEC_T(1,C)                          vP2 = FCN_V(tgMH_CP_SGN)( FCN_V(tgMH_MIN)( vEXT__DS__BX0_U2, vEXT__BX0_U2 ), vDS__BX0_U2 );
+
+        (void)iResult;
 
         if (bExceed_BX0_E0 && FCN_V(tgMH_CMP_ALL_TO_BOOL)( FCN_V(tgMH_CMP_GT)( FCN_V(tgMH_SUB)( vEXT__DS__BX0_U0, vEXT__BX0_U0 ), psSP0->m_vRadius ) ))
         {
@@ -96,9 +99,16 @@ TgRESULT FCN_VO(tgCO_SP_Penetrate_BX)( VEC_OBJ_T(STg2_CO_Packet,PC) psPacket, VE
             psContact->m_vT0 = FCN_V(tgMH_SET1)( TYPE_K(0) );
             psContact->m_vDepth = FCN_V(tgMH_SUB)( psSP0->m_vRadius, vMAG_NM );
 
-            ++psPacket->m_nuiContact;
-
-            return (KTgS_OK);
+            /* Need to validate that the resulting point is within the sphere. */
+            if (FCN_V(tgMH_CMP_ALL_TO_BOOL)( FCN_V(tgMH_CMP_GT)( vMAG_NM, psSP0->m_vRadius ) ))
+            {
+                return (KTgE_NO_INTERSECT);
+            }
+            else
+            {
+                ++psPacket->m_nuiContact;
+                return (KTgS_OK);
+            }
         }
         else
         {

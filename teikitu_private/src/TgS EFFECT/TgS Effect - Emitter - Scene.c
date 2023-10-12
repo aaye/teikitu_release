@@ -48,7 +48,7 @@ TgVOID tgFX_Emitter__Update_BA( TgFX_DATA_INST_ID tiData )
 /* ---- tgFX__Scene__Emitter_Cull__Insert_Frame_Mesh ----------------------------------------------------------------------------------------------------------------------------- */
 /* Mesh emission requires adding a mesh for every "particle" into the scene context                                                                                                */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgVOID tgFX__Scene__Emitter_Cull__Insert_Frame_Mesh( STg2_SE_Context_PC NONULL psSE_Context, TgRSIZE_C uiView_Index, TgFX_DATA_INST_ID tiActive )
+TgVOID tgFX__Scene__Emitter_Cull__Insert_Frame_Mesh( STg2_SE_Context_PC psSE_Context, TgRSIZE_C uiView_Index, TgFX_DATA_INST_ID tiActive )
 {
     STg2_FX__Emitter_P                  psEmitter;
     TgUINT_E32                          uiEmitter_Frame_Mesh_Set__LOD_Index;

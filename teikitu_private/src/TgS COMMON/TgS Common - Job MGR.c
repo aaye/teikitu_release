@@ -796,9 +796,11 @@ static TgUINT_E32 tgJM_Run_Job_Scheduler( TgUINT_PTR_C uiJob_Thread ) TgATTRIBUT
     /* Primary loop */
     while (TgSTD_ATOMIC(load)( &psJob_Thread->m_iEnabled ))
     {
+        TgBOOL                              bAllow_Wait;
         STg2_Job_P                          psJob;
         TgRESULT                            iResult;
 
+        bAllow_Wait = true;
         for (uiQueue = 0; uiQueue < KTgMAX_NUM_QUEUE; ++uiQueue)
         {
             tiQueue = psJob_Thread->m_atiQueue[uiQueue];
@@ -808,7 +810,7 @@ static TgUINT_E32 tgJM_Run_Job_Scheduler( TgUINT_PTR_C uiJob_Thread ) TgATTRIBUT
                 break;
 
             /* The Lock Test is a compare and exchange operation which has more contention possibility than a straight read. */
-            if (0 == TgSTD_ATOMIC(load)(&s_asJob_Queue[tiQueue.m_uiI].m_xniQueued))
+            if (0 == TgSTD_ATOMIC(load_explicit)(&s_asJob_Queue[tiQueue.m_uiI].m_xniQueued, TgSTD_MEMORY_ORDER(relaxed)))
                 continue;
 
             /* #REVIEW: For now, rather than deal with contention - if another thread is processing the queue, move onto the next queue */
@@ -841,6 +843,7 @@ static TgUINT_E32 tgJM_Run_Job_Scheduler( TgUINT_PTR_C uiJob_Thread ) TgATTRIBUT
             else if (TgFAILED( iResult ))
             {
                 /* Contention or Empty */
+                bAllow_Wait = false;
                 continue;
             }
 
@@ -856,7 +859,7 @@ static TgUINT_E32 tgJM_Run_Job_Scheduler( TgUINT_PTR_C uiJob_Thread ) TgATTRIBUT
             break;
         };
 
-        if (uiQueue == KTgMAX_NUM_QUEUE || KTgID__INVALID_VALUE == psJob_Thread->m_atiQueue[uiQueue].m_uiKI)
+        if (bAllow_Wait && (uiQueue == KTgMAX_NUM_QUEUE || KTgID__INVALID_VALUE == psJob_Thread->m_atiQueue[uiQueue].m_uiKI))
         {
             tgJM_PM_Job_Thread__Wait_For_Job( tiJob_Thread );
             /* With a large number of threads, the amount of contention on the queue's becomes a bottle neck. */

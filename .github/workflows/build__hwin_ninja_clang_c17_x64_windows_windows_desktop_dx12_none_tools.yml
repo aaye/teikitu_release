@@ -1,0 +1,22 @@
+name: Tools
+on:
+  push:
+  workflow_dispatch:
+
+env:
+  BUILD_URL: "https://${{ secrets.PAT }}@github.com/${{ github.repository }}.git"
+
+defaults:
+  run:
+    shell: powershell
+    working-directory: build_scripts
+
+jobs:
+  tagcheck:
+    name: Tools Win X64 DX12
+    runs-on: [self-hosted, windows]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build
+        run: .\windows_cmake_command.ps1 -VERBOSE -CICD_BUILD -TEIKITU -IDE:NINJA -COMPILER:CLANG -THREAD:WINDOWS -OS:WINDOWS -DEVICE:DESKTOP -CPU:C17_X64 -GPU:DX12 -BUILD_TYPE:TOOLS
+  

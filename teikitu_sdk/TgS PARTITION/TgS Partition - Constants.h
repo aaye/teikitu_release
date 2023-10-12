@@ -19,25 +19,57 @@
 
 /* == Partition ================================================================================================================================================================== */
 
-/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.--.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-. */
-/*  Configuration                                                                                                                                                                  */
-/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.--.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-. */
+/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
+/*  DOXYGEN                                                                                                                                                                        */
+/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
 
-enum { KTgPA_PNS_MAX_OBJECTS                = (KTgMAX_U16 >> 1) - 1 };
-enum { KTgPA_PNS_MAX_CONTACT_PAIR           = KTgPA_PNS_MAX_OBJECTS << 2 };
-enum { KTgPA_PNS_MAX_INTERVAL               = KTgPA_PNS_MAX_OBJECTS << 1 }; /**< min/max point per interval per object */
-enum { KTgPA_CATEGORY_ALL                   = ~(3u << 30) };
+/** @defgroup TGS_PARTITION Object Partition Managers (Scene Graphs)
+*/
+
+    /** @defgroup TGS_PARTITION_MODULE Module Management Functions
+        @ingroup TGS_PARTITION
+    */
+
+    /** @defgroup TGS_PARTITION_SYSTEM Module Functions
+        @ingroup TGS_PARTITION
+    */
+
+    /** @defgroup TGS_PARTITION_PRUNE_AND_SWEEP Prune and Sweep Functions
+        @ingroup TGS_PARTITION
+    */
 
 
 /* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.--.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-. */
 /*  Public Constants                                                                                                                                                               */
 /* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.--.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-. */
 
-TgTYPE_ENUM(ETgPA_PARTITION, TgSINT_E32,
+TgTYPE_ENUM(ETgPA_GRAPH_TYPE, TgSINT_E32,
 
-    ETgPA_PARTITION__UNKNOWN,       ETgPA_PARTITION__BSP,           ETgPA_PARTITION__BVT,           ETgPA_PARTITION__PRUNE_SWEEP,   ETgPA_PARTITION__SPHERE,
-    ETgPA_PARTITION__BOX_TREE,      ETgPA_PARTITION__BA,            ETgPA_PARTITION__MAX
+    ETgPA_GRAPH_TYPE__BEGIN,
+
+    ETgPA_GRAPH_TYPE__UNKNOWN = ETgPA_GRAPH_TYPE__BEGIN,    ETgPA_GRAPH_TYPE__BINARY_SPACE,                         ETgPA_GRAPH_TYPE__BOUNDING_VOLUME_TREE,
+    ETgPA_GRAPH_TYPE__PRUNE_SWEEP,                          ETgPA_GRAPH_TYPE__SPHERE,                               ETgPA_GRAPH_TYPE__BOX_TREE,
+    ETgPA_GRAPH_TYPE__AXIS_ALIGNED_BOUNDING_BOX,
+
+    ETgPA_GRAPH_TYPE__END,
+    ETgPA_GRAPH_TYPE__MAX = ETgPA_GRAPH_TYPE__END,
+    ETgPA_GRAPH_TYPE__COUNT = ETgPA_GRAPH_TYPE__END - ETgPA_GRAPH_TYPE__BEGIN,
 );
+
+enum { /* PA GRAPH requires last two bits, 0-47 are intersection test (0 != CategeoryA & CollideB && 0 != CategeoryB & CollideA),
+          48-61 are union tests (0 != CategeoryA & CollideB || 0 != CategeoryB & CollideA) */
+
+       KTgPA_CATEGORY_BIT__RESERVED__PA_GRAPH_0     = 63,
+       KTgPA_CATEGORY_BIT__RESERVED__PA_GRAPH_1     = 62,
+       KTgPA_CATEGORY_BIT__RESERVED__USER_0         = 61,
+       KTgPA_CATEGORY_BIT__RESERVED__USER_1         = 60,
+       KTgPA_CATEGORY_BIT__LAST_OR_BIT              = 59,
+       KTgPA_CATEGORY_BIT__LAST_AND_BIT             = 47,
+};
+
+TgEXTN TgUINT_E64_C                         KTgPA_CATEGORY_BIT_MASK__RESERVED;
+TgEXTN TgUINT_E64_C                         KTgPA_CATEGORY_BIT_MASK__OR_TEST;
+TgEXTN TgUINT_E64_C                         KTgPA_CATEGORY_BIT_MASK__AND_TEST;
 
 
 /* =============================================================================================================================================================================== */

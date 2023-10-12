@@ -108,10 +108,6 @@ TgEXTN TgUINT_E64_P                         g_aauiVisited_Constraint[KTgPH_MAX_W
 
 TgEXTN STg2_UT_LF_ISO__RW                   g_sPH_Lock__Update_Module;
 
-TgEXTN TgPH_FCN_UPDATE_COLLISION_SCENE      g_pfnPH_Update_World__Collide;
-TgEXTN STg2_PA_PnS                          g_sPH_SG_PnS; /**< Prune and Sweep scene graph used for active forms */
-
-
                                             /* Run time Configuration */
 
 TgEXTN TgBOOL                               g_bPH_Module__Paused; /**< True if the module is in a pause state, and false otherwise */
@@ -123,14 +119,14 @@ TgEXTN TgCN_VAR_ID                          g_tiPH_CN_Module__Loop_Max;
                                             /* Synchronization Fences */ 
 TgEXTN TgRSIZE_A                            g_axuiPH_FENCE__UPDATE_WORLD[ETgPH_MAX_WORLD];
 TgEXTN TgRSIZE_A                            g_axuiPH_FENCE__UPDATE_WORLD__SIMULATE_BATCH[ETgPH_MAX_WORLD]; /**< Count of the total remaining bodies to be simulated in the world. */
-TgEXTN TgRSIZE_A                            g_axuiPH_FENCE__UPDATE_WORLD__COLLIDE_BATCH[ETgPH_MAX_WORLD];
+TgEXTN TgRSIZE_A                            g_axuiPH_FENCE__UPDATE_WORLD__COLLISION[ETgPH_MAX_WORLD];
 TgEXTN TgRSIZE_A                            g_axuiPH_FENCE__UPDATE_WORLD__BUILD_SETS[ETgPH_MAX_WORLD];
 TgEXTN TgRSIZE_A                            g_axuiPH_FENCE__UPDATE_WORLD__SOLVE_SETS[ETgPH_MAX_WORLD];
 TgEXTN TgRSIZE_A                            g_axuiPH_FENCE__UPDATE_WORLD__FINISH[ETgPH_MAX_WORLD];
 
                                             /* Jobs */
 TgEXTN STg2_Job                             g_asPH__Job__Update_World__Simulate_Batch[ETgPH_MAX_WORLD];
-TgEXTN STg2_Job                             g_asPH__Job__Update_World__Collide_Batch[ETgPH_MAX_WORLD];
+TgEXTN STg2_Job                             g_asPH__Job__Update_World__Collision[ETgPH_MAX_WORLD];
 TgEXTN STg2_Job                             g_asPH__Job__Update_World__Build_Sets[ETgPH_MAX_WORLD];
 TgEXTN STg2_Job                             g_asPH__Job__Update_World__Solve_Sets[ETgPH_MAX_WORLD];
 TgEXTN STg2_Job                             g_asPH__Job__Update_World__Finish[ETgPH_MAX_WORLD];
@@ -161,7 +157,7 @@ TgEXTN STg2_UT__CMD_BUF                     g_asPH_Command_To_World[KTgPH_MAX_WO
 TgEXTN TgVEC_F32_04_1                       g_vPH_History__Body_Pos_W[KTgPH_MAX_HISTORY_BODY];
 TgEXTN TgVEC_F32_04_1                       g_vPH_History__Body_Rot_W[KTgPH_MAX_HISTORY_BODY];
 TgEXTN TgPH_BODY_ID                         g_tiPH_History__Body_ID[KTgPH_MAX_HISTORY_BODY];
-TgEXTN TgRSIZE_A                            g_xnuiPH_History;
+TgEXTN TgRSIZE_A                            g_xnuiPH_History; 
 
 /*# defined(TgBUILD_FEATURE__PHYSICS__HISTORY) */
 #endif
@@ -175,17 +171,19 @@ TgEXTN TgRSIZE_A                            g_xnuiPH_History;
                                             /* Visualization */
 TgEXTN TgVEC_F32_04_1                       g_vPH_Debug_Colour__Body_Enabled; /**< Debug Colour: Enabled Body */
 TgEXTN TgVEC_F32_04_1                       g_vPH_Debug_Colour__Body_Sleep; /**< Debug Colour: Body is being considered for sleep (disabled)  */
-TgEXTN TgVEC_F32_04_1                       g_vPH_Debug_Colour__Body_Disabled; /**< Debug Colour: Disabled Body */
-TgEXTN TgVEC_F32_04_1                       g_vPH_Debug_Colour__Form_Enabled; /**< Debug Colour: Enabled Form */
 TgEXTN TgVEC_F32_04_1                       g_vPH_Debug_Colour__Form_Disabled; /**< Debug Colour: Disabled Form */
+TgEXTN TgVEC_F32_04_1                       g_vPH_Debug_Colour__Contact; /**< Debug Colour: Contact */
 TgEXTN TgVEC_F32_04_1                       g_vPH_Debug_Colour__Ragdoll; /**< Debug Colour: Ragdoll */
 
 TgEXTN TgCN_VAR_ID                          g_tiPH_Debug_Colour__Body_Enabled;
 TgEXTN TgCN_VAR_ID                          g_tiPH_Debug_Colour__Body_Sleep;
-TgEXTN TgCN_VAR_ID                          g_tiPH_Debug_Colour__Body_Disabled;
-TgEXTN TgCN_VAR_ID                          g_tiPH_Debug_Colour__Form_Enabled;
 TgEXTN TgCN_VAR_ID                          g_tiPH_Debug_Colour__Form_Disabled;
+TgEXTN TgCN_VAR_ID                          g_tiPH_Debug_Colour__Contact;
 TgEXTN TgCN_VAR_ID                          g_tiPH_Debug_Colour__Ragdoll;
+
+#define KTgPH_DEBUG_MAX_CONTACT 1000
+TgEXTN TgVEC_UN_F32_04_1                    g_auPH_Debug__Contact[KTgPH_DEBUG_MAX_CONTACT];
+TgEXTN TgRSIZE                              g_nuiPH_Debug__Contact;
 
 /*# defined(TgBUILD_DEBUG__PHYSICS) */
 #endif

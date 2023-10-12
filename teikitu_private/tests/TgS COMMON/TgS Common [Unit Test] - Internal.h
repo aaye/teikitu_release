@@ -18,6 +18,9 @@
 
 #define NULL 0
 #include <string.h> /** memcmp, used for low level test comparisons */
+#if defined(TgBUILD_HOST_SYSTEM__HMAC)
+#include <strings.h>
+#endif
 //#include <stdlib.h>
 #undef NULL
 

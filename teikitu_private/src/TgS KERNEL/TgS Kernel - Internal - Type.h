@@ -101,8 +101,8 @@ TgTYPE_STRUCT(STg2_KN_File_System,)
     TgFCN_KN_FILE_SYSTEM_MOUNT                  m_pfnMount;
     TgFCN_KN_FILE_SYSTEM_EXECUTE                m_pfnExecute_Job;
     TgFCN_KN_FILE_SYSTEM_MOUNT_FREE             m_pfnMount_Free;
-#if 0 != (272 % TgBUILD_HARDWARE__CPU_CACHE_LINE_SIZE)
-    TgUINT_E08                                  m_uiPad1[TgBUILD_HARDWARE__CPU_CACHE_LINE_SIZE - (272 % TgBUILD_HARDWARE__CPU_CACHE_LINE_SIZE)];
+#if 0 != (272 % TgBUILD_HARDWARE__DESTRUCTIVE_INTERFERENCE_SIZE)
+    TgUINT_E08                                  m_uiPad1[TgBUILD_HARDWARE__DESTRUCTIVE_INTERFERENCE_SIZE - (272 % TgBUILD_HARDWARE__DESTRUCTIVE_INTERFERENCE_SIZE)];
 #endif
 };
 

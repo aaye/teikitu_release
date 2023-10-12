@@ -9,10 +9,10 @@
     visit http://creativecommons.org/licenses/by-nc-sa/4.0/ or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. */
 /* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
 
-#if defined(TgBUILD_OS__WIN)
-#include "TgS COMMON/TgS (WIN) Common - Base - Include.h"
-#include "TgS KERNEL/TgS (WIN) Kernel.h"
-/*# defined(TgBUILD_OS__WIN) */
+#if defined(TgBUILD_OS__WINDOWS)
+#include "TgS COMMON/TgS (WINDOWS) Common - Base - Include.h"
+#include "TgS KERNEL/TgS (WINDOWS) Kernel.h"
+/*# defined(TgBUILD_OS__WINDOWS) */
 #endif
 
 /* ---- GPU - Unit Test ---------------------------------------------------------------------------------------------------------------------------------------------------------- */
@@ -74,7 +74,7 @@ static Test_Set                             s_sSET__PHYSICS;
 static Test_Case                            s_sCASE__Physics;
 
 #if defined(TgBUILD_FEATURE__GRAPHICS) 
-#if defined(TgBUILD_OS__WIN)
+#if defined(TgBUILD_OS__WINDOWS)
 static STg2_KN_OS_UNIT_TEST__UTIL__Window   s_shWnd[KTgKN_MAX_WINDOWS];
 #endif
 
@@ -85,19 +85,18 @@ static TgUINT_E64                           s_uiFrame_Counter;
 static TgUINT_E64_A                         s_xuiRender_Counter;
 static TgFLOAT32                            s_fTotal_Elapse_Frame_Time;
 
-static TgFLOAT32                            s_fCam_Dist_Max[2] = { 50.0F, 50.0F };
-static TgFLOAT32                            s_fPhi[2] = { 3.141592653589793238462643383279F / 4.0F, 3.141592653589793238462643383279F / 4.0F };
-static TgFLOAT32                            s_fTheta[2] = { 0.0F, 0.0F };
-static TgSINT_E32                           s_iCamera_Select = 0;
+static TgFLOAT32                            s_fCam_Dist_Max = 50.0F;
+static TgFLOAT32                            s_fPhi = 3.141592653589793238462643383279F / 4.0F;
+static TgFLOAT32                            s_fTheta = 0.0F;
 
 /*# defined(TgBUILD_FEATURE__GRAPHICS) */
 #endif
 
-#if defined(TgBUILD_FEATURE__GRAPHICS) && defined(TgBUILD_OS__WIN)
+#if defined(TgBUILD_FEATURE__GRAPHICS) && defined(TgBUILD_OS__WINDOWS)
 static TgBOOL
 tgUT_IN_Gamepad_Camera(
     TgUINT_PTR_C ARG0, TgFLOAT32_C ARG1, STg2_IN_Event_CPC psIN_Event );
-/*# defined(TgBUILD_OS__WIN) */
+/*# defined(TgBUILD_OS__WINDOWS) */
 #endif
 
 
@@ -178,9 +177,9 @@ TEST_METHOD( UNIT_TEST__TEST__PH_GPU_Render_Enumeration )
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 TEST_METHOD( UNIT_TEST__TEST__PH_GPU_Render_Init_Windows )
 {
-#if defined(TgBUILD_FEATURE__GRAPHICS) && defined(TgBUILD_OS__WIN)
+#if defined(TgBUILD_FEATURE__GRAPHICS) && defined(TgBUILD_OS__WINDOWS)
     Test__Expect_EQ( 1, s_nuiAppWindow = tgKN_OS_UNIT_TEST__UTIL__Init_Windows( s_shWnd, KTgKN_MAX_WINDOWS, true ) );
-/*# defined(TgBUILD_FEATURE__GRAPHICS) && defined(TgBUILD_OS__WIN) */
+/*# defined(TgBUILD_FEATURE__GRAPHICS) && defined(TgBUILD_OS__WINDOWS) */
 #endif
 
     TEST_END_METHOD( KTgS_OK );
@@ -197,10 +196,10 @@ TEST_METHOD( UNIT_TEST__TEST__PH_GPU_Render_Init_Select )
     tgMM_Set_U08_0x00( &s_sSelect, sizeof( s_sSelect ) );
     Test__Expect_EQ(KTgS_OK, tgKN_GPU_UNIT_TEST__UTIL__Init_Select( &s_sSelect, true ));
 
-#if defined(TgBUILD_OS__WIN)
+#if defined(TgBUILD_OS__WINDOWS)
     s_sSelect.m_nuiOutput = tgCM_MIN_UMAX(s_nuiAppWindow,s_sSelect.m_nuiOutput);
     s_sSelect.m_sOutput[0].m_uiOS_ID = s_shWnd[0].m_uiOS_ID;
-/*# defined(TgBUILD_OS__WIN) */
+/*# defined(TgBUILD_OS__WINDOWS) */
 #endif
 
 /*# defined(TgBUILD_FEATURE__GRAPHICS) */
@@ -232,7 +231,9 @@ TEST_METHOD( UNIT_TEST__TEST__PH_GPU_Render_Simple )
     tgMM_Set_U08_0x00( &sGPU_Init_Result, sizeof( sGPU_Init_Result ) );
     Test__Expect_EQ( KTgS_OK, tgKN_GPU_Contexts__Init( &sGPU_Init_Result, &s_sSelect ) );
 
+#if defined(TgBUILD_OS__WINDOWS)
     tiIN_GamePad = tgIN_Insert_Consumer( ETgCONTROLLER_GAMEPAD_0, 0, tgUT_IN_Gamepad_Camera, 0 );
+#endif
 
     for (uiSwap = 0; uiSwap < sGPU_Init_Result.m_nuiSWAP; ++uiSwap)
     {
@@ -242,6 +243,7 @@ TEST_METHOD( UNIT_TEST__TEST__PH_GPU_Render_Simple )
     /* Map the windows to output contexts base don the results. i.e. We selected which output context that we expected for each window in the select data structure, however, the
        context may have failed to be created. Thus, now we map the window to the completed output contexts. */
 
+#if defined(TgBUILD_OS__WINDOWS)
     for (uiWindow = 0; uiWindow < s_nuiAppWindow; ++uiWindow)
     {
         for (uiSwap = 0; uiSwap < sGPU_Init_Result.m_nuiSWAP; ++uiSwap)
@@ -253,6 +255,8 @@ TEST_METHOD( UNIT_TEST__TEST__PH_GPU_Render_Simple )
             }
         };
     };
+/*# defined(TgBUILD_OS__WINDOWS) */
+#endif
 
     /* Physics Init */
     g_tiPH_World = tgPH_World_Query_World_Id( ETgPH_WORLD__SERVER_DEFAULT );
@@ -263,69 +267,56 @@ TEST_METHOD( UNIT_TEST__TEST__PH_GPU_Render_Simple )
     g_tiPH_BY0 = tgPH_Body_Init( g_tiPH_World );   Test__Expect_NE(KTgID__INVALID_VALUE, g_tiPH_BY0.m_uiKI );
     tgPH_Mass_Reset( &sMass );
 
+    /* World Box */
+
     g_atiPH_FM0[0] = tgPH_Form_Init( g_tiPH_World );   Test__Expect_NE(KTgID__INVALID_VALUE, g_atiPH_FM0[0].m_uiKI );
     tgGM_PN_Init_NP_F32_04(&uCollision.m_sPN, tgMH_Init_Vector_ELEM_F32_04_1(0.0F,1.0F,0.0F), tgMH_Init_Point_ELEM_F32_04_1(.0F,0.0F,0.0F));
     tgPH_Form_Set_Collision_Primitive( g_atiPH_FM0[0], ETgPM_PN, &uCollision );
     tgPH_Form_Set_Material_ID( g_atiPH_FM0[0], tgPH_Material_Query_Default( ETgPH_MATERIAL__STEEL_1020 ) );
-    tgPH_Form_Set_Colour( g_atiPH_FM0[0], tgMH_Init_ELEM_F32_04_1(1.0F,0.5F,0.0F,1.0F) );
-    tgPH_Form_Set_Scale( g_atiPH_FM0[0], tgMH_Init_ELEM_F32_04_1(20.0F,1.0F,20.0F,0.0F) );
-    tgPH_Body_Add_Form( g_tiPH_BY0, g_atiPH_FM0[0], &sMass );
+    tgPH_Form_Set_Scale( g_atiPH_FM0[0], tgMH_Init_ELEM_F32_04_1(40.0F,1.0F,40.0F,0.0F) );
+    tgPH_Form_Set_Colour( g_atiPH_FM0[0], tgMH_Init_ELEM_F32_04_1(0.1F,0.1F,0.1F,1.0F) );
+    tgPH_Form_Set_World_Collision( g_atiPH_FM0[0], true );
 
     g_atiPH_FM0[1] = tgPH_Form_Init( g_tiPH_World );   Test__Expect_NE(KTgID__INVALID_VALUE, g_atiPH_FM0[1].m_uiKI );
     tgPH_Form_Set_Collision_Primitive( g_atiPH_FM0[1], ETgPM_PN, &uCollision );
     tgPH_Form_Set_Material_ID( g_atiPH_FM0[1], tgPH_Material_Query_Default( ETgPH_MATERIAL__STEEL_1020 ) );
-    tgPH_Form_Set_Position_B( g_atiPH_FM0[1], tgMH_Init_Point_ELEM_F32_04_1(15.0F,10.0F,0.0F) );
+    tgPH_Form_Set_Position_B( g_atiPH_FM0[1], tgMH_Init_Point_ELEM_F32_04_1(30.0F,10.0F,0.0F) );
     tgPH_Form_Set_Rotation_B( g_atiPH_FM0[1], tgMH_QT_Vector_To_Vector_F32_04_1( tgMH_Init_Vector_ELEM_F32_04_1(0.0F,1.0F,0.0F), tgMH_Init_Vector_ELEM_F32_04_1(1.0F,0.0F,0.0F) ) );
-    tgPH_Form_Set_Scale( g_atiPH_FM0[1], tgMH_Init_ELEM_F32_04_1(10.0F,1.0F,15.0F,0.0F) );
-    tgPH_Form_Set_Colour( g_atiPH_FM0[1], tgMH_Init_ELEM_F32_04_1(1.0F,1.5F,0.0F,0.25F) );
-    tgPH_Body_Add_Form( g_tiPH_BY0, g_atiPH_FM0[1], &sMass );
+    tgPH_Form_Set_Scale( g_atiPH_FM0[1], tgMH_Init_ELEM_F32_04_1(10.0F,1.0F,30.0F,0.0F) );
+    tgPH_Form_Set_Colour( g_atiPH_FM0[1], tgMH_Init_ELEM_F32_04_1(0.2F,0.2F,0.2F,1.0F) );
+    tgPH_Form_Set_World_Collision( g_atiPH_FM0[1], true );
 
     g_atiPH_FM0[2] = tgPH_Form_Init( g_tiPH_World );   Test__Expect_NE(KTgID__INVALID_VALUE, g_atiPH_FM0[2].m_uiKI );
     tgPH_Form_Set_Collision_Primitive( g_atiPH_FM0[2], ETgPM_PN, &uCollision );
     tgPH_Form_Set_Material_ID( g_atiPH_FM0[2], tgPH_Material_Query_Default( ETgPH_MATERIAL__STEEL_1020 ) );
-    tgPH_Form_Set_Position_B( g_atiPH_FM0[2], tgMH_Init_Point_ELEM_F32_04_1(-15.0F,10.0F,0.0F) );
+    tgPH_Form_Set_Position_B( g_atiPH_FM0[2], tgMH_Init_Point_ELEM_F32_04_1(-30.0F,10.0F,0.0F) );
     tgPH_Form_Set_Rotation_B( g_atiPH_FM0[2], tgMH_QT_Vector_To_Vector_F32_04_1( tgMH_Init_Vector_ELEM_F32_04_1(0.0F,1.0F,0.0F), tgMH_Init_Vector_ELEM_F32_04_1(-1.0F,0.0F,0.0F) ) );
-    tgPH_Form_Set_Scale( g_atiPH_FM0[2], tgMH_Init_ELEM_F32_04_1(10.0F,1.0F,15.0F,0.0F) );
-    tgPH_Form_Set_Colour( g_atiPH_FM0[2], tgMH_Init_ELEM_F32_04_1(1.0F,1.5F,0.0F,0.25F) );
-    tgPH_Body_Add_Form( g_tiPH_BY0, g_atiPH_FM0[2], &sMass );
+    tgPH_Form_Set_Scale( g_atiPH_FM0[2], tgMH_Init_ELEM_F32_04_1(10.0F,1.0F,30.0F,0.0F) );
+    tgPH_Form_Set_Colour( g_atiPH_FM0[2], tgMH_Init_ELEM_F32_04_1(0.3F,0.3F,0.3F,1.0F) );
+    tgPH_Form_Set_World_Collision( g_atiPH_FM0[2], true );
 
     g_atiPH_FM0[3] = tgPH_Form_Init( g_tiPH_World );   Test__Expect_NE(KTgID__INVALID_VALUE, g_atiPH_FM0[3].m_uiKI );
     tgPH_Form_Set_Collision_Primitive( g_atiPH_FM0[3], ETgPM_PN, &uCollision );
     tgPH_Form_Set_Material_ID( g_atiPH_FM0[3], tgPH_Material_Query_Default( ETgPH_MATERIAL__STEEL_1020 ) );
-    tgPH_Form_Set_Position_B( g_atiPH_FM0[3], tgMH_Init_Point_ELEM_F32_04_1(0.0F,10.0F,15.0F) );
+    tgPH_Form_Set_Position_B( g_atiPH_FM0[3], tgMH_Init_Point_ELEM_F32_04_1(0.0F,10.0F,30.0F) );
     tgPH_Form_Set_Rotation_B( g_atiPH_FM0[3], tgMH_QT_Vector_To_Vector_F32_04_1( tgMH_Init_Vector_ELEM_F32_04_1(0.0F,1.0F,0.0F), tgMH_Init_Vector_ELEM_F32_04_1(0.0F,0.0F,1.0F) ) );
-    tgPH_Form_Set_Scale( g_atiPH_FM0[3], tgMH_Init_ELEM_F32_04_1(15.0F,1.0F,10.0F,0.0F) );
-    tgPH_Form_Set_Colour( g_atiPH_FM0[3], tgMH_Init_ELEM_F32_04_1(1.0F,1.5F,0.0F,0.25F) );
-    tgPH_Body_Add_Form( g_tiPH_BY0, g_atiPH_FM0[3], &sMass );
+    tgPH_Form_Set_Scale( g_atiPH_FM0[3], tgMH_Init_ELEM_F32_04_1(30.0F,1.0F,10.0F,0.0F) );
+    tgPH_Form_Set_Colour( g_atiPH_FM0[3], tgMH_Init_ELEM_F32_04_1(0.4F,0.4F,0.4F,1.0F) );
+    tgPH_Form_Set_World_Collision( g_atiPH_FM0[3], true );
 
     g_atiPH_FM0[4] = tgPH_Form_Init( g_tiPH_World );   Test__Expect_NE(KTgID__INVALID_VALUE, g_atiPH_FM0[4].m_uiKI );
     tgPH_Form_Set_Collision_Primitive( g_atiPH_FM0[4], ETgPM_PN, &uCollision );
     tgPH_Form_Set_Material_ID( g_atiPH_FM0[4], tgPH_Material_Query_Default( ETgPH_MATERIAL__STEEL_1020 ) );
-    tgPH_Form_Set_Position_B( g_atiPH_FM0[4], tgMH_Init_Point_ELEM_F32_04_1(0.0F,10.0F,-15.0F) );
+    tgPH_Form_Set_Position_B( g_atiPH_FM0[4], tgMH_Init_Point_ELEM_F32_04_1(0.0F,10.0F,-30.0F) );
     tgPH_Form_Set_Rotation_B( g_atiPH_FM0[4], tgMH_QT_Vector_To_Vector_F32_04_1( tgMH_Init_Vector_ELEM_F32_04_1(0.0F,1.0F,0.0F), tgMH_Init_Vector_ELEM_F32_04_1(0.0F,0.0F,-1.0F) ) );
-    tgPH_Form_Set_Scale( g_atiPH_FM0[4], tgMH_Init_ELEM_F32_04_1(15.0F,1.0F,10.0F,0.0F) );
-    tgPH_Form_Set_Colour( g_atiPH_FM0[4], tgMH_Init_ELEM_F32_04_1(1.0F,1.5F,0.0F,0.25F) );
-    tgPH_Body_Add_Form( g_tiPH_BY0, g_atiPH_FM0[4], &sMass );
-
-    //g_tiPH_BY1 = tgPH_Body_Init( g_tiPH_World );   Test__Expect_NE(KTgID__INVALID_VALUE, g_tiPH_BY1.m_uiKI );
-    //g_tiPH_FM1 = tgPH_Form_Init( g_tiPH_World );   Test__Expect_NE(KTgID__INVALID_VALUE, g_tiPH_FM1.m_uiKI );
-    //tgGM_SP_Init_F32_04(&uCollision.m_sSP, tgMH_Init_Point_ELEM_F32_04_1(0.0F,0.0F,0.0F), tgMH_SET1_F32_04_1(2.0F));
-    //tgPH_Form_Set_Collision_Primitive( g_tiPH_FM1, ETgPM_SP, &uCollision );
-    //tgPH_Form_Set_Material_ID( g_tiPH_FM1, tgPH_Material_Query_Default( ETgPH_MATERIAL__STEEL_1020 ) );
-    //tgPH_Mass_Reset( &sMass );
-    //tgPH_Mass_Set_Mass( &sMass, 1 );
-    //tgPH_Body_Add_Form( g_tiPH_BY1, g_tiPH_FM1, KTgZERO_F32_04_1, KTgUNIT_W_F32_04_1, &sMass );
-    //tgPH_Body_Set_Position_W( g_tiPH_BY1, tgMH_Init_Point_ELEM_F32_04_1( -3.0F, 2.0F, -3.0F ) );
-    //tgPH_Body_Add_Force( g_tiPH_BY1, tgMH_Init_Vector_ELEM_F32_04_1( -90.0F, 0.0F, -90.0F ) );
-
-    //tgGM_SP_Init_F32_04(&uCollision.m_sSP, tgMH_Init_Point_ELEM_F32_04_1(0.0F,0.0F,0.0F), tgMH_SET1_F32_04_1(0.5F));
-    //tgPH_Mass_Reset( &sMass );
-    //tgPH_Mass_Set_Mass( &sMass, 1, ETgPM_SP, &uCollision );
-    //tgPH_Body_Add_Force( g_tiPH_BY1, tgMH_Init_Vector_ELEM_F32_04_1( 0.0F, -900000.0F, 0.0F ) );
-    //tgPH_Body_Set_Force_Field_Factor( g_tiPH_BY1, tgMH_SET1_F32_04_1( 0.0F ) );
+    tgPH_Form_Set_Scale( g_atiPH_FM0[4], tgMH_Init_ELEM_F32_04_1(30.0F,1.0F,10.0F,0.0F) );
+    tgPH_Form_Set_Colour( g_atiPH_FM0[4], tgMH_Init_ELEM_F32_04_1(0.5F,0.5F,0.5F,1.0F) );
+    tgPH_Form_Set_World_Collision( g_atiPH_FM0[4], true );
 
     tgMH_CLI_F32_04_3( &mIDX );
 
+    (void)fΘ;
+    (void)uiIndex;
     for (uiIndex = 0, fΘ = 0; uiIndex < TgARRAY_COUNT(g_atiPH_BY2); ++uiIndex)
     {
         TgFLOAT32                           fRadius;
@@ -350,7 +341,7 @@ TEST_METHOD( UNIT_TEST__TEST__PH_GPU_Render_Simple )
         tgPH_Mass_Set_Mass( &sMass, 1, ETgPM_BX, &uCollision );
         tgPH_Form_Set_Collision_Primitive( g_atiPH_FM2[uiIndex], ETgPM_BX, &uCollision );
         tgPH_Form_Set_Material_ID( g_atiPH_FM2[uiIndex], tgPH_Material_Query_Default( ETgPH_MATERIAL__ALUMINUM_6061 ) );
-        tgPH_Form_Set_Colour( g_atiPH_FM2[uiIndex], tgMH_Init_ELEM_F32_04_1(0.0F,1.5F,2.5F,1.0F) );
+        tgPH_Form_Set_Colour( g_atiPH_FM2[uiIndex], tgMH_Init_ELEM_F32_04_1(0.0F,1.5F,2.5F,0.5F) );
         tgPH_Body_Add_Form( g_atiPH_BY2[uiIndex], g_atiPH_FM2[uiIndex], &sMass );
         tgPH_Body_Set_Position_W( g_atiPH_BY2[uiIndex], tgMH_Init_Point_ELEM_F32_04_1( fRadius*tgPM_COS_F32(fΘ), 5.0F + (TgFLOAT32)uiIndex * 0.25F, fRadius*tgPM_SIN_F32(fΘ) ) );
         fΘ += 1.25F / fRadius;
@@ -386,11 +377,14 @@ TEST_METHOD( UNIT_TEST__TEST__PH_GPU_Render_Simple )
             TgOSCHAR                            szBuffer[256];
             TgFLOAT32                           fFrame_Start_Time_Render;
 
+        #if defined(TgBUILD_OS__WINDOWS)
             if (ETgTHREAD_STATUS__INVALID == tgKN_OS_Query_Window_Thread_Status( s_shWnd[uiWindow].m_iWnd ))
                 continue;
             bAll_Windows_Closed = false;
-
             uiSwap = (TgRSIZE)s_shWnd[uiWindow].m_iOutput;
+        /*# defined(TgBUILD_OS__WINDOWS) */
+        #endif
+
             ++nuiSwap;
 
             atiCXT_WORK[nuiCXT_WORK] = tgKN_GPU_EXT__Execute__Frame_Start( sGPU_Init_Result.m_sSWAP[uiSwap].m_tiCXT_EXEC );
@@ -399,12 +393,15 @@ TEST_METHOD( UNIT_TEST__TEST__PH_GPU_Render_Simple )
 
             fFrame_Start_Time_Render = tgTM_Query_Time();
             tgUnit_Test__PH__Render( sGPU_Init_Result.m_sSWAP[uiSwap].m_tiCXT_EXEC, sGPU_Init_Result.m_sSWAP[uiSwap].m_tiCXT_SWAP, tiCXT_WORK, 0 );
-            s_shWnd[uiWindow].m_fFrame_Elapsed_Time = tgTM_Query_Time() - fFrame_Start_Time_Render;
 
+        #if defined(TgBUILD_OS__WINDOWS)
             /* Add the frame time to the windows title. */
+            s_shWnd[uiWindow].m_fFrame_Elapsed_Time = tgTM_Query_Time() - fFrame_Start_Time_Render;
             TgOS_TEXT_FCN(PrintF)( szBuffer, 256, TgOS_TEXT(" Render Time: % 2.2fms, Update Time: % 2.2fms"), (double)s_shWnd[uiWindow].m_fFrame_Elapsed_Time,
                                    (double)s_fTotal_Elapse_Frame_Time );
             tgKN_OS_Set_Window_Title(s_shWnd[uiWindow].m_iWnd, szBuffer, 256 );
+        /*# defined(TgBUILD_OS__WINDOWS) */
+        #endif
 
             TgSTD_ATOMIC(fetch_add)( &s_xuiRender_Counter, 1 );
         }
@@ -475,7 +472,7 @@ TgVOID tgUnit_Test__PH__Setup_Scene_Constant_Buffer( STg2_KN_GPU_Render_Buffer_C
     TgFLOAT32_C                         fAspect_Ratio = (float)psRTBuffer->m_uiWidth / (float)psRTBuffer->m_uiHeight;
     TgFLOAT32_C                         fFoV = 35.0F * KTgPI_F32 / 180.0f;
 
-    TgVEC_S_F32_04_1                    vEye, vAt, vUp;
+    TgVEC_S_F32_04_1                    vEye, vUp;
     TgFLOAT32                           fCosTheta, fSinTheta, fCosPhi, fSinPhi;
     TgVEC_S_F32_04_4                    mS2C;
 
@@ -492,17 +489,22 @@ TgVOID tgUnit_Test__PH__Setup_Scene_Constant_Buffer( STg2_KN_GPU_Render_Buffer_C
         g_sSceneConstantBuffer.m_mC2S._22 = fSwap * fAspect_Ratio;
     }
 
-    tgPM_SINCOS_F32( &fSinTheta, &fCosTheta, s_fTheta[0] );
-    tgPM_SINCOS_F32( &fSinPhi, &fCosPhi, s_fPhi[0] );
+    if (g_tiPH_BY1.m_uiKI != 0ULL)
+    {
+        tgPH_Body_Query_Position_W( &g_sCamera.m_sCamera.m_uCam_Target.m_vF32_04_1, g_tiPH_BY1 );
+    }
 
-    vEye = tgMH_Init_Point_ELEM_S_F32_04_1( fCosTheta * fCosPhi * s_fCam_Dist_Max[0],
-                                            fSinPhi * s_fCam_Dist_Max[0],
-                                            fSinTheta * fCosPhi * s_fCam_Dist_Max[0] );
+    tgPM_SINCOS_F32( &fSinTheta, &fCosTheta, s_fTheta );
+    tgPM_SINCOS_F32( &fSinPhi, &fCosPhi, s_fPhi );
 
-    vAt = tgMH_Init_Point_ELEM_S_F32_04_1( 0.0F, 0.0f, 0.0F );
+    vEye = tgMH_Init_Point_ELEM_S_F32_04_1( fCosTheta * fCosPhi * s_fCam_Dist_Max,
+                                            fSinPhi * s_fCam_Dist_Max,
+                                            fSinTheta * fCosPhi * s_fCam_Dist_Max );
+    vEye = tgMH_ADD_S_F32_04_1( vEye, g_sCamera.m_sCamera.m_uCam_Target.m_vS_F32_04_1 );
+
     vUp = tgMH_Init_Vector_ELEM_S_F32_04_1( 0.0f, 1.0f, 0.0f );
 
-    tgMH_LookLH_S_F32_04_4( &g_sSceneConstantBuffer.m_mW2C, vEye, vAt, vUp );
+    tgMH_LookLH_S_F32_04_4( &g_sSceneConstantBuffer.m_mW2C, vEye, g_sCamera.m_sCamera.m_uCam_Target.m_vS_F32_04_1, vUp );
     tgMM_Copy( &g_sCamera.m_xFrustum_W2C, sizeof(g_sCamera.m_xFrustum_W2C), &g_sSceneConstantBuffer.m_mW2C, sizeof(g_sSceneConstantBuffer.m_mW2C) );
 
     g_sCamera.m_sCamera.m_uCam_Position.m_vS_F32_04_1 = vEye;
@@ -510,22 +512,6 @@ TgVOID tgUnit_Test__PH__Setup_Scene_Constant_Buffer( STg2_KN_GPU_Render_Buffer_C
     g_sCamera.m_vCam_Forward = tgMH_Init_Vector_F32_04_1( g_sCamera.m_xFrustum_W2C.m_vC2 );
     g_sCamera.m_vCam_Right = tgMH_Init_Vector_F32_04_1( g_sCamera.m_xFrustum_W2C.m_vC0 );
     g_sCamera.m_vCam_Up = tgMH_Init_Vector_F32_04_1( g_sCamera.m_xFrustum_W2C.m_vC1 );
-
-
-    if (1 == s_iCamera_Select)
-    {
-        tgPM_SINCOS_F32( &fSinTheta, &fCosTheta, s_fTheta[1] );
-        tgPM_SINCOS_F32( &fSinPhi, &fCosPhi, s_fPhi[1] );
-
-        vEye = tgMH_Init_Point_ELEM_S_F32_04_1( fCosTheta * fCosPhi * s_fCam_Dist_Max[1],
-                                                fSinPhi * s_fCam_Dist_Max[1],
-                                                fSinTheta * fCosPhi * s_fCam_Dist_Max[1] );
-
-        vAt = tgMH_Init_Point_ELEM_S_F32_04_1( 0.0F, 0.0f, 0.0F );
-        vUp = tgMH_Init_Vector_ELEM_S_F32_04_1( 0.0f, 1.0f, 0.0f );
-
-        tgMH_LookLH_S_F32_04_4( &g_sSceneConstantBuffer.m_mW2C, vEye, vAt, vUp );
-    }
 }
 /*# defined(TgBUILD_FEATURE__GRAPHICS) */
 #endif
@@ -539,22 +525,30 @@ TgVOID tgUnit_Test__PH__Setup_Scene_Constant_Buffer( STg2_KN_GPU_Render_Buffer_C
 
 /* ---- tgUT_IN_Gamepad_Camera --------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-#if defined(TgBUILD_FEATURE__GRAPHICS)
+#if defined(TgBUILD_FEATURE__GRAPHICS) && defined(TgBUILD_OS__WINDOWS)
 static TgBOOL tgUT_IN_Gamepad_Camera( TgATTRIBUTE_MAYBE_UNUSED TgUINT_PTR_C ARG0, TgATTRIBUTE_MAYBE_UNUSED TgFLOAT32_C ARG1, STg2_IN_Event_CPC psIN_Event )
 {
+    static TgBOOL bChange_Camera_Target = false;
+    static TgSINT_E32 iPM_To_Create = 1;
+
     if (ETgCONTROLLER_GAMEPAD_0 != psIN_Event->m_enController)
         return (false);
 
     TgWARN_DISABLE_PUSH(4061 4062,switch-enum)
     switch (psIN_Event->m_enProp.GamePad) {
     case ETgPROP_GAMEPAD__A:
-        s_iCamera_Select = 1;
-        s_fTheta[1] = s_fTheta[0];
-        s_fPhi[1] = s_fPhi[0];
-        s_fCam_Dist_Max[1] = s_fCam_Dist_Max[0];
+        tgPH_World_Set_Simulation_Enable( g_tiPH_World, psIN_Event->m_fValue > 0.5F );
         break;
     case ETgPROP_GAMEPAD__B:
-        s_iCamera_Select = 0;
+        if (psIN_Event->m_fValue > 0.5F)
+        {
+            TgBOOL                              bState;
+
+            if (TgSUCCEEDED(tgPH_World_Query_Collision_Simple_Override( &bState, g_tiPH_World )))
+            {
+                tgPH_World_Set_Collision_Simple_Override( g_tiPH_World, !bState );
+            }
+        };
         break;
     case ETgPROP_GAMEPAD__X:
         if (g_tiPH_BY1.m_uiKI == KTgID__INVALID_VALUE)
@@ -564,16 +558,31 @@ static TgBOOL tgUT_IN_Gamepad_Camera( TgATTRIBUTE_MAYBE_UNUSED TgUINT_PTR_C ARG0
 
             g_tiPH_BY1 = tgPH_Body_Init( g_tiPH_World );
             g_tiPH_FM1 = tgPH_Form_Init( g_tiPH_World );
-            tgGM_SP_Init_F32_04(&uCollision.m_sSP, tgMH_Init_Point_ELEM_F32_04_1(0.0F,0.0F,0.0F), tgMH_SET1_F32_04_1(2.0F));
-            tgPH_Form_Set_Collision_Primitive( g_tiPH_FM1, ETgPM_SP, &uCollision );
-            tgPH_Form_Set_Material_ID( g_tiPH_FM1, tgPH_Material_Query_Default( ETgPH_MATERIAL__STEEL_1020 ) );
+
+            tgPH_Form_Set_Material_ID( g_tiPH_FM1, tgPH_Material_Query_Default( ETgPH_MATERIAL__ALUMINUM_6061 ) );
             tgPH_Mass_Reset( &sMass );
-            tgPH_Mass_Set_Mass( &sMass, 100, ETgPM_SP, &uCollision );
-            tgPH_Form_Set_Scale( g_tiPH_FM1, tgMH_Init_ELEM_F32_04_1(4.0F,4.0F,4.0F,0.0F) );
-            tgPH_Form_Set_Colour( g_tiPH_FM1, tgMH_Init_ELEM_F32_04_1(5.0F,0.0F,0.0F,1.0F) );
+            tgPH_Form_Set_Scale( g_tiPH_FM1, tgMH_Init_ELEM_F32_04_1(1.0F,1.0F,1.0F,0.0F) );
+            tgPH_Form_Set_Colour( g_tiPH_FM1, tgMH_Init_ELEM_F32_04_1(0.0F,2.5F,2.5F,1.0F) );
+            switch (iPM_To_Create) {
+            case 1: {
+                TgVEC_F32_04_3                      mFM;
+
+                tgMH_Init_Euler_F32_04_3( &mFM, tgMH_Init_ELEM_F32_04_1(90.0F * KTgTWO_PI_F32 / 360.0F, 0.0F, 45.0F * KTgTWO_PI_F32 / 360.0F, 0.0F ) );
+                tgGM_TB_Init_F32_04(&uCollision.m_sTB, &mFM, tgMH_SET1_F32_04_1(5.0F), tgMH_SET1_F32_04_1(1.0F));
+                tgPH_Form_Set_Collision_Primitive( g_tiPH_FM1, ETgPM_CP, &uCollision );
+                tgPH_Mass_Set_Mass( &sMass, 10, ETgPM_CP, &uCollision );
+            } break;
+            default:
+                tgGM_SP_Init_F32_04(&uCollision.m_sSP, tgMH_Init_Point_ELEM_F32_04_1(0.0F,0.0F,0.0F), tgMH_SET1_F32_04_1(2.0F));
+                tgPH_Form_Set_Collision_Primitive( g_tiPH_FM1, ETgPM_SP, &uCollision );
+                tgPH_Mass_Set_Mass( &sMass, 10, ETgPM_SP, &uCollision );
+                break;
+            }
+
             tgPH_Body_Add_Form( g_tiPH_BY1, g_tiPH_FM1, &sMass );
-            tgPH_Body_Set_Position_W( g_tiPH_BY1, tgMH_Init_Point_ELEM_F32_04_1( 10.0F, 2.0F, 10.0F ) );
-            tgPH_Body_Add_Force( g_tiPH_BY1, tgMH_Init_Vector_ELEM_F32_04_1( -9000.0F, 0.0F, -9000.0F ) );
+            tgPH_Body_Set_Position_W( g_tiPH_BY1, tgMH_Init_Point_ELEM_F32_04_1( 22.0F, 1.0F, 22.0F ) );
+            tgPH_Body_Set_Linear_Velocity( g_tiPH_BY1, tgMH_Init_Vector_ELEM_F32_04_1( -9.0F, 0.0F, -9.0F ) );
+            tgPH_Body_Set_Force_Field_Factor( g_tiPH_BY1, tgMH_SET1_F32_04_1( 10.0F ) );
         };
         break;
     case ETgPROP_GAMEPAD__Y:
@@ -585,14 +594,40 @@ static TgBOOL tgUT_IN_Gamepad_Camera( TgATTRIBUTE_MAYBE_UNUSED TgUINT_PTR_C ARG0
         };
         break;
     case ETgPROP_GAMEPAD__LTHUMB_X:
-        s_fTheta[s_iCamera_Select] = tgPM_FMOD_F32( s_fTheta[s_iCamera_Select] + psIN_Event->m_fValue * 0.0025F, KTgTWO_PI_F32 );
+        if (bChange_Camera_Target)
+        {
+            g_sCamera.m_sCamera.m_uCam_Target.m_vF32_04_1 = tgMH_MAD_F32_04_1( g_sCamera.m_vCam_Right, tgMH_SET1_F32_04_1( psIN_Event->m_fValue * 0.0025F ), g_sCamera.m_sCamera.m_uCam_Target.m_vF32_04_1 );
+        }
+        else
+        {
+            s_fTheta = tgPM_FMOD_F32( s_fTheta + psIN_Event->m_fValue * 0.0025F, KTgTWO_PI_F32 );
+        }
         break;
     case ETgPROP_GAMEPAD__LTHUMB_Y:
-        s_fPhi[s_iCamera_Select] = tgCM_CLP_F32( s_fPhi[s_iCamera_Select] + psIN_Event->m_fValue * 0.0005F, KTgPI_F32 / 16.0F, KTgPI_F32 * 7.0F / 16.0F );
+        if (bChange_Camera_Target)
+        {
+            g_sCamera.m_sCamera.m_uCam_Target.m_vF32_04_1 = tgMH_MAD_F32_04_1( g_sCamera.m_vCam_Up, tgMH_SET1_F32_04_1( psIN_Event->m_fValue * 0.0025F ), g_sCamera.m_sCamera.m_uCam_Target.m_vF32_04_1 );
+        }
+        else
+        {
+            s_fPhi = tgCM_CLP_F32( s_fPhi + psIN_Event->m_fValue * 0.0005F, KTgPI_F32 / 16.0F, KTgPI_F32 * 7.0F / 16.0F );
+        }
         break;
     case ETgPROP_GAMEPAD__RTHUMB_Y:
-        s_fCam_Dist_Max[s_iCamera_Select] = tgCM_CLP_F32( s_fCam_Dist_Max[s_iCamera_Select] - psIN_Event->m_fValue * 0.05F, 5.0F, 150.0F );
+        if (bChange_Camera_Target)
+        {
+            g_sCamera.m_sCamera.m_uCam_Target.m_vS_F32_04_1.y += psIN_Event->m_fValue * 0.0025F;
+        }
+        else
+        {
+            s_fCam_Dist_Max = tgCM_CLP_F32( s_fCam_Dist_Max - psIN_Event->m_fValue * 0.05F, 5.0F, 150.0F );
+        }
         break;
+    case ETgPROP_GAMEPAD__RSHOULDER: TgATTRIBUTE_FALLTHROUGH
+    case ETgPROP_GAMEPAD__LSHOULDER:
+        bChange_Camera_Target = psIN_Event->m_fValue > 0.5F;
+        break;
+
     default:
         break;
     };

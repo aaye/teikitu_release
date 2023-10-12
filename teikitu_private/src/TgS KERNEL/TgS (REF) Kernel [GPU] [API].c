@@ -66,11 +66,11 @@ TgVOID tgKN_GPU_EXT__CMD__Render_Debug_Geom( UTg2_KN_GPU_CMD_C ARG0, ETgKN_GPU_D
 {
 }
 
-TgVOID tgKN_GPU_EXT__CMD__Render_Debug_Geom_Instance( UTg2_KN_GPU_CMD_C ARG0, ETgKN_GPU_DEBUG_PM ARG1, TgRSIZE_C ARG2, STg2_KN_GPU_HLSL_CB_Debug_Model_Instance_CPC ARG3 )
+TgVOID tgKN_GPU_EXT__CMD__Render_Debug_Geom_Instance( UTg2_KN_GPU_CMD_C ARG0, ETgKN_GPU_DEBUG_PM_C ARG1, TgRSIZE_C ARG2, STg2_KN_GPU_HLSL_CB_Debug_Model_Instance_CPC ARG3 )
 {
 }
 
-TgVOID tgKN_GPU_EXT__CMD__Render_Debug_Line( UTg2_KN_GPU_CMD_C ARG0, STg2_KN_GPU_Vertex_Geom_01_CPCU ARG1, TgRSIZE_C ARG2, STg2_KN_GPU_HLSL_CB_Debug_Line_CPC NONULL ARG3 )
+TgVOID tgKN_GPU_EXT__CMD__Render_Debug_Line( UTg2_KN_GPU_CMD_C ARG0, STg2_KN_GPU_Vertex_Geom_01_CPCU ARG1, TgRSIZE_C ARG2, STg2_KN_GPU_HLSL_CB_Debug_Line_CPC ARG3 )
 {
 }
 
@@ -87,12 +87,12 @@ TgRESULT tgKN_GPU_EXT__SwapChain__Set_Viewport_and_Scissor( TgKN_GPU_CXT_SWAP_ID
     return (KTgS_OK);
 }
 
-TgRESULT tgKN_GPU_EXT__Execute__Init_Data_Buffer_1( TgVOID_PP NONULL OUT0, UTg2_KN_GPU_CMD_C ARG1, TgVOID_CP NONULL ARG2, TgRSIZE_C ARG3 )
+TgRESULT tgKN_GPU_EXT__Execute__Init_Data_Buffer_1( TgVOID_PP OUT0, UTg2_KN_GPU_CMD_C ARG1, TgVOID_CP ARG2, TgRSIZE_C ARG3 )
 {
     return (KTgS_OK);
 }
 
-TgRESULT tgKN_GPU_EXT__Execute__Init_Data_Buffer_2( TgVOID_PP NONULL OUT0, TgVOID_PP NONULL OUT1, UTg2_KN_GPU_CMD_C ARG2, TgVOID_CP NONULL ARG3, TgRSIZE_C ARG4, TgVOID_CP NONULL ARG5, TgRSIZE_C ARG6 )
+TgRESULT tgKN_GPU_EXT__Execute__Init_Data_Buffer_2( TgVOID_PP OUT0, TgVOID_PP OUT1, UTg2_KN_GPU_CMD_C ARG2, TgVOID_CP ARG3, TgRSIZE_C ARG4, TgVOID_CP ARG5, TgRSIZE_C ARG6 )
 {
     return (KTgS_OK);
 }
@@ -261,11 +261,11 @@ TgVOID T(tgKN_GPU_EXT_Register_Default_,_Inst)( T(TgKN_GPU_,_INST_ID_C) ARG0 )
 /* ---- Resource - GPU - Texture - API ------------------------------------------------------------------------------------------------------------------------------------------- */
 
 #if defined(MACRO_BUILD_TEXTURE)
-TgVOID T(tgKN_GPU_EXT_,__Fast_Lock)( STg2_KN_GPU_TX_Surface_PCU NONULL OUT0, UTg2_KN_GPU_CMD_C ARG1, T(TgKN_GPU_,_INST_ID_C) ARG2 )
+TgVOID T(tgKN_GPU_EXT_,__Fast_Lock)( STg2_KN_GPU_TX_Surface_PCU OUT0, UTg2_KN_GPU_CMD_C ARG1, T(TgKN_GPU_,_INST_ID_C) ARG2 )
 {
 }
 
-TgVOID T(tgKN_GPU_EXT_,__Lock)( STg2_KN_GPU_TX_Surface_PCU NONULL OUT0, UTg2_KN_GPU_CMD_C ARG1, T(TgKN_GPU_,_INST_ID_C) ARG2 )
+TgVOID T(tgKN_GPU_EXT_,__Lock)( STg2_KN_GPU_TX_Surface_PCU OUT0, UTg2_KN_GPU_CMD_C ARG1, T(TgKN_GPU_,_INST_ID_C) ARG2 )
 {
 }
 

@@ -191,7 +191,7 @@ TgVOID tgPH_Constraint_Fixed__Problem_Definition( TgPH_WORLD_ID_C tiWorld, STg2_
         avRHS_Component[4] = tgMH_SPY_F32_04_1( vError_TMP );
         avRHS_Component[5] = tgMH_SPZ_F32_04_1( vError_TMP );
 
-    #if defined(TgBUILD_DEBUG__PHYSICS__EXTENSIVE_DATA_CHECK)
+    #if defined(TgBUILD_DEBUG__PHYSICS__EXTENSIVE_DATA_CHECK) && TgCOMPILE_ASSERT && TgCOMPILE_ASSERT__DIAG
         for (TgRSIZE uiTest = 0; uiTest < 6; ++uiTest)
         {
             TgDIAG(!tgMH_CMP_ANY_TO_BOOL_F32_04_1(tgMH_NAN_F32_04_1( pvCoefficients[uiTest*ETgPH_PCI__VEC_PER_DOF + ETgPH_PCI__JACOBIAN_LIN_BY_0] )));
@@ -200,7 +200,7 @@ TgVOID tgPH_Constraint_Fixed__Problem_Definition( TgPH_WORLD_ID_C tiWorld, STg2_
             TgDIAG(!tgMH_CMP_ANY_TO_BOOL_F32_04_1(tgMH_NAN_F32_04_1( pvCoefficients[uiTest*ETgPH_PCI__VEC_PER_DOF + ETgPH_PCI__JACOBIAN_ANG_BY_1] )));
             TgDIAG(!tgMH_CMP_ANY_TO_BOOL_F32_04_1(tgMH_NAN_F32_04_1( avRHS_Component[uiTest] )));
         };
-    /*# defined(TgBUILD_DEBUG__PHYSICS__EXTENSIVE_DATA_CHECK) */
+    /*# defined(TgBUILD_DEBUG__PHYSICS__EXTENSIVE_DATA_CHECK) && TgCOMPILE_ASSERT && TgCOMPILE_ASSERT__DIAG */
     #endif
 
         #pragma region Consruct RHS - Needs to be done in every constraint problem data function.
@@ -217,10 +217,10 @@ TgVOID tgPH_Constraint_Fixed__Problem_Definition( TgPH_WORLD_ID_C tiWorld, STg2_
 
                 TgVEC_F32_04_1_C                    vRHS_0 = tgMH_MUL_F32_04_1( avRHS_Component[uiDoF], vStep_Size_RCP );
 
-            #if defined(TgBUILD_DEBUG__PHYSICS__EXTENSIVE_DATA_CHECK)
+            #if defined(TgBUILD_DEBUG__PHYSICS__EXTENSIVE_DATA_CHECK) && TgCOMPILE_ASSERT && TgCOMPILE_ASSERT__DIAG
                 TgDIAG(!tgMH_CMP_ANY_TO_BOOL_F32_04_1(tgMH_NAN_F32_04_1( vSUM_06 )));
                 TgDIAG(!tgMH_CMP_ANY_TO_BOOL_F32_04_1(tgMH_NAN_F32_04_1( vRHS_0 )));
-            /*# defined(TgBUILD_DEBUG__PHYSICS__EXTENSIVE_DATA_CHECK) */
+            /*# defined(TgBUILD_DEBUG__PHYSICS__EXTENSIVE_DATA_CHECK) && TgCOMPILE_ASSERT && TgCOMPILE_ASSERT__DIAG */
             #endif
 
                 auRHS[uiDoF].m_vF32_04_1 = tgMH_SUB_F32_04_1( vRHS_0, vSUM_06 );
@@ -233,12 +233,12 @@ TgVOID tgPH_Constraint_Fixed__Problem_Definition( TgPH_WORLD_ID_C tiWorld, STg2_
             pvCoefficients[4*ETgPH_PCI__VEC_PER_DOF + ETgPH_PCI__MIN_MAX_CFM_RHS] = tgMH_Init_ELEM_F32_04_1( -FLT_MAX, FLT_MAX, fCFM, auRHS[4].m_vS_F32_04_1.x );
             pvCoefficients[5*ETgPH_PCI__VEC_PER_DOF + ETgPH_PCI__MIN_MAX_CFM_RHS] = tgMH_Init_ELEM_F32_04_1( -FLT_MAX, FLT_MAX, fCFM, auRHS[5].m_vS_F32_04_1.x );
 
-        #if defined(TgBUILD_DEBUG__PHYSICS__EXTENSIVE_DATA_CHECK)
+        #if defined(TgBUILD_DEBUG__PHYSICS__EXTENSIVE_DATA_CHECK) && TgCOMPILE_ASSERT && TgCOMPILE_ASSERT__DIAG
             for (TgRSIZE uiTest = 0; uiTest < 6; ++uiTest)
             {
                 TgDIAG(!tgMH_CMP_ANY_TO_BOOL_F32_04_1(tgMH_NAN_F32_04_1( pvCoefficients[uiTest*ETgPH_PCI__VEC_PER_DOF + ETgPH_PCI__MIN_MAX_CFM_RHS] )));
             };
-        /*# defined(TgBUILD_DEBUG__PHYSICS__EXTENSIVE_DATA_CHECK) */
+        /*# defined(TgBUILD_DEBUG__PHYSICS__EXTENSIVE_DATA_CHECK) && TgCOMPILE_ASSERT && TgCOMPILE_ASSERT__DIAG */
         #endif
         };
         #pragma endregion

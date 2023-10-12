@@ -9,7 +9,7 @@
     visit http://creativecommons.org/licenses/by-nc-sa/4.0/ or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. */
 /* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
 
-#if defined(TgBUILD_OS__WIN)
+#if defined(TgBUILD_OS__WINDOWS)
     #define NULL 0
 #endif
 
@@ -19,7 +19,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#if defined(TgBUILD_OS__WIN)
+#if defined(TgBUILD_OS__WINDOWS)
 #include <direct.h>
 #endif
 
@@ -317,7 +317,7 @@ TgRESULT tgCM_Random_Name( TgCHAR_NC_P nczBuffer, TgRSIZE_C nbyBuffer )
 
 /* ---- tgMM_Copy ---------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgRESULT tgMM_Copy( TgVOID_PU NONULL pDest, TgRSIZE_C nbyDest, TgVOID_CPU NONULL pSrc, TgRSIZE_C nbySrc )
+TgRESULT tgMM_Copy( TgVOID_PU pDest, TgRSIZE_C nbyDest, TgVOID_CPU pSrc, TgRSIZE_C nbySrc )
 {
     TgPARAM_CHECK(nullptr != pDest && nullptr != pSrc && nbyDest > 0 && nbySrc > 0 && nbyDest <= KTgMAX_RSIZE && nbySrc <= KTgMAX_RSIZE);
     memcpy( pDest, pSrc, nbyDest > nbySrc ? nbySrc : nbyDest );
@@ -523,7 +523,7 @@ TgVOID tgTM_Channel_Step( ETgTIMER_CHANNEL_C enChannel, TgFLOAT32_C fTimeAdvance
 
 /* ---- tgIO_File_Open ----------------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgSINT_PTR tgIO_File_Open( TgCHAR_U8_CPC NONULL mbzFile, TgATTRIBUTE_MAYBE_UNUSED TgRSIZE_C nbyMaxFile, TgUINT_E32_C uiAccessMask )
+TgSINT_PTR tgIO_File_Open( TgCHAR_U8_CPC mbzFile, TgATTRIBUTE_MAYBE_UNUSED TgRSIZE_C nbyMaxFile, TgUINT_E32_C uiAccessMask )
 {
     FILE                                *piFile;
 
@@ -550,7 +550,7 @@ TgSINT_PTR tgIO_File_Open( TgCHAR_U8_CPC NONULL mbzFile, TgATTRIBUTE_MAYBE_UNUSE
 
 /* ---- tgIO_File_Read ----------------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgRSIZE tgIO_File_Read( TgVOID_P NONULL pDest, TgSINT_PTR_C iFile, TgRSIZE uiTotalBytesToRead )
+TgRSIZE tgIO_File_Read( TgVOID_P pDest, TgSINT_PTR_C iFile, TgRSIZE uiTotalBytesToRead )
 {
     TgRSIZE                             uiTotalBytesRead;
 
@@ -575,7 +575,7 @@ TgRSIZE tgIO_File_Read( TgVOID_P NONULL pDest, TgSINT_PTR_C iFile, TgRSIZE uiTot
 
 /* ---- tgIO_File_Write ---------------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgRSIZE tgIO_File_Write( TgSINT_PTR_C iFile, TgVOID_CP NONULL pSource, TgRSIZE uiTotalBytesToWrite )
+TgRSIZE tgIO_File_Write( TgSINT_PTR_C iFile, TgVOID_CP pSource, TgRSIZE uiTotalBytesToWrite )
 {
     TgRSIZE                             uiTotalBytesWriten;
 
@@ -663,7 +663,7 @@ TgRSIZE tgIO_File_Size( TgSINT_PTR_C iFile )
 
 /* ---- tgIO_Folder_Make --------------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgRESULT tgIO_Folder_Make( TgCHAR_U8_CPC NONULL mbzPath, TgATTRIBUTE_MAYBE_UNUSED TgRSIZE_C nbyMaxPath )
+TgRESULT tgIO_Folder_Make( TgCHAR_U8_CPC mbzPath, TgATTRIBUTE_MAYBE_UNUSED TgRSIZE_C nbyMaxPath )
 {
 #ifdef _MSC_VER 
     return (0 == _mkdir( (TgCHAR_NC_CP)mbzPath) || EEXIST == errno ? KTgS_OK : KTgE_FAIL);
@@ -675,7 +675,7 @@ TgRESULT tgIO_Folder_Make( TgCHAR_U8_CPC NONULL mbzPath, TgATTRIBUTE_MAYBE_UNUSE
 
 /* ---- tgIO_Folder_Remove ------------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgRESULT tgIO_Folder_Remove( TgCHAR_U8_CPC NONULL mbzPath, TgATTRIBUTE_MAYBE_UNUSED TgRSIZE_C nbyMaxPath )
+TgRESULT tgIO_Folder_Remove( TgCHAR_U8_CPC mbzPath, TgATTRIBUTE_MAYBE_UNUSED TgRSIZE_C nbyMaxPath )
 {
 #ifdef _MSC_VER 
     return (0 == _rmdir( (TgCHAR_NC_CP)mbzPath) ? KTgS_OK : KTgE_FAIL);
@@ -687,7 +687,7 @@ TgRESULT tgIO_Folder_Remove( TgCHAR_U8_CPC NONULL mbzPath, TgATTRIBUTE_MAYBE_UNU
 
 /* ---- tgIO_Folder_Exists ------------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgBOOL tgIO_Folder_Exists( TgCHAR_U8_CPC NONULL mbzPath, TgATTRIBUTE_MAYBE_UNUSED TgRSIZE_C nbyMaxPath )
+TgBOOL tgIO_Folder_Exists( TgCHAR_U8_CPC mbzPath, TgATTRIBUTE_MAYBE_UNUSED TgRSIZE_C nbyMaxPath )
 {
 #if defined(TgBUILD_COMPILER__APPLE) || defined(TgBUILD_HOST_SYSTEM__HLNX)
     struct stat sStatInfo = { 0 };
@@ -701,7 +701,7 @@ TgBOOL tgIO_Folder_Exists( TgCHAR_U8_CPC NONULL mbzPath, TgATTRIBUTE_MAYBE_UNUSE
 
 /* ---- tgIO_File_Delete --------------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgRESULT tgIO_File_Delete( TgCHAR_U8_CPC NONULL mbzFile, TgATTRIBUTE_MAYBE_UNUSED TgRSIZE_C nbyMaxFile )
+TgRESULT tgIO_File_Delete( TgCHAR_U8_CPC mbzFile, TgATTRIBUTE_MAYBE_UNUSED TgRSIZE_C nbyMaxFile )
 {
     return (0 == remove( (TgCHAR_NC_CP)mbzFile ) ? KTgS_OK : KTgE_FAIL);
 }
@@ -709,7 +709,7 @@ TgRESULT tgIO_File_Delete( TgCHAR_U8_CPC NONULL mbzFile, TgATTRIBUTE_MAYBE_UNUSE
 
 /* ---- tgIO_File_Copy ----------------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgRESULT tgIO_File_Copy( TgCHAR_U8_CPC NONULL mbzDest, TgATTRIBUTE_MAYBE_UNUSED TgRSIZE_C nbyMaxDest, TgCHAR_U8_CPC NONULL mbzExisting, TgATTRIBUTE_MAYBE_UNUSED TgRSIZE_C nbyMaxExisting )
+TgRESULT tgIO_File_Copy( TgCHAR_U8_CPC mbzDest, TgATTRIBUTE_MAYBE_UNUSED TgRSIZE_C nbyMaxDest, TgCHAR_U8_CPC mbzExisting, TgATTRIBUTE_MAYBE_UNUSED TgRSIZE_C nbyMaxExisting )
 {
     FILE                                *pSource;
     FILE                                *pDest;
@@ -745,7 +745,7 @@ TgRESULT tgIO_File_Copy( TgCHAR_U8_CPC NONULL mbzDest, TgATTRIBUTE_MAYBE_UNUSED 
 
 /* ---- tgIO_File_Move ----------------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgRESULT tgIO_File_Move( TgCHAR_U8_CPC NONULL mbzDest, TgRSIZE_C nbyMaxDest, TgCHAR_U8_CPC NONULL mbzExisting, TgRSIZE_C nbyMaxExisting )
+TgRESULT tgIO_File_Move( TgCHAR_U8_CPC mbzDest, TgRSIZE_C nbyMaxDest, TgCHAR_U8_CPC mbzExisting, TgRSIZE_C nbyMaxExisting )
 {
     if (TgSUCCEEDED(tgIO_File_Copy( mbzDest, nbyMaxDest, mbzExisting, nbyMaxExisting )))
     {
@@ -760,7 +760,7 @@ TgRESULT tgIO_File_Move( TgCHAR_U8_CPC NONULL mbzDest, TgRSIZE_C nbyMaxDest, TgC
 
 /* ---- tgIO_File_Exists --------------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgBOOL tgIO_File_Exists( TgCHAR_U8_CPC NONULL uszFile, TgATTRIBUTE_MAYBE_UNUSED TgRSIZE_C nbyMaxFile )
+TgBOOL tgIO_File_Exists( TgCHAR_U8_CPC uszFile, TgATTRIBUTE_MAYBE_UNUSED TgRSIZE_C nbyMaxFile )
 {
 #if defined(TgBUILD_COMPILER__APPLE) || defined(TgBUILD_HOST_SYSTEM__HLNX)
     struct stat sStatInfo = { 0 };

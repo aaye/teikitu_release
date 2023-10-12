@@ -313,7 +313,7 @@ FCN_V(tgMH_NORM_S)(
     @return A vector that is a normalized version of the argument and its original length */
 TgINLINE VEC_S_T(1)
 FCN_V(tgMH_NORM_LEN_S)(
-    VAR_T(P) NONULL OUT0, VEC_S_T(1,C) ARG1 );
+    VAR_T(P) TgANALYSIS_NO_NULL OUT0, VEC_S_T(1,C) ARG1 );
 
 /** @addtogroup TGS_COMMON_MATH_VECTOR_CALC
     @brief Return a new vector whose value matches ARG0 and sign is ARG1

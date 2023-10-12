@@ -290,8 +290,10 @@ TgVOID FCN_VO(tgCO_FCN_Matrix_Setup_Penetrate)( TgVOID )
     tgMM_Set_U08_0x00( FCN_VO(g_apfnCO_Penetrate), sizeof(FCN_VO(g_apfnCO_Penetrate)) );
     // FCN_VO_CO(tgCO,BA,Penetrate,SP);
     // FCN_VO_CO(tgCO,BA,Penetrate,BA);
+    FCN_VO_CO(tgCO,BX,Penetrate,PN);
     FCN_VO_CO(tgCO,BX,Penetrate,SP);
     // FCN_VO_CO(tgCO,BX,Penetrate,CY);
+    FCN_VO_CO(tgCO,CP,Penetrate,PN);
     // FCN_VO_CO(tgCO,CP,Penetrate,SP);
     // FCN_VO_CO(tgCO,CP,Penetrate,CY);
     // FCN_VO_CO(tgCO,CP,Penetrate,CP);
@@ -301,7 +303,7 @@ TgVOID FCN_VO(tgCO_FCN_Matrix_Setup_Penetrate)( TgVOID )
     FCN_VO_CO(tgCO,PN,Penetrate,BX);
     // FCN_VO_CO(tgCO,PN,Penetrate,CY);
     FCN_VO_CO(tgCO,PN,Penetrate,SP);
-    // FCN_VO_CO(tgCO,PN,Penetrate,CP);
+    FCN_VO_CO(tgCO,PN,Penetrate,CP);
     // FCN_VO_CO(tgCO,RY,Penetrate,CP);
     // FCN_VO_CO(tgCO,SG,Penetrate,CP);
     FCN_VO_CO(tgCO,SP,Penetrate,SP);

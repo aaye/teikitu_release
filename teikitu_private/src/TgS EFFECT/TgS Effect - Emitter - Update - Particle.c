@@ -20,27 +20,27 @@
 
 static TgVOID
 tgFX__Update__Emitter_Update_Particle__Update_Anim_Data(
-    STg2_FX__Emitter__Particle_P NONULL OUT0, STg2_FX__Emitter_P NONULL ARG1, TgVEC_F32_04_1 ARG2 );
+    STg2_FX__Emitter__Particle_P TgANALYSIS_NO_NULL OUT0, STg2_FX__Emitter_P TgANALYSIS_NO_NULL ARG1, TgVEC_F32_04_1 ARG2 );
 
 static TgVOID
 tgFX__Update__Emitter_Update_Particle__Init(
-    STg2_FX__Emitter__Particle_P NONULL OUT0, STg2_FX__Emitter_P NONULL ARG1, TgVEC_F32_04_1 ARG2, TgVEC_F32_04_1 ARG3 );
+    STg2_FX__Emitter__Particle_P TgANALYSIS_NO_NULL OUT0, STg2_FX__Emitter_P TgANALYSIS_NO_NULL ARG1, TgVEC_F32_04_1 ARG2, TgVEC_F32_04_1 ARG3 );
 
 static TgVOID
 tgFX__Update__Emitter_Update_Particle__Update_W(
-    STg2_FX__Emitter_P NONULL OUT0, STg2_FX__Emitter__Particle_P NONULL ARG1 );
+    STg2_FX__Emitter_P TgANALYSIS_NO_NULL OUT0, STg2_FX__Emitter__Particle_P TgANALYSIS_NO_NULL ARG1 );
 
 static TgVOID
 tgFX_Effect__Emitter__Update__Update_Particle__Update_N(
-    STg2_FX__Emitter_P NONULL OUT0, STg2_FX__Emitter__Particle_P NONULL ARG1 );
+    STg2_FX__Emitter_P TgANALYSIS_NO_NULL OUT0, STg2_FX__Emitter__Particle_P TgANALYSIS_NO_NULL ARG1 );
 
 static TgBOOL
 tgFX__Update__Emitter_Update_Particle__Update(
-    STg2_FX__Emitter_P NONULL OUT0, STg2_FX__Emitter__Particle_P NONULL ARG1, TgFLOAT32_C ARG2, TgVEC_F32_04_1 ARG3 );
+    STg2_FX__Emitter_P TgANALYSIS_NO_NULL OUT0, STg2_FX__Emitter__Particle_P TgANALYSIS_NO_NULL ARG1, TgFLOAT32_C ARG2, TgVEC_F32_04_1 ARG3 );
 
 static TgVOID
 tgFX__Update__Emitter_Update_Particle__Update_Collision(
-    STg2_FX__Emitter_P NONULL OUT0, STg2_FX__Emitter__Particle_P NONULL ARG1, TgFLOAT32_C ARG2, TgVEC_F32_04_1 ARG3, TgVEC_F32_04_1 ARG4 );
+    STg2_FX__Emitter_P TgANALYSIS_NO_NULL OUT0, STg2_FX__Emitter__Particle_P TgANALYSIS_NO_NULL ARG1, TgFLOAT32_C ARG2, TgVEC_F32_04_1 ARG3, TgVEC_F32_04_1 ARG4 );
 
 
 

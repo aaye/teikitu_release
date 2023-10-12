@@ -7,6 +7,19 @@ INCLUDE (CMakePackageConfigHelpers)
 INCLUDE (GenerateExportHeader)
 
 ##########################################################################################################################################################################################################
+GET_PROPERTY (isMultiConfig GLOBAL PROPERTY GENERATOR_IS_MULTI_CONFIG)
+IF (isMultiConfig)
+    SET (MK_INSTALL__LIBRARY_DESTINATION "${CMAKE_INSTALL_LIBDIR}/${CMAKE_BUILD_TYPE}")
+    SET (MK_INSTALL__ARCHIVE_DESTINATION "${CMAKE_INSTALL_LIBDIR}/${CMAKE_BUILD_TYPE}")
+    SET (MK_INSTALL__RUNTIME_DESTINATION "${CMAKE_INSTALL_BINDIR}/${CMAKE_BUILD_TYPE}")
+ELSE ()
+    SET (MK_INSTALL__LIBRARY_DESTINATION "${CMAKE_INSTALL_LIBDIR}")
+    SET (MK_INSTALL__ARCHIVE_DESTINATION "${CMAKE_INSTALL_LIBDIR}")
+    SET (MK_INSTALL__RUNTIME_DESTINATION "${CMAKE_INSTALL_BINDIR}")
+ENDIF ()
+
+
+##########################################################################################################################################################################################################
 MACRO(SET_APPEND_GNU_COMPILER_OPTION existing_flags initization_values) 
     SET (${existing_flags} ${${initization_values}})
     IF (MK_COMPILER_FRONTEND__GNU OR MK_COMPILER_FRONTEND__APPLE)
@@ -114,15 +127,15 @@ MACRO(TGS_INSTALL target)
     SET_TARGET_PROPERTIES (${target} PROPERTIES INTERFACE_${target}_MAJOR_VERSION ${CMAKE_PROJECT_VERSION_MAJOR})
     SET_PROPERTY (TARGET ${target} APPEND PROPERTY COMPATIBLE_INTERFACE_STRING ${target}_MAJOR_VERSION )
 
-    GET_PROPERTY (isMultiConfig GLOBAL PROPERTY GENERATOR_IS_MULTI_CONFIG)
-    IF (isMultiConfig)
+    IF ("${MK_BUILD_AUTOMATION}" STREQUAL "CICD_BUILD")
         INSTALL (TARGETS ${target}
+            RUNTIME_DEPENDENCY_SET UNUSED
             DESTINATION ${CMAKE_INSTALL_PREFIX}
             EXPORT "${MK_BUILD_TARGETS_EXPORT_NAME}"
             CONFIGURATIONS ${CMAKE_BUILD_TYPE}
-            LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}/${CMAKE_BUILD_TYPE}"
-            ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}/${CMAKE_BUILD_TYPE}"
-            RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}/${CMAKE_BUILD_TYPE}"
+            LIBRARY DESTINATION "${MK_INSTALL__LIBRARY_DESTINATION}"
+            ARCHIVE DESTINATION "${MK_INSTALL__ARCHIVE_DESTINATION}"
+            RUNTIME DESTINATION "${MK_INSTALL__RUNTIME_DESTINATION}"
             INCLUDES DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
         )
     ELSE ()
@@ -130,9 +143,9 @@ MACRO(TGS_INSTALL target)
             DESTINATION ${CMAKE_INSTALL_PREFIX}
             EXPORT "${MK_BUILD_TARGETS_EXPORT_NAME}"
             CONFIGURATIONS ${CMAKE_BUILD_TYPE}
-            LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
-            ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
-            RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
+            LIBRARY DESTINATION "${MK_INSTALL__LIBRARY_DESTINATION}"
+            ARCHIVE DESTINATION "${MK_INSTALL__ARCHIVE_DESTINATION}"
+            RUNTIME DESTINATION "${MK_INSTALL__RUNTIME_DESTINATION}"
             INCLUDES DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
         )
     ENDIF ()
@@ -161,14 +174,19 @@ MACRO(TGS_ADD_DLL_NO_LIB dllname)
     ADD_CUSTOM_TARGET(${dllname}LIB ALL
         DEPENDS "${TGS_ADD_DLL_NO_LIB__LIB_FILE}")
 
-    IF (isMultiConfig)
-        INSTALL (FILES ${TGS_ADD_DLL_NO_LIB__LIB_FILE} DESTINATION "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}/${CMAKE_BUILD_TYPE}/")
-    ELSE ()
-        INSTALL (FILES ${TGS_ADD_DLL_NO_LIB__LIB_FILE} DESTINATION "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}/")
-    ENDIF ()
-
     ADD_LIBRARY (${dllname} SHARED IMPORTED GLOBAL)
     SET_PROPERTY (TARGET ${dllname} PROPERTY IMPORTED_IMPLIB "${TGS_ADD_DLL_NO_LIB__LIB_FILE}")
+    INSTALL (FILES "${TGS_ADD_DLL_NO_LIB__LIB_FILE}" DESTINATION "${MK_INSTALL__LIBRARY_DESTINATION}")
+
+    IF (NOT "${MK_BUILD_AUTOMATION}" STREQUAL "CICD_BUILD")
+        INSTALL (IMPORTED_RUNTIME_ARTIFACTS  ${dllname}
+            DESTINATION ${CMAKE_INSTALL_PREFIX}
+            CONFIGURATIONS ${CMAKE_BUILD_TYPE}
+            LIBRARY DESTINATION "${MK_INSTALL__LIBRARY_DESTINATION}"
+            RUNTIME DESTINATION "${MK_INSTALL__RUNTIME_DESTINATION}"
+        )
+    ENDIF ()
+
 ENDMACRO ()
 
 
@@ -369,6 +387,16 @@ MACRO(TGS_ADD_HLSL_FILE_AND_COMPILE_TO_HEADER source_files header_files test_ass
         SET (SHADER_CONFIG_LIST "${MK_COMPILE__TYPE}")
     ENDIF ()
 
+    IF (NOT TARGET ${MK_BUILD_ROOT__MODULE_NAME}-Shaders)
+        DEFINE_PROPERTY (TARGET PROPERTY "HLSL_SHADER_GENERATED")
+        ADD_CUSTOM_TARGET (
+            ${MK_BUILD_ROOT__MODULE_NAME}-Shaders
+            ALL
+            DEPENDS $<TARGET_PROPERTY:${MK_BUILD_ROOT__MODULE_NAME}-Shaders,HLSL_SHADER_GENERATED>
+        )
+        SET_TARGET_PROPERTIES("${MK_BUILD_ROOT__MODULE_NAME}-Shaders" PROPERTIES FOLDER "External Dependencies")
+    ENDIF ()
+
     STRING (REPLACE "/" "\\" INCLUDE_FIXED "${GIT_ROOT_PATH}/teikitu_sdk/TgS KERNEL")
     STRING (REPLACE "/" "\\" MK_BUILD_MODULE_FIXED "${MK_BUILD_MODULE__SRC_DIR}")
 
@@ -377,12 +405,24 @@ MACRO(TGS_ADD_HLSL_FILE_AND_COMPILE_TO_HEADER source_files header_files test_ass
         SET (SHADER_OUTPUT_FULL_PATH "${CMAKE_BINARY_DIR}\\lib\\${SHADER_CONFIG_UPPER}\\${FILE_NAME}")
 
         # Add the custom command for non-MSVC generators
-        IF (NOT MK_IDE__MSVC)
-            ADD_CUSTOM_COMMAND (OUTPUT "${SHADER_OUTPUT_FULL_PATH}.${SHADER_TYPE_EXT_LOWER}.cso"
-                                COMMAND dxc.exe -T vs_6_2 -nologo -E"main" -HV 2021 -Zpc -Zsb -Zi -I"${INCLUDE_FIXED}" -Vn"g_ui${FILE_NAME}_${SHADER_TYPE_EXT_UPPER}_Compiled" /
-                                -Fh"${MK_BUILD_MODULE_FIXED}\\${SHADER_CONFIG_UPPER}\\${FILE_NAME}_vs.hlsl.h" -Fo"${SHADER_OUTPUT_FULL_PATH}.${SHADER_TYPE_EXT_LOWER}.cso" /
-                                -Fd "${SHADER_OUTPUT_FULL_PATH}.debug" -Frs "${SHADER_OUTPUT_FULL_PATH}.root_sig" -Fre "${SHADER_OUTPUT_FULL_PATH}.reflection" /
-                                -Fsh "${SHADER_OUTPUT_FULL_PATH}.hash" ${file})
+        # OUTPUT "${MK_BUILD_MODULE_FIXED}\\${SHADER_CONFIG_UPPER}\\${FILE_NAME}_${SHADER_TYPE_EXT_LOWER}.hlsl.h"
+        # TARGET ${MK_BUILD_ROOT__MODULE_NAME}-Shaders
+        IF (NOT MK_IDE__MSVC AND (${test_current} STREQUAL ${test_assigned}))
+            ADD_CUSTOM_COMMAND (OUTPUT "${MK_BUILD_MODULE_FIXED}\\${SHADER_CONFIG_UPPER}\\${FILE_NAME}_${SHADER_TYPE_EXT_LOWER}.hlsl.h"
+                                       "${SHADER_OUTPUT_FULL_PATH}.${SHADER_TYPE_EXT_LOWER}.cso"
+                                COMMAND dxc.exe -T ${SHADER_TYPE_EXT_LOWER}_6_2 -nologo -E"main" -HV 2021 -Zpc -Zsb -Zi -I"${INCLUDE_FIXED}" /
+                                        -Vn "g_ui${FILE_NAME}_${SHADER_TYPE_EXT_UPPER}_Compiled" /
+                                        -Fh "${MK_BUILD_MODULE_FIXED}\\${SHADER_CONFIG_UPPER}\\${FILE_NAME}_${SHADER_TYPE_EXT_LOWER}.hlsl.h" /
+                                        -Fo "${SHADER_OUTPUT_FULL_PATH}.${SHADER_TYPE_EXT_LOWER}.cso" /
+                                        -Fd "${SHADER_OUTPUT_FULL_PATH}.debug" /
+                                        -Frs "${SHADER_OUTPUT_FULL_PATH}.root_sig" /
+                                        -Fre "${SHADER_OUTPUT_FULL_PATH}.reflection" /
+                                        -Fsh "${SHADER_OUTPUT_FULL_PATH}.hash" /
+                                        ${file}
+                                MAIN_DEPENDENCY ${file}
+                                COMMENT "Building HLSL object ${file}"
+            )
+            SET_PROPERTY (TARGET ${MK_BUILD_ROOT__MODULE_NAME}-Shaders APPEND PROPERTY HLSL_SHADER_GENERATED "${MK_BUILD_MODULE_FIXED}\\${SHADER_CONFIG_UPPER}\\${FILE_NAME}_${SHADER_TYPE_EXT_LOWER}.hlsl.h")
         ENDIF ()
 
         # Add all of the generated header files to the IDE project list.
@@ -405,7 +445,7 @@ MACRO(TGS_ADD_HLSL_FILE_AND_COMPILE_TO_HEADER source_files header_files test_ass
         # Set the MSVC shader type properties
         SET_PROPERTY (SOURCE ${file} PROPERTY VS_SHADER_TYPE ${SHADER_TYPE_NAME})
         SET_PROPERTY (SOURCE ${file} PROPERTY VS_SHADER_VARIABLE_NAME "g_ui${FILE_NAME}_${SHADER_TYPE_EXT_UPPER}_Compiled")
-        SET_PROPERTY (SOURCE ${file} PROPERTY VS_SHADER_OUTPUT_HEADER_FILE "${MK_BUILD_MODULE_FIXED}\\$(Configuration)\\${FILE_NAME}_vs.hlsl.h")
+        SET_PROPERTY (SOURCE ${file} PROPERTY VS_SHADER_OUTPUT_HEADER_FILE "${MK_BUILD_MODULE_FIXED}\\$(Configuration)\\${FILE_NAME}_${SHADER_TYPE_EXT_LOWER}.hlsl.h")
         SET_PROPERTY (SOURCE ${file} PROPERTY VS_SETTINGS "AdditionalIncludeDirectories=${INCLUDE_FIXED}")
         SET_PROPERTY (SOURCE ${file} PROPERTY VS_SHADER_MODEL 6.2)
         SET_PROPERTY (SOURCE ${file} PROPERTY VS_SHADER_ENTRYPOINT main)
@@ -453,6 +493,57 @@ MACRO(TGS_ADD_HLSL_FILE source_files header_files test_assigned test_current ide
 ENDMACRO ()
 
 
+##########################################################################################################################################################################################################
+# Test compile a simple C++20 file to retrieve the hardware L1 cache line size
+MACRO(TGS_RETRIEVE_CACHE_LINE_DEFINITION)
+
+    string(CONCAT __TestCacheLineSize
+        "\n#include <cstdint>\n"
+        "\n#include <cstddef>\n"
+        "\n#include <cstdio>\n"
+        "\n#include <new>\n"
+        "int main(int argc, char* argv[])\n"
+        "{\n"
+        "   (void)argc;\n"
+        "   (void)argv;\n"
+        "#ifdef __cpp_lib_hardware_interference_size\n"
+        "   using std::hardware_constructive_interference_size;\n"
+        "   using std::hardware_destructive_interference_size;\n"
+        "   printf(\"C++20 CACHE LINE SIZE USED\\n\");\n"
+        "#else\n"
+        "   // 64 bytes on x86-64 │ L1_CACHE_BYTES │ L1_CACHE_SHIFT │ __cacheline_aligned │ ...\n"
+        "   constexpr std::size_t hardware_constructive_interference_size = 64;\n"
+        "   constexpr std::size_t hardware_destructive_interference_size = 64;\n"
+        "   printf(\"DEFAULT CACHE LINE SIZE USED\\n\");\n"
+        "#endif\n"
+        "   printf(\"hardware_constructive_interference_size: %zd\\n\",hardware_constructive_interference_size);\n"
+        "   printf(\"hardware_destructive_interference_size: %zd\\n\", hardware_destructive_interference_size);\n"
+        "}\n"
+    )
+
+    TRY_RUN (
+        TgBUILD_REPORT_CACHE_LINE_SIZE_RUN
+        TgBUILD_REPORT_CACHE_LINE_SIZE_COMPILE
+        SOURCE_FROM_VAR TestCacheLineSize.cxx __TestCacheLineSize
+        LOG_DESCRIPTION "Retrieving L1 Cache Size"
+        CXX_STANDARD 20
+        COMPILE_OUTPUT_VARIABLE __TgBUILD_REPORT_CACHE_LINE_SIZE_COMPILE_OUTPUT
+        RUN_OUTPUT_VARIABLE __TgBUILD_REPORT_CACHE_LINE_SIZE_RUN_OUTPUT
+    )
+
+    STRING (REGEX MATCH "hardware_constructive_interference_size: ([0-9]+)" _ ${__TgBUILD_REPORT_CACHE_LINE_SIZE_RUN_OUTPUT})
+    SET (MK_COMPILE_HARDWARE_CONSTRUCTIVE_INTERFERENCE_SIZE ${CMAKE_MATCH_1})
+
+    STRING (REGEX MATCH "hardware_destructive_interference_size: ([0-9]+)" _ ${__TgBUILD_REPORT_CACHE_LINE_SIZE_RUN_OUTPUT})
+    SET (MK_COMPILE_HARDWARE_DESTRUCTIVE_INTERFERENCE_SIZE ${CMAKE_MATCH_1})
+
+    IF (NOT __TgBUILD_REPORT_CACHE_LINE_SIZE_RUN_OUTPUT MATCHES "20 CACHE LINE SIZE USED")
+        MESSAGE(WARNING "CACHE LINE SIZE is using fallback values")
+    ENDIF ()
+
+ENDMACRO ()
+
+
 # ========================================================================================================================================================================================================
 #  Function: TGS_SET_STANDARD_PROPERTIES
 # ========================================================================================================================================================================================================
@@ -484,7 +575,7 @@ MACRO (TGS_SET_STANDARD_PROPERTIES TARGET PCH_SOURCE_DIR PCH_SOURCE PCH_INCLUDE 
     # Copy all runtime DLLs into the execution directory.
     GET_TARGET_PROPERTY (TARGET_TYPE ${TARGET} TYPE)
     IF (TARGET_TYPE STREQUAL "EXECUTABLE")
-        IF (MK_BUILD_OS__WIN)
+        IF (MK_BUILD_OS__WINDOWS)
             SET_TARGET_PROPERTIES (${TARGET} PROPERTIES WIN32_EXECUTABLE 1)
         ENDIF ()
 
@@ -492,7 +583,7 @@ MACRO (TGS_SET_STANDARD_PROPERTIES TARGET PCH_SOURCE_DIR PCH_SOURCE PCH_INCLUDE 
         TARGET_LINK_LIBRARIES (${TARGET} PRIVATE "_Ring_0___TgS_COMMON__OS_PRELOAD")
 
         # Check to see if the target has any runtime DLL dependencies, and if so copy them to the build target directory.
-        IF (MK_BUILD_OS__WIN AND (NOT "${MK_BUILD_AUTOMATION}" STREQUAL "CICD_BUILD"))
+        IF (MK_BUILD_OS__WINDOWS AND (NOT "${MK_BUILD_AUTOMATION}" STREQUAL "CICD_BUILD"))
             SET (HAVE_RUNTIME_DLL $<BOOL:$<TARGET_RUNTIME_DLLS:${TARGET}>>)
             #SET (CUSTOM_COMMAND_DEBUG ${CMAKE_COMMAND} -E echo $<TARGET_RUNTIME_DLLS:${TARGET}> $<TARGET_FILE_DIR:${TARGET}>)
             #ADD_CUSTOM_COMMAND (TARGET ${TARGET} POST_BUILD
@@ -505,6 +596,11 @@ MACRO (TGS_SET_STANDARD_PROPERTIES TARGET PCH_SOURCE_DIR PCH_SOURCE PCH_INCLUDE 
                 COMMAND_EXPAND_LISTS
             )
         ENDIF ()
+    ENDIF ()
+
+    # Create a dependency with the module shader target, if it exists
+    IF ( TARGET ${MK_BUILD_ROOT__MODULE_NAME}-Shaders)
+        ADD_DEPENDENCIES (${TARGET} ${MK_BUILD_ROOT__MODULE_NAME}-Shaders)
     ENDIF ()
 
 
@@ -588,7 +684,7 @@ MACRO (TGS_SET_STANDARD_PROPERTIES TARGET PCH_SOURCE_DIR PCH_SOURCE PCH_INCLUDE 
     TARGET_COMPILE_FEATURES (${TARGET} PUBLIC cxx_std_${CMAKE_CXX_STANDARD})
     SET_PROPERTY (TARGET ${TARGET} PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
 
-    IF (MK_BUILD_OS__WIN)
+    IF (MK_BUILD_OS__WINDOWS)
         ADD_COMPILE_DEFINITIONS (TgCOMPILE__PLATFORM_TIME)
         IF (MK_BUILD__OS_TEXT_WIDE)
             TARGET_COMPILE_DEFINITIONS(${TARGET} PRIVATE _UNICODE)

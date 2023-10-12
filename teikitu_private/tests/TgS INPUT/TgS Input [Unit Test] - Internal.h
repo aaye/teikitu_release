@@ -12,6 +12,7 @@
 #define TGS_PLATFORM_INPUT_UNITTEST_INTERNAL_H
 
 #include "TgS Common.h"
+#include "TgS Partition.h"
 #include "TgS Kernel.h"
 #include "TgS Kernel [GPU].h"
 

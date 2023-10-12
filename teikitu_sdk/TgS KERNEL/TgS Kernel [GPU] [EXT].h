@@ -98,7 +98,7 @@ tgKN_GPU_EXT__CMD__Render_Debug_Geom(
     @param [in] ARG1 Pointer to the constant buffer contents to use in the call (non-persistent). */
 TgEXTN TgVOID
 tgKN_GPU_EXT__CMD__Render_Debug_Geom_Instance(
-    UTg2_KN_GPU_CMD_C ARG0, ETgKN_GPU_DEBUG_PM ARG1, TgRSIZE_C ARG2, STg2_KN_GPU_HLSL_CB_Debug_Model_Instance_CPC TgANALYSIS_NO_NULL ARG3 );
+    UTg2_KN_GPU_CMD_C ARG0, ETgKN_GPU_DEBUG_PM_C ARG1, TgRSIZE_C ARG2, STg2_KN_GPU_HLSL_CB_Debug_Model_Instance_CPC TgANALYSIS_NO_NULL ARG3 );
 
 /** @brief Render a debug line in 3D. This will buffer up the render calls until either a new render target is set (which will flush the buffer), or it is filled.
     @param [in] ARG0 Union of a pointer to the command list data structure returned by tgKN_GPU_EXT__Execute__Command_List_Acquire.

@@ -1970,7 +1970,8 @@ static TgVOID tgCN_UID_Print_Internal( TgSINT_E32_C iUID, TgUINT_E32_C uiChannel
 /* ---- tgCN_Default_Break_Write ------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 #if TgCOMPILE__CONSOLE
-static TgRSIZE tgCN_Default_Break_Write( TgATTRIBUTE_MAYBE_UNUSED STg2_Output_PC psOut, TgATTRIBUTE_MAYBE_UNUSED TgRSIZE_C uiOffset, TgATTRIBUTE_MAYBE_UNUSED TgVOID_CP mbzText, TgATTRIBUTE_MAYBE_UNUSED TgRSIZE_C niText )
+static TgRSIZE tgCN_Default_Break_Write( TgATTRIBUTE_MAYBE_UNUSED STg2_Output_PC psOut, TgATTRIBUTE_MAYBE_UNUSED TgRSIZE_C uiOffset, TgATTRIBUTE_MAYBE_UNUSED TgVOID_CP mbzText,
+                                         TgATTRIBUTE_MAYBE_UNUSED TgRSIZE_C niText )
 {
     tgPM_Break();
     return (0);
@@ -1982,7 +1983,8 @@ static TgRSIZE tgCN_Default_Break_Write( TgATTRIBUTE_MAYBE_UNUSED STg2_Output_PC
 /* ---- tgCN_Default_Abort_Write ------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 #if TgCOMPILE__CONSOLE
-static TgRSIZE tgCN_Default_Abort_Write( TgATTRIBUTE_MAYBE_UNUSED STg2_Output_PC psOut, TgATTRIBUTE_MAYBE_UNUSED TgRSIZE_C uiOffset, TgATTRIBUTE_MAYBE_UNUSED TgVOID_CP mbzText, TgATTRIBUTE_MAYBE_UNUSED TgRSIZE_C niText )
+static TgRSIZE tgCN_Default_Abort_Write( TgATTRIBUTE_MAYBE_UNUSED STg2_Output_PC psOut, TgATTRIBUTE_MAYBE_UNUSED TgRSIZE_C uiOffset, TgATTRIBUTE_MAYBE_UNUSED TgVOID_CP mbzText,
+                                         TgATTRIBUTE_MAYBE_UNUSED TgRSIZE_C niText )
 {
     tgPM_Abort();
     return 0;

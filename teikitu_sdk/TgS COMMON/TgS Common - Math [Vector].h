@@ -27,7 +27,7 @@
     @return A vector initialized from the data at ARG*/
 TgINLINE VEC_T(1)
 FCN_V(tgMH_SETU)(
-    VAR_T(CPC) NONULL ARG );
+    VAR_T(CPC) TgANALYSIS_NO_NULL ARG );
 
 /** @addtogroup TGS_COMMON_MATH_VECTOR_LOAD
     @brief Return a vector with the data at the aligned location at ARG
@@ -35,7 +35,7 @@ FCN_V(tgMH_SETU)(
     @return A vector initialized from the data at ARG*/
 TgINLINE VEC_T(1)
 FCN_V(tgMH_SETA)(
-    VAR_T(CPC) NONULL ARG );
+    VAR_T(CPC) TgANALYSIS_NO_NULL ARG );
 
 /** @addtogroup TGS_COMMON_MATH_VECTOR_LOAD
     @brief Return a vector where each element is assigned the same value as ARG

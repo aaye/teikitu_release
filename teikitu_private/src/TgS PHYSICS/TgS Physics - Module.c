@@ -44,7 +44,10 @@ TgRESULT tgPH_Module_Init( TgVOID )
 
 #if defined(TgBUILD_FEATURE__CLIENT) || defined(TgBUILD_FEATURE__SERVER)
     PROFILE_INIT( PH_SIMULATE_BATCH_TOTAL );
-    PROFILE_INIT( PH_COLLIDE_BATCH_TOTAL );
+    PROFILE_INIT( PH_COLLISION_TOTAL );
+    PROFILE_INIT( PH_COLLISION_WORLD_TOTAL );
+    PROFILE_INIT( PH_COLLISION_CONTACT_PAIR_GENEARTION_TOTAL );
+    PROFILE_INIT( PH_COLLISION_CONTACT_CALLBACK_TOTAL );
     PROFILE_INIT( PH_BUILD_SETS_TOTAL );
     PROFILE_INIT( PH_SOLVE_SETS_TOTAL );
     PROFILE_INIT( PH_SOLVER_BATCH_TOTAL );
@@ -53,13 +56,19 @@ TgRESULT tgPH_Module_Init( TgVOID )
 #endif
 #if defined(TgBUILD_FEATURE__CLIENT)
     PROFILE_ARRAY_INIT( 0, _CLIENT_FX, PH_SIMULATE_BATCH );
-    PROFILE_ARRAY_INIT( 0, _CLIENT_FX, PH_COLLIDE_BATCH );
+    PROFILE_ARRAY_INIT( 0, _CLIENT_FX, PH_COLLISION );
+    PROFILE_ARRAY_INIT( 0, _CLIENT_FX, PH_COLLISION_WORLD );
+    PROFILE_ARRAY_INIT( 0, _CLIENT_FX, PH_COLLISION_CONTACT_PAIR_GENEARTION );
+    PROFILE_ARRAY_INIT( 0, _CLIENT_FX, PH_COLLISION_CONTACT_CALLBACK );
     PROFILE_ARRAY_INIT( 0, _CLIENT_FX, PH_BUILD_SETS );
     PROFILE_ARRAY_INIT( 0, _CLIENT_FX, PH_SOLVE_SETS );
     PROFILE_ARRAY_INIT( 0, _CLIENT_FX, PH_UPDATE_WORLD__SIMULATE_BATCH );
     PROFILE_ARRAY_INIT( 0, _CLIENT_FX, PH_CMD_BUFFER_EXECEUTE );
     PROFILE_ARRAY_INIT( 1, _CLIENT_UI, PH_SIMULATE_BATCH );
-    PROFILE_ARRAY_INIT( 1, _CLIENT_UI, PH_COLLIDE_BATCH );
+    PROFILE_ARRAY_INIT( 1, _CLIENT_UI, PH_COLLISION );
+    PROFILE_ARRAY_INIT( 1, _CLIENT_UI, PH_COLLISION_WORLD );
+    PROFILE_ARRAY_INIT( 1, _CLIENT_UI, PH_COLLISION_CONTACT_PAIR_GENEARTION );
+    PROFILE_ARRAY_INIT( 1, _CLIENT_UI, PH_COLLISION_CONTACT_CALLBACK );
     PROFILE_ARRAY_INIT( 1, _CLIENT_UI, PH_BUILD_SETS );
     PROFILE_ARRAY_INIT( 1, _CLIENT_UI, PH_SOLVE_SETS );
     PROFILE_ARRAY_INIT( 1, _CLIENT_UI, PH_UPDATE_WORLD__SIMULATE_BATCH );
@@ -68,7 +77,10 @@ TgRESULT tgPH_Module_Init( TgVOID )
 #endif
 #if defined(TgBUILD_FEATURE__SERVER)
     PROFILE_ARRAY_INIT( uiIndex, _SERVER_DEFAULT, PH_SIMULATE_BATCH );
-    PROFILE_ARRAY_INIT( uiIndex, _SERVER_DEFAULT, PH_COLLIDE_BATCH );
+    PROFILE_ARRAY_INIT( uiIndex, _SERVER_DEFAULT, PH_COLLISION );
+    PROFILE_ARRAY_INIT( uiIndex, _SERVER_DEFAULT, PH_COLLISION_WORLD );
+    PROFILE_ARRAY_INIT( uiIndex, _SERVER_DEFAULT, PH_COLLISION_CONTACT_PAIR_GENEARTION );
+    PROFILE_ARRAY_INIT( uiIndex, _SERVER_DEFAULT, PH_COLLISION_CONTACT_CALLBACK );
     PROFILE_ARRAY_INIT( uiIndex, _SERVER_DEFAULT, PH_BUILD_SETS );
     PROFILE_ARRAY_INIT( uiIndex, _SERVER_DEFAULT, PH_SOLVE_SETS );
     PROFILE_ARRAY_INIT( uiIndex, _SERVER_DEFAULT, PH_UPDATE_WORLD__SIMULATE_BATCH );
@@ -77,9 +89,6 @@ TgRESULT tgPH_Module_Init( TgVOID )
 #endif
 
     tgCM_UT_LF__RW__Init( &g_sPH_Lock__Update_Module.m_sLock );
-
-    g_pfnPH_Update_World__Collide = nullptr;
-    tgPA_PnS_Init( &g_sPH_SG_PnS );
 
     g_bPH_Module__Paused = false;
     g_uiPH_Module__Loop_Max = 1000;
@@ -107,18 +116,16 @@ TgRESULT tgPH_Module_Init( TgVOID )
 #endif
 
 #if defined(TgBUILD_DEBUG__PHYSICS)
-    g_vPH_Debug_Colour__Body_Enabled = tgMH_SET1_F32_04_1( 1.0F );
-    g_vPH_Debug_Colour__Body_Sleep = tgMH_SET1_F32_04_1( 1.0F );
-    g_vPH_Debug_Colour__Body_Disabled = tgMH_SET1_F32_04_1( 1.0F );
-    g_vPH_Debug_Colour__Form_Enabled = tgMH_SET1_F32_04_1( 1.0F );
-    g_vPH_Debug_Colour__Form_Disabled = tgMH_SET1_F32_04_1( 1.0F );
+    g_vPH_Debug_Colour__Body_Enabled = tgMH_Init_ELEM_F32_04_1( 0.0F, 1.0F, 0.0F, 0.50F );
+    g_vPH_Debug_Colour__Body_Sleep = tgMH_Init_ELEM_F32_04_1( 1.0F, 1.0F, 0.0F, 0.25F );
+    g_vPH_Debug_Colour__Form_Disabled = tgMH_Init_ELEM_F32_04_1( 1.0F, 0.0F, 0.0F, 0.25F );
+    g_vPH_Debug_Colour__Contact = tgMH_Init_ELEM_F32_04_1( 10.0F, 0.0F, 10.0F, 1.0F );
     g_vPH_Debug_Colour__Ragdoll = tgMH_SET1_F32_04_1( 1.0F );
 
     g_tiPH_Debug_Colour__Body_Enabled.m_uiKI = KTgID__INVALID_VALUE;
     g_tiPH_Debug_Colour__Body_Sleep.m_uiKI = KTgID__INVALID_VALUE;
-    g_tiPH_Debug_Colour__Body_Disabled.m_uiKI = KTgID__INVALID_VALUE;
-    g_tiPH_Debug_Colour__Form_Enabled.m_uiKI = KTgID__INVALID_VALUE;
     g_tiPH_Debug_Colour__Form_Disabled.m_uiKI = KTgID__INVALID_VALUE;
+    g_tiPH_Debug_Colour__Contact.m_uiKI = KTgID__INVALID_VALUE;
     g_tiPH_Debug_Colour__Ragdoll.m_uiKI = KTgID__INVALID_VALUE;
 /*# defined(TgBUILD_DEBUG__PHYSICS) */
 #endif
@@ -253,19 +260,14 @@ TgRESULT tgPH_Module_Update( TgATTRIBUTE_MAYBE_UNUSED TgFLOAT32_C fDT )
             g_vPH_Debug_Colour__Body_Sleep = uVector.m_vF32_04_1;
         };
 
-        if ((KTgID__INVALID_VALUE != g_tiPH_Debug_Colour__Body_Disabled.m_uiKI) && tgCN_Var_Query_F32_04_1( &uVector.m_vF32_04_1, g_tiPH_Debug_Colour__Body_Disabled ))
-        {
-            g_vPH_Debug_Colour__Body_Disabled = uVector.m_vF32_04_1;
-        };
-
-        if ((KTgID__INVALID_VALUE != g_tiPH_Debug_Colour__Form_Enabled.m_uiKI) && tgCN_Var_Query_F32_04_1( &uVector.m_vF32_04_1, g_tiPH_Debug_Colour__Form_Enabled ))
-        {
-            g_vPH_Debug_Colour__Form_Enabled = uVector.m_vF32_04_1;
-        };
-
         if ((KTgID__INVALID_VALUE != g_tiPH_Debug_Colour__Form_Disabled.m_uiKI) && tgCN_Var_Query_F32_04_1( &uVector.m_vF32_04_1, g_tiPH_Debug_Colour__Form_Disabled ))
         {
             g_vPH_Debug_Colour__Form_Disabled = uVector.m_vF32_04_1;
+        };
+
+        if ((KTgID__INVALID_VALUE != g_tiPH_Debug_Colour__Contact.m_uiKI) && tgCN_Var_Query_F32_04_1( &uVector.m_vF32_04_1, g_tiPH_Debug_Colour__Contact ))
+        {
+            g_vPH_Debug_Colour__Contact = uVector.m_vF32_04_1;
         };
 
         if ((KTgID__INVALID_VALUE != g_tiPH_Debug_Colour__Ragdoll.m_uiKI) && tgCN_Var_Query_F32_04_1( &uVector.m_vF32_04_1, g_tiPH_Debug_Colour__Ragdoll ))

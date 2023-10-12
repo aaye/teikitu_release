@@ -85,7 +85,11 @@ TgTYPE_STRUCT(STg2_EM_TE_Pool,)
 
     /* Lockless data structures (multi-thread safe) */
     STg2_UT_LF__ST                              m_sNew;  /**< Synchronization: Self */
+#if !defined(TgBUILD_COMPILER__MSVC)
     TgUINT_E08                                  m_iPad2[32];
+#else
+    TgUINT_E08                                  m_iPad2[16];
+#endif
 };
 //TgCOMPILER_ASSERT( sizeof( STg2_EM_TE_Pool ) == 4096, 0 );
 

@@ -13,10 +13,12 @@
 
 #include "TgS Common.h"
 #include "TgS Collision.h"
+#include "TgS Partition.h"
 
 #include "TgS Kernel.h"
 #include "TgS Kernel [GPU].h"
 
+#include "TgS Physics.h"
 #include "TgS Render.h"
 
 #include "TgS Script.h"

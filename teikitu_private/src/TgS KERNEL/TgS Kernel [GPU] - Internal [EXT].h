@@ -198,7 +198,7 @@ T(tgKN_GPU_EXT_Register_Default_,_Inst)(
     @param [in] ARG3 Integer indicating the depth of the surface to be locked.  */
 TgEXTN TgVOID
 T(tgKN_GPU_EXT_,__Fast_Lock)(
-    STg2_KN_GPU_TX_Surface_PCU NONULL OUT0, UTg2_KN_GPU_CMD_C ARG1, T(TgKN_GPU_,_INST_ID_C) ARG2 );
+    STg2_KN_GPU_TX_Surface_PCU TgANALYSIS_NO_NULL OUT0, UTg2_KN_GPU_CMD_C ARG1, T(TgKN_GPU_,_INST_ID_C) ARG2 );
 
 /** @brief Lock the surface of a texture for modification. This will make it available to be modified by CPU operations.
     @param [out] OUT0 Pointer to the data structure holding the surface information of the locked texture layer in main memory.
@@ -207,7 +207,7 @@ T(tgKN_GPU_EXT_,__Fast_Lock)(
     @param [in] ARG3 Integer indicating the depth of the surface to be locked.  */
 TgEXTN TgVOID
 T(tgKN_GPU_EXT_,__Lock)(
-    STg2_KN_GPU_TX_Surface_PCU NONULL OUT0, UTg2_KN_GPU_CMD_C ARG1, T(TgKN_GPU_,_INST_ID_C) ARG2 );
+    STg2_KN_GPU_TX_Surface_PCU TgANALYSIS_NO_NULL OUT0, UTg2_KN_GPU_CMD_C ARG1, T(TgKN_GPU_,_INST_ID_C) ARG2 );
 
 /** @brief Return the surface to the GPU to be used. Paired function when surface was fast unlocked.
     @param [in] ARG0 Union of a pointer to the command list data structure returned by tgKN_GPU_EXT__Execute__Command_List_Acquire.

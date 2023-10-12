@@ -15,6 +15,10 @@
     reason for this is to reduce internal fragmentation and because no time savings would be incurred. */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 
+#if !defined(TgBUILD_FEATURE__MALLOC_OVERRIDE)
+#include "TgS Common - Preload - Internal.h"
+#endif
+
 
 /* == Common ===================================================================================================================================================================== */
 
@@ -83,6 +87,10 @@ static TgUINT_E08                           s_sTrace_Table_Buffer[1024*1024];
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 TgRESULT tgMM_Init_MGR( TgVOID )
 {
+    #if !defined(TgBUILD_FEATURE__MALLOC_OVERRIDE)
+    tgMM_Init_MGR_Preload();
+    #endif
+
     TgERROR(ETgMODULE_STATE__FREED == s_enMem_MGR_State);
     s_enMem_MGR_State = ETgMODULE_STATE__INITIALIZING;
 
@@ -158,6 +166,10 @@ TgRESULT tgMM_Free_MGR( TgVOID )
 #endif
 
     s_enMem_MGR_State = ETgMODULE_STATE__FREED;
+
+    #if !defined(TgBUILD_FEATURE__MALLOC_OVERRIDE)
+    tgMM_Free_MGR_Preload();
+    #endif
 
     return (KTgS_OK);
 }

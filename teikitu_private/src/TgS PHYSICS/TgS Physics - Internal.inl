@@ -60,6 +60,19 @@ TgINLINE TgRESULT tgPH_Mass_Rotate_Quat( STg2_PH_Mass_PC psMass, TgVEC_F32_04_1_
 }
 
 
+/* ---- tgPH_Mass_Union_Mat ------------------------------------------------------------------------------------------------------------------------------------------------------ */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgINLINE TgRESULT tgPH_Mass_Union_Mat( STg2_PH_Mass_PC psMS0, STg2_PH_Mass_CPC psMS1 )
+{
+    tgMH_ADD_F32_04_3( &psMS0->m_mMOI, &psMS0->m_mMOI, &psMS1->m_mMOI );
+    tgMH_ADD_F32_04_3( &psMS0->m_mInv_MOI, &psMS0->m_mInv_MOI, &psMS1->m_mInv_MOI );
+    psMS0->m_vCG = tgMH_ADD_F32_04_1( psMS0->m_vCG, tgMH_Init_Vector_F32_04_1( psMS1->m_vCG ) );
+    psMS0->m_uMass.m_vF32_04_1 = tgMH_ADD_F32_04_1( psMS0->m_uMass.m_vF32_04_1, psMS1->m_uMass.m_vF32_04_1 );
+    psMS0->m_uInv_Mass.m_vF32_04_1 = tgMH_ADD_F32_04_1( psMS0->m_uInv_Mass.m_vF32_04_1, psMS1->m_uInv_Mass.m_vF32_04_1 );
+    return KTgS_OK;
+}
+
+
 /* ---- tgPH_Form_Update__WRITE -------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 TgINLINE TgVEC_F32_04_1 tgPH_Material_Calc_Restitution_Factor( STg2_PH_Form_CPC psFM0, TgVEC_F32_04_1_C vDT0, STg2_PH_Form_CPC psFM1, TgVEC_F32_04_1_C vDT1 )
@@ -81,15 +94,32 @@ TgINLINE TgVEC_F32_04_1 tgPH_Material_Calc_Restitution_Factor( STg2_PH_Form_CPC 
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 TgINLINE TgVOID tgPH_Form_Update__WRITE( STg2_PH_Form_P psFM, STg2_PH_Body_PC psBY, TgBOOL_C bReset_Last_Position )
 {
-    tgMH_CAT_F32_04_3( &psFM->m_mFinal_O2W, &psFM->m_mLocal_O2B, &psBY->m_mFinal_O2W);
+    if (nullptr == psBY)
+    {
+        tgMM_Copy( &psFM->m_mFinal_O2W, sizeof(psFM->m_mFinal_O2W), &psFM->m_mLocal_O2B, sizeof(psFM->m_mLocal_O2B) );
+    }
+    else
+    {
+        tgMH_CAT_F32_04_3( &psFM->m_mFinal_O2W, &psFM->m_mLocal_O2B, &psBY->m_mFinal_O2W);
+    };
     psFM->m_vPos_Last_Valid_O2W = psFM->m_vPos_O2W;
     psFM->m_vPos_O2W = tgMH_Query_Axis_3_F32_04_3( &psFM->m_mFinal_O2W );
-    tgGM_BA_Copy_TX_F32_04( &psFM->m_sBA_W, &psFM->m_sBA_O, &psFM->m_mFinal_O2W );
+    if (ETgPM_UNKNOWN != psFM->m_enPM)
+    {
+        if (ETgPM_PN == psFM->m_enPM)
+        {
+            tgGM_BA_Copy_F32_04( &psFM->m_sBA_W, &psFM->m_sBA_O );
+        }
+        else
+        {
+            tgGM_BA_Copy_TX_F32_04( &psFM->m_sBA_W, &psFM->m_sBA_O, &psFM->m_mFinal_O2W );
+        };
+    };
 
     if (bReset_Last_Position)
     {
         psFM->m_vPos_Last_Valid_O2W = psFM->m_vPos_O2W;
-    }
+    };
 }
 
 

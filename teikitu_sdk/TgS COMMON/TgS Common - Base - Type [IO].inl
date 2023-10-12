@@ -21,7 +21,7 @@
 
 /* ---- tgIO_IM__Open ------------------------------------------------------------------------------------------------------------------------------------------------------------ */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgRESULT tgIO_IM__Open( STg2_Input_MEM_PC NONULL psIN, TgVOID_CP NONULL pData, TgRSIZE_C nbyData, TgFCN_MEM_RO_FREE pfnFree )
+TgINLINE TgRESULT tgIO_IM__Open( STg2_Input_MEM_PC TgANALYSIS_NO_NULL psIN, TgVOID_CP TgANALYSIS_NO_NULL pData, TgRSIZE_C nbyData, TgFCN_MEM_RO_FREE pfnFree )
 {
     TgPARAM_CHECK(nullptr != psIN && nullptr != pData && nbyData < KTgMAX_RSIZE);
 
@@ -90,7 +90,7 @@ TgINLINE TgRSIZE tgIO_IM__Size( STg2_Input_MEM_PC psIN )
 
 /* ---- tgIO_IM__Read ------------------------------------------------------------------------------------------------------------------------------------------------------------ */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgRSIZE tgIO_IM__Read( TgVOID_P NONULL pData, TgRSIZE_C nbyData, STg2_Input_PC NONULL psIN, TgRSIZE_C uiOffset, TgRSIZE_C uiRead )
+TgINLINE TgRSIZE tgIO_IM__Read( TgVOID_P TgANALYSIS_NO_NULL pData, TgRSIZE_C nbyData, STg2_Input_PC TgANALYSIS_NO_NULL psIN, TgRSIZE_C uiOffset, TgRSIZE_C uiRead )
 {
     union
     {
@@ -118,7 +118,7 @@ TgINLINE TgRSIZE tgIO_IM__Read( TgVOID_P NONULL pData, TgRSIZE_C nbyData, STg2_I
 
 /* ---- tgIO_IM__End_Of_File ----------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgBOOL tgIO_IM__End_Of_File( STg2_Input_PC NONULL psIN, TgRSIZE_C uiOffset )
+TgINLINE TgBOOL tgIO_IM__End_Of_File( STg2_Input_PC TgANALYSIS_NO_NULL psIN, TgRSIZE_C uiOffset )
 {
     union
     {
@@ -136,7 +136,7 @@ TgINLINE TgBOOL tgIO_IM__End_Of_File( STg2_Input_PC NONULL psIN, TgRSIZE_C uiOff
 
 /* ---- tgIO_OM__Open ------------------------------------------------------------------------------------------------------------------------------------------------------------ */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgRESULT tgIO_OM__Open( STg2_Output_MEM_PC NONULL psOUT, TgVOID_P NONULL pData, TgRSIZE_C nbyData, TgFCN_MEM_RW_FREE pfnFree )
+TgINLINE TgRESULT tgIO_OM__Open( STg2_Output_MEM_PC TgANALYSIS_NO_NULL psOUT, TgVOID_P TgANALYSIS_NO_NULL pData, TgRSIZE_C nbyData, TgFCN_MEM_RW_FREE pfnFree )
 {
     TgPARAM_CHECK(nullptr != psOUT && nullptr != pData && nbyData < KTgMAX_RSIZE);
 
@@ -158,7 +158,7 @@ TgINLINE TgRESULT tgIO_OM__Open( STg2_Output_MEM_PC NONULL psOUT, TgVOID_P NONUL
 
 /* ---- tgIO_OM__Close ----------------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgRESULT tgIO_OM__Close( STg2_Output_PC NONULL psOUT )
+TgINLINE TgRESULT tgIO_OM__Close( STg2_Output_PC TgANALYSIS_NO_NULL psOUT )
 {
     union
     {
@@ -196,7 +196,7 @@ TgINLINE TgRESULT tgIO_OM__Close( STg2_Output_PC NONULL psOUT )
 
 /* ---- tgIO_OM__Query_Data ------------------------------------------------------------------------------------------------------------------------------------------------------ */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgUINT_E08_CP tgIO_OM__Query_Data( STg2_Output_MEM_PC NONULL psOUT )
+TgINLINE TgUINT_E08_CP tgIO_OM__Query_Data( STg2_Output_MEM_PC TgANALYSIS_NO_NULL psOUT )
 {
     TgPARAM_CHECK( nullptr != psOUT );
 
@@ -206,7 +206,7 @@ TgINLINE TgUINT_E08_CP tgIO_OM__Query_Data( STg2_Output_MEM_PC NONULL psOUT )
 
 /* ---- tgIO_OM__Write ----------------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgRSIZE tgIO_OM__Write( STg2_Output_PC NONULL psOUT, TgRSIZE_C uiOffset_Start, TgVOID_CP NONULL pData, TgRSIZE_C nbyData )
+TgINLINE TgRSIZE tgIO_OM__Write( STg2_Output_PC TgANALYSIS_NO_NULL psOUT, TgRSIZE_C uiOffset_Start, TgVOID_CP TgANALYSIS_NO_NULL pData, TgRSIZE_C nbyData )
 {
     union
     {

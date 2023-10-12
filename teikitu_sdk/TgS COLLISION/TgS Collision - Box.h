@@ -653,7 +653,6 @@ TgINLINE VEC_T(1)
 FCN_VO(tgCO_BX_Closest_PN)(
     VEC_T(1,PC) OUT0, VEC_T(1,PC) OUT1, VEC_OBJ_T(TgBOX,CPC) ARG2, VEC_OBJ_T(TgPLANE,CPC) ARG3 );
 
-
 /** @brief Calculate the minimal distance squared between a box and a plane, and on a non-negative distance store the point(s) of closest proximity.
     @param [out] OUT0 Pointer to a vector with a full broadcast of the parametric value for the closest point to ARG5 along the 1st axis of ARG4.
     @param [out] OUT1 Pointer to a vector with a full broadcast of the parametric value for the closest point to ARG5 along the 2nd axis of ARG4.
@@ -678,7 +677,6 @@ TgEXTN VEC_T(1)
 FCN_VO(tgCO_BX_Closest_PM_PN)(
     VEC_T(1,PC) OUT0, VEC_T(1,PC) OUT1, VEC_T(1,PC) OUT2, VEC_T(1,PC) OUT3, VEC_OBJ_T(TgBOX,CPC) ARG4, VEC_OBJ_T(TgPLANE,CPC) ARG5 );
 
-
 /** @brief Update the collision packet with point(s) of penetration between a box and a sphere.
     @param [in,out] OUT0 Pointer to an object holding parameters, existing contact points and updated due to new contact points.
                          Contact points are generated on the surface of ARG2.
@@ -691,6 +689,17 @@ TgEXTN TgRESULT
 FCN_VO(tgCO_PN_Penetrate_BX)(
     VEC_OBJ_T(STg2_CO_Packet,PC) OUT0, VEC_OBJ_T(TgPLANE,CPC) ARG1, VEC_OBJ_T(TgBOX,CPC) ARG2 );
 
+/** @brief Update the collision packet with point(s) of penetration between a box and a sphere.
+    @param [in,out] OUT0 Pointer to an object holding parameters, existing contact points and updated due to new contact points.
+                         Contact points are generated on the surface of ARG2.
+                         Contact normals are the direction for the object at ARG2 to move to achieve separation.
+                         Depth values are measured from the surface of the object at ARG1 to the contact point.
+    @param [in] ARG2 Pointer to a plane object.
+    @param [in] ARG1 Pointer to a box object.
+    @return Result Code. */
+TgEXTN TgRESULT
+FCN_VO(tgCO_BX_Penetrate_PN)(
+    VEC_OBJ_T(STg2_CO_Packet,PC) OUT0, VEC_OBJ_T(TgBOX,CPC) ARG1, VEC_OBJ_T(TgPLANE,CPC) ARG2 );
 
 
 /* Box - Sphere                                                                                                                                                                    */

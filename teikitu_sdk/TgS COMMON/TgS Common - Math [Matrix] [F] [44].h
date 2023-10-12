@@ -28,7 +28,7 @@
     @param [in] ARG2 Matrix */
 TgINLINE TgVOID
 FCN_M(tgMH_CAT_34_44)(
-    VEC_T(4,PC) NONULL OUT0, VEC_T(3,CPC) NONULL ARG1, VEC_T(4,CPC) NONULL ARG2 );
+    VEC_T(4,PC) TgANALYSIS_NO_NULL OUT0, VEC_T(3,CPC) TgANALYSIS_NO_NULL ARG1, VEC_T(4,CPC) TgANALYSIS_NO_NULL ARG2 );
 
 /** @addtogroup TGS_COMMON_MATH_VECTOR_CALC
     @brief Store the concatenation (multiplication) of the two arguments (ARG1 x ARG2)
@@ -37,7 +37,7 @@ FCN_M(tgMH_CAT_34_44)(
     @param [in] ARG2 Matrix */
 TgINLINE TgVOID
 FCN_M(tgMH_CAT_44_34)(
-    VEC_T(4,PC) NONULL OUT0, VEC_T(4,CPC) NONULL ARG1, VEC_T(3,CPC) NONULL ARG2 );
+    VEC_T(4,PC) TgANALYSIS_NO_NULL OUT0, VEC_T(4,CPC) TgANALYSIS_NO_NULL ARG1, VEC_T(3,CPC) TgANALYSIS_NO_NULL ARG2 );
 
 /** @addtogroup TGS_COMMON_MATH_VECTOR_CALC
     @brief Store the transpose of the matrix ARG1
@@ -45,7 +45,7 @@ FCN_M(tgMH_CAT_44_34)(
     @param [in] ARG1 Matrix */
 TgINLINE TgVOID
 FCN_M(tgMH_TR)(
-    VEC_T(4,PC) NONULL OUT0, VEC_T(4,CPC) NONULL ARG1 );
+    VEC_T(4,PC) TgANALYSIS_NO_NULL OUT0, VEC_T(4,CPC) TgANALYSIS_NO_NULL ARG1 );
 
 
 /* =============================================================================================================================================================================== */

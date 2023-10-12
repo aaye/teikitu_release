@@ -9,7 +9,7 @@
     visit http://creativecommons.org/licenses/by-nc-sa/4.0/ or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. */
 /* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
 
-#if defined(TgBUILD_OS__WIN)
+#if defined(TgBUILD_OS__WINDOWS)
     #define NULL 0
 #endif
 #include <string.h>
@@ -328,7 +328,7 @@ TgCHAR_U8_CP tgSM_UID_Query_String( TgSINT_E32_C iIndex )
 
 /* ---- tgSM_Dict_Insert_String_Hash --------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgSTRING_DICT_ID tgSM_Dict_Insert_String_Hash( TgCHAR_U8_CPC NONULL mbzString, TgRSIZE_C nbyMaxString, TgUINT_MAX_C uiHash )
+TgSTRING_DICT_ID tgSM_Dict_Insert_String_Hash( TgCHAR_U8_CPC mbzString, TgRSIZE_C nbyMaxString, TgUINT_MAX_C uiHash )
 {
     TgSTRING_DICT_ID                    tiRet;
     TgRSIZE                             nbyString_Encode_Size;
@@ -625,7 +625,7 @@ TgBOOL tgSM_Table_Is_Loaded( TgSTRING_TABLE_ID_C tiTable )
 
 /* ---- tgSM_Table_Query_String -------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgBOOL tgSM_Table_Query_String( TgCHAR_U8_CPP NONULL mbzStringOut, TgRSIZE_PC NONULL piLengthOut, TgSTRING_TABLE_ID tiTable, TgUINT_E32_C uiIndex )
+TgBOOL tgSM_Table_Query_String( TgCHAR_U8_CPP mbzStringOut, TgRSIZE_PC piLengthOut, TgSTRING_TABLE_ID tiTable, TgUINT_E32_C uiIndex )
 {
     union
     {

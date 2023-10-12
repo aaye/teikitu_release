@@ -28,14 +28,14 @@
     @param [out] OUT Pointer to the geometry object (torus) */
 TgINLINE TgVOID
 FCN_VO(tgGM_TS_Reset)(
-    VEC_OBJ_T(TgTORUS,PCU) NONULL OUT );
+    VEC_OBJ_T(TgTORUS,PCU) TgANALYSIS_NO_NULL OUT );
 
 /** @brief Validate the integrity of the geometry object (torus)
     @param [in] ARG Pointer to a geometry object (torus)
     @return True if the geometry object (torus) is valid and false otherwise */
 TgEXTN TgBOOL
 FCN_VO(tgGM_TS_Is_Valid)(
-    VEC_OBJ_T(TgTORUS,CPCU) NONULL ARG );
+    VEC_OBJ_T(TgTORUS,CPCU) TgANALYSIS_NO_NULL ARG );
 
 /** @brief Determine the point on the geometry object (torus) that is furthest along the direction of ARG1
     @param [in] ARG0 Pointer to a geometry object (torus)
@@ -43,28 +43,28 @@ FCN_VO(tgGM_TS_Is_Valid)(
     @return The point on the geometry object (torus) that is furthest along the direction of ARG1 */
 TgEXTN VEC_T(1)
 FCN_VO(tgGM_TS_Support_Point)(
-    VEC_OBJ_T(TgTORUS,CPCU) NONULL ARG0, VEC_T(1,C) ARG1 );
+    VEC_OBJ_T(TgTORUS,CPCU) TgANALYSIS_NO_NULL ARG0, VEC_T(1,C) ARG1 );
 
 /** @brief Calculate the volume of the geometry object (torus)
     @param [in] ARG Pointer to a geometry object (torus)
     @return The volume of the geometry object (torus) */
 TgINLINE VEC_T(1)
 FCN_VO(tgGM_TS_Volume)(
-    VEC_OBJ_T(TgTORUS,CPCU) NONULL ARG );
+    VEC_OBJ_T(TgTORUS,CPCU) TgANALYSIS_NO_NULL ARG );
 
 /** @brief Calculate the surface area of the geometry object (torus)
     @param [in] ARG Pointer to a geometry object (torus)
     @return The surface area of the geometry object (torus) */
 TgINLINE VEC_T(1)
 FCN_VO(tgGM_TS_Area)(
-    VEC_OBJ_T(TgTORUS,CPCU) NONULL ARG );
+    VEC_OBJ_T(TgTORUS,CPCU) TgANALYSIS_NO_NULL ARG );
 
 /** @brief Calculate the minimum necessary Axis-Aligned Bounding Box to contain the geometry object (torus)
     @param [out] ARG0 Pointer to an axis-aligned bounding box object
     @param [in] ARG1 Pointer to a geometry object (torus) */
 TgEXTN TgVOID
 FCN_VO(tgGM_TS_BA)(
-    VEC_OBJ_T(TgBOXAA,PCU) NONULL ARG0, VEC_OBJ_T(TgTORUS,CPCU) NONULL ARG1 );
+    VEC_OBJ_T(TgBOXAA,PCU) TgANALYSIS_NO_NULL ARG0, VEC_OBJ_T(TgTORUS,CPCU) TgANALYSIS_NO_NULL ARG1 );
 
 /** @brief Calculate the minimum necessary Axis-Aligned Bounding Box to contain the swept geometry object (torus)
     @param [out] ARG0 Pointer to an axis-aligned bounding box object
@@ -72,7 +72,7 @@ FCN_VO(tgGM_TS_BA)(
     @param [in] ARG2 Pointer to a vector describing the swept direction and magnitude */
 TgINLINE TgVOID
 FCN_VO(tgGM_TS_Sweep_BA)(
-    VEC_OBJ_T(TgBOXAA,PCU) NONULL ARG0, VEC_OBJ_T(TgTORUS,CPCU) NONULL ARG1, VEC_T(1,C) ARG2 );
+    VEC_OBJ_T(TgBOXAA,PCU) TgANALYSIS_NO_NULL ARG0, VEC_OBJ_T(TgTORUS,CPCU) TgANALYSIS_NO_NULL ARG1, VEC_T(1,C) ARG2 );
 
 /** @brief Project the geometry object (torus) along the direction vector
     @param [out] OUT0 Pointer to a scalar value to hold the lower bound of the projection
@@ -81,7 +81,7 @@ FCN_VO(tgGM_TS_Sweep_BA)(
     @param [in] ARG3 Direction vector */
 TgEXTN TgVOID
 FCN_VO(tgGM_TS_Project)(
-    VEC_T(1,PCU) NONULL ARG0, VEC_T(1,PCU) NONULL ARG1, VEC_OBJ_T(TgTORUS,CPCU) NONULL ARG2, VEC_T(1,C) ARG3 );
+    VEC_T(1,PCU) TgANALYSIS_NO_NULL ARG0, VEC_T(1,PCU) TgANALYSIS_NO_NULL ARG1, VEC_OBJ_T(TgTORUS,CPCU) TgANALYSIS_NO_NULL ARG2, VEC_T(1,C) ARG3 );
 
 /** @brief Test to see if a point is either on or in the geometry object (torus)
     @param [in] ARG0 Pointer to a geometry object (torus)
@@ -89,14 +89,14 @@ FCN_VO(tgGM_TS_Project)(
     @return True if the position is either on or in the geometry object (torus) and false otherwise */
 TgEXTN TgBOOL
 FCN_VO(tgGM_TS_Is_Contained)(
-    VEC_OBJ_T(TgTORUS,CPCU) NONULL ARG0, VEC_T(1,C) ARG1 );
+    VEC_OBJ_T(TgTORUS,CPCU) TgANALYSIS_NO_NULL ARG0, VEC_T(1,C) ARG1 );
 
 /** @brief Transform the geometry object (torus) at ARG0 by the matrix at ARG1
     @param [in,out] ARG0 Pointer to a geometry object (torus)
     @param [in] ARG1 Column-Major matrix (3x4) containing rotation and translation */
 TgINLINE TgVOID
 FCN_VO(tgGM_TS_TX)(
-    VEC_OBJ_T(TgTORUS,PCU) NONULL ARG0, VEC_T(3,CPCU) NONULL ARG1 );
+    VEC_OBJ_T(TgTORUS,PCU) TgANALYSIS_NO_NULL ARG0, VEC_T(3,CPCU) TgANALYSIS_NO_NULL ARG1 );
 
 /** @brief Transform the geometry object (torus) at ARG1 by the matrix at ARG2 and store it in ARG0
     @param [out] ARG0 Pointer to a geometry object (torus)
@@ -104,7 +104,7 @@ FCN_VO(tgGM_TS_TX)(
     @param [in] ARG2 Column-Major matrix (3x4) containing rotation and translation */
 TgINLINE TgVOID
 FCN_VO(tgGM_TS_Copy_TX)(
-    VEC_OBJ_T(TgTORUS,PCU) NONULL ARG0, VEC_OBJ_T(TgTORUS,CPCU) NONULL ARG1, VEC_T(3,CPCU) NONULL ARG2 );
+    VEC_OBJ_T(TgTORUS,PCU) TgANALYSIS_NO_NULL ARG0, VEC_OBJ_T(TgTORUS,CPCU) TgANALYSIS_NO_NULL ARG1, VEC_T(3,CPCU) TgANALYSIS_NO_NULL ARG2 );
 
 
 /** @brief Initialize a new geometry object (torus) with the function arguments
@@ -114,14 +114,14 @@ FCN_VO(tgGM_TS_Copy_TX)(
     @param [in] ARG3 Vector holding the new outer radius, broadcast across all lanes */
 TgINLINE TgVOID
 FCN_VO(tgGM_TS_Init)(
-    VEC_OBJ_T(TgTORUS,PCU) NONULL ARG0, VEC_T(3,CPCU) NONULL ARG1, VEC_T(1,C) ARG2, VEC_T(1,C) ARG3 );
+    VEC_OBJ_T(TgTORUS,PCU) TgANALYSIS_NO_NULL ARG0, VEC_T(3,CPCU) TgANALYSIS_NO_NULL ARG1, VEC_T(1,C) ARG2, VEC_T(1,C) ARG3 );
 
 /** @brief Copy the one geometry object (torus) to another of the same type
     @param [out] ARG0 Pointer to a geometry object (torus)
     @param [in] ARG1 Pointer to a geometry object (torus) */
 TgINLINE TgVOID
 FCN_VO(tgGM_TS_Copy)(
-    VEC_OBJ_T(TgTORUS,PCU) NONULL ARG0, VEC_OBJ_T(TgTORUS,CPCU) NONULL ARG1 );
+    VEC_OBJ_T(TgTORUS,PCU) TgANALYSIS_NO_NULL ARG0, VEC_OBJ_T(TgTORUS,CPCU) TgANALYSIS_NO_NULL ARG1 );
 
 
 /** @brief Set the normal of the plane
@@ -129,28 +129,28 @@ FCN_VO(tgGM_TS_Copy)(
     @param [in] ARG1 Column-Major matrix (3x4) containing rotation (basis vectors) and origin */
 TgINLINE TgVOID
 FCN_VO(tgGM_TS_Set_Reference_Frame)(
-    VEC_OBJ_T(TgTORUS,PCU) NONULL ARG0, VEC_T(3,CPCU) NONULL ARG1 );
+    VEC_OBJ_T(TgTORUS,PCU) TgANALYSIS_NO_NULL ARG0, VEC_T(3,CPCU) TgANALYSIS_NO_NULL ARG1 );
 
 /** @brief Set the origin
     @param [in,out] ARG0 Pointer to a geometry object (torus)
     @param [in] ARG1 Position vector */
 TgINLINE TgVOID
 FCN_VO(tgGM_TS_Set_Origin)(
-    VEC_OBJ_T(TgTORUS,PCU) NONULL ARG0, VEC_T(1,C) ARG1 );
+    VEC_OBJ_T(TgTORUS,PCU) TgANALYSIS_NO_NULL ARG0, VEC_T(1,C) ARG1 );
 
 /** @brief Set the inner radius
     @param [in,out] ARG0 Pointer to a geometry object (torus)
     @param [in] ARG1 Vector holding the new radius, broadcast across all lanes */
 TgINLINE TgVOID
 FCN_VO(tgGM_TS_Set_Inner_Radius)(
-    VEC_OBJ_T(TgTORUS,PCU) NONULL ARG0, VEC_T(1,C) ARG1 );
+    VEC_OBJ_T(TgTORUS,PCU) TgANALYSIS_NO_NULL ARG0, VEC_T(1,C) ARG1 );
 
 /** @brief Set the outer radius
     @param [in,out] ARG0 Pointer to a geometry object (torus)
     @param [in] ARG1 Vector holding the new radius, broadcast across all lanes */
 TgINLINE TgVOID
 FCN_VO(tgGM_TS_Set_Outer_Radius)(
-    VEC_OBJ_T(TgTORUS,PCU) NONULL ARG0, VEC_T(1,C) ARG1 );
+    VEC_OBJ_T(TgTORUS,PCU) TgANALYSIS_NO_NULL ARG0, VEC_T(1,C) ARG1 );
 
 
 /** @brief Return the origin
@@ -158,28 +158,28 @@ FCN_VO(tgGM_TS_Set_Outer_Radius)(
     @return The origin */
 TgINLINE VEC_T(1)
 FCN_VO(tgGM_TS_Query_Origin)(
-    VEC_OBJ_T(TgTORUS,CPCU) NONULL ARG );
+    VEC_OBJ_T(TgTORUS,CPCU) TgANALYSIS_NO_NULL ARG );
 
 /** @brief Return the normal of the plane
     @param [in] ARG Pointer to a geometry object (torus)
     @return The normal of the plane */
 TgINLINE VEC_T(1)
 FCN_VO(tgGM_TS_Query_Normal)(
-    VEC_OBJ_T(TgTORUS,CPCU) NONULL ARG );
+    VEC_OBJ_T(TgTORUS,CPCU) TgANALYSIS_NO_NULL ARG );
 
 /** @brief Return the inner radius
     @param [in] ARG Pointer to a geometry object (torus)
     @return The inner radius */
 TgINLINE VEC_T(1)
 FCN_VO(tgGM_TS_Query_Inner_Radius)(
-    VEC_OBJ_T(TgTORUS,CPCU) NONULL ARG );
+    VEC_OBJ_T(TgTORUS,CPCU) TgANALYSIS_NO_NULL ARG );
 
 /** @brief Return the outer radius
     @param [in] ARG Pointer to a geometry object (torus)
     @return The outer radius */
 TgINLINE VEC_T(1)
 FCN_VO(tgGM_TS_Query_Outer_Radius)(
-    VEC_OBJ_T(TgTORUS,CPCU) NONULL ARG );
+    VEC_OBJ_T(TgTORUS,CPCU) TgANALYSIS_NO_NULL ARG );
 
 
 /** @} TGS_COMMON_GEOMETRY_TS */

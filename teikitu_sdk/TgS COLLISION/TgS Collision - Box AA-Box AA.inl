@@ -80,9 +80,10 @@ TgINLINE TgBOOL FCN_VO(tgCO_BA_Test_Elem_BA)( VEC_T(1,C) vMin_BA0, VEC_T(1,C) vM
     VEC_T(1,C)                          vX0 = FCN_V(tgMH_MAX)( vMin_BA0, vMin_BA1 );
     VEC_T(1,C)                          vX1 = FCN_V(tgMH_MIN)( vMax_BA0, vMax_BA1 );
     VEC_T(1,C)                          vX2 = FCN_V(tgMH_SUB)( vX0, vX1 );
+    VEC_T(1,C)                          vCMP = FCN_V(tgMH_CMP_GT)( vX2, FCN_V(tgMH_SET1)( TYPE_K(0) ) );
 
     /* Greater than test is used to avoid a false positive due to the w value */
-    return (FCN_V(tgMH_CMP_ANY_TO_BOOL)( FCN_V(tgMH_CMP_GT)( vX2, FCN_V(tgMH_SET1)( TYPE_K(0) ) ) ));
+    return (!FCN_V(tgMH_CMP_ANY_TO_BOOL)( vCMP ));
 }
 
 

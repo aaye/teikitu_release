@@ -28,14 +28,14 @@
     @param [out] OUT Pointer to the geometry object (mesh w/BVT) */
 TgINLINE TgVOID
 FCN_VO(tgGM_MB_Reset)(
-    VEC_OBJ_T(TgMESH_BVT,PCU) NONULL OUT );
+    VEC_OBJ_T(TgMESH_BVT,PCU) TgANALYSIS_NO_NULL OUT );
 
 /** @brief Validate the integrity of the geometry object (mesh w/BVT)
     @param [in] ARG Pointer to a geometry object (mesh w/BVT)
     @return True if the geometry object (mesh w/BVT) is valid and false otherwise */
 TgINLINE TgBOOL
 FCN_VO(tgGM_MB_Is_Valid)(
-    VEC_OBJ_T(TgMESH_BVT,CPCU) NONULL ARG );
+    VEC_OBJ_T(TgMESH_BVT,CPCU) TgANALYSIS_NO_NULL ARG );
 
 /** @brief Determine the point on the geometry object (mesh w/BVT) that is furthest along the direction of ARG1
     @param [in] ARG0 Pointer to a geometry object (mesh w/BVT)
@@ -43,28 +43,28 @@ FCN_VO(tgGM_MB_Is_Valid)(
     @return The point on the geometry object (mesh w/BVT) that is furthest along the direction of ARG1 */
 TgINLINE VEC_T(1)
 FCN_VO(tgGM_MB_Support_Point)(
-    VEC_OBJ_T(TgMESH_BVT,CPCU) NONULL ARG0, VEC_T(1,C) ARG1 );
+    VEC_OBJ_T(TgMESH_BVT,CPCU) TgANALYSIS_NO_NULL ARG0, VEC_T(1,C) ARG1 );
 
 /** @brief Calculate the volume of the geometry object (mesh w/BVT)
     @param [in] ARG Pointer to a geometry object (mesh w/BVT)
     @return The volume of the geometry object (mesh w/BVT) */
 TgINLINE VEC_T(1)
 FCN_VO(tgGM_MB_Volume)(
-    VEC_OBJ_T(TgMESH_BVT,CPCU) NONULL ARG );
+    VEC_OBJ_T(TgMESH_BVT,CPCU) TgANALYSIS_NO_NULL ARG );
 
 /** @brief Calculate the surface area of the geometry object (mesh w/BVT)
     @param [in] ARG Pointer to a geometry object (mesh w/BVT)
     @return The surface area of the geometry object (mesh w/BVT) */
 TgINLINE VEC_T(1)
 FCN_VO(tgGM_MB_Area)(
-    VEC_OBJ_T(TgMESH_BVT,CPCU) NONULL ARG );
+    VEC_OBJ_T(TgMESH_BVT,CPCU) TgANALYSIS_NO_NULL ARG );
 
 /** @brief Calculate the minimum necessary Axis-Aligned Bounding Box to contain the geometry object (mesh w/BVT)
     @param [out] ARG0 Pointer to an axis-aligned bounding box object
     @param [in] ARG1 Pointer to a geometry object (mesh w/BVT) */
 TgINLINE TgVOID
 FCN_VO(tgGM_MB_BA)(
-    VEC_OBJ_T(TgBOXAA,PCU) NONULL ARG0, VEC_OBJ_T(TgMESH_BVT,CPCU) NONULL ARG1 );
+    VEC_OBJ_T(TgBOXAA,PCU) TgANALYSIS_NO_NULL ARG0, VEC_OBJ_T(TgMESH_BVT,CPCU) TgANALYSIS_NO_NULL ARG1 );
 
 /** @brief Calculate the minimum necessary Axis-Aligned Bounding Box to contain the swept geometry object (mesh w/BVT)
     @param [out] ARG0 Pointer to an axis-aligned bounding box object
@@ -72,7 +72,7 @@ FCN_VO(tgGM_MB_BA)(
     @param [in] ARG2 Pointer to a vector describing the swept direction and magnitude */
 TgINLINE TgVOID
 FCN_VO(tgGM_MB_Sweep_BA)(
-    VEC_OBJ_T(TgBOXAA,PCU) NONULL ARG0, VEC_OBJ_T(TgMESH_BVT,CPCU) NONULL ARG1, VEC_T(1,C) ARG2 );
+    VEC_OBJ_T(TgBOXAA,PCU) TgANALYSIS_NO_NULL ARG0, VEC_OBJ_T(TgMESH_BVT,CPCU) TgANALYSIS_NO_NULL ARG1, VEC_T(1,C) ARG2 );
 
 /** @brief Project the geometry object (mesh w/BVT) along the direction vector
     @param [out] OUT0 Pointer to a scalar value to hold the lower bound of the projection
@@ -81,7 +81,7 @@ FCN_VO(tgGM_MB_Sweep_BA)(
     @param [in] ARG3 Direction vector */
 TgINLINE TgVOID
 FCN_VO(tgGM_MB_Project)(
-    VEC_T(1,PCU) NONULL ARG0, VEC_T(1,PCU) NONULL ARG1, VEC_OBJ_T(TgMESH_BVT,CPCU) NONULL ARG2,
+    VEC_T(1,PCU) TgANALYSIS_NO_NULL ARG0, VEC_T(1,PCU) TgANALYSIS_NO_NULL ARG1, VEC_OBJ_T(TgMESH_BVT,CPCU) TgANALYSIS_NO_NULL ARG2,
                             VEC_T(1,C) ARG3 );
 
 /** @brief Test to see if a point is either on or in the geometry object (mesh w/BVT)
@@ -90,14 +90,14 @@ FCN_VO(tgGM_MB_Project)(
     @return True if the position is either on or in the geometry object (mesh w/BVT) and false otherwise */
 TgINLINE TgBOOL
 FCN_VO(tgGM_MB_Is_Contained)(
-    VEC_OBJ_T(TgMESH_BVT,CPCU) NONULL ARG0, VEC_T(1,C) ARG1 );
+    VEC_OBJ_T(TgMESH_BVT,CPCU) TgANALYSIS_NO_NULL ARG0, VEC_T(1,C) ARG1 );
 
 /** @brief Transform the geometry object (mesh w/BVT) at ARG0 by the matrix at ARG1
     @param [in,out] ARG0 Pointer to a geometry object (mesh w/BVT)
     @param [in] ARG1 Column-Major matrix (3x4) containing rotation and translation */
 TgINLINE TgVOID
 FCN_VO(tgGM_MB_TX)(
-    VEC_OBJ_T(TgMESH_BVT,PCU) NONULL ARG0, VEC_T(3,CPCU) NONULL ARG1 );
+    VEC_OBJ_T(TgMESH_BVT,PCU) TgANALYSIS_NO_NULL ARG0, VEC_T(3,CPCU) TgANALYSIS_NO_NULL ARG1 );
 
 /** @brief Transform the geometry object (mesh w/BVT) at ARG1 by the matrix at ARG2 and store it in ARG0
     @param [out] ARG0 Pointer to a geometry object (mesh w/BVT)
@@ -105,7 +105,7 @@ FCN_VO(tgGM_MB_TX)(
     @param [in] ARG2 Column-Major matrix (3x4) containing rotation and translation */
 TgINLINE TgVOID
 FCN_VO(tgGM_MB_Copy_TX)(
-    VEC_OBJ_T(TgMESH_BVT,PCU) NONULL ARG0, VEC_OBJ_T(TgMESH_BVT,CPCU) NONULL ARG1, VEC_T(3,CPCU) NONULL ARG2 );
+    VEC_OBJ_T(TgMESH_BVT,PCU) TgANALYSIS_NO_NULL ARG0, VEC_OBJ_T(TgMESH_BVT,CPCU) TgANALYSIS_NO_NULL ARG1, VEC_T(3,CPCU) TgANALYSIS_NO_NULL ARG2 );
 
 
 /** @brief Initialize a new geometry object (mesh w/BVT) with the function arguments
@@ -113,7 +113,7 @@ FCN_VO(tgGM_MB_Copy_TX)(
     @param [in] ARG1 Pointer to a geometry object (mesh) */
 TgINLINE TgVOID
 FCN_VO(tgGM_MB_Init_MS)(
-    VEC_OBJ_T(TgMESH_BVT,PCU) NONULL ARG0, VEC_OBJ_T(TgMESH_SIMPLE,CPCU) NONULL ARG1 );
+    VEC_OBJ_T(TgMESH_BVT,PCU) TgANALYSIS_NO_NULL ARG0, VEC_OBJ_T(TgMESH_SIMPLE,CPCU) TgANALYSIS_NO_NULL ARG1 );
 
 /** @brief Initialize a new geometry object (mesh w/BVT) with the function arguments
     @param [out] ARG0 Pointer to a geometry object (mesh w/BVT)
@@ -121,7 +121,7 @@ FCN_VO(tgGM_MB_Init_MS)(
     @param [in] ARG2 Column-Major matrix (3x4) containing rotation and translation */
 TgINLINE TgVOID
 FCN_VO(tgGM_MB_Init_MS_TX)(
-    VEC_OBJ_T(TgMESH_BVT,PCU) NONULL ARG0, VEC_OBJ_T(TgMESH_SIMPLE,CPCU) NONULL ARG1, VEC_T(3,CPCU) NONULL ARG2 );
+    VEC_OBJ_T(TgMESH_BVT,PCU) TgANALYSIS_NO_NULL ARG0, VEC_OBJ_T(TgMESH_SIMPLE,CPCU) TgANALYSIS_NO_NULL ARG1, VEC_T(3,CPCU) TgANALYSIS_NO_NULL ARG2 );
 
 
 /** @brief Initialize a new geometry object (mesh w/BVT) with the function arguments
@@ -137,7 +137,7 @@ FCN_VO(tgGM_MB_Init)(
     @param [in] ARG1 Pointer to a geometry object (mesh w/BVT) */
 TgINLINE TgVOID
 FCN_VO(tgGM_MB_Copy)(
-    VEC_OBJ_T(TgMESH_BVT,PCU) NONULL ARG0, VEC_OBJ_T(TgMESH_BVT,CPCU) NONULL ARG1 );
+    VEC_OBJ_T(TgMESH_BVT,PCU) TgANALYSIS_NO_NULL ARG0, VEC_OBJ_T(TgMESH_BVT,CPCU) TgANALYSIS_NO_NULL ARG1 );
 
 
 /** @brief Return the internal index array
@@ -145,28 +145,28 @@ FCN_VO(tgGM_MB_Copy)(
     @return The internal index array */
 TgINLINE TgUINT_E16_CP
 FCN_VO(tgGM_MB_Query_Indx_List)(
-    VEC_OBJ_T(TgMESH_BVT,CPCU) NONULL ARG );
+    VEC_OBJ_T(TgMESH_BVT,CPCU) TgANALYSIS_NO_NULL ARG );
 
 /** @brief Return the internal vertex (position) array
     @param [in] ARG Pointer to the geometry object (mesh w/BVT)
     @return The internal vertex (position) array */
 TgINLINE VEC_T(1,CP)
 FCN_VO(tgGM_MB_Query_Vert_List)(
-    VEC_OBJ_T(TgMESH_BVT,CPCU) NONULL ARG );
+    VEC_OBJ_T(TgMESH_BVT,CPCU) TgANALYSIS_NO_NULL ARG );
 
 /** @brief Return the internal index count
     @param [in] ARG Pointer to the geometry object (mesh w/BVT)
     @return The internal index count */
 TgINLINE TgRSIZE
 FCN_VO(tgGM_MB_Query_Indx_Count)(
-    VEC_OBJ_T(TgMESH_BVT,CPCU) NONULL ARG );
+    VEC_OBJ_T(TgMESH_BVT,CPCU) TgANALYSIS_NO_NULL ARG );
 
 /** @brief Return the internal vertex count
     @param [in] ARG Pointer to the geometry object (mesh w/BVT)
     @return The internal vertex count */
 TgINLINE TgRSIZE
 FCN_VO(tgGM_MB_Query_Vert_Count)(
-    VEC_OBJ_T(TgMESH_BVT,CPCU) NONULL ARG );
+    VEC_OBJ_T(TgMESH_BVT,CPCU) TgANALYSIS_NO_NULL ARG );
 
 
 /** @} TGS_COMMON_GEOMETRY_MB */

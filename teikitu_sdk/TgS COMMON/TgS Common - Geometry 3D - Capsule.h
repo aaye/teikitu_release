@@ -30,28 +30,28 @@
     @return The point on the geometry object (capsule) that is furthest along the direction of ARG1 */
 TgINLINE VEC_T(1)
 FCN_VO(tgGM_CP_Support_Point)(
-    VEC_OBJ_T(TgTUBE,CPCU) NONULL ARG0, VEC_T(1,C) ARG1 );
+    VEC_OBJ_T(TgTUBE,CPCU) TgANALYSIS_NO_NULL ARG0, VEC_T(1,C) ARG1 );
 
 /** @brief Calculate the volume of the geometry object (capsule)
     @param [in] ARG Pointer to a geometry object (capsule)
     @return The volume of the geometry object (capsule) */
 TgINLINE VEC_T(1)
 FCN_VO(tgGM_CP_Volume)(
-    VEC_OBJ_T(TgTUBE,CPCU) NONULL ARG );
+    VEC_OBJ_T(TgTUBE,CPCU) TgANALYSIS_NO_NULL ARG );
 
 /** @brief Calculate the surface area of the geometry object (capsule)
     @param [in] ARG Pointer to a geometry object (capsule)
     @return The surface area of the geometry object (capsule) */
 TgINLINE VEC_T(1)
 FCN_VO(tgGM_CP_Area)(
-    VEC_OBJ_T(TgTUBE,CPCU) NONULL ARG );
+    VEC_OBJ_T(TgTUBE,CPCU) TgANALYSIS_NO_NULL ARG );
 
 /** @brief Calculate the minimum necessary Axis-Aligned Bounding Box to contain the geometry object (capsule)
     @param [out] ARG0 Pointer to an axis-aligned bounding box object
     @param [in] ARG1 Pointer to a geometry object (capsule) */
 TgINLINE TgVOID
 FCN_VO(tgGM_CP_BA)(
-    VEC_OBJ_T(TgBOXAA,PCU) NONULL ARG0, VEC_OBJ_T(TgTUBE,CPCU) NONULL ARG1 );
+    VEC_OBJ_T(TgBOXAA,PCU) TgANALYSIS_NO_NULL ARG0, VEC_OBJ_T(TgTUBE,CPCU) TgANALYSIS_NO_NULL ARG1 );
 
 /** @brief Calculate the minimum necessary Axis-Aligned Bounding Box to contain the swept geometry object (capsule)
     @param [out] ARG0 Pointer to an axis-aligned bounding box object
@@ -59,7 +59,7 @@ FCN_VO(tgGM_CP_BA)(
     @param [in] ARG2 Pointer to a vector describing the swept direction and magnitude */
 TgINLINE TgVOID
 FCN_VO(tgGM_CP_Sweep_BA)(
-    VEC_OBJ_T(TgBOXAA,PCU) NONULL ARG0, VEC_OBJ_T(TgTUBE,CPCU) NONULL ARG1, VEC_T(1,C) ARG2 );
+    VEC_OBJ_T(TgBOXAA,PCU) TgANALYSIS_NO_NULL ARG0, VEC_OBJ_T(TgTUBE,CPCU) TgANALYSIS_NO_NULL ARG1, VEC_T(1,C) ARG2 );
 
 /** @brief Project the geometry object (capsule) along the direction vector
     @param [out] OUT0 Pointer to a scalar value to hold the lower bound of the projection
@@ -68,7 +68,7 @@ FCN_VO(tgGM_CP_Sweep_BA)(
     @param [in] ARG3 Direction vector */
 TgINLINE TgVOID
 FCN_VO(tgGM_CP_Project)(
-    VEC_T(1,PCU) NONULL ARG0, VEC_T(1,PCU) NONULL ARG1, VEC_OBJ_T(TgTUBE,CPCU) NONULL ARG2, VEC_T(1,C) ARG3 );
+    VEC_T(1,PCU) TgANALYSIS_NO_NULL ARG0, VEC_T(1,PCU) TgANALYSIS_NO_NULL ARG1, VEC_OBJ_T(TgTUBE,CPCU) TgANALYSIS_NO_NULL ARG2, VEC_T(1,C) ARG3 );
 
 /** @brief Test to see if a point is either on or in the geometry object (capsule)
     @param [in] ARG0 Pointer to a geometry object (capsule)
@@ -76,7 +76,7 @@ FCN_VO(tgGM_CP_Project)(
     @return True if the position is either on or in the geometry object (capsule) and false otherwise */
 TgINLINE TgBOOL
 FCN_VO(tgGM_CP_Is_Contained)(
-    VEC_OBJ_T(TgTUBE,CPCU) NONULL ARG0, VEC_T(1,C) ARG1 );
+    VEC_OBJ_T(TgTUBE,CPCU) TgANALYSIS_NO_NULL ARG0, VEC_T(1,C) ARG1 );
 
 
 /** @} TGS_COMMON_GEOMETRY_CP */

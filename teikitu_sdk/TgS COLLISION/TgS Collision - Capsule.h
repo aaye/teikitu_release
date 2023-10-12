@@ -833,17 +833,28 @@ FCN_VO(tgCO_CP_Test_PN)(
     VEC_OBJ_T(TgTUBE,CPC) ARG0, VEC_OBJ_T(TgPLANE,CPC) ARG1 );
 
 
-/** @brief Update the collision packet with point(s) of penetration between a capsule and a plane.
+/** @brief Update the collision packet with point(s) of penetration between a capsule and a plane. @return Result Code.
     @param [in,out] OUT0 Pointer to an object holding parameters, existing contact points and updated due to new contact points.
                          Contact points are generated on the surface of ARG2.
                          Contact normals are the direction for the object at ARG2 to move to achieve separation.
                          Depth values are measured from the surface of the object at ARG1 to the contact point.
     @param [in] ARG1 Pointer to a plane object.
-    @param [in] ARG2 Pointer to tube object, interpreted as a capsule.
-    @return Result Code. */
+    @param [in] ARG2 Pointer to tube object, interpreted as a capsule. */
 TgEXTN TgRESULT
 FCN_VO(tgCO_PN_Penetrate_CP)(
     VEC_OBJ_T(STg2_CO_Packet,PC) OUT0, VEC_OBJ_T(TgPLANE,CPC) ARG1, VEC_OBJ_T(TgTUBE,CPC) ARG2 );
+
+
+/** @brief Update the collision packet with point(s) of penetration between a capsule and a plane. @return Result Code.
+    @param [in,out] OUT0 Pointer to an object holding parameters, existing contact points and updated due to new contact points.
+                         Contact points are generated on the surface of ARG2.
+                         Contact normals are the direction for the object at ARG2 to move to achieve separation.
+                         Depth values are measured from the surface of the object at ARG1 to the contact point.
+    @param [in] ARG1 Pointer to tube object, interpreted as a capsule.
+    @param [in] ARG2 Pointer to a plane object. */
+TgEXTN TgRESULT
+FCN_VO(tgCO_CP_Penetrate_PN)(
+    VEC_OBJ_T(STg2_CO_Packet,PC) OUT0, VEC_OBJ_T(TgTUBE,CPC) ARG1, VEC_OBJ_T(TgPLANE,CPC) ARG2 );
 
 
 /** @brief Update the collision packet with point(s) of contact between a swept capsule and a plane.

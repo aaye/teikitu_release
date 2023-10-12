@@ -84,7 +84,7 @@ TgVOID tgPH_Form_Init_Do_Command( TgVOID_CPC pCommand_Buffer, TgRSIZE_C nbyComma
 
     /* Initialize to default values. */
 
-    psFM->m_uiCategory = 1ULL;
+    psFM->m_uiCategory = 0ULL;
     psFM->m_uiCollide = ~0ULL;
 
     psFM->m_vPos_O2B = KTgUNIT_W_F32_04_1;
@@ -98,7 +98,6 @@ TgVOID tgPH_Form_Init_Do_Command( TgVOID_CPC pCommand_Buffer, TgRSIZE_C nbyComma
     tgGM_BA_Reset_F32_04( &psFM->m_sBA_W );
 
     tgGM_BA_Reset_F32_04( &psFM->m_sBA_O );
-    psFM->m_bEnabled = true;
 
     psFM->m_uiUsed_Index = TgSTD_ATOMIC(fetch_add_explicit)( g_axnuiPH_Form_Total__Used + psFM->m_tiForm.m_uiWorld, 1, TgSTD_MEMORY_ORDER(relaxed) );
     g_aapsPH_Form_Used[psFM->m_tiForm.m_uiWorld][psFM->m_uiUsed_Index] = psFM;
@@ -140,24 +139,10 @@ TgVOID tgPH_Form_Reset_Do_Command( TgVOID_CPC pCommand_Buffer, TgRSIZE_C nbyComm
 
 /* ---- tgPH_Form_Set_Collision_Primitive_Command -------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgWARN_DISABLE_PUSH(,cast-function-type-strict)
-PHYSICS_FUNCTION_DEFER_DEFINITION__COPY(Form_Set_Collision_Primitive_Command, Form, FORM, STg2_PH_Form_Collision_Data, UNUSED,
+PHYSICS_FUNCTION_DEFER_DEFINITION__COPY(Form_Set_Collision_Primitive_Command, Form, FORM, STg2_PH_Form_Collision_Data,
 
-    psForm->m_enPM = uCMD.pCommand->Val.m_enPM;
-    tgMM_Copy( &psForm->m_uPM, sizeof(psForm->m_uPM), &uCMD.pCommand->Val.m_uPM, sizeof(psForm->m_uPM) );
-    tgPH_Form_Init_AABB( psForm );
-
-    TgWARN_DISABLE_PUSH(4061 4062,switch-enum)
-    switch (psForm->m_enPM) {
-    case ETgPM_PN: psForm->m_pfnPM_Copy_TX = (TgVOID (*)( TgVOID_PCU, TgVOID_CPCU, TgVOID_CPCU ))tgGM_PN_Copy_TX_F32_04; break;
-    case ETgPM_RT: psForm->m_pfnPM_Copy_TX = (TgVOID (*)( TgVOID_PCU, TgVOID_CPCU, TgVOID_CPCU ))tgGM_RT_Copy_TX_F32_04; break;
-    case ETgPM_SP: psForm->m_pfnPM_Copy_TX = (TgVOID (*)( TgVOID_PCU, TgVOID_CPCU, TgVOID_CPCU ))tgGM_SP_Copy_TX_F32_04; break;
-    case ETgPM_BX: psForm->m_pfnPM_Copy_TX = (TgVOID (*)( TgVOID_PCU, TgVOID_CPCU, TgVOID_CPCU ))tgGM_BX_Copy_TX_F32_04; break;
-    default: break;
-    }
-    TgWARN_DISABLE_POP()
+    tgPH_Form_Set_Collision_Primitive_IMM( psForm, uCMD.pCommand->Val.m_enPM, &uCMD.pCommand->Val.m_uPM );
 )
-TgWARN_DISABLE_POP()
 
 
 
@@ -172,13 +157,16 @@ TgRESULT tgPH_Form_Set_Collision_Primitive( TgPH_FORM_ID_C tiFM0, ETgPM_SHORT_C 
 {
     STg2_PH_Form_Collision_Data         sData;
 
+    /* Fail out any of the primitives we do not support. */
     TgWARN_DISABLE_PUSH(4061 4062,switch-enum)
     switch (enPM) {
     case ETgPM_PN: break;
     case ETgPM_RT: break;
     case ETgPM_SP: break;
     case ETgPM_BX: break;
-    default: return (KTgE_FAIL);
+    case ETgPM_CP: break;
+    case ETgPM_CY: break;
+    default: TgDIAG(false); return (KTgE_FAIL);
     }
     TgWARN_DISABLE_POP()
 
@@ -196,26 +184,41 @@ TgRESULT tgPH_Form_Set_Collision_Primitive( TgPH_FORM_ID_C tiFM0, ETgPM_SHORT_C 
 /*  Public Macro Functions                                                                                                                                                         */
 /* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.--.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-. */
 
-PHYSICS_FUNCTION_ACCESSOR_DEFINITION__SET_DEFER__ASSIGN(Form,FORM,Category,TgUINT_E64,m_uiCategory)
-PHYSICS_FUNCTION_ACCESSOR_DEFINITION__SET_DEFER__ASSIGN(Form,FORM,Collide,TgUINT_E64,m_uiCollide)
+PHYSICS_FUNCTION_QUERY_DEFINITION(Form_Query_World_Collision,Form,FORM,World_Collision,TgBOOL,*pVal = (psForm->m_uiCategory & (1ULL << KTgPH_CATEGORY_BIT__ENABLE_COLLSION));)
+PHYSICS_FUNCTION_DEFER_DEFINITION__ASSIGN(Form_Set_World_Collision,Form,FORM,TgBOOL,
+    psForm->m_uiCategory |= uCMD.pCommand->Val ? (1ULL << KTgPH_CATEGORY_BIT__ENABLE_COLLSION) : 0;
+)
+PHYSICS_FUNCTION_QUERY_DEFINITION__ASSIGN(Form,FORM,Category,TgUINT_E64,m_uiCategory)
+PHYSICS_FUNCTION_DEFER_DEFINITION__ASSIGN(Form_Set_Category,Form,FORM,TgUINT_E64,
+    psForm->m_uiCategory = (uCMD.pCommand->Val & ~(KTgPH_CATEGORY_BIT_MASK__RESERVED)) | (psForm->m_uiCategory & (KTgPH_CATEGORY_BIT_MASK__RESERVED));
+)
+PHYSICS_FUNCTION_QUERY_DEFINITION__ASSIGN(Form,FORM,Collide,TgUINT_E64,m_uiCollide)
+PHYSICS_FUNCTION_DEFER_DEFINITION__ASSIGN(Form_Set_Collide,Form,FORM,TgUINT_E64,
+    psForm->m_uiCollide = (uCMD.pCommand->Val & ~(KTgPA_CATEGORY_BIT_MASK__RESERVED)) | (psForm->m_uiCollide & (KTgPA_CATEGORY_BIT_MASK__RESERVED));
+)
 PHYSICS_FUNCTION_ACCESSOR_DEFINITION__ASSIGN(Form,FORM,Material_ID,TgPH_MATERIAL_ID,m_tiMaterial)
 PHYSICS_FUNCTION_QUERY_DEFINITION__ASSIGN(Form,FORM,Primitive,ETgPM_SHORT,m_enPM)
 PHYSICS_FUNCTION_QUERY_DEFINITION__COPY(Form,FORM,Primitive_Data,UTg2_CO_Primitive_F32_04,m_uPM)
 PHYSICS_FUNCTION_QUERY_DEFINITION__ASSIGN(Form,FORM,Body_ID,TgPH_BODY_ID,m_tiBY)
 PHYSICS_FUNCTION_QUERY_DEFINITION__ASSIGN(Form,FORM,Next_Form_ID,TgPH_FORM_ID,m_tiNext)
-PHYSICS_FUNCTION_ACCESSOR_DEFINITION__SET_DEFER__ASSIGN(Form,FORM,Sweep_ID,TgPNS_OBJECT_ID,m_tiPnS)
-
-PHYSICS_FUNCTION_DEFER_DEFINITION__ASSIGN(Form_Set_Position_B,Form,FORM,TgVEC_F32_04_1,m_vPos_O2B,
+PHYSICS_FUNCTION_ACCESSOR_DEFINITION__SET_DEFER__ASSIGN(Form,FORM,Sweep_ID,TgPARTITION_OBJECT_ID,m_tiPnS)
+PHYSICS_FUNCTION_DEFER_DEFINITION__ASSIGN(Form_Set_Position_B,Form,FORM,TgVEC_F32_04_1,
     psForm->m_vPos_O2B = tgMH_Init_Point_F32_04_1( uCMD.pCommand->Val );
-    tgMH_Init_Reference_Frame_From_Scale_Quaternion_Position_F32_04_3( &psForm->m_mLocal_O2B, psForm->m_vScale, psForm->m_vRot_O2B, psForm->m_vPos_O2B ); )
+    tgMH_Init_Reference_Frame_From_Scale_Quaternion_Position_F32_04_3( &psForm->m_mLocal_O2B, psForm->m_vScale, psForm->m_vRot_O2B, psForm->m_vPos_O2B );
+    tgPH_Form_Update__WRITE( psForm, KTgID__INVALID_VALUE == psForm->m_tiBY.m_uiKI ? nullptr : tgPH_Body_Get_Body_From_ID( psForm->m_tiBY ), true );
+)
 PHYSICS_FUNCTION_QUERY_DEFINITION__ASSIGN(Form,FORM,Position_B,TgVEC_F32_04_1,m_vPos_O2B)
-PHYSICS_FUNCTION_DEFER_DEFINITION__ASSIGN(Form_Set_Rotation_B,Form,FORM,TgVEC_F32_04_1,m_vRot_O2B,
+PHYSICS_FUNCTION_DEFER_DEFINITION__ASSIGN(Form_Set_Rotation_B,Form,FORM,TgVEC_F32_04_1,
     psForm->m_vRot_O2B = uCMD.pCommand->Val;
-    tgMH_Init_Reference_Frame_From_Scale_Quaternion_Position_F32_04_3( &psForm->m_mLocal_O2B, psForm->m_vScale, psForm->m_vRot_O2B, psForm->m_vPos_O2B ); )
+    tgMH_Init_Reference_Frame_From_Scale_Quaternion_Position_F32_04_3( &psForm->m_mLocal_O2B, psForm->m_vScale, psForm->m_vRot_O2B, psForm->m_vPos_O2B );
+    tgPH_Form_Update__WRITE( psForm, KTgID__INVALID_VALUE == psForm->m_tiBY.m_uiKI ? nullptr : tgPH_Body_Get_Body_From_ID( psForm->m_tiBY ), true );
+)
 PHYSICS_FUNCTION_QUERY_DEFINITION__ASSIGN(Form,FORM,Rotation_B,TgVEC_F32_04_1,m_vRot_O2B)
-PHYSICS_FUNCTION_DEFER_DEFINITION__ASSIGN(Form_Set_Scale,Form,FORM,TgVEC_F32_04_1,m_vScale,
+PHYSICS_FUNCTION_DEFER_DEFINITION__ASSIGN(Form_Set_Scale,Form,FORM,TgVEC_F32_04_1,
     psForm->m_vScale = tgMH_Init_Vector_F32_04_1( uCMD.pCommand->Val );
-    tgMH_Init_Reference_Frame_From_Scale_Quaternion_Position_F32_04_3( &psForm->m_mLocal_O2B, psForm->m_vScale, psForm->m_vRot_O2B, psForm->m_vPos_O2B ); )
+    tgMH_Init_Reference_Frame_From_Scale_Quaternion_Position_F32_04_3( &psForm->m_mLocal_O2B, psForm->m_vScale, psForm->m_vRot_O2B, psForm->m_vPos_O2B );
+    tgPH_Form_Update__WRITE( psForm, KTgID__INVALID_VALUE == psForm->m_tiBY.m_uiKI ? nullptr : tgPH_Body_Get_Body_From_ID( psForm->m_tiBY ), true );
+)
 PHYSICS_FUNCTION_QUERY_DEFINITION__ASSIGN(Form,FORM,Scale,TgVEC_F32_04_1,m_vScale)
 PHYSICS_FUNCTION_QUERY_DEFINITION__COPY(Form,FORM,Final_Transform_B,TgVEC_F32_04_3,m_mLocal_O2B)
 PHYSICS_FUNCTION_QUERY_DEFINITION__COPY(Form,FORM,AABB_O,TgBOXAA_F32_04,m_sBA_O)
@@ -225,7 +228,6 @@ PHYSICS_FUNCTION_QUERY_DEFINITION__COPY(Form,FORM,Final_Transform_W,TgVEC_F32_04
 PHYSICS_FUNCTION_QUERY_DEFINITION__COPY(Form,FORM,AABB_W,TgBOXAA_F32_04,m_sBA_W)
 
 PHYSICS_FUNCTION_ACCESSOR_DEFINITION__ASSIGN(Form,FORM,Colour,TgVEC_F32_04_1,m_vDebug_Colour)
-PHYSICS_FUNCTION_ACCESSOR_DEFINITION__ASSIGN(Form,FORM,Enabled,TgBOOL,m_bEnabled)
 
 
 
@@ -250,6 +252,14 @@ TgVOID tgPH_Form_Reset_IMM( TgPH_FORM_ID_C tiFM )
         return;
     };
 
+    if (KTgID__INVALID_VALUE != psFM->m_tiPnS.m_uiKI)
+    {
+        STg2_PH_World_CPC                   psWorld = g_asPH_World + psFM->m_tiForm.m_uiWorld;
+
+        tgPA_Graph_Remove_Object( psWorld->m_tiPA_Graph, psFM->m_tiPnS );
+        psFM->m_tiPnS.m_uiKI = KTgID__INVALID_VALUE;
+    };
+
     /* Reset the data to zero or its equivalents and return it to the free stack. */
 
     uiIndex = TgSTD_ATOMIC(fetch_sub_explicit)( g_axnuiPH_Form_Total__Used + tiFM.m_uiWorld, 1, TgSTD_MEMORY_ORDER(relaxed) );
@@ -262,18 +272,50 @@ TgVOID tgPH_Form_Reset_IMM( TgPH_FORM_ID_C tiFM )
 }
 
 
-/* ---- tgPH_Form_Query_Support_Point -------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ---- tgPH_Form_Set_Collision_Primitive_IMM ---------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgRESULT tgPH_Form_Query_Support_Point( TgVEC_F32_04_1_PC pvPoint, STg2_PH_Form_CPC psFM, TgVEC_F32_04_1_C vDN )
+TgVOID tgPH_Form_Set_Collision_Primitive_IMM( STg2_PH_Form_PC psFM, ETgPM_SHORT_C enPM, UTg2_CO_Primitive_F32_04_CPC puPM )
 {
+    psFM->m_enPM = enPM;
+    tgMM_Copy( &psFM->m_uPM, sizeof(psFM->m_uPM), puPM, sizeof(psFM->m_uPM) );
+    tgPH_Form_Init_AABB( psFM );
+
+    TgWARN_DISABLE_PUSH(,cast-function-type-strict)
     TgWARN_DISABLE_PUSH(4061 4062,switch-enum)
     switch (psFM->m_enPM) {
-    case ETgPM_PN: return KTgE_FAIL;
-    case ETgPM_RT: *pvPoint = tgGM_RT_Support_Point_F32_04( &psFM->m_uPM.m_sRT, vDN ); return KTgS_OK;
-    case ETgPM_SP: *pvPoint = tgGM_SP_Support_Point_F32_04( &psFM->m_uPM.m_sSP, vDN ); return KTgS_OK;
-    case ETgPM_BX: *pvPoint = tgGM_BX_Support_Point_F32_04( &psFM->m_uPM.m_sBX, vDN ); return KTgS_OK;
-    default: return (KTgE_FAIL);
+    case ETgPM_PN:
+        psFM->m_pfnPM_Copy_TX = (TgVOID (*)( TgVOID_PCU, TgVOID_CPCU, TgVOID_CPCU ))tgGM_PN_Copy_TX_F32_04;
+        psFM->m_pfnPM_Sweep_BA = nullptr;
+        psFM->m_pfnPM_Support_Point = nullptr;
+        break;
+    case ETgPM_RT:
+        psFM->m_pfnPM_Copy_TX = (TgVOID (*)( TgVOID_PCU, TgVOID_CPCU, TgVOID_CPCU ))tgGM_RT_Copy_TX_F32_04;
+        psFM->m_pfnPM_Sweep_BA = (TgVOID (*)( TgVOID_PCU, TgVOID_CPCU, TgVEC_F32_04_1_C ))tgGM_RT_Sweep_BA_F32_04;
+        psFM->m_pfnPM_Support_Point = (TgVEC_F32_04_1 (*)( TgVOID_CPCU, TgVEC_F32_04_1_C ))tgGM_RT_Support_Point_F32_04;
+        break;
+    case ETgPM_SP:
+        psFM->m_pfnPM_Copy_TX = (TgVOID (*)( TgVOID_PCU, TgVOID_CPCU, TgVOID_CPCU ))tgGM_SP_Copy_TX_F32_04;
+        psFM->m_pfnPM_Sweep_BA = (TgVOID (*)( TgVOID_PCU, TgVOID_CPCU, TgVEC_F32_04_1_C ))tgGM_SP_Sweep_BA_F32_04;
+        psFM->m_pfnPM_Support_Point = (TgVEC_F32_04_1 (*)( TgVOID_CPCU, TgVEC_F32_04_1_C ))tgGM_SP_Support_Point_F32_04;
+        break;
+    case ETgPM_BX:
+        psFM->m_pfnPM_Copy_TX = (TgVOID (*)( TgVOID_PCU, TgVOID_CPCU, TgVOID_CPCU ))tgGM_BX_Copy_TX_F32_04;
+        psFM->m_pfnPM_Sweep_BA = (TgVOID (*)( TgVOID_PCU, TgVOID_CPCU, TgVEC_F32_04_1_C ))tgGM_BX_Sweep_BA_F32_04;
+        psFM->m_pfnPM_Support_Point = (TgVEC_F32_04_1 (*)( TgVOID_CPCU, TgVEC_F32_04_1_C ))tgGM_BX_Support_Point_F32_04;
+        break;
+    case ETgPM_CP:
+        psFM->m_pfnPM_Copy_TX = (TgVOID (*)( TgVOID_PCU, TgVOID_CPCU, TgVOID_CPCU ))tgGM_TB_Copy_TX_F32_04;
+        psFM->m_pfnPM_Sweep_BA = (TgVOID (*)( TgVOID_PCU, TgVOID_CPCU, TgVEC_F32_04_1_C ))tgGM_CP_Sweep_BA_F32_04;
+        psFM->m_pfnPM_Support_Point = (TgVEC_F32_04_1 (*)( TgVOID_CPCU, TgVEC_F32_04_1_C ))tgGM_CP_Support_Point_F32_04;
+        break;
+    case ETgPM_CY:
+        psFM->m_pfnPM_Copy_TX = (TgVOID (*)( TgVOID_PCU, TgVOID_CPCU, TgVOID_CPCU ))tgGM_TB_Copy_TX_F32_04;
+        psFM->m_pfnPM_Sweep_BA = (TgVOID (*)( TgVOID_PCU, TgVOID_CPCU, TgVEC_F32_04_1_C ))tgGM_CY_Sweep_BA_F32_04;
+        psFM->m_pfnPM_Support_Point = (TgVEC_F32_04_1 (*)( TgVOID_CPCU, TgVEC_F32_04_1_C ))tgGM_CY_Support_Point_F32_04;
+        break;
+    default: break;
     }
+    TgWARN_DISABLE_POP()
     TgWARN_DISABLE_POP()
 }
 
@@ -327,9 +369,13 @@ TgVOID tgPH_Form_Init_AABB( STg2_PH_Form_PC psFM )
     case ETgPM_RT: tgGM_RT_BA_F32_04(&psFM->m_sBA_O,&psFM->m_uPM.m_sRT); break;
     case ETgPM_SP: tgGM_SP_BA_F32_04(&psFM->m_sBA_O,&psFM->m_uPM.m_sSP); break;
     case ETgPM_BX: tgGM_BX_BA_F32_04(&psFM->m_sBA_O,&psFM->m_uPM.m_sBX); break;
-    default: tgGM_BA_Reset_F32_04( &psFM->m_sBA_O ); break;
+    case ETgPM_CP: tgGM_CP_BA_F32_04(&psFM->m_sBA_O,&psFM->m_uPM.m_sTB); break;
+    case ETgPM_CY: tgGM_CY_BA_F32_04(&psFM->m_sBA_O,&psFM->m_uPM.m_sTB); break;
+    default: TgDIAG(false); tgGM_BA_Reset_F32_04( &psFM->m_sBA_O ); break;
     }
     TgWARN_DISABLE_POP()
+
+    tgGM_BA_Copy_F32_04( &psFM->m_sBA_W, &psFM->m_sBA_O );
 }
 
 

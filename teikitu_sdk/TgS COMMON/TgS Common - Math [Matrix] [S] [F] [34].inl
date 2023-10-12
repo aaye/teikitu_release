@@ -475,7 +475,7 @@ TgINLINE VEC_S_T(1) FCN_M(tgMH_Query_Axis_3_S)( MAT_S_T(CPCU) pmM0 )
 
 /* ---- FCN_M(tgMH_Query_Reference_Frame_S) -------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID FCN_M(tgMH_Query_Reference_Frame_S)( VEC_S_T(1,PCU) pvA0, VEC_S_T(1,PCU) pvA1, VEC_S_T(1,PCU) pvA2, VEC_S_T(1,PCU) pvC0, MAT_S_T(CPCU) pmM0 )
+TgINLINE TgRESULT FCN_M(tgMH_Query_Reference_Frame_S)( VEC_S_T(1,PCU) pvA0, VEC_S_T(1,PCU) pvA1, VEC_S_T(1,PCU) pvA2, VEC_S_T(1,PCU) pvC0, MAT_S_T(CPCU) pmM0 )
 {
     VEC_S_T(4) mM1 = {.m_avCol = { pmM0->m_avCol[0], pmM0->m_avCol[1], pmM0->m_avCol[2], VEC_K(KTgUNIT_W_S) } };
     VEC_S_T(4) mM2;
@@ -486,6 +486,8 @@ TgINLINE TgVOID FCN_M(tgMH_Query_Reference_Frame_S)( VEC_S_T(1,PCU) pvA0, VEC_S_
     *pvA1 = mM2.m_avCol[1];
     *pvA2 = mM2.m_avCol[2];
     *pvC0 = mM2.m_avCol[3];
+
+    return KTgS_OK;
 }
 
 

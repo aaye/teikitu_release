@@ -42,7 +42,7 @@
 #include <locale.h>
 #undef NULL
 
-#if defined(TgBUILD_HOST_SYSTEM__HLNX)
+#if defined(TgBUILD_HOST_SYSTEM__HLNX) || defined(TgBUILD_HOST_SYSTEM__HMAC)
 #include <strings.h>
 #include <wctype.h>
 TgCLANG_WARN_SUPPRESS(sign-conversion)
@@ -66,7 +66,7 @@ TgVOID tgTXT_Set_Local_Global( TgCHAR_NC_CP mbzLocal )
 
 /* ---- tgUSZ_Query_At ----------------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgCHAR_U8_CP tgUSZ_Query_At( TgCHAR_U8_CP NONULL mbzARG, TgRSIZE nbyMaxARG, TgRSIZE uiARG_Index )
+TgCHAR_U8_CP tgUSZ_Query_At( TgCHAR_U8_CP mbzARG, TgRSIZE nbyMaxARG, TgRSIZE uiARG_Index )
 {
     TgPARAM_CHECK(nullptr != mbzARG);
 
@@ -89,7 +89,7 @@ TgCHAR_U8_CP tgUSZ_Query_At( TgCHAR_U8_CP NONULL mbzARG, TgRSIZE nbyMaxARG, TgRS
 
 /* ---- tgUSZ_Query_Last --------------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgCHAR_U8_CP tgUSZ_Query_Last( TgCHAR_U8_CP NONULL mbzARG, TgRSIZE nbyMaxARG, TgRSIZE uiMaxRead )
+TgCHAR_U8_CP tgUSZ_Query_Last( TgCHAR_U8_CP mbzARG, TgRSIZE nbyMaxARG, TgRSIZE uiMaxRead )
 {
     TgCHAR_U8_CP                        mbzARG_Last, mbzARG_Test;
     
@@ -123,7 +123,7 @@ TgCHAR_U8_CP tgUSZ_Query_Last( TgCHAR_U8_CP NONULL mbzARG, TgRSIZE nbyMaxARG, Tg
 
 /* ---- tgUSZ_Query_End ---------------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgCHAR_U8_CP tgUSZ_Query_End( TgCHAR_U8_CP NONULL mbzARG, TgRSIZE nbyMaxARG, TgRSIZE uiMaxRead )
+TgCHAR_U8_CP tgUSZ_Query_End( TgCHAR_U8_CP mbzARG, TgRSIZE nbyMaxARG, TgRSIZE uiMaxRead )
 {
     TgCHAR_U8_CP                        mbzARG_Last, mbzARG_End;
     
@@ -161,7 +161,7 @@ TgCHAR_U8_CP tgUSZ_Query_End( TgCHAR_U8_CP NONULL mbzARG, TgRSIZE nbyMaxARG, TgR
 
 /* ---- tgUSZ_To_Upper_Length_U08 ------------------------------------------------------------------------------------------------------------------------------------------------ */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgRSIZE tgUSZ_To_Upper_Length_U08( TgCHAR_U8_CP NONULL pIN, TgRSIZE nbyMaxIN )
+TgRSIZE tgUSZ_To_Upper_Length_U08( TgCHAR_U8_CP pIN, TgRSIZE nbyMaxIN )
 {
     mbstate_t                           mbState0, mbState1; /* Internal C state for the conversion to a wide character */
     TgRSIZE                             nby08; /* Byte count consumed for the next character in the string */
@@ -201,7 +201,7 @@ TgRSIZE tgUSZ_To_Upper_Length_U08( TgCHAR_U8_CP NONULL pIN, TgRSIZE nbyMaxIN )
 
 /* ---- tgUSZ_To_Lower_Length_U08 ------------------------------------------------------------------------------------------------------------------------------------------------ */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgRSIZE tgUSZ_To_Lower_Length_U08( TgCHAR_U8_CP NONULL pIN, TgRSIZE nbyMaxIN )
+TgRSIZE tgUSZ_To_Lower_Length_U08( TgCHAR_U8_CP pIN, TgRSIZE nbyMaxIN )
 {
     mbstate_t                           mbState0, mbState1; /* Internal C state for the conversion to a wide character */
     TgRSIZE                             nby08; /* Byte count consumed for the next character in the string */

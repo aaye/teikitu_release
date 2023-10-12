@@ -110,7 +110,7 @@
     #define TgATTRIBUTE_LIKELY [[likely]]
     #define TgATTRIBUTE_UNLIKELY [[unlikely]]
 #else
-    #define TgATTRIBUTE_FALLTHROUGH TgCLANG_ATTRIBUTE(fallthrough);
+    #define TgATTRIBUTE_FALLTHROUGH __attribute__((fallthrough));
     #define TgATTRIBUTE_NO_DISCARD __attribute__((warn_unused_result))
     #define TgATTRIBUTE_MAYBE_UNUSED __attribute__((unused))
     #define TgATTRIBUTE_LIKELY
@@ -145,34 +145,22 @@
 /* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
 
 #if __has_declspec_attribute(dllimport)
-    #define DLL_IMPORT                          __declspec(dllimport) /* Import function from DLL */
+    #define TgDLL_IMPORT                        __declspec(dllimport) /* Import function from DLL */
 #else
-    #define DLL_IMPORT
+    #define TgDLL_IMPORT
 #endif
 
 #if __has_declspec_attribute(dllexport)
-    #define DLL_EXPORT                          __declspec(dllexport) /* Export function to DLL */
+    #define TgDLL_EXPORT                        __declspec(dllexport) /* Export function to DLL */
 #else
-    #define DLL_EXPORT
+    #define TgDLL_EXPORT
 #endif
-
-#define CDECL                               __attribute__((__cdecl__)) /* Standard C function */
-#define STDCALL                             __attribute__((__stdcall__)) /* Standard calling convention */
 
 #if __has_attribute(always_inline)
-#define TgFORCEINLINE                       static __inline __attribute__((always_inline)) /* Force code to be inline */
+    #define TgFORCEINLINE                       static __inline __attribute__((always_inline)) /* Force code to be inline */
 #else
-#define TgFORCEINLINE                       static __inline
+    #define TgFORCEINLINE                       static __inline
 #endif
-
-#define TgINLINE                            static __inline
-#if defined(TgCOMPILE_FILE__CXX)
-#define TgALIGN(A)                          alignas(A)
-#else
-#define TgALIGN(A)                          _Alignas(A)
-#endif
-
-#define TgTLS                               _Thread_local
 
 #if __has_builtin(__builtin_expect)
     #define TgEXPECT_TRUE(...)                  __builtin_expect( (__VA_ARGS__), 1 )
@@ -182,6 +170,17 @@
     #define TgEXPECT_FALSE(...)                 (__VA_ARGS__)
 #endif
 
+#define CDECL                               __attribute__((__cdecl__)) /* Defined in MSVC: Standard C function */
+#define STDCALL                             __attribute__((__stdcall__)) /* Defined in MSVC: Standard calling convention */
+#define TgINLINE                            static __inline
+
+#if defined(TgCOMPILE_FILE__CXX)
+    #define TgALIGN(A)                          alignas(A)
+#else
+    #define TgALIGN(A)                          _Alignas(A)
+#endif
+
+#define TgTLS                               _Thread_local
 #define TgPASSINREG                         
 #define TgALIAS                             __attribute__((__may_alias__))
 
@@ -207,6 +206,7 @@
 #define OKNULL                              _Nullable
 
 #define TgANALYSIS_NO_NULL                  _Nonnull
+
 
 //TODO __builtin_assume
 

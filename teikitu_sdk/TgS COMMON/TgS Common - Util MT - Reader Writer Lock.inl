@@ -42,7 +42,7 @@ tgCM_UT_MT__RW_DATA__Update(
 
 /* ---- tgCM_UT_MT__RW_DATA__Init ------------------------------------------------------------------------------------------------------------------------------------------------ */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgCM_UT_MT__RW_DATA__Init( STg2_UT_ST__RW_DATA_PCU NONULL psRW_DATA )
+TgINLINE TgVOID tgCM_UT_MT__RW_DATA__Init( STg2_UT_ST__RW_DATA_PCU psRW_DATA )
 {
     tgMM_Set_U08_0x00( psRW_DATA, sizeof( STg2_UT_ST__RW_DATA ) );
     tgMM_Set_U08_0xFF( psRW_DATA->m_asThread, sizeof( psRW_DATA->m_asThread ) );
@@ -51,7 +51,7 @@ TgINLINE TgVOID tgCM_UT_MT__RW_DATA__Init( STg2_UT_ST__RW_DATA_PCU NONULL psRW_D
 
 /* ---- tgCM_UT_MT__RW_DATA__Free ------------------------------------------------------------------------------------------------------------------------------------------------ */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgCM_UT_MT__RW_DATA__Free( STg2_UT_ST__RW_DATA_PCU NONULL psRW_DATA )
+TgINLINE TgVOID tgCM_UT_MT__RW_DATA__Free( STg2_UT_ST__RW_DATA_PCU psRW_DATA )
 {
 #if TgCOMPILE_ASSERT
     TgSINT_E32                          iIndex;
@@ -304,7 +304,7 @@ TgINLINE TgVOID tgCM_UT_LF__RW__Exit_Write( STg2_UT_LF__RW_PCU psRW )
 
 /* ---- tgCM_UT_LF__RW_SN__Init -------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgRESULT tgCM_UT_LF__RW_SN__Init( STg2_UT_LF_ISO__RW_SN_PCU NONULL psRW_SN )
+TgINLINE TgRESULT tgCM_UT_LF__RW_SN__Init( STg2_UT_LF_ISO__RW_SN_PCU psRW_SN )
 {
     TgVERIFY( KTgS_OK == tgCM_UT_LF__SN__Init( &psRW_SN->m_sLock.m_sLock ) );
     tgCM_UT_MT__RW_DATA__Init( &psRW_SN->m_sData );
@@ -314,7 +314,7 @@ TgINLINE TgRESULT tgCM_UT_LF__RW_SN__Init( STg2_UT_LF_ISO__RW_SN_PCU NONULL psRW
 
 /* ---- tgCM_UT_LF__RW_SN__Free -------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgCM_UT_LF__RW_SN__Free( STg2_UT_LF_ISO__RW_SN_PCU NONULL psRW_SN )
+TgINLINE TgVOID tgCM_UT_LF__RW_SN__Free( STg2_UT_LF_ISO__RW_SN_PCU psRW_SN )
 {
     tgCM_UT_LF__RW_SN__Enter_Write_Spin_Block( psRW_SN );
     tgCM_UT_MT__RW_DATA__Free( &psRW_SN->m_sData );
@@ -324,7 +324,7 @@ TgINLINE TgVOID tgCM_UT_LF__RW_SN__Free( STg2_UT_LF_ISO__RW_SN_PCU NONULL psRW_S
 
 /* ---- tgCM_UT_LF__RW_SN__Enter_Read_Yield_Block -------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgCM_UT_LF__RW_SN__Enter_Read_Yield_Block( STg2_UT_LF_ISO__RW_SN_PCU NONULL psRW_SN )
+TgINLINE TgVOID tgCM_UT_LF__RW_SN__Enter_Read_Yield_Block( STg2_UT_LF_ISO__RW_SN_PCU psRW_SN )
 {
     tgCM_UT_LF__SN__Lock_Yield( &psRW_SN->m_sLock.m_sLock );
 
@@ -361,7 +361,7 @@ TgINLINE TgVOID tgCM_UT_LF__RW_SN__Enter_Read_Yield_Block( STg2_UT_LF_ISO__RW_SN
 
 /* ---- tgCM_UT_LF__RW_SN__Enter_Read_Spin_Block --------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgCM_UT_LF__RW_SN__Enter_Read_Spin_Block( STg2_UT_LF_ISO__RW_SN_PCU NONULL psRW_SN )
+TgINLINE TgVOID tgCM_UT_LF__RW_SN__Enter_Read_Spin_Block( STg2_UT_LF_ISO__RW_SN_PCU psRW_SN )
 {
     tgCM_UT_LF__SN__Lock_Spin( &psRW_SN->m_sLock.m_sLock );
 
@@ -398,7 +398,7 @@ TgINLINE TgVOID tgCM_UT_LF__RW_SN__Enter_Read_Spin_Block( STg2_UT_LF_ISO__RW_SN_
 
 /* ---- tgCM_UT_LF__RW_SN__Enter_Read_Yield -------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgRESULT tgCM_UT_LF__RW_SN__Enter_Read_Yield( STg2_UT_LF_ISO__RW_SN_PCU NONULL psRW_SN )
+TgINLINE TgRESULT tgCM_UT_LF__RW_SN__Enter_Read_Yield( STg2_UT_LF_ISO__RW_SN_PCU psRW_SN )
 {
     tgCM_UT_LF__SN__Lock_Yield( &psRW_SN->m_sLock.m_sLock );
 
@@ -420,7 +420,7 @@ TgINLINE TgRESULT tgCM_UT_LF__RW_SN__Enter_Read_Yield( STg2_UT_LF_ISO__RW_SN_PCU
 
 /* ---- tgCM_UT_LF__RW_SN__Enter_Read_Spin --------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgRESULT tgCM_UT_LF__RW_SN__Enter_Read_Spin( STg2_UT_LF_ISO__RW_SN_PCU NONULL psRW_SN )
+TgINLINE TgRESULT tgCM_UT_LF__RW_SN__Enter_Read_Spin( STg2_UT_LF_ISO__RW_SN_PCU psRW_SN )
 {
     tgCM_UT_LF__SN__Lock_Spin( &psRW_SN->m_sLock.m_sLock );
 
@@ -442,7 +442,7 @@ TgINLINE TgRESULT tgCM_UT_LF__RW_SN__Enter_Read_Spin( STg2_UT_LF_ISO__RW_SN_PCU 
 
 /* ---- tgCM_UT_LF__RW_SN__Exit_Read_Yield --------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgCM_UT_LF__RW_SN__Exit_Read_Yield( STg2_UT_LF_ISO__RW_SN_PCU NONULL psRW_SN )
+TgINLINE TgVOID tgCM_UT_LF__RW_SN__Exit_Read_Yield( STg2_UT_LF_ISO__RW_SN_PCU psRW_SN )
 {
     tgCM_UT_LF__SN__Lock_Yield( &psRW_SN->m_sLock.m_sLock );
     TgERROR(psRW_SN->m_sData.m_enState == ETgUTM_RW_STATE__Reading);
@@ -467,7 +467,7 @@ TgINLINE TgVOID tgCM_UT_LF__RW_SN__Exit_Read_Yield( STg2_UT_LF_ISO__RW_SN_PCU NO
 
 /* ---- tgCM_UT_LF__RW_SN__Exit_Read_Spin ---------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgCM_UT_LF__RW_SN__Exit_Read_Spin( STg2_UT_LF_ISO__RW_SN_PCU NONULL psRW_SN )
+TgINLINE TgVOID tgCM_UT_LF__RW_SN__Exit_Read_Spin( STg2_UT_LF_ISO__RW_SN_PCU psRW_SN )
 {
     tgCM_UT_LF__SN__Lock_Spin( &psRW_SN->m_sLock.m_sLock );
     TgERROR(psRW_SN->m_sData.m_enState == ETgUTM_RW_STATE__Reading);
@@ -492,7 +492,7 @@ TgINLINE TgVOID tgCM_UT_LF__RW_SN__Exit_Read_Spin( STg2_UT_LF_ISO__RW_SN_PCU NON
 
 /* ---- tgCM_UT_LF__RW_SN__Enter_Write_Yield_Block ------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgCM_UT_LF__RW_SN__Enter_Write_Yield_Block( STg2_UT_LF_ISO__RW_SN_PCU NONULL psRW_SN )
+TgINLINE TgVOID tgCM_UT_LF__RW_SN__Enter_Write_Yield_Block( STg2_UT_LF_ISO__RW_SN_PCU psRW_SN )
 {
     tgCM_UT_LF__SN__Lock_Yield( &psRW_SN->m_sLock.m_sLock );
 
@@ -529,7 +529,7 @@ TgINLINE TgVOID tgCM_UT_LF__RW_SN__Enter_Write_Yield_Block( STg2_UT_LF_ISO__RW_S
 
 /* ---- tgCM_UT_LF__RW_SN__Enter_Write_Spin_Block -------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgCM_UT_LF__RW_SN__Enter_Write_Spin_Block( STg2_UT_LF_ISO__RW_SN_PCU NONULL psRW_SN )
+TgINLINE TgVOID tgCM_UT_LF__RW_SN__Enter_Write_Spin_Block( STg2_UT_LF_ISO__RW_SN_PCU psRW_SN )
 {
     tgCM_UT_LF__SN__Lock_Spin( &psRW_SN->m_sLock.m_sLock );
 
@@ -566,7 +566,7 @@ TgINLINE TgVOID tgCM_UT_LF__RW_SN__Enter_Write_Spin_Block( STg2_UT_LF_ISO__RW_SN
 
 /* ---- tgCM_UT_LF__RW_SN__Enter_Write_Yield ------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgRESULT tgCM_UT_LF__RW_SN__Enter_Write_Yield( STg2_UT_LF_ISO__RW_SN_PCU NONULL psRW_SN )
+TgINLINE TgRESULT tgCM_UT_LF__RW_SN__Enter_Write_Yield( STg2_UT_LF_ISO__RW_SN_PCU psRW_SN )
 {
     tgCM_UT_LF__SN__Lock_Yield( &psRW_SN->m_sLock.m_sLock );
 
@@ -588,7 +588,7 @@ TgINLINE TgRESULT tgCM_UT_LF__RW_SN__Enter_Write_Yield( STg2_UT_LF_ISO__RW_SN_PC
 
 /* ---- tgCM_UT_LF__RW_SN__Enter_Write_Spin -------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgRESULT tgCM_UT_LF__RW_SN__Enter_Write_Spin( STg2_UT_LF_ISO__RW_SN_PCU NONULL psRW_SN )
+TgINLINE TgRESULT tgCM_UT_LF__RW_SN__Enter_Write_Spin( STg2_UT_LF_ISO__RW_SN_PCU psRW_SN )
 {
     tgCM_UT_LF__SN__Lock_Spin( &psRW_SN->m_sLock.m_sLock );
 
@@ -610,7 +610,7 @@ TgINLINE TgRESULT tgCM_UT_LF__RW_SN__Enter_Write_Spin( STg2_UT_LF_ISO__RW_SN_PCU
 
 /* ---- tgCM_UT_LF__RW_SN__Exit_Write_Yield -------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgCM_UT_LF__RW_SN__Exit_Write_Yield( STg2_UT_LF_ISO__RW_SN_PCU NONULL psRW_SN )
+TgINLINE TgVOID tgCM_UT_LF__RW_SN__Exit_Write_Yield( STg2_UT_LF_ISO__RW_SN_PCU psRW_SN )
 {
     tgCM_UT_LF__SN__Lock_Yield( &psRW_SN->m_sLock.m_sLock );
     TgERROR(psRW_SN->m_sData.m_enState == ETgUTM_RW_STATE__Writing);
@@ -628,7 +628,7 @@ TgINLINE TgVOID tgCM_UT_LF__RW_SN__Exit_Write_Yield( STg2_UT_LF_ISO__RW_SN_PCU N
 
 /* ---- tgCM_UT_LF__RW_SN__Exit_Write_Spin --------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgCM_UT_LF__RW_SN__Exit_Write_Spin( STg2_UT_LF_ISO__RW_SN_PCU NONULL psRW_SN )
+TgINLINE TgVOID tgCM_UT_LF__RW_SN__Exit_Write_Spin( STg2_UT_LF_ISO__RW_SN_PCU psRW_SN )
 {
     tgCM_UT_LF__SN__Lock_Spin( &psRW_SN->m_sLock.m_sLock );
     TgERROR(psRW_SN->m_sData.m_enState == ETgUTM_RW_STATE__Writing);
@@ -653,7 +653,7 @@ TgINLINE TgVOID tgCM_UT_LF__RW_SN__Exit_Write_Spin( STg2_UT_LF_ISO__RW_SN_PCU NO
 
 /* ---- tgCM_UT_MT__RW_MX__Init -------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgRESULT tgCM_UT_MT__RW_MX__Init( STg2_UT_MT__RW_MX_PCU NONULL psRW_MX )
+TgINLINE TgRESULT tgCM_UT_MT__RW_MX__Init( STg2_UT_MT__RW_MX_PCU psRW_MX )
 {
     TgVERIFY( KTgS_OK == tgPM_MT_MX_Init( &psRW_MX->m_sLock, nullptr ) );
     tgCM_UT_MT__RW_DATA__Init( &psRW_MX->m_sData );
@@ -663,7 +663,7 @@ TgINLINE TgRESULT tgCM_UT_MT__RW_MX__Init( STg2_UT_MT__RW_MX_PCU NONULL psRW_MX 
 
 /* ---- tgCM_UT_MT__RW_MX__Free -------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgCM_UT_MT__RW_MX__Free( STg2_UT_MT__RW_MX_PCU NONULL psRW_MX )
+TgINLINE TgVOID tgCM_UT_MT__RW_MX__Free( STg2_UT_MT__RW_MX_PCU psRW_MX )
 {
     tgCM_UT_MT__RW_DATA__Free( &psRW_MX->m_sData );
     tgPM_MT_MX_Free( &psRW_MX->m_sLock );
@@ -672,7 +672,7 @@ TgINLINE TgVOID tgCM_UT_MT__RW_MX__Free( STg2_UT_MT__RW_MX_PCU NONULL psRW_MX )
 
 /* ---- tgCM_UT_MT__RW_MX__Enter_Read_Block -------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgCM_UT_MT__RW_MX__Enter_Read_Block( STg2_UT_MT__RW_MX_PCU NONULL psRW_MX )
+TgINLINE TgVOID tgCM_UT_MT__RW_MX__Enter_Read_Block( STg2_UT_MT__RW_MX_PCU psRW_MX )
 {
     tgPM_MT_MX_Wait_Block( &psRW_MX->m_sLock );
 
@@ -707,7 +707,7 @@ TgINLINE TgVOID tgCM_UT_MT__RW_MX__Enter_Read_Block( STg2_UT_MT__RW_MX_PCU NONUL
 
 /* ---- tgCM_UT_MT__RW_MX__Enter_Read -------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgRESULT tgCM_UT_MT__RW_MX__Enter_Read( STg2_UT_MT__RW_MX_PCU NONULL psRW_MX )
+TgINLINE TgRESULT tgCM_UT_MT__RW_MX__Enter_Read( STg2_UT_MT__RW_MX_PCU psRW_MX )
 {
     tgPM_MT_MX_Wait_Block( &psRW_MX->m_sLock );
 
@@ -728,7 +728,7 @@ TgINLINE TgRESULT tgCM_UT_MT__RW_MX__Enter_Read( STg2_UT_MT__RW_MX_PCU NONULL ps
 
 /* ---- tgCM_UT_MT__RW_MX__Exit_Read --------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgCM_UT_MT__RW_MX__Exit_Read( STg2_UT_MT__RW_MX_PCU NONULL psRW_MX )
+TgINLINE TgVOID tgCM_UT_MT__RW_MX__Exit_Read( STg2_UT_MT__RW_MX_PCU psRW_MX )
 {
     tgPM_MT_MX_Wait_Block( &psRW_MX->m_sLock );
     TgERROR(psRW_MX->m_sData.m_enState == ETgUTM_RW_STATE__Reading);
@@ -752,7 +752,7 @@ TgINLINE TgVOID tgCM_UT_MT__RW_MX__Exit_Read( STg2_UT_MT__RW_MX_PCU NONULL psRW_
 
 /* ---- tgCM_UT_MT__RW_MX__Enter_Write_Block ------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgCM_UT_MT__RW_MX__Enter_Write_Block( STg2_UT_MT__RW_MX_PCU NONULL psRW_MX )
+TgINLINE TgVOID tgCM_UT_MT__RW_MX__Enter_Write_Block( STg2_UT_MT__RW_MX_PCU psRW_MX )
 {
     tgPM_MT_MX_Wait_Block( &psRW_MX->m_sLock );
 
@@ -787,7 +787,7 @@ TgINLINE TgVOID tgCM_UT_MT__RW_MX__Enter_Write_Block( STg2_UT_MT__RW_MX_PCU NONU
 
 /* ---- tgCM_UT_MT__RW_MX__Enter_Write ------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgRESULT tgCM_UT_MT__RW_MX__Enter_Write( STg2_UT_MT__RW_MX_PCU NONULL psRW_MX )
+TgINLINE TgRESULT tgCM_UT_MT__RW_MX__Enter_Write( STg2_UT_MT__RW_MX_PCU psRW_MX )
 {
     tgPM_MT_MX_Wait_Block( &psRW_MX->m_sLock );
 
@@ -808,7 +808,7 @@ TgINLINE TgRESULT tgCM_UT_MT__RW_MX__Enter_Write( STg2_UT_MT__RW_MX_PCU NONULL p
 
 /* ---- tgCM_UT_MT__RW_MX__Exit_Write -------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgCM_UT_MT__RW_MX__Exit_Write( STg2_UT_MT__RW_MX_PCU NONULL psRW_MX )
+TgINLINE TgVOID tgCM_UT_MT__RW_MX__Exit_Write( STg2_UT_MT__RW_MX_PCU psRW_MX )
 {
     tgPM_MT_MX_Wait_Block( &psRW_MX->m_sLock );
     TgERROR(psRW_MX->m_sData.m_enState == ETgUTM_RW_STATE__Writing);

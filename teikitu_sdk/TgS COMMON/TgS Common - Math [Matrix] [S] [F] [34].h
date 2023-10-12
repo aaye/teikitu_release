@@ -27,7 +27,7 @@
     @param [in] ARG1 Matrix */
 TgINLINE TgVOID
 FCN_M(tgMH_TR_S)(
-    VEC_S_T(4,PCU) NONULL OUT0, MAT_S_T(CPCU) NONULL ARG1 );
+    VEC_S_T(4,PCU) TgANALYSIS_NO_NULL OUT0, MAT_S_T(CPCU) TgANALYSIS_NO_NULL ARG1 );
 
 
 
@@ -40,7 +40,7 @@ FCN_M(tgMH_TR_S)(
     @param [in] ARG3 Vector, Camera Up Direction */
 TgINLINE TgVOID
 FCN_M(tgMH_LookLH_S)(
-    MAT_S_T(PCU) NONULL OUT0, VEC_S_T(1,C) ARG1, VEC_S_T(1,C) ARG2, VEC_S_T(1,C) ARG3 );
+    MAT_S_T(PCU) TgANALYSIS_NO_NULL OUT0, VEC_S_T(1,C) ARG1, VEC_S_T(1,C) ARG2, VEC_S_T(1,C) ARG3 );
 
 /** @addtogroup TGS_COMMON_MATH_VECTOR_CALC
     @brief Store a right-handed view matrix
@@ -50,7 +50,7 @@ FCN_M(tgMH_LookLH_S)(
     @param [in] ARG3 Vector, Camera Up Direction */
 TgINLINE TgVOID
 FCN_M(tgMH_LookRH_S)(
-    MAT_S_T(PCU) NONULL OUT0, VEC_S_T(1,C) ARG1, VEC_S_T(1,C) ARG2, VEC_S_T(1,C) ARG3 );
+    MAT_S_T(PCU) TgANALYSIS_NO_NULL OUT0, VEC_S_T(1,C) ARG1, VEC_S_T(1,C) ARG2, VEC_S_T(1,C) ARG3 );
 
 /** @addtogroup TGS_COMMON_MATH_VECTOR_CALC
     @brief Store a left-handed view matrix
@@ -60,7 +60,7 @@ FCN_M(tgMH_LookRH_S)(
     @param [in] ARG3 Vector, Camera Up Direction */
 TgINLINE TgVOID
 FCN_M(tgMH_Look_S)(
-    MAT_S_T(PCU) NONULL OUT0, VEC_S_T(1,C) ARG1, VEC_S_T(1,C) ARG2, VEC_S_T(1,C) ARG3 );
+    MAT_S_T(PCU) TgANALYSIS_NO_NULL OUT0, VEC_S_T(1,C) ARG1, VEC_S_T(1,C) ARG2, VEC_S_T(1,C) ARG3 );
 
 
 /* =============================================================================================================================================================================== */

@@ -23,7 +23,7 @@
 
 /* ---- tgCM_UT_ST__QU__Init ----------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgRESULT tgCM_UT_ST__QU__Init( STg2_UT_ST__QU_PC NONULL psMP_QU )
+TgINLINE TgRESULT tgCM_UT_ST__QU__Init( STg2_UT_ST__QU_PC psMP_QU )
 {
     psMP_QU->m_sNode.m_pNext_Node = &psMP_QU->m_sNode;
     psMP_QU->m_psTail_Node = &psMP_QU->m_sNode;
@@ -33,7 +33,7 @@ TgINLINE TgRESULT tgCM_UT_ST__QU__Init( STg2_UT_ST__QU_PC NONULL psMP_QU )
 
 /* ---- tgCM_UT_ST__QU__Free ----------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgCM_UT_ST__QU__Free( STg2_UT_ST__QU_PC NONULL psMP_QU )
+TgINLINE TgVOID tgCM_UT_ST__QU__Free( STg2_UT_ST__QU_PC psMP_QU )
 {
     TgERROR(tgCM_UT_ST__QU__Is_Empty( psMP_QU ));
 }
@@ -41,7 +41,7 @@ TgINLINE TgVOID tgCM_UT_ST__QU__Free( STg2_UT_ST__QU_PC NONULL psMP_QU )
 
 /* ---- tgCM_UT_ST__QU__Enqueue -------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgCM_UT_ST__QU__Enqueue( STg2_UT_ST__QU_PC NONULL psMP_QU, STg2_UT_ST__QU_Node_PC NONULL psNode )
+TgINLINE TgVOID tgCM_UT_ST__QU__Enqueue( STg2_UT_ST__QU_PC psMP_QU, STg2_UT_ST__QU_Node_PC psNode )
 {
     STg2_UT_ST__QU_Node_P               psTailNode;
 
@@ -59,7 +59,7 @@ TgINLINE TgVOID tgCM_UT_ST__QU__Enqueue( STg2_UT_ST__QU_PC NONULL psMP_QU, STg2_
 
 /* ---- tgCM_UT_ST__QU__Merge ---------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgCM_UT_ST__QU__Merge( STg2_UT_ST__QU_PC NONULL psMP_QU0, STg2_UT_ST__QU_PC NONULL psMP_QU1 )
+TgINLINE TgVOID tgCM_UT_ST__QU__Merge( STg2_UT_ST__QU_PC psMP_QU0, STg2_UT_ST__QU_PC psMP_QU1 )
 {
     STg2_UT_ST__QU_Node_P               psTailNode;
     STg2_UT_ST__QU_Node_P               psNode;
@@ -84,7 +84,7 @@ TgINLINE TgVOID tgCM_UT_ST__QU__Merge( STg2_UT_ST__QU_PC NONULL psMP_QU0, STg2_U
 
 /* ---- tgCM_UT_ST__QU__Dequeue -------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE STg2_UT_ST__QU_Node_P tgCM_UT_ST__QU__Dequeue( STg2_UT_ST__QU_PC NONULL psMP_QU )
+TgINLINE STg2_UT_ST__QU_Node_P tgCM_UT_ST__QU__Dequeue( STg2_UT_ST__QU_PC psMP_QU )
 {
     STg2_UT_ST__QU_Node_P               psNode;
 
@@ -108,7 +108,7 @@ TgINLINE STg2_UT_ST__QU_Node_P tgCM_UT_ST__QU__Dequeue( STg2_UT_ST__QU_PC NONULL
 
 /* ---- tgCM_UT_ST__QU__Is_Empty ------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgBOOL tgCM_UT_ST__QU__Is_Empty( STg2_UT_ST__QU_PC NONULL psMP_QU )
+TgINLINE TgBOOL tgCM_UT_ST__QU__Is_Empty( STg2_UT_ST__QU_PC psMP_QU )
 {
     return (&psMP_QU->m_sNode == psMP_QU->m_sNode.m_pNext_Node);
 }
@@ -116,7 +116,7 @@ TgINLINE TgBOOL tgCM_UT_ST__QU__Is_Empty( STg2_UT_ST__QU_PC NONULL psMP_QU )
 
 /* ---- tgCM_UT_ST__QU__Is_Valid ------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgBOOL tgCM_UT_ST__QU__Is_Valid( STg2_UT_ST__QU_PC NONULL psMP_QU )
+TgINLINE TgBOOL tgCM_UT_ST__QU__Is_Valid( STg2_UT_ST__QU_PC psMP_QU )
 {
     STg2_UT_ST__QU_Node_P               psNode;
 
@@ -141,7 +141,7 @@ TgINLINE TgBOOL tgCM_UT_ST__QU__Is_Valid( STg2_UT_ST__QU_PC NONULL psMP_QU )
 
 /* ---- tgCM_UT_ST__QU__In_Queue ------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgBOOL tgCM_UT_ST__QU__In_Queue( STg2_UT_ST__QU_PC NONULL psMP_QU, STg2_UT_ST__QU_Node_PC NONULL psTest )
+TgINLINE TgBOOL tgCM_UT_ST__QU__In_Queue( STg2_UT_ST__QU_PC psMP_QU, STg2_UT_ST__QU_Node_PC psTest )
 {
     STg2_UT_ST__QU_Node_P               psNode;
 

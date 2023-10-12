@@ -9,7 +9,7 @@ CMAKE_PATH ( SET MK_BUILD_MODULE__INC_DIR NORMALIZE "${GIT_ROOT_PATH}/teikitu_sd
 CMAKE_PATH ( SET MK_BUILD_MODULE__SRC_DIR NORMALIZE "${GIT_ROOT_PATH}/teikitu_private/src/TgS ${MK_BUILD_ROOT__MODULE_NAME}" )
 
 # Special case for "headless" graphics/rendering: NONE
-SET (MK_BUILD__GRAPHICS_GENEREIC "-")
+SET (MK_BUILD__GRAPHICS_GENEREIC "NO_IMPL")
 IF (NOT "${MK_BUILD__GRAPHICS_NAME}" STREQUAL "NONE")
     SET (MK_BUILD__GRAPHICS_GENEREIC ${MK_BUILD__GRAPHICS_NAME})
 ENDIF ()
@@ -163,7 +163,7 @@ TGS_ADD_SOURCE_FILE( lib_api_gpu_source_files lib_api_gpu_header_files "DX12" "$
 TGS_ADD_SOURCE_FILE( lib_api_gpu_source_files lib_api_gpu_header_files "DX12" "${MK_BUILD__GRAPHICS_NAME}" "SDK/Source Files/Resource" "${MK_BUILD_MODULE__SRC_DIR}/TgS (DX12) Kernel [GPU] - Resource [Pipeline].c")
 TGS_ADD_SOURCE_FILE( lib_api_gpu_source_files lib_api_gpu_header_files "DX12" "${MK_BUILD__GRAPHICS_NAME}" "SDK/Source Files/Resource" "${MK_BUILD_MODULE__SRC_DIR}/TgS (DX12) Kernel [GPU] - Resource [Texture].c")
 
-TGS_ADD_SOURCE_FILE( lib_api_gpu_source_files lib_api_gpu_header_files "DX12-WIN" "${MK_BUILD__GRAPHICS_NAME}-${MK_BUILD__OS_NAME}" "SDK/Source Files/Base" "${MK_BUILD_MODULE__SRC_DIR}/TgS (DX12-WIN) Kernel [GPU] - Module.c")
+TGS_ADD_SOURCE_FILE( lib_api_gpu_source_files lib_api_gpu_header_files "DX12-WINDOWS" "${MK_BUILD__GRAPHICS_NAME}-${MK_BUILD__OS_NAME}" "SDK/Source Files/Base" "${MK_BUILD_MODULE__SRC_DIR}/TgS (DX12-WINDOWS) Kernel [GPU] - Module.c")
 
 TGS_ADD_HEADER_FILE( lib_api_gpu_source_files lib_sdk_api_gpu_header_files "DX12" "${MK_BUILD__GRAPHICS_NAME}" "Public/Header Files" "${MK_BUILD_MODULE__INC_DIR}/TgS (DX12) Kernel [GPU] - Constants.h")
 TGS_ADD_HEADER_FILE( lib_api_gpu_source_files lib_sdk_api_gpu_header_files "DX12" "${MK_BUILD__GRAPHICS_NAME}" "Public/Header Files" "${MK_BUILD_MODULE__INC_DIR}/TgS (DX12) Kernel [GPU] - Type.h")
@@ -204,9 +204,9 @@ TGS_ADD_HEADER_FILE( lib_api_gpu_source_files lib_api_gpu_header_files "DX12" "$
 # GPU Library - Specialization Vulkan (VLKN)
 
 
-TGS_ADD_SOURCE_FILE( lib_api_gpu_source_files lib_api_gpu_header_files "VLKN-WIN" "${MK_BUILD__GRAPHICS_NAME}-${MK_BUILD__OS_NAME}" "SDK/Source Files/Base" "${MK_BUILD_MODULE__SRC_DIR}/TgS (VLKN-WIN) Kernel [GPU] - Module.c")
+TGS_ADD_SOURCE_FILE( lib_api_gpu_source_files lib_api_gpu_header_files "VULKAN-WINDOWS" "${MK_BUILD__GRAPHICS_NAME}-${MK_BUILD__OS_NAME}" "SDK/Source Files/Base" "${MK_BUILD_MODULE__SRC_DIR}/TgS (VULKAN-WINDOWS) Kernel [GPU] - Module.c")
 
-TGS_ADD_HEADER_FILE( lib_api_gpu_source_files lib_api_gpu_header_files "VLKN" "${MK_BUILD__GRAPHICS_NAME}" "Public/Header Files" "${MK_BUILD_MODULE__INC_DIR}/TgS (VLKN) Kernel [GPU] - Constants.h")
+TGS_ADD_HEADER_FILE( lib_api_gpu_source_files lib_api_gpu_header_files "VULKAN" "${MK_BUILD__GRAPHICS_NAME}" "Public/Header Files" "${MK_BUILD_MODULE__INC_DIR}/TgS (VULKAN) Kernel [GPU] - Constants.h")
 
 
 
@@ -251,39 +251,26 @@ IF ("${MK_BUILD__GRAPHICS_NAME}" STREQUAL "DX12")
     # DirectX Agile SDK
     TARGET_INCLUDE_DIRECTORIES(${MK_BUILD__GRAPHICS_IMPL_LIB} BEFORE PUBLIC "${GIT_ROOT_PATH}/teikitu_external/__directx_agile/build/native/include")
 
-    IF (NOT "${MK_BUILD_AUTOMATION}" STREQUAL "CICD_BUILD")
-        # DirectX Agile SDK - D3D12Core
-        TGS_ADD_DLL_NO_LIB ("D3D12Core")
-        SET_PROPERTY (TARGET "D3D12Core" PROPERTY IMPORTED_LOCATION "${GIT_ROOT_PATH}/teikitu_external/__directx_agile/build/native/bin/x64/D3D12Core.dll")
-        TARGET_LINK_LIBRARIES (${MK_BUILD__GRAPHICS_IMPL_LIB} PRIVATE "D3D12Core")
-        SET_PROPERTY(TARGET "D3D12CoreLIB" PROPERTY PROJECT_LABEL "DX12-DLL Core")
-        SET_TARGET_PROPERTIES("D3D12CoreLIB" PROPERTIES FOLDER "External Dependencies")
+    # DirectX Agile SDK - D3D12Core
+    TGS_ADD_DLL_NO_LIB ("D3D12Core")
+    SET_PROPERTY (TARGET "D3D12Core" PROPERTY IMPORTED_LOCATION "${GIT_ROOT_PATH}/teikitu_external/__directx_agile/build/native/bin/x64/D3D12Core.dll")
+    TARGET_LINK_LIBRARIES (${MK_BUILD__GRAPHICS_IMPL_LIB} PRIVATE "D3D12Core")
+    SET_PROPERTY(TARGET "D3D12CoreLIB" PROPERTY PROJECT_LABEL "DX12-DLL Core")
+    SET_TARGET_PROPERTIES("D3D12CoreLIB" PROPERTIES FOLDER "External Dependencies")
 
-        # DirectX Agile SDK - D3D12SDKLayers
-        TGS_ADD_DLL_NO_LIB ("d3d12SDKLayers")
-        SET_PROPERTY (TARGET "d3d12SDKLayers" PROPERTY IMPORTED_LOCATION "${GIT_ROOT_PATH}/teikitu_external/__directx_agile/build/native/bin/x64/d3d12SDKLayers.dll")
-        TARGET_LINK_LIBRARIES (${MK_BUILD__GRAPHICS_IMPL_LIB} PRIVATE "d3d12SDKLayers")
-        SET_PROPERTY(TARGET "d3d12SDKLayersLIB" PROPERTY PROJECT_LABEL "DX12-DLL SDK Layers")
-        SET_TARGET_PROPERTIES("d3d12SDKLayersLIB" PROPERTIES FOLDER "External Dependencies")
+    # DirectX Agile SDK - D3D12SDKLayers
+    TGS_ADD_DLL_NO_LIB ("d3d12SDKLayers")
+    SET_PROPERTY (TARGET "d3d12SDKLayers" PROPERTY IMPORTED_LOCATION "${GIT_ROOT_PATH}/teikitu_external/__directx_agile/build/native/bin/x64/d3d12SDKLayers.dll")
+    TARGET_LINK_LIBRARIES (${MK_BUILD__GRAPHICS_IMPL_LIB} PRIVATE "d3d12SDKLayers")
+    SET_PROPERTY(TARGET "d3d12SDKLayersLIB" PROPERTY PROJECT_LABEL "DX12-DLL SDK Layers")
+    SET_TARGET_PROPERTIES("d3d12SDKLayersLIB" PROPERTIES FOLDER "External Dependencies")
 
-        # DirectX Agile SDK - D3D12SDKLayers
-        TGS_ADD_DLL_NO_LIB ("WinPixEventRuntime")
-        SET_PROPERTY (TARGET "WinPixEventRuntime" PROPERTY IMPORTED_LOCATION "${GIT_ROOT_PATH}/teikitu_external/__win_pix_event_runtime/bin/x64/WinPixEventRuntime.dll")
-        TARGET_LINK_LIBRARIES (${MK_BUILD__GRAPHICS_IMPL_LIB} PRIVATE "WinPixEventRuntime")
-        SET_PROPERTY(TARGET "WinPixEventRuntimeLIB" PROPERTY PROJECT_LABEL "Windows PIX")
-        SET_TARGET_PROPERTIES("WinPixEventRuntimeLIB" PROPERTIES FOLDER "External Dependencies")
-
-        # Install the DLLs into the install binary directory. This will not be done automatically as IMPORTED targets are not installed.
-        IF (isMultiConfig)
-            INSTALL (FILES "${GIT_ROOT_PATH}/teikitu_external/__directx_agile/build/native/bin/x64/D3D12Core.dll" DESTINATION "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_BINDIR}/${CMAKE_BUILD_TYPE}/")
-            INSTALL (FILES "${GIT_ROOT_PATH}/teikitu_external/__directx_agile/build/native/bin/x64/d3d12SDKLayers.dll" DESTINATION "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_BINDIR}/${CMAKE_BUILD_TYPE}/")
-            INSTALL (FILES "${GIT_ROOT_PATH}/teikitu_external/__win_pix_event_runtime/bin/x64/WinPixEventRuntime.dll" DESTINATION "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_BINDIR}/${CMAKE_BUILD_TYPE}/")
-        ELSE ()
-            INSTALL (FILES "${GIT_ROOT_PATH}/teikitu_external/__directx_agile/build/native/bin/x64/D3D12Core.dll" DESTINATION "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_BINDIR}/")
-            INSTALL (FILES "${GIT_ROOT_PATH}/teikitu_external/__directx_agile/build/native/bin/x64/d3d12SDKLayers.dll" DESTINATION "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_BINDIR}/")
-            INSTALL (FILES "${GIT_ROOT_PATH}/teikitu_external/__win_pix_event_runtime/bin/x64/WinPixEventRuntime.dll" DESTINATION "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_BINDIR}/")
-        ENDIF ()
-    ENDIF ()
+    # DirectX Agile SDK - D3D12SDKLayers
+    TGS_ADD_DLL_NO_LIB ("WinPixEventRuntime")
+    SET_PROPERTY (TARGET "WinPixEventRuntime" PROPERTY IMPORTED_LOCATION "${GIT_ROOT_PATH}/teikitu_external/__win_pix_event_runtime/bin/x64/WinPixEventRuntime.dll")
+    TARGET_LINK_LIBRARIES (${MK_BUILD__GRAPHICS_IMPL_LIB} PRIVATE "WinPixEventRuntime")
+    SET_PROPERTY(TARGET "WinPixEventRuntimeLIB" PROPERTY PROJECT_LABEL "Windows PIX")
+    SET_TARGET_PROPERTIES("WinPixEventRuntimeLIB" PROPERTIES FOLDER "External Dependencies")
 ENDIF ()
 
 

@@ -1227,15 +1227,15 @@ static TgRESULT tgUnit_Test__KN_GPU__Render_5( TgKN_GPU_CXT_EXEC_ID_C tiCXT_EXEC
                  45.0f * KTgPI_F32 / 180.0f,
                  45.0f * KTgPI_F32 / 180.0f );
             tgMH_CAT_S_F32_04_4( &mTemp, &mTranslation, &mRotation );
-            tgMH_CAT_S_F32_04_4( &s_sModelConstantBufferInstance.m_vModel_Transform[uiModel], &mTemp, &mTranslation2 );
+            tgMH_CAT_S_F32_04_4( &s_sModelConstantBufferInstance.m_avModel_Transform[uiModel], &mTemp, &mTranslation2 );
 
-            s_sModelConstantBufferInstance.m_vModel_Colour[uiModel].r = 0.1F + 0.3F * (TgFLOAT32)((uiModel / 1) % 4);
-            s_sModelConstantBufferInstance.m_vModel_Colour[uiModel].r *= s_sModelConstantBufferInstance.m_vModel_Colour[uiModel].r;
-            s_sModelConstantBufferInstance.m_vModel_Colour[uiModel].g = 0.1F + 0.3F * (TgFLOAT32)((uiModel / 4) % 4);
-            s_sModelConstantBufferInstance.m_vModel_Colour[uiModel].g *= s_sModelConstantBufferInstance.m_vModel_Colour[uiModel].g;
-            s_sModelConstantBufferInstance.m_vModel_Colour[uiModel].b = 0.1F + 0.3F * (TgFLOAT32)((uiModel / 16) % 4);
-            s_sModelConstantBufferInstance.m_vModel_Colour[uiModel].b *= s_sModelConstantBufferInstance.m_vModel_Colour[uiModel].b;
-            s_sModelConstantBufferInstance.m_vModel_Colour[uiModel].a = 1.0F;
+            s_sModelConstantBufferInstance.m_avModel_Colour[uiModel].r = 0.1F + 0.3F * (TgFLOAT32)((uiModel / 1) % 4);
+            s_sModelConstantBufferInstance.m_avModel_Colour[uiModel].r *= s_sModelConstantBufferInstance.m_avModel_Colour[uiModel].r;
+            s_sModelConstantBufferInstance.m_avModel_Colour[uiModel].g = 0.1F + 0.3F * (TgFLOAT32)((uiModel / 4) % 4);
+            s_sModelConstantBufferInstance.m_avModel_Colour[uiModel].g *= s_sModelConstantBufferInstance.m_avModel_Colour[uiModel].g;
+            s_sModelConstantBufferInstance.m_avModel_Colour[uiModel].b = 0.1F + 0.3F * (TgFLOAT32)((uiModel / 16) % 4);
+            s_sModelConstantBufferInstance.m_avModel_Colour[uiModel].b *= s_sModelConstantBufferInstance.m_avModel_Colour[uiModel].b;
+            s_sModelConstantBufferInstance.m_avModel_Colour[uiModel].a = 1.0F;
         }
 
         TgVERIFY(SUCCEEDED(ID3D12Resource_Map( psSwap_Resource->m_psDX12_CBV_Scene, 0, &sRead_Range, (TgVOID_PP)&puiMappedConstantBuffer )));
@@ -1272,16 +1272,16 @@ static TgRESULT tgUnit_Test__KN_GPU__Render_5( TgKN_GPU_CXT_EXEC_ID_C tiCXT_EXEC
         s_sModelConstantBufferInstance.m_vLight_Ambient = tgMH_Init_ELEM_S_F32_04_1( 0.1F, 0.1F, 0.1F, 1.0F );
         s_sModelConstantBufferInstance.m_vLight_Direction = tgMH_Init_ELEM_S_F32_04_1( -1.0F/1.73205081F, 1.0F/1.73205081F, -1.0F/1.73205081F, 0.0F );
         s_sModelConstantBufferInstance.m_vLight_Direction_Colour = tgMH_Init_ELEM_S_F32_04_1( 0.4F, 0.6F, 0.6F, 1.0F );
-        s_sModelConstantBufferInstance.m_vModel_Colour[0] = tgMH_Init_ELEM_S_F32_04_1( 2.0F, 2.0F, 2.0F, 1.0F );
-        tgMH_CLI_S_F32_04_4( s_sModelConstantBufferInstance.m_vModel_Transform + 0 );
-        s_sModelConstantBufferInstance.m_vModel_Transform[0]._41 = s_sSceneConstantBuffer.scene_lights[0].origin_and_range.x;
-        s_sModelConstantBufferInstance.m_vModel_Transform[0]._42 = s_sSceneConstantBuffer.scene_lights[0].origin_and_range.y;
-        s_sModelConstantBufferInstance.m_vModel_Transform[0]._43 = s_sSceneConstantBuffer.scene_lights[0].origin_and_range.z;
-        s_sModelConstantBufferInstance.m_vModel_Colour[1] = tgMH_Init_ELEM_S_F32_04_1( 2.0F, 2.0F, 2.0F, 1.0F );
-        tgMH_CLI_S_F32_04_4( s_sModelConstantBufferInstance.m_vModel_Transform + 1 );
-        s_sModelConstantBufferInstance.m_vModel_Transform[1]._41 = s_sSceneConstantBuffer.scene_lights[1].origin_and_range.x;
-        s_sModelConstantBufferInstance.m_vModel_Transform[1]._42 = s_sSceneConstantBuffer.scene_lights[1].origin_and_range.y;
-        s_sModelConstantBufferInstance.m_vModel_Transform[1]._43 = s_sSceneConstantBuffer.scene_lights[1].origin_and_range.z;
+        s_sModelConstantBufferInstance.m_avModel_Colour[0] = tgMH_Init_ELEM_S_F32_04_1( 2.0F, 2.0F, 2.0F, 1.0F );
+        tgMH_CLI_S_F32_04_4( s_sModelConstantBufferInstance.m_avModel_Transform + 0 );
+        s_sModelConstantBufferInstance.m_avModel_Transform[0]._41 = s_sSceneConstantBuffer.scene_lights[0].origin_and_range.x;
+        s_sModelConstantBufferInstance.m_avModel_Transform[0]._42 = s_sSceneConstantBuffer.scene_lights[0].origin_and_range.y;
+        s_sModelConstantBufferInstance.m_avModel_Transform[0]._43 = s_sSceneConstantBuffer.scene_lights[0].origin_and_range.z;
+        s_sModelConstantBufferInstance.m_avModel_Colour[1] = tgMH_Init_ELEM_S_F32_04_1( 2.0F, 2.0F, 2.0F, 1.0F );
+        tgMH_CLI_S_F32_04_4( s_sModelConstantBufferInstance.m_avModel_Transform + 1 );
+        s_sModelConstantBufferInstance.m_avModel_Transform[1]._41 = s_sSceneConstantBuffer.scene_lights[1].origin_and_range.x;
+        s_sModelConstantBufferInstance.m_avModel_Transform[1]._42 = s_sSceneConstantBuffer.scene_lights[1].origin_and_range.y;
+        s_sModelConstantBufferInstance.m_avModel_Transform[1]._43 = s_sSceneConstantBuffer.scene_lights[1].origin_and_range.z;
         tgKN_GPU_EXT__CMD__Render_Debug_Geom_Instance( uCMD, ETgKN_GPU_DEBUG_PM_3D_SPHERE, 2, &s_sModelConstantBufferInstance );
         PIXEndEvent_ThatWorksInC_ID3D12GraphicsCommandList( uCMD.psEXT->m_psDX12_Graphics_Cmd_List );
     }

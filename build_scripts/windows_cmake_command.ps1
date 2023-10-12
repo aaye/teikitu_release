@@ -39,11 +39,11 @@ Param(
     [string]$CPU,
 
     [Parameter(Mandatory=$true, HelpMessage = "Select target threading library: WIN POSIX")]
-    [ValidateSet("WIN", "POSIX")]
+    [ValidateSet("WINDOWS", "POSIX")]
     [string]$THREAD,
 
     [Parameter(Mandatory=$true)]
-    [ValidateSet("WIN", "POSIX")]
+    [ValidateSet("WINDOWS", "POSIX", "ANDROID")]
     [string]$OS,
 
     [Parameter(Mandatory=$true, HelpMessage = "Select target device: DESKTOP_X86")]
@@ -51,7 +51,7 @@ Param(
     [string]$DEVICE,
 
     [Parameter(HelpMessage = "Select target gpu: REF, DX12")]
-    [ValidateSet("NONE", "REF", "DX12", "VULKAN")]
+    [ValidateSet("NONE", "REF", "DX12", "VULKAN", "METAL")]
     [string]$GPU,
 
     [Parameter(HelpMessage = "Select target gpu: REF, DX12")]
@@ -157,6 +157,10 @@ $CMAKE_BUILD_COMMON_CMD=@() # Empty Array
 If ($LOG_STATUS)
 {
     $CMAKE_BUILD_COMMON_CMD += "--log-level=STATUS"
+}
+else
+{
+    $CMAKE_BUILD_COMMON_CMD += "--log-level=WARNING"
 }
 
 If ($FRESH)

@@ -27,7 +27,7 @@
     @param [in] ARG1 Matrix */
 TgINLINE TgVOID
 FCN_M(tgMH_TR)(
-    VEC_T(4,PC) NONULL OUT0, VEC_T(3,CPC) NONULL ARG1 );
+    VEC_T(4,PC) TgANALYSIS_NO_NULL OUT0, VEC_T(3,CPC) TgANALYSIS_NO_NULL ARG1 );
 
 
 /* =============================================================================================================================================================================== */

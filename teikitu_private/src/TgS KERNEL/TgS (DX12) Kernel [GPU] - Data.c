@@ -131,7 +131,7 @@ D3D12_RASTERIZER_DESC const                 g_asKN_GPU_EXT_Default_Rasterizer_St
                                             };
 
 D3D12_DEPTH_STENCIL_DESC const              g_asKN_GPU_EXT_Default_Depth_Stencil_State[ETgKN_GPU_DEFAULT_DEPTH_STENCIL_STATE_COUNT] = {
-                                                {
+                                                {   /* ETgKN_GPU_DEFAULT_DEPTH_STENCIL_STATE_TEST_NONE */
                                                     .DepthEnable = FALSE,
                                                     .DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL,
                                                     .DepthFunc = D3D12_COMPARISON_FUNC_LESS,
@@ -142,7 +142,7 @@ D3D12_DEPTH_STENCIL_DESC const              g_asKN_GPU_EXT_Default_Depth_Stencil
                                                     .BackFace = { D3D12_STENCIL_OP_KEEP, D3D12_STENCIL_OP_KEEP, D3D12_STENCIL_OP_KEEP, D3D12_COMPARISON_FUNC_ALWAYS }
                                                 },
 
-                                                {
+                                                {   /* ETgKN_GPU_DEFAULT_DEPTH_STENCIL_STATE_TEST_DEPTH */
                                                     .DepthEnable = TRUE,
                                                     .DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL,
                                                     .DepthFunc = D3D12_COMPARISON_FUNC_LESS,
@@ -153,7 +153,7 @@ D3D12_DEPTH_STENCIL_DESC const              g_asKN_GPU_EXT_Default_Depth_Stencil
                                                     .BackFace = { D3D12_STENCIL_OP_KEEP, D3D12_STENCIL_OP_KEEP, D3D12_STENCIL_OP_KEEP, D3D12_COMPARISON_FUNC_ALWAYS }
                                                 },
 
-                                                {
+                                                {   /* ETgKN_GPU_DEFAULT_DEPTH_STENCIL_STATE_TEST_DEPTH_STENCIL */
                                                     .DepthEnable = TRUE,
                                                     .DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL,
                                                     .DepthFunc = D3D12_COMPARISON_FUNC_LESS,
@@ -164,7 +164,7 @@ D3D12_DEPTH_STENCIL_DESC const              g_asKN_GPU_EXT_Default_Depth_Stencil
                                                     .BackFace = { D3D12_STENCIL_OP_KEEP, D3D12_STENCIL_OP_KEEP, D3D12_STENCIL_OP_KEEP, D3D12_COMPARISON_FUNC_ALWAYS }
                                                 },
 
-                                                {
+                                                {   /* ETgKN_GPU_DEFAULT_DEPTH_STENCIL_STATE_TEST_DEPTH_TRANSPARENT */
                                                     .DepthEnable = FALSE,
                                                     .DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO,
                                                     .DepthFunc = D3D12_COMPARISON_FUNC_LESS,
@@ -235,7 +235,7 @@ STg2_KN_GPU_PSO_DESC                        g_asKN_GPU_STD_PSO_DESC[ETgKN_GPU_DE
                                                     .m_enTopology_Type = ETgKN_GPU_EXT_TOPOLOGY_TYPE_LINE,
                                                     .m_enRasterizer_State = ETgKN_GPU_DEFAULT_RASTERIZER_STATE_DEFAULT_SOLID_LINE_AA,
                                                     .m_enBlend_State = ETgKN_GPU_DEFAULT_BLEND_STATE_NONE,
-                                                    .m_enDepth_State = ETgKN_GPU_DEFAULT_DEPTH_STENCIL_STATE_TEST_DEPTH,
+                                                    .m_enDepth_State = ETgKN_GPU_DEFAULT_DEPTH_STENCIL_STATE_TEST_DEPTH_TRANSPARENT,
                                                     .m_uszName = u8"DEBUG LINE",
                                                 },
 
@@ -244,8 +244,8 @@ STg2_KN_GPU_PSO_DESC                        g_asKN_GPU_STD_PSO_DESC[ETgKN_GPU_DE
                                                     .m_enInput_Layout = ETgKN_GPU_DEFAULT_INPUT_LAYOUT_VERTEX_GEOM_00,
                                                     .m_enTopology_Type = ETgKN_GPU_EXT_TOPOLOGY_TYPE_TRIANGLE,
                                                     .m_enRasterizer_State = ETgKN_GPU_DEFAULT_RASTERIZER_STATE_DEFAULT_SOLID,
-                                                    .m_enBlend_State = ETgKN_GPU_DEFAULT_BLEND_STATE_NONE,
-                                                    .m_enDepth_State = ETgKN_GPU_DEFAULT_DEPTH_STENCIL_STATE_TEST_DEPTH,
+                                                    .m_enBlend_State = ETgKN_GPU_DEFAULT_BLEND_STATE_ALPHA,
+                                                    .m_enDepth_State = ETgKN_GPU_DEFAULT_DEPTH_STENCIL_STATE_TEST_DEPTH_TRANSPARENT,
                                                     .m_uszName = u8"DEBUG GEOM 00",
                                                 },
 
@@ -254,8 +254,8 @@ STg2_KN_GPU_PSO_DESC                        g_asKN_GPU_STD_PSO_DESC[ETgKN_GPU_DE
                                                     .m_enInput_Layout = ETgKN_GPU_DEFAULT_INPUT_LAYOUT_VERTEX_GEOM_01,
                                                     .m_enTopology_Type = ETgKN_GPU_EXT_TOPOLOGY_TYPE_TRIANGLE,
                                                     .m_enRasterizer_State = ETgKN_GPU_DEFAULT_RASTERIZER_STATE_DEFAULT_SOLID,
-                                                    .m_enBlend_State = ETgKN_GPU_DEFAULT_BLEND_STATE_NONE,
-                                                    .m_enDepth_State = ETgKN_GPU_DEFAULT_DEPTH_STENCIL_STATE_TEST_DEPTH,
+                                                    .m_enBlend_State = ETgKN_GPU_DEFAULT_BLEND_STATE_ALPHA,
+                                                    .m_enDepth_State = ETgKN_GPU_DEFAULT_DEPTH_STENCIL_STATE_TEST_DEPTH_TRANSPARENT,
                                                     .m_uszName = u8"DEBUG GEOM 01",
                                                 },
 
@@ -264,8 +264,8 @@ STg2_KN_GPU_PSO_DESC                        g_asKN_GPU_STD_PSO_DESC[ETgKN_GPU_DE
                                                     .m_enInput_Layout = ETgKN_GPU_DEFAULT_INPUT_LAYOUT_VERTEX_GEOM_01,
                                                     .m_enTopology_Type = ETgKN_GPU_EXT_TOPOLOGY_TYPE_TRIANGLE,
                                                     .m_enRasterizer_State = ETgKN_GPU_DEFAULT_RASTERIZER_STATE_DEFAULT_SOLID,
-                                                    .m_enBlend_State = ETgKN_GPU_DEFAULT_BLEND_STATE_NONE,
-                                                    .m_enDepth_State = ETgKN_GPU_DEFAULT_DEPTH_STENCIL_STATE_TEST_DEPTH,
+                                                    .m_enBlend_State = ETgKN_GPU_DEFAULT_BLEND_STATE_ALPHA,
+                                                    .m_enDepth_State = ETgKN_GPU_DEFAULT_DEPTH_STENCIL_STATE_TEST_DEPTH_TRANSPARENT,
                                                     .m_uszName = u8"DEBUG GEOM 01 WITH GAMMA",
                                                 },
 
@@ -274,8 +274,8 @@ STg2_KN_GPU_PSO_DESC                        g_asKN_GPU_STD_PSO_DESC[ETgKN_GPU_DE
                                                     .m_enInput_Layout = ETgKN_GPU_DEFAULT_INPUT_LAYOUT_VERTEX_GEOM_02,
                                                     .m_enTopology_Type = ETgKN_GPU_EXT_TOPOLOGY_TYPE_TRIANGLE,
                                                     .m_enRasterizer_State = ETgKN_GPU_DEFAULT_RASTERIZER_STATE_DEFAULT_SOLID,
-                                                    .m_enBlend_State = ETgKN_GPU_DEFAULT_BLEND_STATE_NONE,
-                                                    .m_enDepth_State = ETgKN_GPU_DEFAULT_DEPTH_STENCIL_STATE_TEST_DEPTH,
+                                                    .m_enBlend_State = ETgKN_GPU_DEFAULT_BLEND_STATE_ALPHA,
+                                                    .m_enDepth_State = ETgKN_GPU_DEFAULT_DEPTH_STENCIL_STATE_TEST_DEPTH_TRANSPARENT,
                                                     .m_uszName = u8"DEBUG GEOM 02",
                                                 },
 
@@ -284,9 +284,9 @@ STg2_KN_GPU_PSO_DESC                        g_asKN_GPU_STD_PSO_DESC[ETgKN_GPU_DE
                                                     .m_enInput_Layout = ETgKN_GPU_DEFAULT_INPUT_LAYOUT_INSTANCE_VERTEX_GEOM_02,
                                                     .m_enTopology_Type = ETgKN_GPU_EXT_TOPOLOGY_TYPE_TRIANGLE,
                                                     .m_enRasterizer_State = ETgKN_GPU_DEFAULT_RASTERIZER_STATE_DEFAULT_SOLID,
-                                                    .m_enBlend_State = ETgKN_GPU_DEFAULT_BLEND_STATE_NONE,
-                                                    .m_enDepth_State = ETgKN_GPU_DEFAULT_DEPTH_STENCIL_STATE_TEST_DEPTH,
-                                                    .m_uszName = u8"DEBUG GEOM 02",
+                                                    .m_enBlend_State = ETgKN_GPU_DEFAULT_BLEND_STATE_ALPHA,
+                                                    .m_enDepth_State = ETgKN_GPU_DEFAULT_DEPTH_STENCIL_STATE_TEST_DEPTH_TRANSPARENT,
+                                                    .m_uszName = u8"DEBUG GEOM 02 INSTANCE",
                                                 },
 
                                                 {   /* ETgKN_GPU_DEFAULT_PSO_DEBUG_GEOM_03 */
@@ -294,8 +294,8 @@ STg2_KN_GPU_PSO_DESC                        g_asKN_GPU_STD_PSO_DESC[ETgKN_GPU_DE
                                                     .m_enInput_Layout = ETgKN_GPU_DEFAULT_INPUT_LAYOUT_VERTEX_GEOM_03,
                                                     .m_enTopology_Type = ETgKN_GPU_EXT_TOPOLOGY_TYPE_TRIANGLE,
                                                     .m_enRasterizer_State = ETgKN_GPU_DEFAULT_RASTERIZER_STATE_DEFAULT_SOLID,
-                                                    .m_enBlend_State = ETgKN_GPU_DEFAULT_BLEND_STATE_NONE,
-                                                    .m_enDepth_State = ETgKN_GPU_DEFAULT_DEPTH_STENCIL_STATE_TEST_DEPTH,
+                                                    .m_enBlend_State = ETgKN_GPU_DEFAULT_BLEND_STATE_ALPHA,
+                                                    .m_enDepth_State = ETgKN_GPU_DEFAULT_DEPTH_STENCIL_STATE_TEST_DEPTH_TRANSPARENT,
                                                     .m_uszName = u8"DEBUG GEOM 03",
                                                 },
 

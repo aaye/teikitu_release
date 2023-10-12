@@ -147,7 +147,7 @@ TgINLINE TgVOID FCN_M(tgMH_Init_Reference_Frame_From_Vector_And_Position)( MAT_T
 
 /* ---- FCN_M(tgMH_Init_Reference_Frame_From_Basis_Axes_And_Position) ------------------------------------------------------------------------------------------------------------ */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID FCN_M(tgMH_Init_Reference_Frame_From_Basis_Axes_And_Position)( MAT_T(PC) NONULL pmOUT_0, VEC_T(1,C) vARG_1, VEC_T(1,C) vARG_2, VEC_T(1,C) vARG_3, VEC_T(1,C) vARG_4 )
+TgINLINE TgVOID FCN_M(tgMH_Init_Reference_Frame_From_Basis_Axes_And_Position)( MAT_T(PC) TgANALYSIS_NO_NULL pmOUT_0, VEC_T(1,C) vARG_1, VEC_T(1,C) vARG_2, VEC_T(1,C) vARG_3, VEC_T(1,C) vARG_4 )
 {
     MAT_UN_PTR_T()                      uM0;
     VEC_UN_T(1)                         uV0, uV1, uV2, uV3;
@@ -221,7 +221,7 @@ TgINLINE TgVOID FCN_M(tgMH_CAT)( MAT_T(PC) pmOUT_0, MAT_T(CPC) pmARG_1, MAT_T(CP
 
 /* ---- FCN_M(tgMH_INV_DET) ------------------------------------------------------------------------------------------------------------------------------------------------------ */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID FCN_M(tgMH_INV_DET)( VEC_T(4,PC) NONULL pmOUT_0, VEC_T(1,C) vARG_1, MAT_T(CPC) pmARG_2 )
+TgINLINE TgVOID FCN_M(tgMH_INV_DET)( VEC_T(4,PC) TgANALYSIS_NO_NULL pmOUT_0, VEC_T(1,C) vARG_1, MAT_T(CPC) pmARG_2 )
 {
     VEC_UN_PTR_T(4)                     uM0;
     VEC_UN_T(1)                         uV0;
@@ -236,7 +236,7 @@ TgINLINE TgVOID FCN_M(tgMH_INV_DET)( VEC_T(4,PC) NONULL pmOUT_0, VEC_T(1,C) vARG
 
 /* ---- FCN_M(tgMH_INV) -------------------------------------------------------------------------------------------------------------------------------===------------------------ */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID FCN_M(tgMH_INV)( VEC_T(4,PC) NONULL pmOUT_0, MAT_T(CPC) pmARG_1 )
+TgINLINE TgVOID FCN_M(tgMH_INV)( VEC_T(4,PC) TgANALYSIS_NO_NULL pmOUT_0, MAT_T(CPC) pmARG_1 )
 {
     VEC_UN_PTR_T(4)                     uM0;
     MAT_UN_CONST_PTR_T()                uM1;
@@ -460,7 +460,7 @@ TgINLINE VEC_T(1) FCN_M(tgMH_Query_Axis_3)( MAT_T(CPC) pmARG_0 )
 
 /* ---- FCN_M(tgMH_Query_Reference_Frame) ---------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID FCN_M(tgMH_Query_Reference_Frame)( VEC_T(1,P) pvOUT_0, VEC_T(1,P) pvOUT_1, VEC_T(1,P) pvOUT_2, VEC_T(1,P) pvOUT_3, MAT_T(CPC) pmARG_4 )
+TgINLINE TgRESULT FCN_M(tgMH_Query_Reference_Frame)( VEC_T(1,P) pvOUT_0, VEC_T(1,P) pvOUT_1, VEC_T(1,P) pvOUT_2, VEC_T(1,P) pvOUT_3, MAT_T(CPC) pmARG_4 )
 {
     MAT_UN_CONST_PTR_T()                uM0;
     VEC_UN_PTR_T(1)                     uV0, uV1, uV2, uV3;
@@ -472,7 +472,7 @@ TgINLINE TgVOID FCN_M(tgMH_Query_Reference_Frame)( VEC_T(1,P) pvOUT_0, VEC_T(1,P
 
     VEC_UN_PTR_M_MEMBER(uM0) = pmARG_4;
 
-    FCN_M(tgMH_Query_Reference_Frame_S)( VEC_S_UN_PTR_1_MEMBER(uV0), VEC_S_UN_PTR_1_MEMBER(uV1), VEC_S_UN_PTR_1_MEMBER(uV2), VEC_S_UN_PTR_1_MEMBER(uV3), VEC_S_UN_PTR_M_MEMBER(uM0) );
+    return FCN_M(tgMH_Query_Reference_Frame_S)( VEC_S_UN_PTR_1_MEMBER(uV0), VEC_S_UN_PTR_1_MEMBER(uV1), VEC_S_UN_PTR_1_MEMBER(uV2), VEC_S_UN_PTR_1_MEMBER(uV3), VEC_S_UN_PTR_M_MEMBER(uM0) );
 }
 
 
@@ -536,7 +536,7 @@ TgINLINE TgVOID FCN_M(tgMH_CLI)( MAT_T(PC) pmOUT_0 )
 
 /* ---- FCN_M(tgMH_Set_Rot) ------------------------------------------------------------------------------------------------------------------------------------------------------ */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID FCN_M(tgMH_Set_Rot)( MAT_T(PC) NONULL pmOUT_0, MAT_T(CPC) pmARG_1 )
+TgINLINE TgVOID FCN_M(tgMH_Set_Rot)( MAT_T(PC) TgANALYSIS_NO_NULL pmOUT_0, MAT_T(CPC) pmARG_1 )
 {
     MAT_UN_PTR_T()                      uM0;
     MAT_UN_CONST_PTR_T()                uM1;
@@ -549,7 +549,7 @@ TgINLINE TgVOID FCN_M(tgMH_Set_Rot)( MAT_T(PC) NONULL pmOUT_0, MAT_T(CPC) pmARG_
 
 /* ---- FCN_M(tgMH_Set_T) -------------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID FCN_M(tgMH_Set_T)( MAT_T(PC) NONULL pmOUT_0, VEC_T(1,C) vARG_1 )
+TgINLINE TgVOID FCN_M(tgMH_Set_T)( MAT_T(PC) TgANALYSIS_NO_NULL pmOUT_0, VEC_T(1,C) vARG_1 )
 {
     MAT_UN_PTR_T()                      uM0;
     VEC_UN_T(1)                         uV0;
@@ -562,7 +562,7 @@ TgINLINE TgVOID FCN_M(tgMH_Set_T)( MAT_T(PC) NONULL pmOUT_0, VEC_T(1,C) vARG_1 )
 
 /* ---- FCN_M(tgMH_Set_T_ELEM) --------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID FCN_M(tgMH_Set_T_ELEM)( MAT_T(PC) NONULL pmOUT_0, VAR_T(C) fARG_1, VAR_T(C) fARG_2, VAR_T(C) fARG_3 )
+TgINLINE TgVOID FCN_M(tgMH_Set_T_ELEM)( MAT_T(PC) TgANALYSIS_NO_NULL pmOUT_0, VAR_T(C) fARG_1, VAR_T(C) fARG_2, VAR_T(C) fARG_3 )
 {
     MAT_UN_PTR_T()                      uM0;
 
@@ -573,7 +573,7 @@ TgINLINE TgVOID FCN_M(tgMH_Set_T_ELEM)( MAT_T(PC) NONULL pmOUT_0, VAR_T(C) fARG_
 
 /* ---- FCN_M(tgMH_Set_Euler) ---------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID FCN_M(tgMH_Set_Euler)( MAT_T(PC) NONULL pmOUT_0, VEC_T(1,C) vARG_1 )
+TgINLINE TgVOID FCN_M(tgMH_Set_Euler)( MAT_T(PC) TgANALYSIS_NO_NULL pmOUT_0, VEC_T(1,C) vARG_1 )
 {
     MAT_UN_PTR_T()                      uM0;
     VEC_UN_T(1)                         uV0;
@@ -586,7 +586,7 @@ TgINLINE TgVOID FCN_M(tgMH_Set_Euler)( MAT_T(PC) NONULL pmOUT_0, VEC_T(1,C) vARG
 
 /* ---- FCN_M(tgMH_Set_Euler_ELEM) ----------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID FCN_M(tgMH_Set_Euler_ELEM)( MAT_T(PC) NONULL pmOUT_0, VAR_T(C) fARG_1, VAR_T(C) fARG_2, VAR_T(C) fARG_3 )
+TgINLINE TgVOID FCN_M(tgMH_Set_Euler_ELEM)( MAT_T(PC) TgANALYSIS_NO_NULL pmOUT_0, VAR_T(C) fARG_1, VAR_T(C) fARG_2, VAR_T(C) fARG_3 )
 {
     MAT_UN_PTR_T()                      uM0;
 
@@ -597,7 +597,7 @@ TgINLINE TgVOID FCN_M(tgMH_Set_Euler_ELEM)( MAT_T(PC) NONULL pmOUT_0, VAR_T(C) f
 
 /* ---- FCN_M(tgMH_Set_Euler_X) -------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID FCN_M(tgMH_Set_Euler_X)( MAT_T(PC) NONULL pmOUT_0, VAR_T(C) fARG_1 )
+TgINLINE TgVOID FCN_M(tgMH_Set_Euler_X)( MAT_T(PC) TgANALYSIS_NO_NULL pmOUT_0, VAR_T(C) fARG_1 )
 {
     MAT_UN_PTR_T()                      uM0;
 
@@ -608,7 +608,7 @@ TgINLINE TgVOID FCN_M(tgMH_Set_Euler_X)( MAT_T(PC) NONULL pmOUT_0, VAR_T(C) fARG
 
 /* ---- FCN_M(tgMH_Set_Euler_Y) -------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID FCN_M(tgMH_Set_Euler_Y)( MAT_T(PC) NONULL pmOUT_0, VAR_T(C) fARG_1 )
+TgINLINE TgVOID FCN_M(tgMH_Set_Euler_Y)( MAT_T(PC) TgANALYSIS_NO_NULL pmOUT_0, VAR_T(C) fARG_1 )
 {
     MAT_UN_PTR_T()                      uM0;
 
@@ -619,7 +619,7 @@ TgINLINE TgVOID FCN_M(tgMH_Set_Euler_Y)( MAT_T(PC) NONULL pmOUT_0, VAR_T(C) fARG
 
 /* ---- FCN_M(tgMH_Set_Euler_Z) -------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID FCN_M(tgMH_Set_Euler_Z)( MAT_T(PC) NONULL pmOUT_0, VAR_T(C) fARG_1 )
+TgINLINE TgVOID FCN_M(tgMH_Set_Euler_Z)( MAT_T(PC) TgANALYSIS_NO_NULL pmOUT_0, VAR_T(C) fARG_1 )
 {
     MAT_UN_PTR_T()                      uM0;
 
@@ -630,7 +630,7 @@ TgINLINE TgVOID FCN_M(tgMH_Set_Euler_Z)( MAT_T(PC) NONULL pmOUT_0, VAR_T(C) fARG
 
 /* ---- FCN_M(tgMH_Set_Quat) ----------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID FCN_M(tgMH_Set_Quat)( MAT_T(PC) NONULL pmOUT_0, VEC_T(1,C) vARG_1 )
+TgINLINE TgVOID FCN_M(tgMH_Set_Quat)( MAT_T(PC) TgANALYSIS_NO_NULL pmOUT_0, VEC_T(1,C) vARG_1 )
 {
     MAT_UN_PTR_T()                      uM0;
     VEC_UN_T(1)                         uV0;
@@ -643,7 +643,7 @@ TgINLINE TgVOID FCN_M(tgMH_Set_Quat)( MAT_T(PC) NONULL pmOUT_0, VEC_T(1,C) vARG_
 
 /* ---- FCN_M(tgMH_ADD) ---------------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID FCN_M(tgMH_ADD)( MAT_T(PC) pmOUT_0, MAT_T(CPC) pmARG_1, MAT_T(CPC) NONULL pmARG_2 )
+TgINLINE TgVOID FCN_M(tgMH_ADD)( MAT_T(PC) pmOUT_0, MAT_T(CPC) pmARG_1, MAT_T(CPC) TgANALYSIS_NO_NULL pmARG_2 )
 {
     #define EQN(A) FCN_V(tgMH_ADD)( pmARG_1->m_avCol[A], pmARG_2->m_avCol[A] )
     GENERATE__MAT_ASSIGN
@@ -653,7 +653,7 @@ TgINLINE TgVOID FCN_M(tgMH_ADD)( MAT_T(PC) pmOUT_0, MAT_T(CPC) pmARG_1, MAT_T(CP
 
 /* ---- FCN_M(tgMH_MUL) ---------------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID FCN_M(tgMH_MUL)( MAT_T(PC) pmOUT_0, MAT_T(CPC) pmARG_1, MAT_T(CPC) NONULL pmARG_2 )
+TgINLINE TgVOID FCN_M(tgMH_MUL)( MAT_T(PC) pmOUT_0, MAT_T(CPC) pmARG_1, MAT_T(CPC) TgANALYSIS_NO_NULL pmARG_2 )
 {
     #define EQN(A) FCN_V(tgMH_MUL)( pmARG_1->m_avCol[A], pmARG_2->m_avCol[A] )
     GENERATE__MAT_ASSIGN
@@ -663,7 +663,7 @@ TgINLINE TgVOID FCN_M(tgMH_MUL)( MAT_T(PC) pmOUT_0, MAT_T(CPC) pmARG_1, MAT_T(CP
 
 /* ---- FCN_M(tgMH_DIV) ---------------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID FCN_M(tgMH_DIV)( MAT_T(PC) pmOUT_0, MAT_T(CPC) pmARG_1, MAT_T(CPC) NONULL pmARG_2 )
+TgINLINE TgVOID FCN_M(tgMH_DIV)( MAT_T(PC) pmOUT_0, MAT_T(CPC) pmARG_1, MAT_T(CPC) TgANALYSIS_NO_NULL pmARG_2 )
 {
     #define EQN(A) FCN_V(tgMH_DIV)( pmARG_1->m_avCol[A], pmARG_2->m_avCol[A] )
     GENERATE__MAT_ASSIGN
@@ -673,7 +673,7 @@ TgINLINE TgVOID FCN_M(tgMH_DIV)( MAT_T(PC) pmOUT_0, MAT_T(CPC) pmARG_1, MAT_T(CP
 
 /* ---- FCN_M(tgMH_SUB) ---------------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID FCN_M(tgMH_SUB)( MAT_T(PC) pmOUT_0, MAT_T(CPC) pmARG_1, MAT_T(CPC) NONULL pmARG_2 )
+TgINLINE TgVOID FCN_M(tgMH_SUB)( MAT_T(PC) pmOUT_0, MAT_T(CPC) pmARG_1, MAT_T(CPC) TgANALYSIS_NO_NULL pmARG_2 )
 {
     #define EQN(A) FCN_V(tgMH_SUB)( pmARG_1->m_avCol[A], pmARG_2->m_avCol[A] )
     GENERATE__MAT_ASSIGN

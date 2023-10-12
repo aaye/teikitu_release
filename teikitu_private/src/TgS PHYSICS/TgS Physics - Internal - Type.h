@@ -34,13 +34,16 @@ TgTYPE_STRUCT( STg2_PH_Form, )
     TgUINT_E64                                  m_uiCollide; /**< Bitfield representing those fields this form collides. */
     TgPH_MATERIAL_ID                            m_tiMaterial; /**< Physical material properties. */
     TgUINT_E32                                  m_uiPad0;
+
     ETgPM_SHORT                                 m_enPM; /**< Collision primitive used by a Form. */
     UTg2_CO_Primitive_F32_04                    m_uPM; /**< Union of available collision primitives. */
     TgVOID                                      (*m_pfnPM_Copy_TX)( TgVOID_PCU, TgVOID_CPCU, TgVOID_CPCU ); /* Function used to transform the primitive for collision test. */
+    TgVOID                                      (*m_pfnPM_Sweep_BA)( TgVOID_PCU, TgVOID_CPCU, TgVEC_F32_04_1_C ); /* Function used to transform the primitive for collision test. */
+    TgVEC_F32_04_1                              (*m_pfnPM_Support_Point)( TgVOID_CPCU, TgVEC_F32_04_1_C ); /* Function used to transform the primitive for collision test. */
 
     TgPH_BODY_ID                                m_tiBY; /**< Parent Body. */
     TgPH_FORM_ID                                m_tiNext; /**< Next form that is linked to the same parent body. */
-    TgPNS_OBJECT_ID                             m_tiPnS; /**< Prune and Sweep ID. */
+    TgPARTITION_OBJECT_ID                       m_tiPnS; /**< Prune and Sweep ID. */
 
     TgVEC_F32_04_1                              m_vPos_O2B; /**< Position of the Form in Parent Reference Frame. */
     TgVEC_F32_04_1                              m_vRot_O2B; /**< Quaternion rotation of the Form in Parent Reference Frame. */
@@ -56,10 +59,9 @@ TgTYPE_STRUCT( STg2_PH_Form, )
     TgVEC_F32_04_1                              m_vDebug_Colour;
 
     TgFLOAT32                                   m_fDisable_Timer; /**< A measure of the time the form has experienced movement under the sleep threshold. */
-
-    TgUINT_E32                                  m_bEnabled : 1; /**< Bitfield boolean flag indicating that the Form is enabled. */
-    TgUINT_E32                                  m_uiPad2 : 31;
-    TgUINT_E64                                  m_uiPad3;
+    TgUINT_E08                                  m_uiUpdate : 1;
+    TgUINT_E08                                  m_uiFlags : 7;
+    TgUINT_E08                                  m_uiPad[11];
 };
 
 
@@ -99,7 +101,7 @@ TgTYPE_STRUCT( STg2_PH_Body, )
     TgUINT_PTR                                  m_uiContext; /**< Void pointed passed into one of the user defined call backs.  */
     TgUINT_PTR                                  m_uiPad;
 
-    TgUINT_E32                                  m_bEnabled : 1; /**< Set indicates that the body is enabled (but may not be active). */
+    TgUINT_E32                                  m_bUpdate : 1; /**< Set indicates that the body is enabled (but may not be active). */
     TgUINT_E32                                  m_bRagdoll : 1; /**< Set indicates that the body is part of a ragdoll. */
     TgUINT_E32                                  m_bPad_1 : 30;
 
@@ -257,13 +259,16 @@ TgTYPE_STRUCT(STg2_PH_World,)
                                                 /* World Configuration */
     TgVEC_F32_04_1                              m_vForce_Field; /**< The acceleration field applied to all bodies during simulation. */
     TgVEC_F32_04_1                              m_vStep_Size; /**< The size of the fixed time step used during update. */
+    TgPH_FCN_UPDATE_COLLISION_SCENE             m_pfnCollision_Update; /**< Function to use as the entry point to the Collision pass during World Update. */
+    TgPARTITION_GRAPH_ID                        m_tiPA_Graph; /**< UID for the Partition Manager Graph used in the Collision pass. */
 
                                                 /* Run Time Configuration */
     TgUINT_E64                                  m_uiPaused : 1; /**< True if the world is in a pause state, and false otherwise. */
     TgUINT_E64                                  m_uiSingle_Step : 1; /**< True if the module should execute a single step, and false otherwise. */
     TgUINT_E64                                  m_uiSimulate : 1; /**< True if the simulation pass is active, and false otherwise. */
     TgUINT_E64                                  m_uiCollide : 1; /**< True if the collision pass is active, and false otherwise. */
-    TgUINT_E64                                  m_uiPad1 : 60;
+    TgUINT_E64                                  m_uiCollision_Simple : 1; /**< True if the simple (N^2) collision pair generator is used, and false otherwise. */
+    TgUINT_E64                                  m_uiPad1 : 59;
 
                                                 /* Serialization */
     STg2_PH_Scene_P                             m_psScene; /**< List of all the scenes associated with this world. */
@@ -275,9 +280,13 @@ TgTYPE_STRUCT(STg2_PH_World,)
 TgTYPE_STRUCT( STg2_PH_Update__Simulation, )
 {
                                                 /* These lists are 1:1 with g_aapsBody_Used. */
-    TgVEC_F32_04_1_P                            m_avPos_W; /**< Predicted Position: Used in Collision Pass */
-    TgVEC_F32_04_1_P                            m_avRot_W; /**< Predicted Rotation: Used in Collision Pass */
+    TgVEC_F32_04_1_P                            m_avBY_Pos_O2W; /**< Predicted Position: Used in Constraints. */
     TgVEC_F32_04_1_P                            m_avRHS_LA; /**< Linear, Angular Right Hand Side component, used in Constraint Coefficient generation to finalize RHS. */
+
+                                                /* These lists are 1:1 with g_aapsForm_Used. */
+    TgVEC_F32_04_3_P                            m_amFM_Final_O2W; /**< Predicted Final Transform: Used in Collsion Pass */
+    TgVEC_F32_04_1_P                            m_avFM_Pos_O2W; /**< Predicted Final Position: Used in Collsion Pass */
+    TgBOXAA_F32_04_P                            m_asFM_BA_W; /**< Axis Aligned Bounding Box covering current position and rotation swept to the predicted position and rotation. */
 };
 
 TgTYPE_STRUCT( STg2_PH_Update__Contact, )
@@ -341,7 +350,10 @@ TgCOMPILER_ASSERT( sizeof( STg2_PH_Job__Update_World__Collide_Data ) <= KTgJOB_D
 TgTYPE_STRUCT(STg2_PH_Job__Update_World__Build_Set_Data,)
 {
     TgPH_WORLD_ID TgALIGN(16)                   m_tiWorld;
-    TgUINT_E08                                  m_uiPad[8];
+    TgUINT_E08                                  m_bSimulation : 1;
+    TgUINT_E08                                  m_bCollision : 1;
+    TgUINT_E08                                  m_uiFlags : 6;
+    TgUINT_E08                                  m_uiPad[7];
 };
 TgCOMPILER_ASSERT( sizeof( STg2_PH_Job__Update_World__Build_Set_Data ) <= KTgJOB_DATA_SIZE, 0 );
 

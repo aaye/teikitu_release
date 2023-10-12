@@ -9,10 +9,10 @@
     visit http://creativecommons.org/licenses/by-nc-sa/4.0/ or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. */
 /* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
 
-#if defined(TgBUILD_OS__WIN)
-#include "TgS COMMON/TgS (WIN) Common - Base - Include.h"
-#include "TgS KERNEL/TgS (WIN) Kernel.h"
-/*# defined(TgBUILD_OS__WIN) */
+#if defined(TgBUILD_OS__WINDOWS)
+#include "TgS COMMON/TgS (WINDOWS) Common - Base - Include.h"
+#include "TgS KERNEL/TgS (WINDOWS) Kernel.h"
+/*# defined(TgBUILD_OS__WINDOWS) */
 #endif
 
 /* ---- GPU - Unit Test ---------------------------------------------------------------------------------------------------------------------------------------------------------- */
@@ -80,10 +80,12 @@ static Test_Case                            s_sCASE__Kernel_GPU_Render_Simple;
 static Test_Case                            s_sCASE__Kernel_GPU_Compute;
 
 #if defined(TgBUILD_FEATURE__GRAPHICS)
-#if defined(TgBUILD_OS__WIN)
+#if defined(TgBUILD_OS__WINDOWS)
 static TgRSIZE                              s_nuiAppWindow = 0; /* Minimum of 1 */
 static STg2_KN_OS_UNIT_TEST__UTIL__Window   s_shWnd[KTgKN_MAX_WINDOWS];
-/*# defined(TgBUILD_OS__WIN) */
+#else
+static TgRSIZE_C                            s_nuiAppWindow = 1;
+/*# defined(TgBUILD_OS__WINDOWS) */
 #endif
 static STg2_KN_GPU_Select                   s_sSelect;
 /*# defined(TgBUILD_FEATURE__GRAPHICS) */
@@ -205,9 +207,9 @@ TEST_METHOD( UNIT_TEST__TEST__KN_GPU_Render_Enumeration )
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 TEST_METHOD( UNIT_TEST__TEST__KN_GPU_Render_Init_Windows )
 {
-#if defined(TgBUILD_FEATURE__GRAPHICS) && defined(TgBUILD_OS__WIN)
+#if defined(TgBUILD_FEATURE__GRAPHICS) && defined(TgBUILD_OS__WINDOWS)
     Test__Expect_EQ( 9, s_nuiAppWindow = tgKN_OS_UNIT_TEST__UTIL__Init_Windows( s_shWnd, KTgKN_MAX_WINDOWS, false ) );
-/*# defined(TgBUILD_FEATURE__GRAPHICS) && defined(TgBUILD_OS__WIN) */
+/*# defined(TgBUILD_FEATURE__GRAPHICS) && defined(TgBUILD_OS__WINDOWS) */
 #endif
 
     TEST_END_METHOD( KTgS_OK );
@@ -236,7 +238,7 @@ TEST_METHOD( UNIT_TEST__TEST__KN_GPU_Render_Init_Select )
     s_sSelect.m_nuiNode = 2;
     s_sSelect.m_nuiOutput = 1;
 
-#if defined(TgBUILD_OS__WIN)
+#if defined(TgBUILD_OS__WINDOWS)
     {
         /* On Windows, pull back the window client size to use as the render target size. */
 
@@ -255,7 +257,7 @@ TEST_METHOD( UNIT_TEST__TEST__KN_GPU_Render_Init_Select )
         }
     }
 
-/*# defined(TgBUILD_OS__WIN) */
+/*# defined(TgBUILD_OS__WINDOWS) */
 #endif
 
     Test__Expect_EQ( KTgS_OK, tgKN_GPU_Select_Context__Validate( &s_sSelect ) );
@@ -294,11 +296,14 @@ static TgRESULT UNIT_TEST__TEST__KN_GPU_Render_Simple_Job( STg2_Job_CPC psJob )
     {
         tgUnit_Test__KN_GPU__Render( uJob_Data.ps->m_tiCXT_EXEC, uJob_Data.ps->m_tiCXT_SWAP, uJob_Data.ps->m_tiCXT_WORK, 2 );
     }
-    s_shWnd[uJob_Data.ps->m_uiWindow].m_fFrame_Elapsed_Time = tgTM_Query_Time() - fFrame_Start_Time;
 
+#if defined(TgBUILD_OS__WINDOWS)
     /* Add the frame time to the windows title. */
+    s_shWnd[uJob_Data.ps->m_uiWindow].m_fFrame_Elapsed_Time = tgTM_Query_Time() - fFrame_Start_Time;
     TgOS_TEXT_FCN(PrintF)( szBuffer, 256, TgOS_TEXT(" Frame Time: % 2.2fms"), (double)s_shWnd[uJob_Data.ps->m_uiWindow].m_fFrame_Elapsed_Time );
     tgKN_OS_Set_Window_Title(s_shWnd[uJob_Data.ps->m_uiWindow].m_iWnd, szBuffer, 256 );
+/*# defined(TgBUILD_OS__WINDOWS) */
+#endif
 
     TgSTD_ATOMIC(fetch_add)( &s_xuiRender_Counter, 1 );
     return (KTgS_OK);
@@ -352,6 +357,7 @@ TEST_METHOD( UNIT_TEST__TEST__KN_GPU_Render_Simple )
     /* Map the windows to output contexts based on the results. i.e. We selected which output context that we expected for each window in the select data structure, however, the
        context may have failed to be created. Thus, now we map the window to the completed output contexts. */
 
+#if defined(TgBUILD_OS__WINDOWS)
     for (uiWindow = 0; uiWindow < s_nuiAppWindow; ++uiWindow)
     {
         for (uiSwap = 0; uiSwap < sGPU_Init_Result.m_nuiSWAP; ++uiSwap)
@@ -364,6 +370,8 @@ TEST_METHOD( UNIT_TEST__TEST__KN_GPU_Render_Simple )
             }
         };
     };
+/*# defined(TgBUILD_OS__WINDOWS) */
+#endif
 
     bAll_Windows_Closed = false;
     for (s_uiFrame_Counter = 0; !bAll_Windows_Closed; ++s_uiFrame_Counter)
@@ -389,11 +397,14 @@ TEST_METHOD( UNIT_TEST__TEST__KN_GPU_Render_Simple )
         uiFrame_Counter_Start = TgSTD_ATOMIC(load)( &s_xuiRender_Counter );
         for (uiWindow = 0; uiWindow < s_nuiAppWindow; ++uiWindow)
         {
+        #if defined(TgBUILD_OS__WINDOWS)
             if (ETgTHREAD_STATUS__INVALID == tgKN_OS_Query_Window_Thread_Status( s_shWnd[uiWindow].m_iWnd ))
                 continue;
             bAll_Windows_Closed = false;
-
             uiSwap = (TgRSIZE)s_shWnd[uiWindow].m_iOutput;
+        /*# defined(TgBUILD_OS__WINDOWS) */
+        #endif
+
             ++nuiSwap;
             if (!s_bTest_Context_CMD_Per_Window)
             {

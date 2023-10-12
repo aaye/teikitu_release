@@ -11,17 +11,67 @@
 
 #include "../TgS UNIT TEST/TgS Common [Unit Test] - Unit Test.h"
 
-#if defined(TgBUILD_OS__WIN)
-#include "TgS COMMON/TgS (WIN) Common - Base - Include.h"
-#include "TgS COMMON/TgS (WIN) Common - Base - Type.h"
+#include "TgS Common.h"
+
+#if TgS_RING_LEVEL >= 0 || defined(TgS_UNIT_TEST__COLLISION)
+#include "TgS Collision.h"
+#endif
+#if TgS_RING_LEVEL >= 0 || defined(TgS_UNIT_TEST__PARTITION)
+#include "TgS Partition.h"
+#endif
+#if TgS_RING_LEVEL >= 0 || defined(TgS_UNIT_TEST__PATH_AI)
+#include "TgS Path-AI.h"
+#endif
+#if TgS_RING_LEVEL >= 2 || defined(TgS_UNIT_TEST__KERNEL)
+#include "TgS Kernel.h"
+#include "TgS Utility.h"
+#if defined(TgBUILD_FEATURE__GRAPHICS)
+#include "TgS Kernel [GPU].h"
+#endif
+#endif
+#if TgS_RING_LEVEL >= 3 || defined(TgS_UNIT_TEST__ANIMATION)
+#include "TgS Animation.h"
+#endif
+#if TgS_RING_LEVEL >= 3 || defined(TgS_UNIT_TEST__INPUT)
+#include "TgS Input.h"
+#endif
+#if TgS_RING_LEVEL >= 3 || defined(TgS_UNIT_TEST__PHYSICS)
+#include "TgS Physics.h"
+#endif
+#if TgS_RING_LEVEL >= 3 || defined(TgS_UNIT_TEST__RENDER)
+#include "TgS Render.h"
+#endif
+#if TgS_RING_LEVEL >= 3 || defined(TgS_UNIT_TEST__SOUND)
+#include "TgS Sound.h"
+#endif
+#if TgS_RING_LEVEL >= 4 || defined(TgS_UNIT_TEST__EFFECT)
+#include "TgS Effect.h"
+#endif
+#if TgS_RING_LEVEL >= 4 || defined(TgS_UNIT_TEST__OBJECT)
+#include "TgS Object.h"
+#endif
+#if TgS_RING_LEVEL >= 4 || defined(TgS_UNIT_TEST__SCRIPT)
+#include "TgS Set.h"
+#endif
+#if TgS_RING_LEVEL >= 4 || defined(TgS_UNIT_TEST__SET)
+#include "TgS Script.h"
+#endif
+#if TgS_RING_LEVEL >= 5 || defined(TgS_UNIT_TEST__EXECUTION)
+    if (TgFAILED(tgEX_Module_Init()))
+        goto FAIL_Test_Context__Init;
+#endif
+
+#if defined(TgBUILD_OS__WINDOWS)
+#include "TgS COMMON/TgS (WINDOWS) Common - Base - Include.h"
+#include "TgS COMMON/TgS (WINDOWS) Common - Base - Type.h"
 #endif
 typedef struct HINSTANCE__ *HINSTANCE;
 
 TgMSVC_PRAGMA(warning( push, 0 ))
-#if defined(TgBUILD_OS__WIN) && defined(_DEBUG )
+#if defined(TgBUILD_OS__WINDOWS) && defined(_DEBUG )
 #define _CRTDBG_MAP_ALLOC
 #include <crtdbg.h>
-/*# defined(TgBUILD_OS__WIN) && defined(_DEBUG ) */
+/*# defined(TgBUILD_OS__WINDOWS) && defined(_DEBUG ) */
 #endif
 TgMSVC_PRAGMA(warning( pop ))
 TgCLANG_WARN_SUPPRESS(missing-prototypes)
@@ -37,10 +87,10 @@ TgCLANG_WARN_SUPPRESS(missing-prototypes)
 
 static STg2_Output                          g_sErrOut, g_sStdOut;
 
-#if defined(TgBUILD_OS__WIN) && defined(_DEBUG )
+#if defined(TgBUILD_OS__WINDOWS) && defined(_DEBUG )
 TgEXTN HINSTANCE                            g_hInstance;
 static _CrtMemState                         s_sMemState0;
-/*# defined(TgBUILD_OS__WIN) && defined(_DEBUG ) */
+/*# defined(TgBUILD_OS__WINDOWS) && defined(_DEBUG ) */
 #endif
 
 /* static PROFILE_DEFINE( PROFILE_UNIT_TEST__EXECUTE ); */
@@ -54,13 +104,13 @@ static _CrtMemState                         s_sMemState0;
 
 void CDECL Test_End_Process(void) TgATTRIBUTE_NO_EXCEPT
 {
-#if defined(TgBUILD_OS__WIN) && defined(_DEBUG )
+#if defined(TgBUILD_OS__WINDOWS) && defined(_DEBUG )
   _CrtMemState                        sMemState1, sMemState2;
     _CrtMemCheckpoint( &sMemState1 );
     if (_CrtMemDifference( &sMemState2, &s_sMemState0, &sMemState1 ))
         _CrtMemDumpStatistics( &sMemState2 );
     _CrtMemDumpAllObjectsSince( &s_sMemState0 );
-/*# defined(TgBUILD_OS__WIN) && defined(_DEBUG ) */
+/*# defined(TgBUILD_OS__WINDOWS) && defined(_DEBUG ) */
 #endif
 }
 
@@ -148,6 +198,10 @@ TgRESULT Test_Context__Init( TgVOID )
 #endif
 
 
+#if TgS_RING_LEVEL >= 0 || defined(TgS_UNIT_TEST__PARTITION)
+    if (TgFAILED(tgPA_Module_Init()))
+        goto FAIL_Test_Context__Init;
+#endif
 #if TgS_RING_LEVEL >= 0 || defined(TgS_UNIT_TEST__COLLISION)
     if (TgFAILED(tgCO_Module_Init()))
         goto FAIL_Test_Context__Init;
@@ -219,9 +273,7 @@ FAIL_Test_Context__Init:
 #if TgS_RING_LEVEL >= 2
     tgCO_Module_Free();
 #endif
-#if TgS_RING_LEVEL >= 0
     tgGB_Free();
-#endif
     return (KTgE_FAIL);
 }
 
@@ -302,9 +354,7 @@ FAIL_Test_Context__Boot:
 #if TgS_RING_LEVEL >= 2
     tgCO_Module_Stop();
 #endif
-#if TgS_RING_LEVEL >= 0
     tgGB_Stop();
-#endif
     return (KTgE_FAIL);
 }
 
@@ -387,6 +437,9 @@ TgRESULT Test_Context__Free( TgVOID )
 #endif
     tgKN_Module_Free();
 #endif
+#if TgS_RING_LEVEL >= 0 || defined(TgS_UNIT_TEST__PARTITION)
+    tgPA_Module_Free();
+#endif
 #if TgS_RING_LEVEL >= 0 || defined(TgS_UNIT_TEST__COLLISION)
     tgCO_Module_Free();
 #endif
@@ -418,22 +471,22 @@ TgMAIN_FUNCTION
     TgSINT_E64                          iTime_Start, iTime_End, iTime_Elapsed;
     TgFLOAT32                           fTime_Elapsed;
     
-#if !defined(TgCOMPILE_PLATFORM__WIN_CON) && defined(TgCOMPILE_PLATFORM__WIN)
+#if !defined(TgCOMPILE_PLATFORM__WINDOWS_CON) && defined(TgCOMPILE_PLATFORM__WIN)
     (void)hPrevInstance;
     (void)lpCmdLine;
     (void)nCmdShow;
-/*# !defined(TgCOMPILE_PLATFORM__WIN_CON) && defined(TgCOMPILE_PLATFORM__WIN) */
+/*# !defined(TgCOMPILE_PLATFORM__WINDOWS_CON) && defined(TgCOMPILE_PLATFORM__WIN) */
 #endif
 
     atexit( Test_End_Process );
 
     TgMAIN_PLATFORM_GLOBAL_INIT;
 
-#if defined(TgBUILD_OS__WIN) && defined(_DEBUG )
+#if defined(TgBUILD_OS__WINDOWS) && defined(_DEBUG )
     _CrtSetDbgFlag( _crtDbgFlag | _CRTDBG_ALLOC_MEM_DF | _CRTDBG_CHECK_ALWAYS_DF );
     _CrtSetReportMode( _CRT_ERROR, _CRTDBG_MODE_DEBUG );
     _CrtMemCheckpoint( &s_sMemState0 );
-/*# defined(TgBUILD_OS__WIN) && defined(_DEBUG ) */
+/*# defined(TgBUILD_OS__WINDOWS) && defined(_DEBUG ) */
 #endif
 
     iTime_Start = tgTM_Query_Counter_Tick();

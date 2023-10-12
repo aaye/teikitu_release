@@ -111,7 +111,7 @@ TgRESULT tgCM_UT_LF__HT_RW__Init_Fixed( STg2_UT_LF__HT_RW_PCU psHash_Table, TgRS
 
 /* ---- tgCM_UT_LF__HT_RW__Insert_Internal --------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgRESULT tgCM_UT_LF__HT_RW__Insert_Internal( STg2_UT_LF__HT_RW_PCU NONULL psHash_Table, TgUINT_MAX_C uiHash, TgVOID_CP pValue )
+TgRESULT tgCM_UT_LF__HT_RW__Insert_Internal( STg2_UT_LF__HT_RW_PCU psHash_Table, TgUINT_MAX_C uiHash, TgVOID_CP pValue )
 {
     TgRSIZE                             uiIndex;
     union

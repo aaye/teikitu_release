@@ -24,7 +24,7 @@
 
 /* See: https://en.cppreference.com/w/cpp/thread/hardware_destructive_interference_size for the impact of improper sharing of L1 cache line. */
 
-#define TgCCL                               TgBUILD_HARDWARE__CPU_CACHE_LINE_SIZE
+#define TgCCL                               TgBUILD_HARDWARE__DESTRUCTIVE_INTERFERENCE_SIZE
 
 
 /* =============================================================================================================================================================================== */

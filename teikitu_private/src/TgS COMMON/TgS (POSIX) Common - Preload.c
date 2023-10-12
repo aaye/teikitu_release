@@ -94,6 +94,8 @@ TgVOID CDECL tgMM_OS__Preload_Process_Done( TgVOID ) TgATTRIBUTE_NO_EXCEPT
 /*  TgS COMMON Public Function Implementations                                                                                                                                     */
 /* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
 
+#if defined(TgBUILD_FEATURE__MALLOC_OVERRIDE)
+
 /* ---- tgTR_Yield --------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 TgVOID tgTR_Yield(TgVOID)
@@ -144,3 +146,6 @@ TgVOID tgPM_MT_SM_Signal( STg1_MT_SM_PCU psSM, TgUINT_E32_C nuiSignal )
         TgVERIFY(0 == iRet);
     };
 }
+
+/*# defined(TgBUILD_FEATURE__MALLOC_OVERRIDE) */
+#endif

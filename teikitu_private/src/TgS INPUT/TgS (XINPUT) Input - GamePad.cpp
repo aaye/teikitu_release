@@ -9,7 +9,7 @@
     visit http://creativecommons.org/licenses/by-nc-sa/4.0/ or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. */
 /* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
 
-#include "TgS COMMON/TgS (WIN) Common - Base - Include.h"
+#include "TgS COMMON/TgS (WINDOWS) Common - Base - Include.h"
 
 TgDISABLE_ALL_WARNNGS_PUSH
 #include <xinput.h>

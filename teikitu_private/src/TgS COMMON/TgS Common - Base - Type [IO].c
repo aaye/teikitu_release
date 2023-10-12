@@ -12,7 +12,7 @@
 #if !defined(TEMPLATE_TYPE_EXPANSION__RELOAD)
     #define TEMPLATE_TYPE_EXPANSION__RELOAD
 
-    #if defined(TgBUILD_OS__WIN)
+    #if defined(TgBUILD_OS__WINDOWS)
         #define NULL 0
     #endif
 

@@ -33,7 +33,7 @@ TEST_METHOD_DEFINE( LINK_TEST__TEST__PH )
     TgPH_SCENE_ID tiScene = { .m_uiKI=0 };
     TgPH_WORLD_ID tiWorld = { .m_uiKI=0 };
 
-    TgPNS_OBJECT_ID TgPNS_OBJECT_ID_VAR = { .m_uiKI=0 };
+    TgPARTITION_OBJECT_ID TgPARTITION_OBJECT_ID_VAR = { .m_uiKI=0 };
 
     TgVEC_F32_04_1 TgVEC_F32_04_1_VAR = {0};
     TgFLOAT32 TgFLOAT32_VAR = 0.0F;
@@ -101,10 +101,9 @@ TEST_METHOD_DEFINE( LINK_TEST__TEST__PH )
     tgPH_Form_Query_Count( tiWorld );
     PHYSICS_FUNCTION_ACCESSOR__LINK_TEST_ASSIGN(Form,FORM,Category,TgUINT_E64)
     PHYSICS_FUNCTION_ACCESSOR__LINK_TEST_ASSIGN(Form,FORM,Collide,TgUINT_E64)
-    PHYSICS_FUNCTION_ACCESSOR__LINK_TEST_ASSIGN(Form,FORM,Enabled,TgBOOL)
     tgPH_Form_Query_Next_Form_ID( &tiForm, tiForm );
     tgPH_Form_Query_Body_ID( &tiBody, tiForm );
-    PHYSICS_FUNCTION_ACCESSOR__LINK_TEST_ASSIGN(Form,FORM,Sweep_ID,TgPNS_OBJECT_ID)
+    PHYSICS_FUNCTION_ACCESSOR__LINK_TEST_ASSIGN(Form,FORM,Sweep_ID,TgPARTITION_OBJECT_ID)
     PHYSICS_FUNCTION_ACCESSOR__LINK_TEST_ASSIGN(Form,FORM,Scale,TgVEC_F32_04_1) // Scale to be applied to the base geometry
     PHYSICS_FUNCTION_ACCESSOR__LINK_TEST_ASSIGN(Form,FORM,Colour,TgVEC_F32_04_1) // Debug Colour
 
@@ -139,7 +138,7 @@ TEST_METHOD_DEFINE( LINK_TEST__TEST__PH )
     PHYSICS_FUNCTION_ACCESSOR__LINK_TEST_ASSIGN(Body,BODY,Contact_FCN,TgCONTACT_FCN)
     PHYSICS_FUNCTION_ACCESSOR__LINK_TEST_ASSIGN(Body,BODY,Moved_FCN,TgMOVED_FCN)
     PHYSICS_FUNCTION_ACCESSOR__LINK_TEST_ASSIGN(Body,BODY,Context,TgUINT_PTR)
-    tgPH_Body_Query_Enabled( &TgBOOL_VAR, tiBody );
+    tgPH_Body_Query_Update( &TgBOOL_VAR, tiBody );
 
     /* Constraint                                                                                                                                                                  */
     tgPH_Constraint_Init( tiWorld );

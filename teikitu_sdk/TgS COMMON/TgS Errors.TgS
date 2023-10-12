@@ -27,6 +27,7 @@ ERROR_PROC( MEM_ALLOC_FAIL,                     ETgLIB__GENERAL )
 ERROR_PROC( JOB_QUEUE_FULL,                     ETgLIB__GENERAL )
 ERROR_PROC( SN_INVALID_ID,                      ETgLIB__GENERAL )
 ERROR_PROC( BUFFER_TOO_SMALL,                   ETgLIB__GENERAL )
+ERROR_PROC( NOT_SUPPORTED,                      ETgLIB__GENERAL )
 
 WARN_PROC( WARN,                                ETgLIB__GENERAL )
 WARN_PROC( DUPLICATE,                           ETgLIB__GENERAL )

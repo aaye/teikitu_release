@@ -56,7 +56,7 @@
     @return True if a root is found, and false otherwise */
 TgEXTN TgBOOL
 FCN_F(tgMH_BrentZ)(
-    VAR_T(PCU) NONULL ARG0, TgVOID_PCU ARG1, VAR_T()(*ARG2)( TgVOID_PCU, VAR_T(C) ), VAR_T() ARG3, VAR_T() ARG4 );
+    VAR_T(PCU) TgANALYSIS_NO_NULL ARG0, TgVOID_PCU ARG1, VAR_T()(*ARG2)( TgVOID_PCU, VAR_T(C) ), VAR_T() ARG3, VAR_T() ARG4 );
 
 /** @addtogroup TGS_COMMON_MATH_SCALAR_ALG
     @brief Calculate the root of a first degree equation
@@ -71,7 +71,7 @@ FCN_F(tgMH_BrentZ)(
     @return True if a root is found, and false otherwise */
 TgEXTN TgBOOL
 FCN_F(tgMH_BrentD)(
-    VAR_T(PCU) NONULL ARG0, VAR_T(PCU) NONULL ARG1, TgVOID_PCU ARG2, VAR_T()(*ARG3)( TgVOID_PCU, VAR_T(C) ), VAR_T()(*ARG4)( TgVOID_PCU, VAR_T(C) ), VAR_T() ARG5, VAR_T() ARG6,
+    VAR_T(PCU) TgANALYSIS_NO_NULL ARG0, VAR_T(PCU) TgANALYSIS_NO_NULL ARG1, TgVOID_PCU ARG2, VAR_T()(*ARG3)( TgVOID_PCU, VAR_T(C) ), VAR_T()(*ARG4)( TgVOID_PCU, VAR_T(C) ), VAR_T() ARG5, VAR_T() ARG6,
     VAR_T() ARG7 );
 
 
@@ -86,7 +86,7 @@ FCN_F(tgMH_BrentD)(
     @return True if a root is found, and false otherwise */
 TgEXTN TgBOOL
 FCN_F(tgMH_Calc_Root_1)(
-    VAR_T(PCU) NONULL ARG0, TgSINT_E32_PCU ARG1, VAR_T() ARG2, VAR_T() ARG3 );
+    VAR_T(PCU) TgANALYSIS_NO_NULL ARG0, TgSINT_E32_PCU ARG1, VAR_T() ARG2, VAR_T() ARG3 );
 
 /** @addtogroup TGS_COMMON_MATH_SCALAR_ROOT
     @brief Calculate the root of a second degree equation*/
@@ -98,7 +98,7 @@ FCN_F(tgMH_Calc_Root_1)(
     @return True if a root is found, and false otherwise */
 TgEXTN TgBOOL
 FCN_F(tgMH_Calc_Root_2)(
-    VAR_T(PCU) NONULL ARG0, TgSINT_E32_PCU ARG1, VAR_T() ARG2, VAR_T() ARG3, VAR_T() ARG4 );
+    VAR_T(PCU) TgANALYSIS_NO_NULL ARG0, TgSINT_E32_PCU ARG1, VAR_T() ARG2, VAR_T() ARG3, VAR_T() ARG4 );
 
 /** @addtogroup TGS_COMMON_MATH_SCALAR_ROOT
     @brief Calculate the root of a third degree equation*/
@@ -111,7 +111,7 @@ FCN_F(tgMH_Calc_Root_2)(
     @return True if a root is found, and false otherwise */
 TgEXTN TgBOOL
 FCN_F(tgMH_Calc_Root_3)(
-    VAR_T(PCU) NONULL ARG0, TgSINT_E32_PCU ARG1, VAR_T() ARG2, VAR_T() ARG3, VAR_T() ARG4, VAR_T() ARG5 );
+    VAR_T(PCU) TgANALYSIS_NO_NULL ARG0, TgSINT_E32_PCU ARG1, VAR_T() ARG2, VAR_T() ARG3, VAR_T() ARG4, VAR_T() ARG5 );
 
 /** @addtogroup TGS_COMMON_MATH_SCALAR_ROOT
     @brief Calculate the root of a fourth degree equation*/
@@ -125,7 +125,7 @@ FCN_F(tgMH_Calc_Root_3)(
     @return True if a root is found, and false otherwise */
 TgEXTN TgBOOL
 FCN_F(tgMH_Calc_Root_4)(
-    VAR_T(PCU) NONULL ARG0,TgSINT_E32_PCU ARG1,VAR_T() ARG2,VAR_T() ARG3,VAR_T() ARG4,VAR_T() ARG5,VAR_T() ARG6 );
+    VAR_T(PCU) TgANALYSIS_NO_NULL ARG0,TgSINT_E32_PCU ARG1,VAR_T() ARG2,VAR_T() ARG3,VAR_T() ARG4,VAR_T() ARG5,VAR_T() ARG6 );
 
 
 #include "TgS COMMON/TgS Common - Base - Defines [Template] [Math].h_inc"

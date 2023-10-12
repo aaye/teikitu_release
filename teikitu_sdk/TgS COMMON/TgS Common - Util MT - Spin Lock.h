@@ -142,8 +142,6 @@ TgTYPE_STRUCT(STg2_UT_LF_ISO__SN_ID,)
 TgMSVC_WARN_DISABLE_POP(4820)
 
 TgCOMPILER_ASSERT( 16 == sizeof( STg2_UT_ST__SRV_REQ_ID ), 0 );
-TgCOMPILER_ASSERT( ATOMIC_128BIT_SIZE == sizeof( STg2_UT_LF__SN_ID ), 0 );
-TgCOMPILER_ASSERT( TgCCL == sizeof( STg2_UT_LF_ISO__SN_ID ), 0 );
 
 
 /* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */

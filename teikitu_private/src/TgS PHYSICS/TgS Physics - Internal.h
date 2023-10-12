@@ -46,57 +46,58 @@ tgPH_Update_World__Init_Jobs( TgVOID );
 /** @addtogroup TGS_PHYSICS_MASS */
 /** @{ */
 
-/** @brief Update the mass structure based on moving the centre of mass.
+/** @brief Update the mass structure based on moving the centre of mass. @return Result Code.
     @param [in,out] INOUT0 Pointer to a mass data structure that is updated.
-    @param [in] ARG1 Scalar value
-    @param [in] ARG2 Scalar value
-    @param [in] ARG3 Scalar value
-    @return KTgS_OK on success, and KTgE_FAIL or an error code otherwise */
+    @param [in] ARG1 Scalar value.
+    @param [in] ARG2 Scalar value.
+    @param [in] ARG3 Scalar value.*/
 TgINLINE TgRESULT
 tgPH_Mass_Move_Elem(
     STg2_PH_Mass_PC TgANALYSIS_NO_NULL INOUT0, TgFLOAT32_C ARG1, TgFLOAT32_C ARG2, TgFLOAT32_C ARG3 );
 
-/** @brief Update the mass structure based on moving the centre of mass.
+/** @brief Update the mass structure based on moving the centre of mass. @return Result Code.
     @param [in,out] INOUT0 Pointer to a mass data structure that is updated.
-    @param [in] ARG1 Vector value
-    @return KTgS_OK on success, and KTgE_FAIL or an error code otherwise */
+    @param [in] ARG1 Vector value. */
 TgEXTN TgRESULT
 tgPH_Mass_Move(
     STg2_PH_Mass_PC TgANALYSIS_NO_NULL INOUT0, TgVEC_F32_04_1_C ARG1 );
 
-/** @brief Update the mass structure based on a rotation (euler angles).
+/** @brief Update the mass structure based on a rotation (euler angles). @return Result Code.
     @param [in,out] INOUT0 Pointer to a mass data structure that is updated.
-    @param [in] ARG1 Scalar value
-    @param [in] ARG2 Scalar value
-    @param [in] ARG3 Scalar value
-    @return KTgS_OK on success, and KTgE_FAIL or an error code otherwise */
+    @param [in] ARG1 Scalar value.
+    @param [in] ARG2 Scalar value.
+    @param [in] ARG3 Scalar value. */
 TgINLINE TgRESULT
 tgPH_Mass_Rotate_Eul_Elem(
     STg2_PH_Mass_PC TgANALYSIS_NO_NULL INOUT0, TgFLOAT32_C ARG1, TgFLOAT32_C ARG2, TgFLOAT32_C ARG3 );
 
-/** @brief Update the mass structure based on a rotation (euler angles).
+/** @brief Update the mass structure based on a rotation (euler angles). @return Result Code.
     @param [in,out] INOUT0 Pointer to a mass data structure that is updated.
-    @param [in] ARG1 Vector value
-    @return KTgS_OK on success, and KTgE_FAIL or an error code otherwise */
+    @param [in] ARG1 Vector value. */
 TgINLINE TgRESULT
 tgPH_Mass_Rotate_Eul( 
     STg2_PH_Mass_PC TgANALYSIS_NO_NULL INOUT0, TgVEC_F32_04_1_C ARG1 );
 
-/** @brief Update the mass structure based on a rotation (quaternion).
+/** @brief Update the mass structure based on a rotation (quaternion). @return Result Code.
     @param [in,out] INOUT0 Pointer to a mass data structure that is updated.
-    @param [in] ARG1 Vector value
-    @return KTgS_OK on success, and KTgE_FAIL or an error code otherwise */
+    @param [in] ARG1 Vector value. */
 TgINLINE TgRESULT
 tgPH_Mass_Rotate_Quat(
     STg2_PH_Mass_PC TgANALYSIS_NO_NULL INOUT0, TgVEC_F32_04_1_C ARG1 );
 
-/** @brief Update the mass structure based on a rotation (matrix).
+/** @brief Update the mass structure based on a rotation (matrix). @return Result Code.
     @param [in,out] INOUT0 Pointer to a mass data structure that is updated.
-    @param [in] ARG1 Pointer to an array of vectors (matrix)
-    @return KTgS_OK on success, and KTgE_FAIL or an error code otherwise */
+    @param [in] ARG1 Pointer to an array of vectors (matrix). */
 TgEXTN TgRESULT
 tgPH_Mass_Rotate_Mat(
     STg2_PH_Mass_PC TgANALYSIS_NO_NULL INOUT0, TgVEC_F32_04_3_CPCU ARG1 );
+
+/** @brief Update the mass structure as union of itself and the argument. @return Result Code.
+    @param [in,out] INOUT0 Pointer to a mass data structure that is updated.
+    @param [in] ARG1 Pointer a mass data structure. */
+TgINLINE TgRESULT
+tgPH_Mass_Union_Mat(
+    STg2_PH_Mass_PC TgANALYSIS_NO_NULL INOUT0, STg2_PH_Mass_CPC TgANALYSIS_NO_NULL ARG1 );
 
 /** @} TGS_PHYSICS_MASS */
 
@@ -127,12 +128,12 @@ tgPH_Material_Calc_Restitution_Factor(
 
 /** @brief Used to update when there is has been a local change to the Form.
     @note WRITE access is required.
-    @param [in,out] OUT0 Pointer to a Form to update.
+    @param [in,out] INOUT0 Pointer to a Form to update.
     @param [in] ARG1 Pointer to the owning Body.
     @param [in] ARG2 Boolean flag for Last Position that on true uses the updated Position and on false the current (previous) Position. */
 TgINLINE TgVOID
 tgPH_Form_Update__WRITE(
-     STg2_PH_Form_PC TgANALYSIS_NO_NULL OUT0, STg2_PH_Body_PC TgANALYSIS_NO_NULL ARG1, TgBOOL_C ARG2 );
+     STg2_PH_Form_PC TgANALYSIS_NO_NULL INOUT0, STg2_PH_Body_PC TgANALYSIS_NO_NULL ARG1, TgBOOL_C ARG2 );
 
 /** @brief Used to update when there is has been a local change to the Form.
     @note WRITE access is required.
@@ -141,20 +142,26 @@ TgEXTN TgVOID
 tgPH_Form_Reset_IMM(
      TgPH_FORM_ID_C ARG0 );
 
-TgEXTN TgRESULT
-tgPH_Form_Query_Support_Point(
-    TgVEC_F32_04_1_PC TgANALYSIS_NO_NULL OUT0, STg2_PH_Form_CPC TgANALYSIS_NO_NULL ARG1, TgVEC_F32_04_1_C ARG2 );
+/** @brief Immediate mode to set the collision primitive, function table, and primitive data.
+    @note WRITE access is required.
+    @param [in,out] INOUT0 Pointer to a Form to update.
+    @param [in] ARG1 Enumeration selecting the type of primitive.
+    @param [in] ARG2 Pointer to the primitive data. */
+TgEXTN TgVOID
+tgPH_Form_Set_Collision_Primitive_IMM(
+    STg2_PH_Form_PC INOUT0, ETgPM_SHORT_C ARG1, UTg2_CO_Primitive_F32_04_CPC ARG2 );
+
 
 
 /* -- Body ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 
 /** @brief Used to update the local state of the Body and cascade updates to its children.
     @note WRITE access is required.
-    @param [in,out] ARG0 Pointer to a Body to update.
+    @param [in,out] INOUT0 Pointer to a Body to update.
     @param [in] ARG1 Boolean flag for Last Position that on true uses the updated Position and on false the current (previous) Position. */
 TgINLINE TgVOID
 tgPH_Body_Update__WRITE(
-     STg2_PH_Body_PC TgANALYSIS_NO_NULL ARG0, TgBOOL_C ARG1 );
+     STg2_PH_Body_PC TgANALYSIS_NO_NULL INOUT0, TgBOOL_C ARG1 );
 
 /** @brief Removes the Form from the Body's linked list of associated Forms.
     @note WRITE access is required.
@@ -172,12 +179,13 @@ TgEXTN TgVOID
 tgPH_Body_Remove_Form_IMM(
     TgPH_FORM_ID_C ARG0 );
 
-/** @brief Body will call this on all of its children when its internal state has changed.
+/** @brief Sets the enabled state for the body, and cascades this change down to all of the associated Forms.
     @note WRITE access is required.
-    @param [in] ARG0 UID for the Form object to be updated. */
-TgEXTN TgRESULT
-tgPH_Body_Set_Enabled(
-    TgPH_BODY_ID_C ARG0, TgBOOL_C ARG1 );
+    @param [in] ARG0 Pointer to a Body data structure.
+    @param [in] ARG1 Boolean flag to indicating new state. */
+TgEXTN TgVOID
+tgPH_Body_Set_Update_IMM(
+    STg2_PH_Body_PC ARG0, TgBOOL_C ARG1 );
 
 TgEXTN TgVOID
 tgPH_Body_Contact_Default(
@@ -272,17 +280,6 @@ tgPH_Scene_Validate(
 
 /* -- World ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 
-/*                                                                                                                                                               Collision Updates */
-
-TgEXTN TgVOID
-tgPH_Update_World__Collide__Simple(
-    TgPH_WORLD_ID_C ARG0, TgRSIZE_C ARG1, TgRSIZE_C ARG2 );
-
-TgEXTN TgVOID
-tgPH_Update_World__Collide__Prune_And_Sweep(
-    TgPH_WORLD_ID_C ARG0, TgRSIZE_C ARG1, TgRSIZE_C ARG2 );
-
-
 /*                                                                                                                                                                   World Updates */
 
 TgEXTN TgRESULT
@@ -294,8 +291,12 @@ tgPH_Update_World__Simulate_Batch_IMM(
     TgPH_WORLD_ID_C ARG1, TgRSIZE_C ARG2, TgRSIZE_C ARG3 );
 
 TgEXTN TgVOID
-tgPH_Update_World__Collide_Batch(
+tgPH_Update_World__Collide__Simple_IMM(
     TgPH_WORLD_ID_C ARG0, TgRSIZE_C ARG1, TgRSIZE_C ARG2 );
+
+TgEXTN TgVOID
+tgPH_Update_World__Collide__Partition_Manager_IMM(
+    TgPH_WORLD_ID_C ARG0 );
 
 TgEXTN TgRESULT
 tgPH_Update_World__Build_Sets(
@@ -464,18 +465,18 @@ T_NAME(tgPH_,_Grow_Commit_List)(
 /*# !defined(T_STATIC) */
 
 /** @brief Init the object passed into the function.
-    @param [in,out] ARG0 Pointer to an object to initialize. 
+    @param [in,out] INOUT0 Pointer to an object to initialize. 
     @return KTgS_OK on success, and KTgE_FAIL or an error code otherwise. */
 TgEXTN TgRESULT
 T_NAME(tgPH_,_Init_Internal)(
-    T_NAME(STg2_PH_,_P) TgANALYSIS_NO_NULL ARG0 );
+    T_NAME(STg2_PH_,_P) TgANALYSIS_NO_NULL INOUT0 );
 
 /** @brief Reset the object passed into the function.
-    @param [in,out] ARG0 Pointer to an object to initialize.
+    @param [in,out] INOUT0 Pointer to an object to initialize.
     @return KTgS_OK on success, and KTgE_FAIL or an error code otherwise. */
 TgEXTN TgRESULT
 T_NAME(tgPH_,_Reset_Internal)(
-    T_NAME(STg2_PH_,_P) TgANALYSIS_NO_NULL ARG0 );
+    T_NAME(STg2_PH_,_P) TgANALYSIS_NO_NULL INOUT0 );
 
 /*# !defined(T_STATIC) */
 #endif

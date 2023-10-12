@@ -31,9 +31,11 @@ TgUINT_E32                                  g_uiOS_MM_Page_Size = 0;
 /*  TgS COMMON Public Function Implementations                                                                                                                                     */
 /* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
 
+#if defined(TgBUILD_FEATURE__MALLOC_OVERRIDE)
+
 /* ---- tgMM_Copy ---------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgRESULT tgMM_Copy( TgVOID_PU NONULL pDest, TgRSIZE_C nbyDest, TgVOID_CPU NONULL pSrc, TgRSIZE_C nbySrc )
+TgRESULT tgMM_Copy( TgVOID_PU pDest, TgRSIZE_C nbyDest, TgVOID_CPU pSrc, TgRSIZE_C nbySrc )
 {
     memcpy( pDest, pSrc, nbyDest > nbySrc ? nbySrc : nbyDest );
     return (KTgS_OK);
@@ -65,3 +67,6 @@ TgRESULT tgMM_Set_U08_0xFF( TgVOID_PU pDest, TgRSIZE_C nuiU08 )
     memset( pDest, 0xFF, nuiU08 );
     return (KTgS_OK);
 }
+
+/*# defined(TgBUILD_FEATURE__MALLOC_OVERRIDE) */
+#endif

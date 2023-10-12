@@ -45,7 +45,8 @@ TgKI_DECLARE(PATH_NAV_MESH_ID)
 TgKI_DECLARE(PATH_ENTITY_ID)
 TgKI_DECLARE(PATH_OBSTACLE_ID)
 
-TgKI_DECLARE(PNS_OBJECT_ID)
+TgKI_DECLARE(PARTITION_GRAPH_ID)
+TgKI_DECLARE(PARTITION_OBJECT_ID)
 
 
 /* =============================================================================================================================================================================== */

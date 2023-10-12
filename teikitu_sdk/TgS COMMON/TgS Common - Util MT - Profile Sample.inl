@@ -21,7 +21,7 @@
 
 /* ---- tgProfile_Sample_Reset --------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgProfile_Sample_Reset( STg2_Profile_Record_PCU NONULL psMonitor )
+TgINLINE TgVOID tgProfile_Sample_Reset( STg2_Profile_Record_PCU psMonitor )
 {
     TgSTD_ATOMIC(store)( &psMonitor->m_iRecord_DepthAndStart, 0 );
     TgSTD_ATOMIC(store)( &psMonitor->m_iRecord_Idle_Total, 0 );
@@ -35,7 +35,7 @@ TgINLINE TgVOID tgProfile_Sample_Reset( STg2_Profile_Record_PCU NONULL psMonitor
 
 /* ---- tgProfile_Sample_Start --------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgSINT_E64 tgProfile_Sample_Start( STg2_Profile_Record_PCU NONULL psMonitor )
+TgINLINE TgSINT_E64 tgProfile_Sample_Start( STg2_Profile_Record_PCU psMonitor )
 {
     TgSINT_E64                          iDepthAndStart, iNewDepthAndStart;
     TgSINT_E64                          iDepth;
@@ -73,7 +73,7 @@ TgINLINE TgSINT_E64 tgProfile_Sample_Start( STg2_Profile_Record_PCU NONULL psMon
 
 /* ---- tgProfile_Sample_Stop ---------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgSINT_E64 tgProfile_Sample_Stop( STg2_Profile_Record_PCU NONULL psMonitor )
+TgINLINE TgSINT_E64 tgProfile_Sample_Stop( STg2_Profile_Record_PCU psMonitor )
 {
     TgSINT_E64                          iDepthAndStart, iNewDepthAndStart;
     TgSINT_E64                          iDepth;
@@ -103,7 +103,7 @@ TgINLINE TgSINT_E64 tgProfile_Sample_Stop( STg2_Profile_Record_PCU NONULL psMoni
 
 /* ---- tgProfile_Sample_Report -------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgProfile_Sample_Report( STg2_Profile_Record_PCU NONULL psMonitor )
+TgINLINE TgVOID tgProfile_Sample_Report( STg2_Profile_Record_PCU psMonitor )
 {
     TgSINT_E64                          iDepthAndStart, iNewDepthAndStart;
     TgSINT_E64                          iDepth;

@@ -114,14 +114,26 @@ TgRESULT tgUnit_Test__PH__Render( TgKN_GPU_CXT_EXEC_ID_C tiCXT_EXEC, TgKN_GPU_CX
         /* Draw a sphere at the camera location. */
         PIXBeginEvent_ThatWorksInC_ID3D12GraphicsCommandList( uCMD.psEXT->m_psDX12_Graphics_Cmd_List, 0, "UNIT TEST: Draw Debug Geometry" );
         tgKN_GPU_EXT__CMD__Set_State_From_Default( uCMD, ETgKN_GPU_DEFAULT_PSO_DEBUG_GEOM_02, sRTBuffer.m_enFormat, sDSBuffer.m_enFormat );
+
+        //tgMH_CLI_S_F32_04_4( &s_sModelConstantBuffer.m_vModel_Transform );
+        //s_sModelConstantBuffer.m_vModel_Transform._11 = 0.25F;
+        //s_sModelConstantBuffer.m_vModel_Transform._22 = 0.25F;
+        //s_sModelConstantBuffer.m_vModel_Transform._33 = 0.25F;
+        //s_sModelConstantBuffer.m_vModel_Transform._41 = g_sCamera.m_sCamera.m_uCam_Position.m_vS_F32_04_1.x;
+        //s_sModelConstantBuffer.m_vModel_Transform._42 = g_sCamera.m_sCamera.m_uCam_Position.m_vS_F32_04_1.y;
+        //s_sModelConstantBuffer.m_vModel_Transform._43 = g_sCamera.m_sCamera.m_uCam_Position.m_vS_F32_04_1.z;
+        //tgKN_GPU_EXT__CMD__Render_Debug_Geom( uCMD, ETgKN_GPU_DEBUG_PM_3D_SPHERE, &s_sModelConstantBuffer );
+
+        /* Draw a sphere at the camera location. */
         tgMH_CLI_S_F32_04_4( &s_sModelConstantBuffer.m_vModel_Transform );
         s_sModelConstantBuffer.m_vModel_Transform._11 = 0.25F;
         s_sModelConstantBuffer.m_vModel_Transform._22 = 0.25F;
         s_sModelConstantBuffer.m_vModel_Transform._33 = 0.25F;
-        s_sModelConstantBuffer.m_vModel_Transform._41 = g_sCamera.m_sCamera.m_uCam_Position.m_vS_F32_04_1.x;
-        s_sModelConstantBuffer.m_vModel_Transform._42 = g_sCamera.m_sCamera.m_uCam_Position.m_vS_F32_04_1.y;
-        s_sModelConstantBuffer.m_vModel_Transform._43 = g_sCamera.m_sCamera.m_uCam_Position.m_vS_F32_04_1.z;
+        s_sModelConstantBuffer.m_vModel_Transform._41 = g_sCamera.m_sCamera.m_uCam_Target.m_vS_F32_04_1.x;
+        s_sModelConstantBuffer.m_vModel_Transform._42 = g_sCamera.m_sCamera.m_uCam_Target.m_vS_F32_04_1.y;
+        s_sModelConstantBuffer.m_vModel_Transform._43 = g_sCamera.m_sCamera.m_uCam_Target.m_vS_F32_04_1.z;
         tgKN_GPU_EXT__CMD__Render_Debug_Geom( uCMD, ETgKN_GPU_DEBUG_PM_3D_SPHERE, &s_sModelConstantBuffer );
+
         PIXEndEvent_ThatWorksInC_ID3D12GraphicsCommandList( uCMD.psEXT->m_psDX12_Graphics_Cmd_List );
     }
     #endif
@@ -130,42 +142,17 @@ TgRESULT tgUnit_Test__PH__Render( TgKN_GPU_CXT_EXEC_ID_C tiCXT_EXEC, TgKN_GPU_CX
     {
         TgPH_WORLD_ID                       tiPH_World;
 
-        /* Draw some world models. */
         PIXBeginEvent_ThatWorksInC_ID3D12GraphicsCommandList( uCMD.psEXT->m_psDX12_Graphics_Cmd_List, 0, "UNIT TEST: Draw Debug Geometry" );
-        tgKN_GPU_EXT__CMD__Set_State_From_Default( uCMD, ETgKN_GPU_DEFAULT_PSO_DEBUG_GEOM_02, sRTBuffer.m_enFormat, sDSBuffer.m_enFormat );
-
         tiPH_World = tgPH_World_Query_World_Id( ETgPH_WORLD__SERVER_DEFAULT );
-        tgPH_Form_Visualize_Render( uCMD, &s_sModelConstantBuffer, tiPH_World );
-
+        tgPH_Form_Visualize_Render( uCMD, &s_sModelConstantBuffer, tiPH_World, sRTBuffer.m_enFormat, sDSBuffer.m_enFormat );
         PIXEndEvent_ThatWorksInC_ID3D12GraphicsCommandList( uCMD.psEXT->m_psDX12_Graphics_Cmd_List );
     }
     #endif
 
     #if defined(TgCOMPILE__RENDER_DEBUG_OUTPUT) && TgCOMPILE__PROFILE
     {
-        TgCHAR_U8                           uszBuffer[512];
-        STg2_KN_GPU_OUTPUT_DEBUG_STRING     sOutput_Debug_String_0;
-
         PIXBeginEvent_ThatWorksInC_ID3D12GraphicsCommandList( uCMD.psEXT->m_psDX12_Graphics_Cmd_List, 0, "Physics Performance Stats" );
-        tgMM_Set_U08_0x00( &sOutput_Debug_String_0, sizeof( sOutput_Debug_String_0 ) );
-
-        sOutput_Debug_String_0.m_sOutput_DESC = sOutput_DESC;
-        sOutput_Debug_String_0.m_sRTBuffer = sRTBuffer;
-        sOutput_Debug_String_0.m_sDSBuffer = sDSBuffer;
-        sOutput_Debug_String_0.m_enFont = ETgKN_GPU_DOS_FONT_ROM_MARCIO;
-        sOutput_Debug_String_0.m_auszText[0] = uszBuffer;
-        sOutput_Debug_String_0.m_nuiText = 1;
-        sOutput_Debug_String_0.m_vText_Box_V.x = -1.0F + (10.0F / (float)sRTBuffer.m_uiWidth);
-        sOutput_Debug_String_0.m_vText_Box_V.y = 0.5F - (40.0F / (float)sRTBuffer.m_uiHeight); /* Odd, it seems to be taking into account the windows title bar. */
-        sOutput_Debug_String_0.m_vText_Box_V.z = 1.0F - (10.0F / (float)sRTBuffer.m_uiWidth);
-        sOutput_Debug_String_0.m_vText_Box_V.w =-1.0F + (10.0F / (float)sRTBuffer.m_uiHeight);
-        sOutput_Debug_String_0.m_vText_Colour.r = 0.0F;
-        sOutput_Debug_String_0.m_vText_Colour.g = 1.0F;
-        sOutput_Debug_String_0.m_vText_Colour.b = 0.0F;
-        sOutput_Debug_String_0.m_vText_Colour.a = 1.0F;
-        sOutput_Debug_String_0.m_bRight_Aligned = false;
-
-        tgKN_GPU__CMD__Render_Debug_Text_Box( uCMD, &sOutput_Debug_String_0 );
+        tgPH_Debug_Render_Performance_Stats( uCMD, &sOutput_DESC, &sRTBuffer, &sDSBuffer );
         PIXEndEvent_ThatWorksInC_ID3D12GraphicsCommandList( uCMD.psEXT->m_psDX12_Graphics_Cmd_List );
     }
     #endif

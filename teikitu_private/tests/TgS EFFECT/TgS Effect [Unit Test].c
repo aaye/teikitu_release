@@ -9,10 +9,10 @@
     visit http://creativecommons.org/licenses/by-nc-sa/4.0/ or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. */
 /* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
 
-#if defined(TgBUILD_OS__WIN)
-#include "TgS COMMON/TgS (WIN) Common - Base - Include.h"
-#include "TgS KERNEL/TgS (WIN) Kernel.h"
-/*# defined(TgBUILD_OS__WIN) */
+#if defined(TgBUILD_OS__WINDOWS)
+#include "TgS COMMON/TgS (WINDOWS) Common - Base - Include.h"
+#include "TgS KERNEL/TgS (WINDOWS) Kernel.h"
+/*# defined(TgBUILD_OS__WINDOWS) */
 #endif
 
 /* ---- GPU - Unit Test ---------------------------------------------------------------------------------------------------------------------------------------------------------- */
@@ -71,19 +71,13 @@ static Test_Case                            s_sCASE__Effect_Effects;
 
 #if defined(TgBUILD_FEATURE__GRAPHICS) 
 
-#if defined(TgBUILD_OS__WIN)
+#if defined(TgBUILD_OS__WINDOWS)
 static TgRSIZE                              s_nuiAppWindow = 0; /* Minimum of 1 */
 static STg2_KN_OS_UNIT_TEST__UTIL__Window   s_shWnd[KTgKN_MAX_WINDOWS];
-/*# defined(TgBUILD_OS__WIN) */
+/*# defined(TgBUILD_OS__WINDOWS) */
 #endif
 
 static STg2_KN_GPU_Select                   s_sSelect;
-
-#if defined(TgBUILD_OS__WIN)
-
-static TgBOOL
-tgUT_IN_Gamepad_Camera(
-    TgUINT_PTR_C ARG0, TgFLOAT32_C ARG1, STg2_IN_Event_CPC psIN_Event );
 
 static TgVOID
 tgUnit_Test__FX__Init_Billboard(
@@ -105,7 +99,18 @@ static TgVOID
 tgUnit_Test__FX__Init_Trail(
     TgUINT_E08_P puiBuffer );
 
-/*# defined(TgBUILD_OS__WIN) */
+#if defined(TgBUILD_OS__WINDOWS)
+
+static TgBOOL
+tgUT_IN_Gamepad_Camera(
+    TgUINT_PTR_C ARG0, TgFLOAT32_C ARG1, STg2_IN_Event_CPC psIN_Event );
+
+static TgFLOAT32                            s_fCam_Dist_Max[2] = { 50.0F, 50.0F };
+static TgFLOAT32                            s_fPhi[2] = { 3.141592653589793238462643383279F / 4.0F, 3.141592653589793238462643383279F / 4.0F };
+static TgFLOAT32                            s_fTheta[2] = { 0.0F, 0.0F };
+static TgSINT_E32                           s_iCamera_Select = 0;
+
+/*# defined(TgBUILD_OS__WINDOWS) */
 #endif
 
 
@@ -119,11 +124,6 @@ static TgFLOAT32                            s_fTotal_Elapse_Frame_Time;
 
 static TgBOOL                               s_bTest_Context_CMD_Per_Window = false;
 static TgBOOL                               s_bTest_Render_With_Jobs = false;
-
-static TgFLOAT32                            s_fCam_Dist_Max[2] = { 50.0F, 50.0F };
-static TgFLOAT32                            s_fPhi[2] = { 3.141592653589793238462643383279F / 4.0F, 3.141592653589793238462643383279F / 4.0F };
-static TgFLOAT32                            s_fTheta[2] = { 0.0F, 0.0F };
-static TgSINT_E32                           s_iCamera_Select = 0;
 
 TgTYPE_STRUCT( UT_KN_GPU_Render_Simple_Job_Data )
 {
@@ -220,9 +220,9 @@ TEST_METHOD( UNIT_TEST__TEST__FX_GPU_Render_Enumeration )
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 TEST_METHOD( UNIT_TEST__TEST__FX_GPU_Render_Init_Windows )
 {
-#if defined(TgBUILD_FEATURE__GRAPHICS) && defined(TgBUILD_OS__WIN)
+#if defined(TgBUILD_FEATURE__GRAPHICS) && defined(TgBUILD_OS__WINDOWS)
     Test__Expect_EQ( 1, s_nuiAppWindow = tgKN_OS_UNIT_TEST__UTIL__Init_Windows( s_shWnd, KTgKN_MAX_WINDOWS, true ) );
-/*# defined(TgBUILD_FEATURE__GRAPHICS) && defined(TgBUILD_OS__WIN) */
+/*# defined(TgBUILD_FEATURE__GRAPHICS) && defined(TgBUILD_OS__WINDOWS) */
 #endif
 
     TEST_END_METHOD( KTgS_OK );
@@ -239,10 +239,10 @@ TEST_METHOD( UNIT_TEST__TEST__FX_GPU_Render_Init_Select )
     tgMM_Set_U08_0x00( &s_sSelect, sizeof( s_sSelect ) );
     Test__Expect_EQ(KTgS_OK, tgKN_GPU_UNIT_TEST__UTIL__Init_Select( &s_sSelect, true ));
 
-#if defined(TgBUILD_OS__WIN)
+#if defined(TgBUILD_OS__WINDOWS)
     s_sSelect.m_nuiOutput = tgCM_MIN_UMAX(s_nuiAppWindow,s_sSelect.m_nuiOutput);
     s_sSelect.m_sOutput[0].m_uiOS_ID = s_shWnd[0].m_uiOS_ID;
-/*# defined(TgBUILD_OS__WIN) */
+/*# defined(TgBUILD_OS__WINDOWS) */
 #endif
 
 /*# defined(TgBUILD_FEATURE__GRAPHICS) */
@@ -267,10 +267,13 @@ static TgRESULT UNIT_TEST__TEST__FX_GPU_Render_Simple_Job( STg2_Job_CPC psJob )
     tgUnit_Test__FX__Render( uJob_Data.ps->m_tiCXT_EXEC, uJob_Data.ps->m_tiCXT_SWAP, uJob_Data.ps->m_tiCXT_WORK, 0 );
     s_shWnd[uJob_Data.ps->m_uiWindow].m_fFrame_Elapsed_Time = tgTM_Query_Time() - fFrame_Start_Time;
 
+#if defined(TgBUILD_OS__WINDOWS)
     /* Add the frame time to the windows title. */
     TgOS_TEXT_FCN(PrintF)( szBuffer, 256, TgOS_TEXT(" Render Time: % 2.2fms, Update Time: % 2.2fms"), (double)s_shWnd[uJob_Data.ps->m_uiWindow].m_fFrame_Elapsed_Time,
                            (double)s_fTotal_Elapse_Frame_Time );
     tgKN_OS_Set_Window_Title(s_shWnd[uJob_Data.ps->m_uiWindow].m_iWnd, szBuffer, 256 );
+/*# defined(TgBUILD_OS__WINDOWS) */
+#endif
 
     TgSTD_ATOMIC(fetch_add)( &s_xuiRender_Counter, 1 );
     return (KTgS_OK);
@@ -348,7 +351,9 @@ TEST_METHOD( UNIT_TEST__TEST__FX_GPU_Render_Simple )
     tgMM_Set_U08_0x00( &sGPU_Init_Result, sizeof( sGPU_Init_Result ) );
     Test__Expect_EQ( KTgS_OK, tgKN_GPU_Contexts__Init( &sGPU_Init_Result, &s_sSelect ) );
 
+#if defined(TgBUILD_OS__WINDOWS)
     tiIN_GamePad = tgIN_Insert_Consumer( ETgCONTROLLER_GAMEPAD_0, 0, tgUT_IN_Gamepad_Camera, 0 );
+#endif
 
     g_pbyFX_Billboard_Test = (TgUINT_E08_P)TgMALLOC_POOL( sizeof( STg2_FX_Billboard__File_Data ) + 2 * sizeof( STg2_FX_AnimData__Constant_F32_04 ) );
     tgUnit_Test__FX__Init_Billboard( g_pbyFX_Billboard_Test );
@@ -663,7 +668,7 @@ TgVOID tgUnit_Test__FX__Setup_Scene_Constant_Buffer( STg2_KN_GPU_Render_Buffer_C
 
 /* ---- tgUT_IN_Gamepad_Camera --------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-#if defined(TgBUILD_FEATURE__GRAPHICS)
+#if defined(TgBUILD_FEATURE__GRAPHICS) && defined(TgBUILD_OS__WINDOWS)
 static TgBOOL tgUT_IN_Gamepad_Camera( TgATTRIBUTE_MAYBE_UNUSED TgUINT_PTR_C ARG0, TgATTRIBUTE_MAYBE_UNUSED TgFLOAT32_C ARG1, STg2_IN_Event_CPC psIN_Event )
 {
     if (ETgCONTROLLER_GAMEPAD_0 != psIN_Event->m_enController)
@@ -706,7 +711,7 @@ static TgBOOL tgUT_IN_Gamepad_Camera( TgATTRIBUTE_MAYBE_UNUSED TgUINT_PTR_C ARG0
     TgWARN_DISABLE_POP()
     return (true);
 }
-/*# defined(TgBUILD_FEATURE__GRAPHICS) */
+/*# defined(TgBUILD_FEATURE__GRAPHICS) && defined(TgBUILD_OS__WINDOWS) */
 #endif
 
 

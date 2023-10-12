@@ -69,8 +69,8 @@ TgTYPE_STRUCT(STg2_SE_CO_Request_F32_04,)
     TgOBJECT_INST_ID                            m_tiMainObject; /**< The object that initiated this collision call */
     TgOBJECT_INST_ID                            m_tiObject_Graph_Ignored[KTgOB_MAX_OBJECT_IGNORE];
     TgOBJECT_INST_ID                            m_tiObject_Ignored[KTgOB_MAX_OBJECT_IGNORE];
-#if 0 != (2760 % TgBUILD_HARDWARE__CPU_CACHE_LINE_SIZE)
-    TgUINT_E08                                  m_uiPad0[TgBUILD_HARDWARE__CPU_CACHE_LINE_SIZE - (2760 % TgBUILD_HARDWARE__CPU_CACHE_LINE_SIZE)];
+#if 0 != (2760 % TgBUILD_HARDWARE__DESTRUCTIVE_INTERFERENCE_SIZE)
+    TgUINT_E08                                  m_uiPad0[TgBUILD_HARDWARE__DESTRUCTIVE_INTERFERENCE_SIZE - (2760 % TgBUILD_HARDWARE__DESTRUCTIVE_INTERFERENCE_SIZE)];
 #endif
 };
 

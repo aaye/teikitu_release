@@ -241,6 +241,15 @@ TgVOID tgPH_Constraint__Bind_IMM( TgPH_WORLD_ID_C tiWorld )
             psBY1->m_tiCT_Head = uCT.psCT->m_tiConstraint;
         };
 
+    #if defined(TgBUILD_DEBUG__PHYSICS)
+        if (g_nuiPH_Debug__Contact < KTgPH_DEBUG_MAX_CONTACT)
+        {
+            g_auPH_Debug__Contact[g_nuiPH_Debug__Contact].m_vF32_04_1 = uCT.psCT->m_sContact.m_sContact.m_vS0;
+            ++g_nuiPH_Debug__Contact;
+        };
+    /*# defined(TgBUILD_DEBUG__PHYSICS) */
+    #endif
+
         uCT.psNode = tgCM_UT_LF__ST__Pop( &g_asPH_Update__Constraint_IMM[tiWorld.m_uiI].m_sStack );
     };
 }
@@ -257,10 +266,10 @@ TgVOID tgPH_Constraint__Free_IMM( STg2_PH_Constraint_PC psCT )
     TgPARAM_CHECK(nullptr != psCT);
 
     /* Need to remove this constraint from the bodies linked lists. */
-    psBY0 = tgPH_Body_Get_Body_From_ID( psCT->m_tiBY0 );
-    tgPH_Constraint__Free_IMM_Linked_List_Remove( psBY0, psCT );
-    psBY1 = tgPH_Body_Get_Body_From_ID( psCT->m_tiBY1 );
-    tgPH_Constraint__Free_IMM_Linked_List_Remove( psBY1, psCT );
+    if (KTgID__INVALID_VALUE != psCT->m_tiBY0.m_uiKI && nullptr != (psBY0 = tgPH_Body_Get_Body_From_ID( psCT->m_tiBY0 )))
+        tgPH_Constraint__Free_IMM_Linked_List_Remove( psBY0, psCT );
+    if (KTgID__INVALID_VALUE != psCT->m_tiBY1.m_uiKI && nullptr != (psBY1 = tgPH_Body_Get_Body_From_ID( psCT->m_tiBY1 )))
+        tgPH_Constraint__Free_IMM_Linked_List_Remove( psBY1, psCT );
 
     /* IMPORTANT: This is the primary data synchronization to remove a  constraint from the world. It is ASSUMED that all new / delete operations for a World are done on a
        single thread, and not overlapped with any of the deferred commands. Thus, there are not synchronization guards on either the Init or Free functions. */
@@ -328,56 +337,30 @@ TgVOID tgPH_Module_Constraint_Init_Internal( TgVOID )
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 static TgVOID tgPH_Constraint__Free_IMM_Linked_List_Remove( STg2_PH_Body_PC psBY, STg2_PH_Constraint_CPC psCT )
 {
-    TgPH_CONSTRAINT_ID                  tiCT_Next;
-
-    if (nullptr == psBY)
-    {
-        return;
-    };
+    TgPH_CONSTRAINT_ID_C                tiCT_Next = psBY->m_tiBody.m_uiKI == psCT->m_tiBY0.m_uiKI ? psCT->m_tiNext_0 : psCT->m_tiNext_1;
+    TgPH_CONSTRAINT_ID_P                ptiCT;
 
     TgPARAM_CHECK(nullptr != psBY && nullptr != psCT);
     TgPARAM_CHECK((psBY->m_tiBody.m_uiKI == psCT->m_tiBY0.m_uiKI) || (psBY->m_tiBody.m_uiKI == psCT->m_tiBY1.m_uiKI ));
 
-    tiCT_Next = psBY->m_tiBody.m_uiKI == psCT->m_tiBY0.m_uiKI ? psCT->m_tiNext_0 : psCT->m_tiNext_1;
-
-    if (psBY->m_tiCT_Head.m_uiKI == psCT->m_tiConstraint.m_uiKI)
+    ptiCT = &psBY->m_tiCT_Head;
+    while (KTgID__INVALID_VALUE != ptiCT->m_uiKI)
     {
-        psBY->m_tiCT_Head = tiCT_Next; /* Remove the head of the linked list, and point to the next element. */
-    }
-    else
-    {
-        STg2_PH_Constraint_P                psCT1;
-
-        psCT1  = tgPH_Constraint_Get_Constraint_From_ID( psBY->m_tiCT_Head );
-        while (nullptr != psCT1)
+        if (ptiCT->m_uiKI == psCT->m_tiConstraint.m_uiKI)
         {
-            /* Purpose is to remove this Constraint from the linked list of Constraints. Check for this body in the current constraint and continue down the link list.
-               The body could be either BY0 or BY1 in each constraint that we iterate. If the body is not found the linked list is corrupted. */
+            *ptiCT = tiCT_Next; /* Remove the node, and point to the next element. */
+            break;
+        }
+        else
+        {
+            STg2_PH_Constraint_PC               psCT1 = tgPH_Constraint_Get_Constraint_From_ID( *ptiCT );
 
-            if (psCT1->m_tiBY0.m_uiKI == psBY->m_tiBody.m_uiKI)
+            if (nullptr == psCT1) TgATTRIBUTE_UNLIKELY
             {
-                if (psCT1->m_tiNext_0.m_uiKI == psCT->m_tiConstraint.m_uiKI)
-                {
-                    psCT1->m_tiNext_0 = tiCT_Next;
-                    break;
-                };
-                psCT1  = tgPH_Constraint_Get_Constraint_From_ID( psCT1->m_tiNext_0 );
-                continue;
+                return;
             };
 
-            if (psCT1->m_tiBY1.m_uiKI == psBY->m_tiBody.m_uiKI)
-            {
-                if (psCT1->m_tiNext_1.m_uiKI == psCT->m_tiConstraint.m_uiKI)
-                {
-                    psCT1->m_tiNext_1 = tiCT_Next;
-                    break;
-                };
-                psCT1  = tgPH_Constraint_Get_Constraint_From_ID( psCT1->m_tiNext_1 );
-                continue;
-            };
-
-            TgDIAG(false);
-            break; /* Badness - the linked lists have been corrupted. Indeterminate behaviour. */
+            ptiCT = psBY->m_tiBody.m_uiKI == psCT1->m_tiBY0.m_uiKI ? &psCT1->m_tiNext_0 : &psCT1->m_tiNext_1;
         };
     };
 }

@@ -186,22 +186,26 @@ TgVOID tgKN_GPU_EXT__CMD__Render_Debug_Geom( UTg2_KN_GPU_CMD_C uCMD, ETgKN_GPU_D
 
 /* ---- tgKN_GPU_EXT__CMD__Render_Debug_Geom_Instance ---------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgVOID tgKN_GPU_EXT__CMD__Render_Debug_Geom_Instance( UTg2_KN_GPU_CMD_C uCMD, ETgKN_GPU_DEBUG_PM enPM, TgRSIZE_C nuiInstance,
+TgVOID tgKN_GPU_EXT__CMD__Render_Debug_Geom_Instance( UTg2_KN_GPU_CMD_C uCMD, ETgKN_GPU_DEBUG_PM_C enPM, TgRSIZE_C nuiInstance,
                                                       STg2_KN_GPU_HLSL_CB_Debug_Model_Instance_CPC psModel_Instance_Constant_Buffer )
 {
     TgRSIZE                             uiEXEC = (uCMD.psEXT->m_tiCXT_WORK.m_uiI >> 16) & 0xFFFF;
     TgRSIZE                             uiWORK = (uCMD.psEXT->m_tiCXT_WORK.m_uiI & 0xFFFF) % KTgKN_GPU_MAX_EXEC_CONTEXT_COMMAND;
     STg2_KN_GPU_EXT_CXT_EXEC_PC         psEXT_CXT_EXEC = g_asKN_GPU_EXT_CXT_EXEC + uiEXEC;
+    TgSINT_E32_C                        iPM_3D_Index = (TgSINT_E32)enPM - (TgSINT_E32)ETgKN_GPU_DEBUG_PM_3D_START;
 
     STg2_KN_GPU_EXT_CXT_CMD_P           psEXT_CXT_CMD;
     TgRSIZE                             uiDX12_CB_GEOM;
     TgRSIZE                             nuiIndex;
     D3D12_RANGE                         sDX12_Range;
-    TgUINT_E08_P                        puiMappedConstantBuffer;
     D3D12_VERTEX_BUFFER_VIEW            sVertex_Buffer_View;
     D3D12_INDEX_BUFFER_VIEW             sIndex_Buffer_View;
     D3D12_GPU_DESCRIPTOR_HANDLE         shDX12_GPU;
     D3D12_GPU_VIRTUAL_ADDRESS           uiKB_GPU_Address;
+    union {
+        STg2_KN_GPU_HLSL_CB_DMI_P           ps;
+        TgUINT_E08_P                        pui;
+    }                                   uMappedConstantBuffer;
 
     TgPARAM_VAR(STg2_KN_GPU_CXT_EXEC_PC psCXT_EXEC = g_asKN_GPU_CXT_EXEC + uiEXEC;)
     TgPARAM_CHECK_INDEX( uiEXEC, g_asKN_GPU_EXT_CXT_EXEC );
@@ -214,26 +218,31 @@ TgVOID tgKN_GPU_EXT__CMD__Render_Debug_Geom_Instance( UTg2_KN_GPU_CMD_C uCMD, ET
     {
         return;
     }
-    enPM = (ETgKN_GPU_DEBUG_PM)((TgSINT_E32)enPM - ETgKN_GPU_DEBUG_PM_3D_START);
 
     psEXT_CXT_CMD = psEXT_CXT_EXEC->m_sContext_Command + uiWORK;
+    TgDIAG(psEXT_CXT_EXEC);
     uiDX12_CB_GEOM = TgSTD_ATOMIC(fetch_add)( &psEXT_CXT_CMD->m_xuiDX12_CB_GEOM, 1 );
 
     if (uiDX12_CB_GEOM >= KTgKN_GPU_MAX_DEBUG_GEOM || nullptr == psEXT_CXT_CMD->m_psDX12_CB_GEOM[uiDX12_CB_GEOM])
         return;
 
+    TgDIAG(psEXT_CXT_CMD->m_psDX12_CB_GEOM);
+    TgDIAG(psEXT_CXT_EXEC->m_psDX12_Vertex_Buffer__Geom);
+    TgDIAG(psEXT_CXT_EXEC->m_psDX12_Index_Buffer__Geom);
+    TgDIAG(psEXT_CXT_EXEC->m_nbyDX12_Index_Buffer__Geom);
+
     tgMM_Set_U08_0x00( &sDX12_Range, sizeof( sDX12_Range ) );
 
-    TgVERIFY(SUCCEEDED(ID3D12Resource_Map( psEXT_CXT_CMD->m_psDX12_CB_GEOM[uiDX12_CB_GEOM], 0, &sDX12_Range, (TgVOID_PP)&puiMappedConstantBuffer )));
-    tgMM_Copy( puiMappedConstantBuffer, g_uiAligned_Debug_Model_Instance_Constant_Buffer_Size, psModel_Instance_Constant_Buffer, sizeof(STg2_KN_GPU_HLSL_CB_Debug_Model_Instance) );
+    TgVERIFY(SUCCEEDED(ID3D12Resource_Map( psEXT_CXT_CMD->m_psDX12_CB_GEOM[uiDX12_CB_GEOM], 0, &sDX12_Range, (TgVOID_PP)&uMappedConstantBuffer.pui )));
+    tgMM_Copy( uMappedConstantBuffer.pui, g_uiAligned_Debug_Model_Instance_Constant_Buffer_Size, psModel_Instance_Constant_Buffer, sizeof(STg2_KN_GPU_HLSL_CB_Debug_Model_Instance) );
     ID3D12Resource_Unmap( psEXT_CXT_CMD->m_psDX12_CB_GEOM[uiDX12_CB_GEOM], 0, &sDX12_Range );
 
-    sVertex_Buffer_View.BufferLocation = ID3D12Resource_GetGPUVirtualAddress( psEXT_CXT_EXEC->m_psDX12_Vertex_Buffer__Geom[enPM] );
+    sVertex_Buffer_View.BufferLocation = ID3D12Resource_GetGPUVirtualAddress( psEXT_CXT_EXEC->m_psDX12_Vertex_Buffer__Geom[iPM_3D_Index] );
     sVertex_Buffer_View.StrideInBytes = sizeof( STg2_KN_GPU_Vertex_Geom_02 );
-    sVertex_Buffer_View.SizeInBytes = (UINT)psEXT_CXT_EXEC->m_nbyDX12_Vertex_Buffer__Geom[enPM];
+    sVertex_Buffer_View.SizeInBytes = (UINT)psEXT_CXT_EXEC->m_nbyDX12_Vertex_Buffer__Geom[iPM_3D_Index];
 
-    sIndex_Buffer_View.BufferLocation = ID3D12Resource_GetGPUVirtualAddress( psEXT_CXT_EXEC->m_psDX12_Index_Buffer__Geom[enPM] );
-    sIndex_Buffer_View.SizeInBytes = (UINT)psEXT_CXT_EXEC->m_nbyDX12_Index_Buffer__Geom[enPM];
+    sIndex_Buffer_View.BufferLocation = ID3D12Resource_GetGPUVirtualAddress( psEXT_CXT_EXEC->m_psDX12_Index_Buffer__Geom[iPM_3D_Index] );
+    sIndex_Buffer_View.SizeInBytes = (UINT)psEXT_CXT_EXEC->m_nbyDX12_Index_Buffer__Geom[iPM_3D_Index];
     sIndex_Buffer_View.Format = DXGI_FORMAT_R16_UINT;
 
     ID3D12GraphicsCommandList8_IASetVertexBuffers( uCMD.psEXT->m_psDX12_Graphics_Cmd_List, 0, 1, &sVertex_Buffer_View );
@@ -243,7 +252,7 @@ TgVOID tgKN_GPU_EXT__CMD__Render_Debug_Geom_Instance( UTg2_KN_GPU_CMD_C uCMD, ET
     ID3D12GraphicsCommandList8_SetGraphicsRootDescriptorTable( uCMD.psEXT->m_psDX12_Graphics_Cmd_List, 1, shDX12_GPU );
     uiKB_GPU_Address = ID3D12Resource_GetGPUVirtualAddress( psEXT_CXT_CMD->m_psDX12_CB_GEOM[uiDX12_CB_GEOM] );
     ID3D12GraphicsCommandList8_SetGraphicsRootConstantBufferView( uCMD.psEXT->m_psDX12_Graphics_Cmd_List, 0, uiKB_GPU_Address );
-    nuiIndex = psEXT_CXT_EXEC->m_nbyDX12_Index_Buffer__Geom[enPM] / sizeof(TgUINT_E16);
+    nuiIndex = psEXT_CXT_EXEC->m_nbyDX12_Index_Buffer__Geom[iPM_3D_Index] / sizeof(TgUINT_E16);
     ID3D12GraphicsCommandList8_DrawIndexedInstanced( uCMD.psEXT->m_psDX12_Graphics_Cmd_List, (UINT)nuiIndex, (UINT)nuiInstance, 0, 0, 0 );
 }
 

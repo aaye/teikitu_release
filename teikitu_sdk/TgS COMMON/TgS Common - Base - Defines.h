@@ -20,6 +20,10 @@
 /*  Early Compilation Validations                                                                                                                                                  */
 /* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
 
+#if defined(TgIDE__XCODE) && defined(__cplusplus)
+#define TgCOMPILE_FILE__CXX
+#endif
+
 #if !defined(TgCOMPILE_FILE__CXX) && (!defined(__STDC_VERSION__) || (__STDC_VERSION__ < 201112L))
     #error Codebase developed and tested against C17
 #endif
@@ -167,7 +171,7 @@
 /*  ASSERTS                                                                                                                                                                        */
 /* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
 
-#if defined(TgBUILD_COMPILER__CLANG) // && !defined(TgBUILD_COMPILER_FRONTEND__MSVC)
+#if defined(TgBUILD_COMPILER__CLANG) || defined(TgBUILD_COMPILER__APPLE)
     #if __has_extension(cxx_static_assert) && (defined(TgCOMPILE_ALL__CXX) || defined(TgCOMPILE_FILE__CXX))
         #define TgCOMPILER_ASSERT(x,c)              static_assert(x,"")
     #elif __has_extension(c_static_assert)
@@ -671,7 +675,7 @@
 /* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.- */
 
 TgCOMPILER_ASSERT( sizeof( void* ) == TgBUILD_HARDWARE__POINTER_SIZE, 0 );
-TgCOMPILER_ASSERT( TgBUILD_HARDWARE__CPU_CACHE_LINE_SIZE >= TgBUILD_HARDWARE__POINTER_SIZE * 6, 0 );
+TgCOMPILER_ASSERT( TgBUILD_HARDWARE__DESTRUCTIVE_INTERFERENCE_SIZE >= TgBUILD_HARDWARE__POINTER_SIZE * 6, 0 );
 
 
 /* =============================================================================================================================================================================== */

@@ -54,6 +54,7 @@ TgVOID tgPH_SV_SOR_LCP( TgPH_WORLD_ID_C tiWorld, STg2_PH_Solver__Set_CPC psSolve
 
                                         /* 1 Entry Per Body */
     TgVEC_F32_04_1_PC                   avResult = psSolver_Set->m_avResult;
+    TgVEC_F32_04_1                      avUnused[2];
 
     TgVEC_F32_04_1_P                    avλ; /* Constraint Impulse, read-modify-write */
     TgRSIZE                             nuiConstraint, nuiDoF, nuiSolver_Iteration;
@@ -105,6 +106,10 @@ TgVOID tgPH_SV_SOR_LCP( TgPH_WORLD_ID_C tiWorld, STg2_PH_Solver__Set_CPC psSolve
         #endif
             TgVEC_F32_04_1_C                    vRHS_Factor = tgMH_Init_ELEM_F32_04_1( 1.0F, 1.0F, 1.0F, uFactor.m_vS_F32_04_1.x );
 
+        #if defined(TgBUILD_DEBUG__PHYSICS__EXTENSIVE_DATA_CHECK) && TgCOMPILE_ASSERT && TgCOMPILE_ASSERT__DIAG
+            TgDIAG(!tgMH_CMP_ANY_TO_BOOL_F32_04_1(tgMH_NAN_F32_04_1( uFactor.m_vF32_04_1 )));
+        #endif
+
             avDoF_Coeff_Update[ETgPH_PCI__JACOBIAN_LIN_BY_0] = tgMH_MUL_F32_04_1( uFactor.m_vF32_04_1, avDoF_Coefficients[ETgPH_PCI__JACOBIAN_LIN_BY_0] );
             avDoF_Coeff_Update[ETgPH_PCI__JACOBIAN_ANG_BY_0] = tgMH_MUL_F32_04_1( uFactor.m_vF32_04_1, avDoF_Coefficients[ETgPH_PCI__JACOBIAN_ANG_BY_0] );
             avDoF_Coeff_Update[ETgPH_PCI__JACOBIAN_LIN_BY_1] = tgMH_MUL_F32_04_1( uFactor.m_vF32_04_1, avDoF_Coefficients[ETgPH_PCI__JACOBIAN_LIN_BY_1] );
@@ -118,7 +123,7 @@ TgVOID tgPH_SV_SOR_LCP( TgPH_WORLD_ID_C tiWorld, STg2_PH_Solver__Set_CPC psSolve
             avDoF_Coeff_Update[ETgPH_PCI__J_LIN_RESULT_MULT_BY_1] = vLJ1;
             avDoF_Coeff_Update[ETgPH_PCI__J_ANG_RESULT_MULT_BY_1] = vAJ1;
 
-        #if defined(TgBUILD_DEBUG__PHYSICS__EXTENSIVE_DATA_CHECK)
+        #if defined(TgBUILD_DEBUG__PHYSICS__EXTENSIVE_DATA_CHECK) && TgCOMPILE_ASSERT && TgCOMPILE_ASSERT__DIAG
             TgDIAG(!tgMH_CMP_ANY_TO_BOOL_F32_04_1(tgMH_NAN_F32_04_1( avDoF_Coeff_Update[ETgPH_PCI__JACOBIAN_LIN_BY_0] )));
             TgDIAG(!tgMH_CMP_ANY_TO_BOOL_F32_04_1(tgMH_NAN_F32_04_1( avDoF_Coeff_Update[ETgPH_PCI__JACOBIAN_ANG_BY_0] )));
             TgDIAG(!tgMH_CMP_ANY_TO_BOOL_F32_04_1(tgMH_NAN_F32_04_1( avDoF_Coeff_Update[ETgPH_PCI__JACOBIAN_LIN_BY_1] )));
@@ -131,7 +136,7 @@ TgVOID tgPH_SV_SOR_LCP( TgPH_WORLD_ID_C tiWorld, STg2_PH_Solver__Set_CPC psSolve
             TgDIAG(!tgMH_CMP_ANY_TO_BOOL_F32_04_1(tgMH_NAN_F32_04_1( avDoF_Coeff_Update[ETgPH_PCI__J_ANG_RESULT_MULT_BY_0] )));
             TgDIAG(!tgMH_CMP_ANY_TO_BOOL_F32_04_1(tgMH_NAN_F32_04_1( avDoF_Coeff_Update[ETgPH_PCI__J_LIN_RESULT_MULT_BY_1] )));
             TgDIAG(!tgMH_CMP_ANY_TO_BOOL_F32_04_1(tgMH_NAN_F32_04_1( avDoF_Coeff_Update[ETgPH_PCI__J_ANG_RESULT_MULT_BY_1] )));
-        /*# defined(TgBUILD_DEBUG__PHYSICS__EXTENSIVE_DATA_CHECK) */
+        /*# defined(TgBUILD_DEBUG__PHYSICS__EXTENSIVE_DATA_CHECK) && TgCOMPILE_ASSERT && TgCOMPILE_ASSERT__DIAG */
         #endif
         };
     };
@@ -143,8 +148,10 @@ TgVOID tgPH_SV_SOR_LCP( TgPH_WORLD_ID_C tiWorld, STg2_PH_Solver__Set_CPC psSolve
         for (nuiConstraint = 0, nuiDoF = 0; nuiConstraint < nuiConstraint_Total; ++nuiConstraint)
         {
             TgRSIZE_C                           nuiDoF_Constraint = psSolver_Set->m_anuiDoF[nuiConstraint];
-            TgRSIZE_C                           uiBY0 = auiJacobian_Index[nuiConstraint*2 + 0];
-            TgRSIZE_C                           uiBY1 = auiJacobian_Index[nuiConstraint*2 + 1];
+            TgRSIZE_C                           uiBY0_Used_Index = auiJacobian_Index[nuiConstraint*2 + 0];
+            TgRSIZE_C                           uiBY1_Used_Index = auiJacobian_Index[nuiConstraint*2 + 1];
+            TgVEC_F32_04_1_PC                   avResult_0 = KTgMAX_RSIZE != uiBY0_Used_Index ? avResult + uiBY0_Used_Index*2 : avUnused;
+            TgVEC_F32_04_1_PC                   avResult_1 = KTgMAX_RSIZE != uiBY1_Used_Index ? avResult + uiBY1_Used_Index*2 : avUnused;
 
             for (; nuiDoF < nuiDoF_Constraint; ++nuiDoF)
             {
@@ -154,17 +161,13 @@ TgVOID tgPH_SV_SOR_LCP( TgPH_WORLD_ID_C tiWorld, STg2_PH_Solver__Set_CPC psSolve
                 TgVEC_F32_04_1_C                    vUpper_Bound = tgMH_SPY_F32_04_1( avDoF_Coefficients[ETgPH_PCI__MIN_MAX_CFM_RHS] );
                 TgVEC_F32_04_1_C                    vRHS = tgMH_SPW_F32_04_1( avDoF_Coefficients[ETgPH_PCI__MIN_MAX_CFM_RHS] );
 
-// #TODO #OPT: Better to branch on the existence of the a second body, or just do the math? */
-                TgVEC_F32_04_1_C                    vSUM_00 = tgMH_DOT_F32_04_1( avDoF_Coefficients[ETgPH_PCI__JACOBIAN_LIN_BY_0], avResult[uiBY0*2 + 0] );
-                TgVEC_F32_04_1_C                    vSUM_01 = tgMH_DOT_F32_04_1( avDoF_Coefficients[ETgPH_PCI__JACOBIAN_ANG_BY_0], avResult[uiBY0*2 + 1] );
-                TgVEC_F32_04_1_C                    vSUM_02 = tgMH_DOT_F32_04_1( avDoF_Coefficients[ETgPH_PCI__JACOBIAN_LIN_BY_1], avResult[uiBY1*2 + 0] );
-                TgVEC_F32_04_1_C                    vSUM_03 = tgMH_DOT_F32_04_1( avDoF_Coefficients[ETgPH_PCI__JACOBIAN_ANG_BY_1], avResult[uiBY1*2 + 1] );
-
+                TgVEC_F32_04_1_C                    vSUM_00 = tgMH_DOT_F32_04_1( avDoF_Coefficients[ETgPH_PCI__JACOBIAN_LIN_BY_0], avResult_0[0] );
+                TgVEC_F32_04_1_C                    vSUM_01 = tgMH_DOT_F32_04_1( avDoF_Coefficients[ETgPH_PCI__JACOBIAN_ANG_BY_0], avResult_0[1] );
+                TgVEC_F32_04_1_C                    vSUM_02 = tgMH_DOT_F32_04_1( avDoF_Coefficients[ETgPH_PCI__JACOBIAN_LIN_BY_1], avResult_1[0] );
+                TgVEC_F32_04_1_C                    vSUM_03 = tgMH_DOT_F32_04_1( avDoF_Coefficients[ETgPH_PCI__JACOBIAN_ANG_BY_1], avResult_1[1] );
                 TgVEC_F32_04_1_C                    vSUM_04 = tgMH_ADD_F32_04_1( vSUM_00, vSUM_01 );
                 TgVEC_F32_04_1_C                    vSUM_05 = tgMH_ADD_F32_04_1( vSUM_02, vSUM_03 );
                 TgVEC_F32_04_1_C                    vSUM_06 = tgMH_ADD_F32_04_1( vSUM_04, vSUM_05 );
-
-                                                    /* Compute and clamp λ */
 
             #if defined(TgBUILD_FEATURE__PHYSICS__CFM)
                 TgVEC_F32_04_1_C                    vTMP_00 = tgMH_MAD_F32_04_1( avλ[nuiDoF], avDoF_Coefficients[ETgPH_PCI__RCP_A_DIAG], vRHS );
@@ -172,6 +175,7 @@ TgVOID tgPH_SV_SOR_LCP( TgPH_WORLD_ID_C tiWorld, STg2_PH_Solver__Set_CPC psSolve
             #else
                 TgVEC_F32_04_1_C                    vTMP_01 = tgMH_SUB_F32_04_1( vRHS, vSUM_06 );
             #endif
+                                                    /* Compute and clamp λ */
 
                 TgVEC_F32_04_1_C                    vTMP_02 = tgMH_ADD_F32_04_1( avλ[nuiDoF], vTMP_01 );
                 TgVEC_F32_04_1_C                    vΛ = tgMH_CLP_F32_04_1( vTMP_02, vLower_Bound, vUpper_Bound ); /* Clamp the new λ value to the lower and upper bound. */
@@ -189,10 +193,10 @@ TgVOID tgPH_SV_SOR_LCP( TgPH_WORLD_ID_C tiWorld, STg2_PH_Solver__Set_CPC psSolve
             #endif
 
                 /* Update constraint force and torque */
-                avResult[uiBY0*2 + 0] = tgMH_MAD_F32_04_1( vδ, avDoF_Coefficients[ETgPH_PCI__J_LIN_RESULT_MULT_BY_0], avResult[uiBY0*2 + 0] );
-                avResult[uiBY0*2 + 1] = tgMH_MAD_F32_04_1( vδ, avDoF_Coefficients[ETgPH_PCI__J_ANG_RESULT_MULT_BY_0], avResult[uiBY0*2 + 1] );
-                avResult[uiBY1*2 + 0] = tgMH_MAD_F32_04_1( vδ, avDoF_Coefficients[ETgPH_PCI__J_LIN_RESULT_MULT_BY_1], avResult[uiBY1*2 + 0] );
-                avResult[uiBY1*2 + 1] = tgMH_MAD_F32_04_1( vδ, avDoF_Coefficients[ETgPH_PCI__J_ANG_RESULT_MULT_BY_1], avResult[uiBY1*2 + 1] );
+                avResult_0[0] = tgMH_MAD_F32_04_1( vδ, avDoF_Coefficients[ETgPH_PCI__J_LIN_RESULT_MULT_BY_0], avResult_0[0] );
+                avResult_0[1] = tgMH_MAD_F32_04_1( vδ, avDoF_Coefficients[ETgPH_PCI__J_ANG_RESULT_MULT_BY_0], avResult_0[1] );
+                avResult_1[0] = tgMH_MAD_F32_04_1( vδ, avDoF_Coefficients[ETgPH_PCI__J_LIN_RESULT_MULT_BY_1], avResult_1[0] );
+                avResult_1[1] = tgMH_MAD_F32_04_1( vδ, avDoF_Coefficients[ETgPH_PCI__J_ANG_RESULT_MULT_BY_1], avResult_1[1] );
             };
         };
     };

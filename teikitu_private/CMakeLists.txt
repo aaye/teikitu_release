@@ -52,7 +52,7 @@ ENDIF ()
 SET (CMAKE_USER_MAKE_RULES_OVERRIDE ${GIT_ROOT_PATH}/cmake/flag_overrides.cmake)
 
 # Project Configurations
-SET (CMAKE_CONFIGURATION_TYPES Debug Release Final Tools )
+SET (CMAKE_CONFIGURATION_TYPES DEBUG RELEASE FINAL TOOLS)
 SET (CMAKE_CONFIGURATION_TYPES "${CMAKE_CONFIGURATION_TYPES}" CACHE STRING "Reset the configurations to what we need" FORCE )
 
 # Generate the root project name with a declaration of the git branch that was used.
@@ -63,6 +63,11 @@ ELSE ()
     SET (MK_PROJECT_NAME "${MK_PROJECT_NAME} (Unknown)")
 ENDIF ()
 SET(STREAM_FILE_CONTENTS "SET (MK_PROJECT_NAME \"${MK_PROJECT_NAME}\")\n")
+
+# Disable Vulkan and Metal
+IF ("${MK_FEATURE__GRAPHICS}" STREQUAL "VULKAN" OR "${MK_FEATURE__GRAPHICS}" STREQUAL "METAL")
+    SET (MK_FEATURE__GRAPHICS "NONE")
+ENDIF ()
 
 # Generation the solution name for the project
 PROJECT (${MK_PROJECT_NAME} LANGUAGES C CXX DESCRIPTION "Teikitu Compile Test")

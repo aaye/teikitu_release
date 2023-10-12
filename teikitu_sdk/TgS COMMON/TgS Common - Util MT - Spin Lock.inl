@@ -21,7 +21,7 @@
 
 /* ---- tgCM_UT_LF__SN__Init ----------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgRESULT tgCM_UT_LF__SN__Init( STg2_UT_LF__SN_PCU NONULL psMP_SN )
+TgINLINE TgRESULT tgCM_UT_LF__SN__Init( STg2_UT_LF__SN_PCU psMP_SN )
 {
     TgSTD_ATOMIC(store)( &psMP_SN->m_uiSRV_REQ, 0 );
     return (KTgS_OK);
@@ -30,7 +30,7 @@ TgINLINE TgRESULT tgCM_UT_LF__SN__Init( STg2_UT_LF__SN_PCU NONULL psMP_SN )
 
 /* ---- tgCM_UT_LF__SN__Free_Unsafe ---------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgCM_UT_LF__SN__Free_Unsafe( STg2_UT_LF__SN_PCU NONULL psMP_SN )
+TgINLINE TgVOID tgCM_UT_LF__SN__Free_Unsafe( STg2_UT_LF__SN_PCU psMP_SN )
 {
 #if TgCOMPILE_ASSERT && TgCOMPILE_ASSERT__VERIFY
     STg2_UT_ST__SRV_REQ                 sSRV_REQ;
@@ -44,7 +44,7 @@ TgINLINE TgVOID tgCM_UT_LF__SN__Free_Unsafe( STg2_UT_LF__SN_PCU NONULL psMP_SN )
 
 /* ---- tgCM_UT_LF__SN__Lock_Yield ----------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgCM_UT_LF__SN__Lock_Yield( STg2_UT_LF__SN_PCU NONULL psMP_SN )
+TgINLINE TgVOID tgCM_UT_LF__SN__Lock_Yield( STg2_UT_LF__SN_PCU psMP_SN )
 {
     STg2_UT_ST__SRV_REQ                 sOrig, sNew, sCurrent;
 
@@ -70,7 +70,7 @@ TgINLINE TgVOID tgCM_UT_LF__SN__Lock_Yield( STg2_UT_LF__SN_PCU NONULL psMP_SN )
 
 /* ---- tgCM_UT_LF__SN__Lock_Spin ------------------------------------------------------------------------------------------------------------------------------------------------ */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgCM_UT_LF__SN__Lock_Spin( STg2_UT_LF__SN_PCU NONULL psMP_SN )
+TgINLINE TgVOID tgCM_UT_LF__SN__Lock_Spin( STg2_UT_LF__SN_PCU psMP_SN )
 {
     STg2_UT_ST__SRV_REQ                 sOrig, sNew, sCurrent;
 
@@ -96,7 +96,7 @@ TgINLINE TgVOID tgCM_UT_LF__SN__Lock_Spin( STg2_UT_LF__SN_PCU NONULL psMP_SN )
 
 /* ---- tgCM_UT_LF__SN__Lock_Test ------------------------------------------------------------------------------------------------------------------------------------------------ */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgRESULT tgCM_UT_LF__SN__Lock_Test( STg2_UT_LF__SN_PCU NONULL psMP_SN )
+TgINLINE TgRESULT tgCM_UT_LF__SN__Lock_Test( STg2_UT_LF__SN_PCU psMP_SN )
 {
     STg2_UT_ST__SRV_REQ                 sOrig, sTest, sNew;
 
@@ -118,7 +118,7 @@ TgINLINE TgRESULT tgCM_UT_LF__SN__Lock_Test( STg2_UT_LF__SN_PCU NONULL psMP_SN )
 
 /* ---- tgCM_UT_LF__SN__Signal --------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgCM_UT_LF__SN__Signal( STg2_UT_LF__SN_PCU NONULL psMP_SN )
+TgINLINE TgVOID tgCM_UT_LF__SN__Signal( STg2_UT_LF__SN_PCU psMP_SN )
 {
     STg2_UT_ST__SRV_REQ                 sOrig, sNew;
 
@@ -140,7 +140,7 @@ TgINLINE TgVOID tgCM_UT_LF__SN__Signal( STg2_UT_LF__SN_PCU NONULL psMP_SN )
 
 /* ---- tgCM_UT_LF__SN_CNT__Init ------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgRESULT tgCM_UT_LF__SN_CNT__Init( STg2_UT_LF__SN_CNT_PCU NONULL psMP_SN_CNT )
+TgINLINE TgRESULT tgCM_UT_LF__SN_CNT__Init( STg2_UT_LF__SN_CNT_PCU psMP_SN_CNT )
 {
     TgSTD_ATOMIC(store)( &psMP_SN_CNT->m_uiSRV_REQ_CNT, 0 );
     return (KTgS_OK);
@@ -149,7 +149,7 @@ TgINLINE TgRESULT tgCM_UT_LF__SN_CNT__Init( STg2_UT_LF__SN_CNT_PCU NONULL psMP_S
 
 /* ---- tgCM_UT_LF__SN_CNT__Free_Unsafe ------------------------------------------------------------------------------------------------------------------------------------------ */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgCM_UT_LF__SN_CNT__Free_Unsafe( STg2_UT_LF__SN_CNT_PCU NONULL psMP_SN_CNT )
+TgINLINE TgVOID tgCM_UT_LF__SN_CNT__Free_Unsafe( STg2_UT_LF__SN_CNT_PCU psMP_SN_CNT )
 {
 #if TgCOMPILE_ASSERT && TgCOMPILE_ASSERT__VERIFY
     STg2_UT_ST__SRV_REQ_CNT             sSRV_REQ_CNT;
@@ -163,7 +163,7 @@ TgINLINE TgVOID tgCM_UT_LF__SN_CNT__Free_Unsafe( STg2_UT_LF__SN_CNT_PCU NONULL p
 
 /* ---- tgCM_UT_LF__SN_CNT__Lock_Or_Increment_Count ------------------------------------------------------------------------------------------------------------------------------ */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgRESULT tgCM_UT_LF__SN_CNT__Lock_Or_Increment_Count( STg2_UT_LF__SN_CNT_PCU NONULL psMP_SN_CNT )
+TgINLINE TgRESULT tgCM_UT_LF__SN_CNT__Lock_Or_Increment_Count( STg2_UT_LF__SN_CNT_PCU psMP_SN_CNT )
 {
     STg2_UT_ST__SRV_REQ_CNT             sOrig, sNew;
 
@@ -198,7 +198,7 @@ TgINLINE TgRESULT tgCM_UT_LF__SN_CNT__Lock_Or_Increment_Count( STg2_UT_LF__SN_CN
 
 /* ---- tgCM_UT_LF__SN_CNT__Signal_Or_Reset_Count -------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgUINT_E32 tgCM_UT_LF__SN_CNT__Signal_Or_Reset_Count( STg2_UT_LF__SN_CNT_PCU NONULL psMP_SN_CNT )
+TgINLINE TgUINT_E32 tgCM_UT_LF__SN_CNT__Signal_Or_Reset_Count( STg2_UT_LF__SN_CNT_PCU psMP_SN_CNT )
 {
     STg2_UT_ST__SRV_REQ_CNT             sOrig, sNew;
     TgUINT_E32                          nuiTested;
@@ -222,7 +222,7 @@ TgINLINE TgUINT_E32 tgCM_UT_LF__SN_CNT__Signal_Or_Reset_Count( STg2_UT_LF__SN_CN
 
 /* ---- tgCM_UT_LF__SN_ID__Init -------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgRESULT tgCM_UT_LF__SN_ID__Init( STg2_UT_LF__SN_ID_PCU NONULL psMP_SN_ID, TgUINT_E64_C uiKI )
+TgINLINE TgRESULT tgCM_UT_LF__SN_ID__Init( STg2_UT_LF__SN_ID_PCU psMP_SN_ID, TgUINT_E64_C uiKI )
 {
     STg2_UT_ST__SRV_REQ_ID              sSRV_REQ_ID;
 
@@ -241,7 +241,7 @@ TgINLINE TgRESULT tgCM_UT_LF__SN_ID__Init( STg2_UT_LF__SN_ID_PCU NONULL psMP_SN_
 
 /* ---- tgCM_UT_LF__SN_ID__Free_Yield -------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgCM_UT_LF__SN_ID__Free_Yield( STg2_UT_LF__SN_ID_PCU NONULL psMP_SN_ID )
+TgINLINE TgVOID tgCM_UT_LF__SN_ID__Free_Yield( STg2_UT_LF__SN_ID_PCU psMP_SN_ID )
 {
     STg2_UT_ST__SRV_REQ_ID              sOrig, sNew, sTest;
 
@@ -278,7 +278,7 @@ TgINLINE TgVOID tgCM_UT_LF__SN_ID__Free_Yield( STg2_UT_LF__SN_ID_PCU NONULL psMP
 
 /* ---- tgCM_UT_LF__SN_ID__Free_Spin --------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgCM_UT_LF__SN_ID__Free_Spin( STg2_UT_LF__SN_ID_PCU NONULL psMP_SN_ID )
+TgINLINE TgVOID tgCM_UT_LF__SN_ID__Free_Spin( STg2_UT_LF__SN_ID_PCU psMP_SN_ID )
 {
     STg2_UT_ST__SRV_REQ_ID              sOrig, sNew, sTest;
 
@@ -320,7 +320,7 @@ TgINLINE TgVOID tgCM_UT_LF__SN_ID__Free_Spin( STg2_UT_LF__SN_ID_PCU NONULL psMP_
 
 /* ---- tgCM_UT_LF__SN_ID__Free_Unsafe ------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgCM_UT_LF__SN_ID__Free_Unsafe( STg2_UT_LF__SN_ID_PCU NONULL psMP_SN_ID )
+TgINLINE TgVOID tgCM_UT_LF__SN_ID__Free_Unsafe( STg2_UT_LF__SN_ID_PCU psMP_SN_ID )
 {
     STg2_UT_ST__SRV_REQ_ID              sSRV_REQ_ID;
     
@@ -340,7 +340,7 @@ TgINLINE TgVOID tgCM_UT_LF__SN_ID__Free_Unsafe( STg2_UT_LF__SN_ID_PCU NONULL psM
 
 /* ---- tgCM_UT_LF__SN_ID__Lock_Yield -------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgRESULT tgCM_UT_LF__SN_ID__Lock_Yield( STg2_UT_LF__SN_ID_PCU NONULL psMP_SN_ID, TgUINT_E64_C uiKI )
+TgINLINE TgRESULT tgCM_UT_LF__SN_ID__Lock_Yield( STg2_UT_LF__SN_ID_PCU psMP_SN_ID, TgUINT_E64_C uiKI )
 {
     STg2_UT_ST__SRV_REQ_ID              sOrig, sNew, sCurrent;
 
@@ -377,7 +377,7 @@ TgINLINE TgRESULT tgCM_UT_LF__SN_ID__Lock_Yield( STg2_UT_LF__SN_ID_PCU NONULL ps
 
 /* ---- tgCM_UT_LF__SN_ID__Lock_Spin --------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgRESULT tgCM_UT_LF__SN_ID__Lock_Spin( STg2_UT_LF__SN_ID_PCU NONULL psMP_SN_ID, TgUINT_E64_C uiKI )
+TgINLINE TgRESULT tgCM_UT_LF__SN_ID__Lock_Spin( STg2_UT_LF__SN_ID_PCU psMP_SN_ID, TgUINT_E64_C uiKI )
 {
     STg2_UT_ST__SRV_REQ_ID              sOrig, sNew, sCurrent;
 
@@ -413,7 +413,7 @@ TgINLINE TgRESULT tgCM_UT_LF__SN_ID__Lock_Spin( STg2_UT_LF__SN_ID_PCU NONULL psM
 
 /* ---- tgCM_UT_LF__SN_ID__Lock_Test --------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgRESULT tgCM_UT_LF__SN_ID__Lock_Test( STg2_UT_LF__SN_ID_PCU NONULL psMP_SN_ID, TgUINT_E64_C uiKI )
+TgINLINE TgRESULT tgCM_UT_LF__SN_ID__Lock_Test( STg2_UT_LF__SN_ID_PCU psMP_SN_ID, TgUINT_E64_C uiKI )
 {
     STg2_UT_ST__SRV_REQ_ID              sOrig, sNew, sTest;
 
@@ -447,7 +447,7 @@ TgINLINE TgRESULT tgCM_UT_LF__SN_ID__Lock_Test( STg2_UT_LF__SN_ID_PCU NONULL psM
 
 /* ---- tgCM_UT_LF__SN_ID__Invalidate_Index_Yield -------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgRESULT tgCM_UT_LF__SN_ID__Invalidate_Index_Yield( STg2_UT_LF__SN_ID_PCU NONULL psMP_SN_ID, TgUINT_E64_C uiKI )
+TgINLINE TgRESULT tgCM_UT_LF__SN_ID__Invalidate_Index_Yield( STg2_UT_LF__SN_ID_PCU psMP_SN_ID, TgUINT_E64_C uiKI )
 {
     STg2_UT_ST__SRV_REQ_ID              sOrig, sNew;
     TgRESULT                            iResult;
@@ -474,7 +474,7 @@ TgINLINE TgRESULT tgCM_UT_LF__SN_ID__Invalidate_Index_Yield( STg2_UT_LF__SN_ID_P
 
 /* ---- tgCM_UT_LF__SN_ID__Invalidate_Index_Spin --------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgRESULT tgCM_UT_LF__SN_ID__Invalidate_Index_Spin( STg2_UT_LF__SN_ID_PCU NONULL psMP_SN_ID, TgUINT_E64_C uiKI )
+TgINLINE TgRESULT tgCM_UT_LF__SN_ID__Invalidate_Index_Spin( STg2_UT_LF__SN_ID_PCU psMP_SN_ID, TgUINT_E64_C uiKI )
 {
     STg2_UT_ST__SRV_REQ_ID              sOrig, sNew;
     TgRESULT                            iResult;
@@ -501,7 +501,7 @@ TgINLINE TgRESULT tgCM_UT_LF__SN_ID__Invalidate_Index_Spin( STg2_UT_LF__SN_ID_PC
 
 /* ---- tgCM_UT_LF__SN_ID__Signal ------------------------------------------------------------------------------------------------------------------------------------------------ */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgCM_UT_LF__SN_ID__Signal( STg2_UT_LF__SN_ID_PCU NONULL psMP_SN_ID )
+TgINLINE TgVOID tgCM_UT_LF__SN_ID__Signal( STg2_UT_LF__SN_ID_PCU psMP_SN_ID )
 {
     STg2_UT_ST__SRV_REQ_ID              sOrig, sNew;
 

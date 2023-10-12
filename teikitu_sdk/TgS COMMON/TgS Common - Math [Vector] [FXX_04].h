@@ -92,7 +92,7 @@ FCN_V(tgMH_Init_Ortho)(
     @param [in] ARG2 Vector */
 TgINLINE TgVOID
 FCN_V(tgMH_Init_Basis_From_Vector)(
-    VEC_T(1,PC) NONULL ARG0, VEC_T(1,PC) NONULL ARG1, VEC_T(1,C) ARG2 );
+    VEC_T(1,PC) TgANALYSIS_NO_NULL ARG0, VEC_T(1,PC) TgANALYSIS_NO_NULL ARG1, VEC_T(1,C) ARG2 );
 
 /** @addtogroup TGS_COMMON_MATH_VECTOR_LOAD
     @brief Return a vector where each element is assigned the X element from the argument
@@ -188,7 +188,7 @@ FCN_V(tgMH_UCX)(
     @return A vector that is the normalized cross product of the two vector arguments */
 TgINLINE VEC_T(1)
 FCN_V(tgMH_UCX_LEN)(
-    VEC_T(1,PC) NONULL OUT0, VEC_T(1,C) ARG1, VEC_T(1,C) ARG2 );
+    VEC_T(1,PC) TgANALYSIS_NO_NULL OUT0, VEC_T(1,C) ARG1, VEC_T(1,C) ARG2 );
 
 
 

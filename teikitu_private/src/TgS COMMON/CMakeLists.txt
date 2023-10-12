@@ -343,13 +343,13 @@ FOREACH (MK_LIST_ITEM__OS_NAME IN LISTS MK_GENERATE_LIST__OS_NAMES)
 
 ENDFOREACH ()
 
-TGS_ADD_SOURCE_FILE( lib_os_source_files lib_os_header_files "WIN" "${MK_BUILD__OS_NAME}" "SDK/Source Files/@Specialization/Operating System" "${MK_BUILD_MODULE__SRC_DIR}/TgS (WIN) Common - Link Test.c" )
-TGS_ADD_SOURCE_FILE( lib_os_source_files lib_os_header_files "WIN" "${MK_BUILD__OS_NAME}" "SDK/Source Files/@Specialization/Operating System" "${MK_BUILD_MODULE__SRC_DIR}/TgS (WIN) Common - SysInfo.c" )
+TGS_ADD_SOURCE_FILE( lib_os_source_files lib_os_header_files "WINDOWS" "${MK_BUILD__OS_NAME}" "SDK/Source Files/@Specialization/Operating System" "${MK_BUILD_MODULE__SRC_DIR}/TgS (WINDOWS) Common - Link Test.c" )
+TGS_ADD_SOURCE_FILE( lib_os_source_files lib_os_header_files "WINDOWS" "${MK_BUILD__OS_NAME}" "SDK/Source Files/@Specialization/Operating System" "${MK_BUILD_MODULE__SRC_DIR}/TgS (WINDOWS) Common - SysInfo.c" )
 
-TGS_ADD_HEADER_FILE( lib_os_source_files lib_os_header_files "WIN" "${MK_BUILD__OS_NAME}" "SDK/Header Files/@Specialization/Operating System" "${MK_BUILD_MODULE__SRC_DIR}/TgS (WIN) Common - Internal - Type.h" )
-TGS_ADD_HEADER_FILE( lib_os_source_files lib_os_header_files "WIN" "${MK_BUILD__OS_NAME}" "SDK/Header Files/@Specialization/Operating System" "${MK_BUILD_MODULE__SRC_DIR}/TgS (WIN) Common - Global - Data.h" )
+TGS_ADD_HEADER_FILE( lib_os_source_files lib_os_header_files "WINDOWS" "${MK_BUILD__OS_NAME}" "SDK/Header Files/@Specialization/Operating System" "${MK_BUILD_MODULE__SRC_DIR}/TgS (WINDOWS) Common - Internal - Type.h" )
+TGS_ADD_HEADER_FILE( lib_os_source_files lib_os_header_files "WINDOWS" "${MK_BUILD__OS_NAME}" "SDK/Header Files/@Specialization/Operating System" "${MK_BUILD_MODULE__SRC_DIR}/TgS (WINDOWS) Common - Global - Data.h" )
 
-TGS_ADD_HEADER_FILE( lib_os_source_files lib_sdk_os_header_files "WIN" "${MK_BUILD__OS_NAME}" "Public/Header Files/@Specialization/Operating System" "${MK_BUILD_MODULE__INC_DIR}/TgS (WIN) Common - SysInfo.h" )
+TGS_ADD_HEADER_FILE( lib_os_source_files lib_sdk_os_header_files "WINDOWS" "${MK_BUILD__OS_NAME}" "Public/Header Files/@Specialization/Operating System" "${MK_BUILD_MODULE__INC_DIR}/TgS (WINDOWS) Common - SysInfo.h" )
 
 
 
@@ -358,9 +358,9 @@ TGS_ADD_HEADER_FILE( lib_os_source_files lib_sdk_os_header_files "WIN" "${MK_BUI
 # math interface and implementation
 
 SET( MK_GENERATE_LIST__MATH_INTERFACE_LIST_0    CLANG               APPLE)
-SET( MK_GENERATE_LIST__MATH_INTERFACE_LIST_1    ${MK_BUILD__COMPILER_NAME} ${MK_BUILD__HARDWARE_NAME} ${MK_BUILD__UNIVERSAL_NAME})
+SET( MK_GENERATE_LIST__MATH_INTERFACE_LIST_1    ${MK_BUILD__COMPILER_NAME} ${MK_BUILD__COMPILER_NAME})
 SET( MK_GENERATE_LIST__MATH_IMPLEMENTATION_0    APPLE)
-SET( MK_GENERATE_LIST__MATH_IMPLEMENTATION_1    ${MK_BUILD__HARDWARE_NAME} ${MK_BUILD__UNIVERSAL_NAME})
+SET( MK_GENERATE_LIST__MATH_IMPLEMENTATION_1    ${MK_BUILD__COMPILER_NAME})
 
 FOREACH (MK_LIST_ITEM__NAME_0 MK_LIST_ITEM__NAME_1 IN ZIP_LISTS MK_GENERATE_LIST__MATH_INTERFACE_LIST_0 MK_GENERATE_LIST__MATH_INTERFACE_LIST_1)
     TGS_ADD_HEADER_FILE( lib_source_files lib_sdk_header_files "${MK_LIST_ITEM__NAME_0}" "${MK_LIST_ITEM__NAME_1}" "Public/Header Files/@Specialization/Math" "${MK_BUILD_MODULE__INC_DIR}/TgS (${MK_LIST_ITEM__NAME_0}) Common - Math [Vector].h" )
@@ -451,7 +451,7 @@ IF (MK_BUILD__PRELOAD__MALLOC_OVERRIDE)
     TARGET_LINK_LIBRARIES ("_Ring_0___TgS_COMMON__OS_PRELOAD" PRIVATE "_Ring_0___TgS_COMMON__MIMALLOC")
 
     # Create an imported shared library (lib/dll) for the redirector. This is stored with mimalloc to allow for easy comparison against the base files.
-    IF (MK_BUILD_OS__WIN)
+    IF (MK_BUILD_OS__WINDOWS)
         ADD_LIBRARY ("_Ring_0___TgS_COMMON__OS_PRELOAD-Redirect" SHARED IMPORTED GLOBAL)
         SET_PROPERTY (TARGET "_Ring_0___TgS_COMMON__OS_PRELOAD-Redirect" PROPERTY IMPORTED_IMPLIB "${MIMALLOC_LIBRARY_DIR}/_Ring_0___TgS_COMMON__OS_PRELOAD-Redirect.lib")
         SET_PROPERTY (TARGET "_Ring_0___TgS_COMMON__OS_PRELOAD-Redirect" PROPERTY IMPORTED_LOCATION "${MIMALLOC_LIBRARY_DIR}/_Ring_0___TgS_COMMON__OS_PRELOAD-Redirect.dll")
@@ -459,7 +459,7 @@ IF (MK_BUILD__PRELOAD__MALLOC_OVERRIDE)
     ENDIF ()
 ELSE ()
     ADD_LIBRARY ("_Ring_0___TgS_COMMON__OS_PRELOAD" STATIC ${lib_preload_source_files} ${lib_preload_header_files} ${lib_sdk_preload_header_files})
-    TARGET_LINK_LIBRARIES ("_Ring_0___TgS_COMMON__OS_PRELOAD" PRIVATE "_Ring_0___TgS_COMMON__MIMALLOC")
+    TARGET_LINK_LIBRARIES ("_Ring_0___TgS_COMMON__OS_PRELOAD" PUBLIC "_Ring_0___TgS_COMMON__MIMALLOC")
 ENDIF ()
 
 TGS_GET_MODULE_OBJECT_OUTPUT_DIRECTORY ("__OS_PRELOAD")
@@ -477,6 +477,8 @@ ADD_LIBRARY ("_Ring_0___TgS_COMMON" STATIC ${lib_source_files} ${lib_header_file
 TGS_GET_MODULE_OBJECT_OUTPUT_DIRECTORY ()
 SET (PCH_INCLUDE_DEFAULT "TgS Common - Internal.h")
 TGS_SET_STANDARD_LIBRARY_PROPERTIES ("_Ring_0___TgS_COMMON" "${MK_BUILD_MODULE__SRC_DIR}" "TgS Common [PCH]" ${PCH_INCLUDE_DEFAULT} lib_source_files lib_header_files lib_sdk_header_files)
-TARGET_LINK_LIBRARIES("_Ring_0___TgS_COMMON" PUBLIC "_Ring_0___TgS_COMMON__OS")
-
+TARGET_LINK_LIBRARIES ("_Ring_0___TgS_COMMON" PUBLIC "_Ring_0___TgS_COMMON__OS")
+IF (NOT MK_BUILD__PRELOAD__MALLOC_OVERRIDE)
+    TARGET_LINK_LIBRARIES ("_Ring_0___TgS_COMMON" PUBLIC "_Ring_0___TgS_COMMON__OS_PRELOAD")
+ENDIF ()
 #ADD_LIBRARY("_Ring_X___TgS_COMMON__FILE_TEST__" STATIC ${lib_os_source_files} ${lib_os_header_files} ${lib_source_files} ${lib_header_files} ${lib_mem_source_files} ${lib_mem_header_files})

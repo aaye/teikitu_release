@@ -21,8 +21,17 @@ PROFILE_DEFINE( PH_COMMANDS__CLIENT );
 PROFILE_ARRAY_DEFINE( ETgPH_MAX_WORLD, PH_SIMULATE_BATCH );
 PROFILE_DEFINE( PH_SIMULATE_BATCH_TOTAL );
 
-PROFILE_ARRAY_DEFINE( ETgPH_MAX_WORLD, PH_COLLIDE_BATCH );
-PROFILE_DEFINE( PH_COLLIDE_BATCH_TOTAL );
+PROFILE_ARRAY_DEFINE( ETgPH_MAX_WORLD, PH_COLLISION );
+PROFILE_DEFINE( PH_COLLISION_TOTAL );
+
+    PROFILE_ARRAY_DEFINE( ETgPH_MAX_WORLD, PH_COLLISION_WORLD );
+    PROFILE_DEFINE( PH_COLLISION_WORLD_TOTAL );
+
+        PROFILE_ARRAY_DEFINE( ETgPH_MAX_WORLD, PH_COLLISION_CONTACT_PAIR_GENEARTION );
+        PROFILE_DEFINE( PH_COLLISION_CONTACT_PAIR_GENEARTION_TOTAL );
+
+            PROFILE_ARRAY_DEFINE( ETgPH_MAX_WORLD, PH_COLLISION_CONTACT_CALLBACK );
+            PROFILE_DEFINE( PH_COLLISION_CONTACT_CALLBACK_TOTAL );
 
 PROFILE_ARRAY_DEFINE( ETgPH_MAX_WORLD, PH_BUILD_SETS );
 PROFILE_DEFINE( PH_BUILD_SETS_TOTAL );
@@ -37,6 +46,16 @@ PROFILE_ARRAY_DEFINE( ETgPH_MAX_WORLD, PH_CMD_BUFFER_EXECEUTE );
 PROFILE_DEFINE( PH_CMD_BUFFER_EXECEUTE_TOTAL );
 /*# defined(TgBUILD_FEATURE__CLIENT) || defined(TgBUILD_FEATURE__SERVER) */
 #endif
+
+
+
+
+/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.--.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-. */
+/*  Configuration Data                                                                                                                                                             */
+/* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.--.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-. */
+
+TgUINT_E64_C                                KTgPH_CATEGORY_BIT_MASK__RESERVED = (0xFULL << 62) | (1ULL << KTgPH_CATEGORY_BIT__FORM_IS_UPDATING_GRAPH)
+                                                                              | (1ULL << KTgPH_CATEGORY_BIT__FORM_IS_UPDATING) | (1ULL << KTgPH_CATEGORY_BIT__ENABLE_COLLSION);
 
 
 
@@ -66,9 +85,6 @@ TgUINT_E64_P                                g_aauiVisited_Constraint[KTgPH_MAX_W
 
 STg2_UT_LF_ISO__RW                          g_sPH_Lock__Update_Module;
 
-TgPH_FCN_UPDATE_COLLISION_SCENE             g_pfnPH_Update_World__Collide;
-STg2_PA_PnS                                 g_sPH_SG_PnS; //« Prune and Sweep scene graph used for active forms
-
                                             /* Run time Configuration */
 
 TgBOOL                                      g_bPH_Module__Paused; /**< True if the module is in a pause state, and false otherwise */
@@ -81,14 +97,14 @@ TgCN_VAR_ID                                 g_tiPH_CN_Module__Loop_Max;
                                             /* Synchronization Fences */
 TgRSIZE_A                                   g_axuiPH_FENCE__UPDATE_WORLD[ETgPH_MAX_WORLD];
 TgRSIZE_A                                   g_axuiPH_FENCE__UPDATE_WORLD__SIMULATE_BATCH[ETgPH_MAX_WORLD];
-TgRSIZE_A                                   g_axuiPH_FENCE__UPDATE_WORLD__COLLIDE_BATCH[ETgPH_MAX_WORLD];
+TgRSIZE_A                                   g_axuiPH_FENCE__UPDATE_WORLD__COLLISION[ETgPH_MAX_WORLD];
 TgRSIZE_A                                   g_axuiPH_FENCE__UPDATE_WORLD__BUILD_SETS[ETgPH_MAX_WORLD];
 TgRSIZE_A                                   g_axuiPH_FENCE__UPDATE_WORLD__SOLVE_SETS[ETgPH_MAX_WORLD];
 TgRSIZE_A                                   g_axuiPH_FENCE__UPDATE_WORLD__FINISH[ETgPH_MAX_WORLD];
 
                                             /* Jobs */
 STg2_Job                                    g_asPH__Job__Update_World__Simulate_Batch[ETgPH_MAX_WORLD];
-STg2_Job                                    g_asPH__Job__Update_World__Collide_Batch[ETgPH_MAX_WORLD];
+STg2_Job                                    g_asPH__Job__Update_World__Collision[ETgPH_MAX_WORLD];
 STg2_Job                                    g_asPH__Job__Update_World__Build_Sets[ETgPH_MAX_WORLD];
 STg2_Job                                    g_asPH__Job__Update_World__Solve_Sets[ETgPH_MAX_WORLD];
 STg2_Job                                    g_asPH__Job__Update_World__Finish[ETgPH_MAX_WORLD];
@@ -134,17 +150,18 @@ TgRSIZE_A                                   g_xnuiPH_History;
                                             /* Visualization */
 TgVEC_F32_04_1                              g_vPH_Debug_Colour__Body_Enabled;
 TgVEC_F32_04_1                              g_vPH_Debug_Colour__Body_Sleep;
-TgVEC_F32_04_1                              g_vPH_Debug_Colour__Body_Disabled;
-TgVEC_F32_04_1                              g_vPH_Debug_Colour__Form_Enabled;
 TgVEC_F32_04_1                              g_vPH_Debug_Colour__Form_Disabled;
+TgVEC_F32_04_1                              g_vPH_Debug_Colour__Contact;
 TgVEC_F32_04_1                              g_vPH_Debug_Colour__Ragdoll;
 
 TgCN_VAR_ID                                 g_tiPH_Debug_Colour__Body_Enabled;
 TgCN_VAR_ID                                 g_tiPH_Debug_Colour__Body_Sleep;
-TgCN_VAR_ID                                 g_tiPH_Debug_Colour__Body_Disabled;
-TgCN_VAR_ID                                 g_tiPH_Debug_Colour__Form_Enabled;
 TgCN_VAR_ID                                 g_tiPH_Debug_Colour__Form_Disabled;
+TgCN_VAR_ID                                 g_tiPH_Debug_Colour__Contact;
 TgCN_VAR_ID                                 g_tiPH_Debug_Colour__Ragdoll;
+
+TgVEC_UN_F32_04_1                           g_auPH_Debug__Contact[KTgPH_DEBUG_MAX_CONTACT];
+TgRSIZE                                     g_nuiPH_Debug__Contact;
 /*# defined(TgBUILD_DEBUG__PHYSICS) */
 #endif
 
@@ -174,20 +191,18 @@ TgRSIZE tgPH_Query_Fixed_Memory( TgVOID )
            + sizeof( g_asPH_Update__Simulation )
            + sizeof( g_asPH_Update__Constraint_IMM )
            + sizeof( g_sPH_Lock__Update_Module )
-           + sizeof( g_pfnPH_Update_World__Collide )
-           + sizeof( g_sPH_SG_PnS )
            + sizeof( g_bPH_Module__Paused )
            + sizeof( g_uiPH_Module__Loop_Max )
            + sizeof( g_tiPH_CN_Module__Paused )
            + sizeof( g_tiPH_CN_Module__Loop_Max )
            + sizeof( g_axuiPH_FENCE__UPDATE_WORLD )
            + sizeof( g_axuiPH_FENCE__UPDATE_WORLD__SIMULATE_BATCH )
-           + sizeof( g_axuiPH_FENCE__UPDATE_WORLD__COLLIDE_BATCH )
+           + sizeof( g_axuiPH_FENCE__UPDATE_WORLD__COLLISION )
            + sizeof( g_axuiPH_FENCE__UPDATE_WORLD__BUILD_SETS )
            + sizeof( g_axuiPH_FENCE__UPDATE_WORLD__SOLVE_SETS )
            + sizeof( g_axuiPH_FENCE__UPDATE_WORLD__FINISH )
            + sizeof( g_asPH__Job__Update_World__Simulate_Batch )
-           + sizeof( g_asPH__Job__Update_World__Collide_Batch )
+           + sizeof( g_asPH__Job__Update_World__Collision )
            + sizeof( g_asPH__Job__Update_World__Build_Sets )
            + sizeof( g_asPH__Job__Update_World__Solve_Sets )
            + sizeof( g_asPH__Job__Update_World__Finish )
@@ -213,14 +228,10 @@ TgRSIZE tgPH_Query_Fixed_Memory( TgVOID )
          #if defined(TgBUILD_DEBUG__PHYSICS)
             + sizeof( g_vPH_Debug_Colour__Body_Enabled )
             + sizeof( g_vPH_Debug_Colour__Body_Sleep )
-            + sizeof( g_vPH_Debug_Colour__Body_Disabled )
-            + sizeof( g_vPH_Debug_Colour__Form_Enabled )
             + sizeof( g_vPH_Debug_Colour__Form_Disabled )
             + sizeof( g_vPH_Debug_Colour__Ragdoll )
             + sizeof( g_tiPH_Debug_Colour__Body_Enabled )
             + sizeof( g_tiPH_Debug_Colour__Body_Sleep )
-            + sizeof( g_tiPH_Debug_Colour__Body_Disabled )
-            + sizeof( g_tiPH_Debug_Colour__Form_Enabled )
             + sizeof( g_tiPH_Debug_Colour__Form_Disabled )
             + sizeof( g_tiPH_Debug_Colour__Ragdoll )
          /*# defined(TgBUILD_DEBUG__PHYSICS) */

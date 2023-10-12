@@ -35,6 +35,7 @@ TgRESULT tgPH_Mass_Set_Mass( STg2_PH_Mass_PC psMS, TgFLOAT32_C fMass, ETgPM_SHOR
     {
         tgMM_Set_U08_0x00( &psMS->m_mMOI, sizeof(psMS->m_mMOI) );
         tgMM_Set_U08_0x00( &psMS->m_mInv_MOI, sizeof(psMS->m_mInv_MOI) );
+        psMS->m_vCG = KTgUNIT_W_F32_04_1;
         psMS->m_uMass.m_vF32_04_1 = KTgZERO_F32_04_1;
         psMS->m_uInv_Mass.m_vF32_04_1 = KTgZERO_F32_04_1;
         return (KTgS_OK);
@@ -46,45 +47,73 @@ TgRESULT tgPH_Mass_Set_Mass( STg2_PH_Mass_PC psMS, TgFLOAT32_C fMass, ETgPM_SHOR
     TgWARN_DISABLE_PUSH(4061 4062,switch-enum)
     switch (enPM) {
     case ETgPM_BX: { /* Width = x, Height = y, Depth =z */
-            TgVEC_UN_F32_04_1_C                 uExtent = { .m_vF32_04_1 = puPM->m_sBX.m_vExtent };
-            TgFLOAT32_C                         fMass_Coeff = (1.0F / 12.0F) * fMass;
-            TgFLOAT32_C                         _11 = fMass_Coeff * (uExtent.m_vS_F32_04_1.y*uExtent.m_vS_F32_04_1.y + uExtent.m_vS_F32_04_1.z*uExtent.m_vS_F32_04_1.z);
-            TgFLOAT32_C                         _22 = fMass_Coeff * (uExtent.m_vS_F32_04_1.x*uExtent.m_vS_F32_04_1.x + uExtent.m_vS_F32_04_1.z*uExtent.m_vS_F32_04_1.z);
-            TgFLOAT32_C                         _33 = fMass_Coeff * (uExtent.m_vS_F32_04_1.x*uExtent.m_vS_F32_04_1.x + uExtent.m_vS_F32_04_1.y*uExtent.m_vS_F32_04_1.y);
-            TgVEC_UN_F32_04_3                   uM0;
+        TgVEC_UN_F32_04_1_C                 uExtent = { .m_vF32_04_1 = puPM->m_sBX.m_vExtent };
+        TgFLOAT32_C                         fMass_Coeff = (1.0F / 12.0F) * fMass;
+        TgVEC_UN_F32_04_3                   uM0;
 
-            tgMM_Set_U08_0x00( &uM0, sizeof(uM0) );
-            uM0.m_mS_F32_04_3._11 = _11;
-            uM0.m_mS_F32_04_3._22 = _22;
-            uM0.m_mS_F32_04_3._33 = _33;
-            tgMM_Copy( &psMS->m_mMOI, sizeof(psMS->m_mMOI), &uM0.m_mF32_04_3, sizeof(uM0) );
-            uM0.m_mS_F32_04_3._11 = 1.0F / _11;
-            uM0.m_mS_F32_04_3._22 = 1.0F / _22;
-            uM0.m_mS_F32_04_3._33 = 1.0F / _33;
-            tgMM_Copy( &psMS->m_mInv_MOI, sizeof(psMS->m_mInv_MOI), &uM0.m_mF32_04_3, sizeof(uM0) );
-        }
-        break;
+        tgMM_Set_U08_0x00( &uM0, sizeof(uM0) );
+        uM0.m_mS_F32_04_3._11 = fMass_Coeff * (uExtent.m_vS_F32_04_1.y*uExtent.m_vS_F32_04_1.y + uExtent.m_vS_F32_04_1.z*uExtent.m_vS_F32_04_1.z);
+        uM0.m_mS_F32_04_3._22 = fMass_Coeff * (uExtent.m_vS_F32_04_1.x*uExtent.m_vS_F32_04_1.x + uExtent.m_vS_F32_04_1.z*uExtent.m_vS_F32_04_1.z);
+        uM0.m_mS_F32_04_3._33 = fMass_Coeff * (uExtent.m_vS_F32_04_1.x*uExtent.m_vS_F32_04_1.x + uExtent.m_vS_F32_04_1.y*uExtent.m_vS_F32_04_1.y);
+        tgMM_Copy( &psMS->m_mMOI, sizeof(psMS->m_mMOI), &uM0.m_mF32_04_3, sizeof(uM0) );
+        uM0.m_mS_F32_04_3._11 = 1.0F / uM0.m_mS_F32_04_3._11;
+        uM0.m_mS_F32_04_3._22 = 1.0F / uM0.m_mS_F32_04_3._22;
+        uM0.m_mS_F32_04_3._33 = 1.0F / uM0.m_mS_F32_04_3._33;
+        tgMM_Copy( &psMS->m_mInv_MOI, sizeof(psMS->m_mInv_MOI), &uM0.m_mF32_04_3, sizeof(uM0) );
+        psMS->m_vCG = KTgUNIT_W_F32_04_1;
+        tgPH_Mass_Rotate_Mat( psMS, &puPM->m_sBX.m_mReference_Frame );
+    } break;
     case ETgPM_SP: {
-            TgVEC_UN_F32_04_1_C                 uRadius = { .m_vF32_04_1 = puPM->m_sSP.m_vRadius };
-            TgFLOAT32_C                         fVal = 0.4F * fMass * uRadius.m_vS_F32_04_1.x;
-            TgFLOAT32_C                         fInv_Val = 1.0F / fVal;
-            TgVEC_UN_F32_04_3                   uM0;
+        TgVEC_UN_F32_04_1_C                 uRadius = { .m_vF32_04_1 = puPM->m_sSP.m_vRadius };
+        TgFLOAT32_C                         fVal = 0.4F * fMass * uRadius.m_vS_F32_04_1.x;
+        TgFLOAT32_C                         fInv_Val = 1.0F / fVal;
+        TgVEC_UN_F32_04_3                   uM0;
 
-            tgMM_Set_U08_0x00( &uM0, sizeof(uM0) );
-            uM0.m_mS_F32_04_3._11 = fVal;
-            uM0.m_mS_F32_04_3._22 = fVal;
-            uM0.m_mS_F32_04_3._33 = fVal;
-            tgMM_Copy( &psMS->m_mMOI, sizeof(psMS->m_mMOI), &uM0.m_mF32_04_3, sizeof(uM0) );
-            uM0.m_mS_F32_04_3._11 = fInv_Val;
-            uM0.m_mS_F32_04_3._22 = fInv_Val;
-            uM0.m_mS_F32_04_3._33 = fInv_Val;
-            tgMM_Copy( &psMS->m_mInv_MOI, sizeof(psMS->m_mInv_MOI), &uM0.m_mF32_04_3, sizeof(uM0) );
-        }
-        break;
-    default:
-        tgMH_CLI_F32_04_3( &psMS->m_mMOI );
-        tgMH_CLI_F32_04_3( &psMS->m_mInv_MOI );
-        break;
+        tgMM_Set_U08_0x00( &uM0, sizeof(uM0) );
+        uM0.m_mS_F32_04_3._11 = fVal;
+        uM0.m_mS_F32_04_3._22 = fVal;
+        uM0.m_mS_F32_04_3._33 = fVal;
+        tgMM_Copy( &psMS->m_mMOI, sizeof(psMS->m_mMOI), &uM0.m_mF32_04_3, sizeof(uM0) );
+        uM0.m_mS_F32_04_3._11 = fInv_Val;
+        uM0.m_mS_F32_04_3._22 = fInv_Val;
+        uM0.m_mS_F32_04_3._33 = fInv_Val;
+        tgMM_Copy( &psMS->m_mInv_MOI, sizeof(psMS->m_mInv_MOI), &uM0.m_mF32_04_3, sizeof(uM0) );
+        psMS->m_vCG = KTgUNIT_W_F32_04_1;
+    } break;
+    case ETgPM_TB: TgATTRIBUTE_FALLTHROUGH
+    case ETgPM_CY: TgATTRIBUTE_FALLTHROUGH
+    case ETgPM_CP: {
+        TgVEC_UN_F32_04_1_C                 uRadiusSq = { .m_vF32_04_1 = puPM->m_sTB.m_vRadiusSq };
+        TgVEC_UN_F32_04_1_C                 uExtent = { .m_vF32_04_1 = puPM->m_sTB.m_vExtent };
+        TgVEC_UN_F32_04_3                   uM0;
+
+        tgMM_Set_U08_0x00( &uM0, sizeof(uM0) );
+        uM0.m_mS_F32_04_3._11 = (1.0F / 12.0F)*fMass*(3.0F*uRadiusSq.m_vS_F32_04_1.x + uExtent.m_vS_F32_04_1.x*uExtent.m_vS_F32_04_1.x*4.0F);
+        uM0.m_mS_F32_04_3._22 = (1.0F / 2.0F)*fMass*uRadiusSq.m_vS_F32_04_1.x;
+        uM0.m_mS_F32_04_3._33 = (1.0F / 12.0F)*fMass*(3.0F*uRadiusSq.m_vS_F32_04_1.x + uExtent.m_vS_F32_04_1.x*uExtent.m_vS_F32_04_1.x*4.0F);
+        tgMM_Copy( &psMS->m_mMOI, sizeof(psMS->m_mMOI), &uM0.m_mF32_04_3, sizeof(uM0) );
+        uM0.m_mS_F32_04_3._11 = 1.0F / uM0.m_mS_F32_04_3._11;
+        uM0.m_mS_F32_04_3._22 = 1.0F / uM0.m_mS_F32_04_3._22;
+        uM0.m_mS_F32_04_3._33 = 1.0F / uM0.m_mS_F32_04_3._33;
+        tgMM_Copy( &psMS->m_mInv_MOI, sizeof(psMS->m_mInv_MOI), &uM0.m_mF32_04_3, sizeof(uM0) );
+        psMS->m_vCG = KTgUNIT_W_F32_04_1;
+        tgPH_Mass_Rotate_Mat( psMS, &puPM->m_sTB.m_mReference_Frame );
+    } break;
+    default: {
+        TgVEC_UN_F32_04_3                   uM0;
+        TgFLOAT32_C                         fInv_Mass = 1.0F / fMass;
+
+        tgMM_Set_U08_0x00( &uM0, sizeof(uM0) );
+        uM0.m_mS_F32_04_3._11 = fMass;
+        uM0.m_mS_F32_04_3._22 = fMass;
+        uM0.m_mS_F32_04_3._33 = fMass;
+        tgMM_Copy( &psMS->m_mMOI, sizeof(psMS->m_mMOI), &uM0.m_mF32_04_3, sizeof(uM0) );
+        uM0.m_mS_F32_04_3._11 = fInv_Mass;
+        uM0.m_mS_F32_04_3._22 = fInv_Mass;
+        uM0.m_mS_F32_04_3._33 = fInv_Mass;
+        tgMM_Copy( &psMS->m_mInv_MOI, sizeof(psMS->m_mInv_MOI), &uM0.m_mF32_04_3, sizeof(uM0) );
+        psMS->m_vCG = KTgUNIT_W_F32_04_1;
+    } break;
     };
     TgWARN_DISABLE_POP()
     return (KTgS_OK);
@@ -104,6 +133,7 @@ TgRESULT tgPH_Mass_Move( STg2_PH_Mass_PC psMass, TgVEC_F32_04_1_C vDS )
     TgUN_V128                           u00, u01, u02, u03, u04;
     TgUN_V128                           u10, u11, u12, u13, u14;
     TgUN_V128                           u20, u21, u22;
+    TgVEC_F32_04_4                      m44;
 
     u00.m_vF32_04_1 = tgMH_Init_Vector_F32_04_1( psMass->m_vCG );
     u01.m_vF32_04_1 = tgMH_NEG_F32_04_1( u00.m_vF32_04_1 );
@@ -150,6 +180,11 @@ TgRESULT tgPH_Mass_Move( STg2_PH_Mass_PC psMass, TgVEC_F32_04_1_C vDS )
 
     psMass->m_vCG = tgMH_ADD_F32_04_1( psMass->m_vCG, vDS );
 
+    tgMH_INV_F32_04_3( &m44, &psMass->m_mMOI );
+    psMass->m_mInv_MOI.m_vC0 = m44.m_vC0;
+    psMass->m_mInv_MOI.m_vC1 = m44.m_vC1;
+    psMass->m_mInv_MOI.m_vC2 = m44.m_vC2;
+
     return (KTgS_OK);
 }
 
@@ -161,6 +196,7 @@ TgRESULT tgPH_Mass_Rotate_Mat( STg2_PH_Mass_PC psMass, TgVEC_F32_04_3_CPCU pmR0 
     TgUN_V128                           uA0, uA1, uA2, uA3, uA4, uA5, uA6, uA7, uA8;
     TgUN_V128                           uM0, uR0, uM1, uR1, uM2, uR2;
     TgVEC_F32_04_1                      vCG;
+    TgVEC_F32_04_4                      m44;
 
     uM0.m_vF32_04_1 = psMass->m_mMOI.m_avCol[0];
     uM1.m_vF32_04_1 = psMass->m_mMOI.m_avCol[1];
@@ -202,6 +238,11 @@ TgRESULT tgPH_Mass_Rotate_Mat( STg2_PH_Mass_PC psMass, TgVEC_F32_04_3_CPCU pmR0 
     psMass->m_vCG = tgMH_SEL_F32_04_1( psMass->m_vCG, tgMH_DOT3_F32_04_1( vCG, pmR0->m_avCol[0] ), KTgF000_V128.m_vF32_04_1 );
     psMass->m_vCG = tgMH_SEL_F32_04_1( psMass->m_vCG, tgMH_DOT3_F32_04_1( vCG, pmR0->m_avCol[1] ), KTg0F00_V128.m_vF32_04_1 );
     psMass->m_vCG = tgMH_SEL_F32_04_1( psMass->m_vCG, tgMH_DOT3_F32_04_1( vCG, pmR0->m_avCol[2] ), KTg00F0_V128.m_vF32_04_1 );
+
+    tgMH_INV_F32_04_3( &m44, &psMass->m_mMOI );
+    psMass->m_mInv_MOI.m_vC0 = m44.m_vC0;
+    psMass->m_mInv_MOI.m_vC1 = m44.m_vC1;
+    psMass->m_mInv_MOI.m_vC2 = m44.m_vC2;
 
     return (KTgS_OK);
 }

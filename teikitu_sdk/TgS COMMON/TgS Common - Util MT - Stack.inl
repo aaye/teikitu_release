@@ -23,7 +23,7 @@
 
 /* ---- tgCM_UT_LF__ST__Init ----------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgCM_UT_LF__ST__Init( STg2_UT_LF__ST_PCU NONULL psST )
+TgINLINE TgVOID tgCM_UT_LF__ST__Init( STg2_UT_LF__ST_PCU psST )
 {
     STg2_UT_ST__PTR_TKT                 sPTR_TKT;
 
@@ -36,7 +36,7 @@ TgINLINE TgVOID tgCM_UT_LF__ST__Init( STg2_UT_LF__ST_PCU NONULL psST )
 
 /* ---- tgCM_UT_LF__ST__Init_PreLoad --------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgCM_UT_LF__ST__Init_PreLoad( STg2_UT_LF__ST_PCU NONULL psST, TgVOID_P pData, TgRSIZE_C uiStride, TgRSIZE_C nuiData )
+TgINLINE TgVOID tgCM_UT_LF__ST__Init_PreLoad( STg2_UT_LF__ST_PCU psST, TgVOID_P pData, TgRSIZE_C uiStride, TgRSIZE_C nuiData )
 {
     STg2_UT_ST__PTR_TKT                 sPTR_TKT;
     TgUN_PTR                            sPTR;
@@ -67,7 +67,7 @@ TgINLINE TgVOID tgCM_UT_LF__ST__Free( TgATTRIBUTE_MAYBE_UNUSED STg2_UT_LF__ST_PC
 
 /* ---- tgCM_UT_LF__ST__Push ----------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgCM_UT_LF__ST__Push( STg2_UT_LF__ST_PCU NONULL psST, STg2_UT_ST__ST_Node_PCU NONULL psNode )
+TgINLINE TgVOID tgCM_UT_LF__ST__Push( STg2_UT_LF__ST_PCU psST, STg2_UT_ST__ST_Node_PCU psNode )
 {
     STg2_UT_ST__PTR_TKT                 sOrig, sNew;
     
@@ -84,7 +84,7 @@ TgINLINE TgVOID tgCM_UT_LF__ST__Push( STg2_UT_LF__ST_PCU NONULL psST, STg2_UT_ST
 
 /* ---- tgCM_UT_LF__ST__Pop ------------------------------------------------------------------------------------------------------------------------------------------------------ */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE STg2_UT_ST__ST_Node_P tgCM_UT_LF__ST__Pop( STg2_UT_LF__ST_PCU NONULL psST )
+TgINLINE STg2_UT_ST__ST_Node_P tgCM_UT_LF__ST__Pop( STg2_UT_LF__ST_PCU psST )
 {
     STg2_UT_ST__PTR_TKT                 sOrig, sNew;
     
@@ -106,7 +106,7 @@ TgINLINE STg2_UT_ST__ST_Node_P tgCM_UT_LF__ST__Pop( STg2_UT_LF__ST_PCU NONULL ps
 
 /* ---- tgCM_UT_LF__ST__Release -------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE STg2_UT_ST__ST_Node_P tgCM_UT_LF__ST__Release( STg2_UT_LF__ST_PCU NONULL psST )
+TgINLINE STg2_UT_ST__ST_Node_P tgCM_UT_LF__ST__Release( STg2_UT_LF__ST_PCU psST )
 {
     STg2_UT_ST__PTR_TKT                 sOrig, sNew;
     
@@ -129,7 +129,7 @@ TgINLINE STg2_UT_ST__ST_Node_P tgCM_UT_LF__ST__Release( STg2_UT_LF__ST_PCU NONUL
 
 /* ---- tgCM_UT_LF__ST__Merge ---------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgCM_UT_LF__ST__Merge( STg2_UT_LF__ST_PCU NONULL psST, STg2_UT_ST__ST_Node_P NONULL psHead, STg2_UT_ST__ST_Node_P NONULL psTail )
+TgINLINE TgVOID tgCM_UT_LF__ST__Merge( STg2_UT_LF__ST_PCU psST, STg2_UT_ST__ST_Node_P psHead, STg2_UT_ST__ST_Node_P psTail )
 {
     STg2_UT_ST__PTR_TKT                 sOrig, sNew;
     
@@ -146,7 +146,7 @@ TgINLINE TgVOID tgCM_UT_LF__ST__Merge( STg2_UT_LF__ST_PCU NONULL psST, STg2_UT_S
 
 /* ---- tgCM_UT_LF__ST__Pop_Wait_Yield ------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE STg2_UT_ST__ST_Node_P tgCM_UT_LF__ST__Pop_Wait_Yield( STg2_UT_LF__ST_PCU NONULL psST )
+TgINLINE STg2_UT_ST__ST_Node_P tgCM_UT_LF__ST__Pop_Wait_Yield( STg2_UT_LF__ST_PCU psST )
 {
     STg2_UT_ST__ST_Node_P               pResult;
 
@@ -166,7 +166,7 @@ TgINLINE STg2_UT_ST__ST_Node_P tgCM_UT_LF__ST__Pop_Wait_Yield( STg2_UT_LF__ST_PC
 
 /* ---- tgCM_UT_LF__ST__Pop_Wait_Spin -------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE STg2_UT_ST__ST_Node_P tgCM_UT_LF__ST__Pop_Wait_Spin( STg2_UT_LF__ST_PCU NONULL psST )
+TgINLINE STg2_UT_ST__ST_Node_P tgCM_UT_LF__ST__Pop_Wait_Spin( STg2_UT_LF__ST_PCU psST )
 {
     STg2_UT_ST__ST_Node_P               pResult;
 
@@ -187,7 +187,7 @@ TgINLINE STg2_UT_ST__ST_Node_P tgCM_UT_LF__ST__Pop_Wait_Spin( STg2_UT_LF__ST_PCU
 
 /* ---- tgCM_UT_LF__ST__Is_Empty ------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgBOOL tgCM_UT_LF__ST__Is_Empty( STg2_UT_LF__ST_PCU NONULL psST )
+TgINLINE TgBOOL tgCM_UT_LF__ST__Is_Empty( STg2_UT_LF__ST_PCU psST )
 {
     STg2_UT_ST__PTR_TKT                 sOrig;
     
@@ -203,7 +203,7 @@ TgINLINE TgBOOL tgCM_UT_LF__ST__Is_Empty( STg2_UT_LF__ST_PCU NONULL psST )
 
 /* ---- tgCM_UT_MT__ST_MX__Init -------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgCM_UT_MT__ST_MX__Init( STg2_UT_MT__ST_MX_PCU NONULL psMP_ST, TgCHAR_U8_CPCU mbzName )
+TgINLINE TgVOID tgCM_UT_MT__ST_MX__Init( STg2_UT_MT__ST_MX_PCU psMP_ST, TgCHAR_U8_CPCU mbzName )
 {
     TgVERIFY( KTgS_OK == tgPM_MT_MX_Init( &psMP_ST->m_sLock, nullptr ) );
     TgVERIFY( KTgS_OK == tgPM_MT_SM_Init( &psMP_ST->m_sStack_Count, mbzName, 0, KTgMAX_S32) );
@@ -213,7 +213,7 @@ TgINLINE TgVOID tgCM_UT_MT__ST_MX__Init( STg2_UT_MT__ST_MX_PCU NONULL psMP_ST, T
 
 /* ---- tgCM_UT_MT__ST_MX__Free -------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgCM_UT_MT__ST_MX__Free( STg2_UT_MT__ST_MX_PCU NONULL psMP_ST )
+TgINLINE TgVOID tgCM_UT_MT__ST_MX__Free( STg2_UT_MT__ST_MX_PCU psMP_ST )
 {
     TgERROR(nullptr == psMP_ST->m_psTop_Node);
     tgPM_MT_SM_Free( &psMP_ST->m_sStack_Count );
@@ -223,7 +223,7 @@ TgINLINE TgVOID tgCM_UT_MT__ST_MX__Free( STg2_UT_MT__ST_MX_PCU NONULL psMP_ST )
 
 /* ---- tgCM_UT_MT__ST_MX__Push -------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgCM_UT_MT__ST_MX__Push( STg2_UT_MT__ST_MX_PCU NONULL psMP_ST, STg2_UT_ST__ST_Node_PCU NONULL psMP_Node )
+TgINLINE TgVOID tgCM_UT_MT__ST_MX__Push( STg2_UT_MT__ST_MX_PCU psMP_ST, STg2_UT_ST__ST_Node_PCU psMP_Node )
 {
     tgPM_MT_MX_Wait_Block( &psMP_ST->m_sLock );
 
@@ -238,7 +238,7 @@ TgINLINE TgVOID tgCM_UT_MT__ST_MX__Push( STg2_UT_MT__ST_MX_PCU NONULL psMP_ST, S
 
 /* ---- tgCM_UT_MT__ST_MX__Pop --------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE STg2_UT_ST__ST_Node_P tgCM_UT_MT__ST_MX__Pop( STg2_UT_MT__ST_MX_PCU NONULL psMP_ST )
+TgINLINE STg2_UT_ST__ST_Node_P tgCM_UT_MT__ST_MX__Pop( STg2_UT_MT__ST_MX_PCU psMP_ST )
 {
     STg2_UT_ST__ST_Node_P               psTop_Node;
 
@@ -261,7 +261,7 @@ TgINLINE STg2_UT_ST__ST_Node_P tgCM_UT_MT__ST_MX__Pop( STg2_UT_MT__ST_MX_PCU NON
 
 /* ---- tgCM_UT_MT__ST_MX__Pop_Wait_Block ---------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE STg2_UT_ST__ST_Node_P tgCM_UT_MT__ST_MX__Pop_Wait_Block( STg2_UT_MT__ST_MX_PCU NONULL psMP_ST )
+TgINLINE STg2_UT_ST__ST_Node_P tgCM_UT_MT__ST_MX__Pop_Wait_Block( STg2_UT_MT__ST_MX_PCU psMP_ST )
 {
     STg2_UT_ST__ST_Node_P               psTop_Node;
 
@@ -281,7 +281,7 @@ TgINLINE STg2_UT_ST__ST_Node_P tgCM_UT_MT__ST_MX__Pop_Wait_Block( STg2_UT_MT__ST
 
 /* ---- tgCM_UT_MT__ST_MX__Is_Empty ---------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgBOOL tgCM_UT_MT__ST_MX__Is_Empty( STg2_UT_MT__ST_MX_PCU NONULL psMP_ST )
+TgINLINE TgBOOL tgCM_UT_MT__ST_MX__Is_Empty( STg2_UT_MT__ST_MX_PCU psMP_ST )
 {
     return (nullptr == psMP_ST->m_psTop_Node);
 }

@@ -27,7 +27,7 @@
     @return A vector where each element is assigned the same value as ARG */
 TgINLINE TgVOID
 FCN_M(tgMH_CLR_S)(
-    MAT_S_T(PCU) NONULL OUT );
+    MAT_S_T(PCU) TgANALYSIS_NO_NULL OUT );
 
 
 
@@ -39,7 +39,7 @@ FCN_M(tgMH_CLR_S)(
     @param [in] ARG2 Matrix */
 TgINLINE TgVOID
 FCN_M(tgMH_MAX_S)(
-    MAT_S_T(PCU) NONULL OUT0, MAT_S_T(CPCU) NONULL ARG1, MAT_S_T(CPCU) NONULL ARG2 );
+    MAT_S_T(PCU) TgANALYSIS_NO_NULL OUT0, MAT_S_T(CPCU) TgANALYSIS_NO_NULL ARG1, MAT_S_T(CPCU) TgANALYSIS_NO_NULL ARG2 );
 
 /** @addtogroup TGS_COMMON_MATH_VECTOR_LOGICAL
     @brief Store a matrix where each element is the minimum of the corresponding elements in the argument matrices
@@ -48,7 +48,7 @@ FCN_M(tgMH_MAX_S)(
     @param [in] ARG2 Matrix */
 TgINLINE TgVOID
 FCN_M(tgMH_MIN_S)(
-    MAT_S_T(PCU) NONULL OUT0, MAT_S_T(CPCU) NONULL ARG1, MAT_S_T(CPCU) NONULL ARG2 );
+    MAT_S_T(PCU) TgANALYSIS_NO_NULL OUT0, MAT_S_T(CPCU) TgANALYSIS_NO_NULL ARG1, MAT_S_T(CPCU) TgANALYSIS_NO_NULL ARG2 );
 
 /** @addtogroup TGS_COMMON_MATH_VECTOR_LOGICAL
     @brief Store the result of a bit-wise and between both arguments
@@ -57,7 +57,7 @@ FCN_M(tgMH_MIN_S)(
     @param [in] ARG2 Matrix */
 TgINLINE TgVOID
 FCN_M(tgMH_AND_S)(
-    MAT_S_T(PCU) NONULL OUT0, MAT_S_T(CPCU) NONULL ARG1, MAT_S_T(CPCU) NONULL ARG2 );
+    MAT_S_T(PCU) TgANALYSIS_NO_NULL OUT0, MAT_S_T(CPCU) TgANALYSIS_NO_NULL ARG1, MAT_S_T(CPCU) TgANALYSIS_NO_NULL ARG2 );
 
 /** @addtogroup TGS_COMMON_MATH_VECTOR_LOGICAL
     @brief Store the result of a bit-wise or between both arguments
@@ -66,7 +66,7 @@ FCN_M(tgMH_AND_S)(
     @param [in] ARG2 Matrix */
 TgINLINE TgVOID
 FCN_M(tgMH_OR_S)(
-    MAT_S_T(PCU) NONULL OUT0, MAT_S_T(CPCU) NONULL ARG1, MAT_S_T(CPCU) NONULL ARG2 );
+    MAT_S_T(PCU) TgANALYSIS_NO_NULL OUT0, MAT_S_T(CPCU) TgANALYSIS_NO_NULL ARG1, MAT_S_T(CPCU) TgANALYSIS_NO_NULL ARG2 );
 
 /** @addtogroup TGS_COMMON_MATH_VECTOR_LOGICAL
     @brief Store the result of a bit-wise xor between both arguments
@@ -75,7 +75,7 @@ FCN_M(tgMH_OR_S)(
     @param [in] ARG2 Matrix */
 TgINLINE TgVOID
 FCN_M(tgMH_XOR_S)(
-    MAT_S_T(PCU) NONULL OUT0, MAT_S_T(CPCU) NONULL ARG1, MAT_S_T(CPCU) NONULL ARG2 );
+    MAT_S_T(PCU) TgANALYSIS_NO_NULL OUT0, MAT_S_T(CPCU) TgANALYSIS_NO_NULL ARG1, MAT_S_T(CPCU) TgANALYSIS_NO_NULL ARG2 );
 
 
 /* =============================================================================================================================================================================== */

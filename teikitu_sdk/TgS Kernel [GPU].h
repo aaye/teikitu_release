@@ -73,7 +73,7 @@ tgKN_GPU_Enumerate( TgVOID );
     @return Result Code. */
 TgEXTN TgRESULT
 tgKN_GPU_Query_Adapter_List(
-    STg2_KN_GPU_Adapter_CPP NONULL OUT0, TgUINT_E32_C ARG1 );
+    STg2_KN_GPU_Adapter_CPP TgANALYSIS_NO_NULL OUT0, TgUINT_E32_C ARG1 );
 
 /** @brief Validate that a selected format is supported on an output and adapter.
     @param [in] ARG0 Integer index selecting the adapter.
@@ -102,7 +102,7 @@ tgKN_GPU_Query_Mode_List(
     @return Result Code. */
 TgEXTN TgRESULT
 tgKN_GPU_Select_Min_Mode(
-    STg2_KN_GPU_Mode_PC NONULL OUT0, TgUINT_E32_C ARG1, TgUINT_E32_C ARG2, STg2_KN_GPU_Mode_CPC NONULL ARG3 );
+    STg2_KN_GPU_Mode_PC TgANALYSIS_NO_NULL OUT0, TgUINT_E32_C ARG1, TgUINT_E32_C ARG2, STg2_KN_GPU_Mode_CPC TgANALYSIS_NO_NULL ARG3 );
 
 /** @brief Find the closest mode (rounded up) that was enumerated for the selected output device.
     @param [out] OUT0 Pointer to the closest (rounded up) valid mode found to the requested mode.
@@ -112,7 +112,7 @@ tgKN_GPU_Select_Min_Mode(
     @return Result Code. */
 TgEXTN TgRESULT
 tgKN_GPU_Select_Max_Mode(
-    STg2_KN_GPU_Mode_PC NONULL OUT0, TgUINT_E32_C ARG1, TgUINT_E32_C ARG2, STg2_KN_GPU_Mode_CPC NONULL ARG3 );
+    STg2_KN_GPU_Mode_PC TgANALYSIS_NO_NULL OUT0, TgUINT_E32_C ARG1, TgUINT_E32_C ARG2, STg2_KN_GPU_Mode_CPC TgANALYSIS_NO_NULL ARG3 );
 
 
 /* ---- GPU - Contexts ----------------------------------------------------------------------------------------------------------------------------------------------------------- */
@@ -137,21 +137,21 @@ tgKN_GPU_Select_Max_Mode(
     @return Result Code. */
 TgEXTN TgRESULT
 tgKN_GPU_Select_Context__Init_From_Config(
-    STg2_KN_GPU_Select_PCU NONULL OUT0 );
+    STg2_KN_GPU_Select_PCU TgANALYSIS_NO_NULL OUT0 );
 
 /** @brief Fill a selection data structure based on internal data filled out by a call to Enumerate.
     @param [in] ARG0 Pointer to a selection data structure.
     @return Result Code. */
 TgEXTN TgRESULT
 tgKN_GPU_Select_Context__Init_From_Enumeration(
-    STg2_KN_GPU_Select_PCU NONULL ARG0 );
+    STg2_KN_GPU_Select_PCU TgANALYSIS_NO_NULL ARG0 );
 
 /** @brief Validate and update the selection data structure based on internal data, of which most is discovered during an enumeration. 
     @param [in,out] OUT0 Pointer to a selection data structure. 
     @return Result Code. */
 TgEXTN TgRESULT
 tgKN_GPU_Select_Context__Validate(
-    STg2_KN_GPU_Select_CPCU NONULL OUT0 );
+    STg2_KN_GPU_Select_CPCU TgANALYSIS_NO_NULL OUT0 );
 
 /** @brief Create a new GPU context based on the selection data structure.
     @param [out] OUT0 Pointer to result data structure that is filled in with the resulting UID(s) of the allocated contexts.
@@ -159,7 +159,7 @@ tgKN_GPU_Select_Context__Validate(
     @return Result Code. */
 TgEXTN TgRESULT
 tgKN_GPU_Contexts__Init(
-    STg2_KN_GPU_Init_Result_PCU NONULL OUT0, STg2_KN_GPU_Select_CPCU NONULL ARG1 );
+    STg2_KN_GPU_Init_Result_PCU TgANALYSIS_NO_NULL OUT0, STg2_KN_GPU_Select_CPCU TgANALYSIS_NO_NULL ARG1 );
 
 /** @brief Free a GPU context, and all associated resources assuming that they are not shared with other contexts. */
 TgEXTN TgVOID
@@ -168,7 +168,7 @@ tgKN_GPU_Contexts__Free( TgVOID );
 /** @brief Get the current swap chain render buffer (i.e. the one that is next to be presented) and relevant descriptors. */
 TgEXTN TgVOID
 tgKN_GPU__SwapChain__Get_Target_Buffers(
-    STg2_KN_GPU_Render_Buffer_PC NONULL OUT0, STg2_KN_GPU_Render_Buffer_PC NONULL OUT1, TgKN_GPU_CXT_SWAP_ID_C ARG2
+    STg2_KN_GPU_Render_Buffer_PC TgANALYSIS_NO_NULL OUT0, STg2_KN_GPU_Render_Buffer_PC TgANALYSIS_NO_NULL OUT1, TgKN_GPU_CXT_SWAP_ID_C ARG2
 );
 
 
@@ -194,7 +194,7 @@ tgKN_GPU__SwapChain__Get_Target_Buffers(
     @param [in] ARG4 Enumeration for the type of allocator to use. */
 TgEXTN TgKN_GPU_TX_IMG_INST_ID
 tgKN_GPU_TX_IMG__Load_TIFF_From_OS_File_System(
-    UTg2_KN_GPU_CMD_C ARG0, TgKN_FS_MOUNT_ID_C ARG1, TgCHAR_U8_CPC OKNULL ARG2, TgCHAR_U8_CPC NONULL ARG3, ETgKN_GPU_ALLOCATOR_C ARG4 );
+    UTg2_KN_GPU_CMD_C ARG0, TgKN_FS_MOUNT_ID_C ARG1, TgCHAR_U8_CPC OKNULL ARG2, TgCHAR_U8_CPC TgANALYSIS_NO_NULL ARG3, ETgKN_GPU_ALLOCATOR_C ARG4 );
 
 /** @brief Load a TIFF (using LibTIFF) using a file UID.
     @param [in] ARG0 Union of a pointer to the command list data structure returned by tgKN_GPU_EXT__Execute__Command_List_Acquire.
@@ -214,7 +214,7 @@ tgKN_GPU_TX_IMG__Load_TIFF_From_KN_File_System(
     @return Result Code. */
 TgEXTN TgRESULT
 tgKN_GPU_Query_DOS_Font_ROM_TX(
-    STg2_KN_GPU_FONT_TX_PC NONULL OUT0, ETgKN_GPU_DOS_FONT_ROM_C ARG1 );
+    STg2_KN_GPU_FONT_TX_PC TgANALYSIS_NO_NULL OUT0, ETgKN_GPU_DOS_FONT_ROM_C ARG1 );
 
 
 /* ---- GPU - Transformations ---------------------------------------------------------------------------------------------------------------------------------------------------- */
@@ -238,31 +238,31 @@ tgKN_GPU_Colour_Grading_CPU(
     @param [in] ARG1 Pointer to a debug string descriptor. */
 TgEXTN TgVOID
 tgKN_GPU__CMD__Render_Debug_Text_Box( 
-    UTg2_KN_GPU_CMD_C ARG0, STg2_KN_GPU_OUTPUT_DEBUG_STRING_CPC NONULL ARG1 );
+    UTg2_KN_GPU_CMD_C ARG0, STg2_KN_GPU_OUTPUT_DEBUG_STRING_CPC TgANALYSIS_NO_NULL ARG1 );
 
 TgEXTN TgVOID
 tgKN_GPU__CMD__Render_Debug_Line(
-    UTg2_KN_GPU_CMD_C ARG0, TgVEC_F32_04_1 ARG1, TgVEC_F32_04_1 ARG2, TgVEC_F32_04_1 ARG3, TgVEC_F32_04_1 ARG4, STg2_KN_GPU_HLSL_CB_Debug_Line_CPC NONULL ARG5 );
+    UTg2_KN_GPU_CMD_C ARG0, TgVEC_F32_04_1 ARG1, TgVEC_F32_04_1 ARG2, TgVEC_F32_04_1 ARG3, TgVEC_F32_04_1 ARG4, STg2_KN_GPU_HLSL_CB_Debug_Line_CPC TgANALYSIS_NO_NULL ARG5 );
 
 TgEXTN TgVOID
 tgKN_GPU__CMD__Render_Debug_Line_Flush(
-    UTg2_KN_GPU_CMD_C ARG0, STg2_KN_GPU_HLSL_CB_Debug_Line_CPC NONULL ARG1 );
+    UTg2_KN_GPU_CMD_C ARG0, STg2_KN_GPU_HLSL_CB_Debug_Line_CPC TgANALYSIS_NO_NULL ARG1 );
 
 TgEXTN TgVOID
 tgKN_GPU__CMD__Render_Debug_Axes(
-    UTg2_KN_GPU_CMD_C ARG0, TgVEC_F32_04_3_CPCU NONULL ARG1, TgVEC_F32_04_1 ARG2, STg2_KN_GPU_HLSL_CB_Debug_Line_CPC NONULL ARG3 );
+    UTg2_KN_GPU_CMD_C ARG0, TgVEC_F32_04_3_CPCU TgANALYSIS_NO_NULL ARG1, TgVEC_F32_04_1 ARG2, STg2_KN_GPU_HLSL_CB_Debug_Line_CPC TgANALYSIS_NO_NULL ARG3 );
 
 TgEXTN TgVOID
 tgKN_GPU__CMD__Render_Debug_nGon(
-    UTg2_KN_GPU_CMD_C ARG0, TgVEC_F32_04_1 ARG1, TgVEC_F32_04_3_CPCU NONULL ARG2, TgFLOAT32_C ARG3, TgSINT_E32_C ARG4, STg2_KN_GPU_HLSL_CB_Debug_Line_CPC NONULL ARG5 );
+    UTg2_KN_GPU_CMD_C ARG0, TgVEC_F32_04_1 ARG1, TgVEC_F32_04_3_CPCU TgANALYSIS_NO_NULL ARG2, TgFLOAT32_C ARG3, TgSINT_E32_C ARG4, STg2_KN_GPU_HLSL_CB_Debug_Line_CPC TgANALYSIS_NO_NULL ARG5 );
 
 TgEXTN TgVOID
 tgKN_GPU__CMD__Render_Debug_Frustum(
-    UTg2_KN_GPU_CMD_C ARG0, TgVEC_F32_04_1 ARG1, TgVEC_F32_04_4_CPCU NONULL ARG2, TgVEC_F32_04_4_CPCU NONULL ARG3, STg2_KN_GPU_HLSL_CB_Debug_Line_CPC NONULL ARG4 );
+    UTg2_KN_GPU_CMD_C ARG0, TgVEC_F32_04_1 ARG1, TgVEC_F32_04_4_CPCU TgANALYSIS_NO_NULL ARG2, TgVEC_F32_04_4_CPCU TgANALYSIS_NO_NULL ARG3, STg2_KN_GPU_HLSL_CB_Debug_Line_CPC TgANALYSIS_NO_NULL ARG4 );
 
 TgEXTN TgVOID
 tgKN_GPU__CMD__Render_Debug_Camera_Frustum(
-    UTg2_KN_GPU_CMD_C ARG0, TgVEC_F32_04_1_C vCL0, STg2_KN_GPU_Camera_CPCU psCamera, STg2_KN_GPU_HLSL_CB_Debug_Line_CPC NONULL ARG3 );
+    UTg2_KN_GPU_CMD_C ARG0, TgVEC_F32_04_1_C vCL0, STg2_KN_GPU_Camera_CPCU psCamera, STg2_KN_GPU_HLSL_CB_Debug_Line_CPC TgANALYSIS_NO_NULL ARG3 );
 
 /*# defined(TgCOMPILE__RENDER_DEBUG_OUTPUT) */
 #endif
@@ -276,7 +276,7 @@ tgKN_GPU__CMD__Render_Debug_Camera_Frustum(
     @param [in] ARG3 Structure describing the present depth buffer. */
 TgEXTN TgVOID
 tgKN_GPU__CMD__Render_Console_Text( 
-    UTg2_KN_GPU_CMD_C ARG0, STg2_KN_GPU_HLSL_Output_DESC_CPC NONULL ARG1, STg2_KN_GPU_Render_Buffer ARG2, STg2_KN_GPU_Render_Buffer ARG3 );
+    UTg2_KN_GPU_CMD_C ARG0, STg2_KN_GPU_HLSL_Output_DESC_CPC TgANALYSIS_NO_NULL ARG1, STg2_KN_GPU_Render_Buffer ARG2, STg2_KN_GPU_Render_Buffer ARG3 );
 
 /*# defined(TgCOMPILE__RENDER_DEBUG_OUTPUT) && TgCOMPILE__CONSOLE */
 #endif

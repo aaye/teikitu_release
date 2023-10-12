@@ -126,7 +126,7 @@ TgVOID tgKN_GPU__CMD__Render_Debug_Text_Box( UTg2_KN_GPU_CMD_C uCMD, STg2_KN_GPU
     fText_Start_Z = psDBG->m_vText_Box_V.z - 2.0F / (float)psDBG->m_sRTBuffer.m_uiWidth;
     fText_Start_W = psDBG->m_vText_Box_V.w + 2.0F / (float)psDBG->m_sRTBuffer.m_uiHeight;
     fLimitT = tgCM_MIN_F32( fText_Start_Y,  1.0F );
-    fLimitB = tgCM_MAX_F32( fText_Start_W, -1.0F );
+    fLimitB = tgCM_MAX_F32( fText_Start_W - sText_Constant_Buffer.m_vFont_Glyph_Scale_S.y*2, -1.0F );
 
     if (psDBG->m_bDraw_Background || psDBG->m_bDraw_First_Line)
     {
@@ -244,7 +244,7 @@ TgVOID tgKN_GPU__CMD__Render_Debug_Text_Box( UTg2_KN_GPU_CMD_C uCMD, STg2_KN_GPU
                 }
                 else
                 {
-                    sText_Constant_Buffer.m_vText_Offset[uiBuffer_Index].y = fText_Start_Y - (float)uiTextY * sText_Constant_Buffer.m_vFont_Glyph_Scale_S.y;
+                    sText_Constant_Buffer.m_vText_Offset[uiBuffer_Index].y = fText_Start_Y - (float)(uiTextY + 1) * sText_Constant_Buffer.m_vFont_Glyph_Scale_S.y;
 
                     /* Stop processing the string(s) if there is no longer any room for further lines in the text box. */
                     if (sText_Constant_Buffer.m_vText_Offset[uiBuffer_Index].y - sText_Constant_Buffer.m_vFont_Glyph_Scale_S.y <= fLimitB)
@@ -259,7 +259,7 @@ TgVOID tgKN_GPU__CMD__Render_Debug_Text_Box( UTg2_KN_GPU_CMD_C uCMD, STg2_KN_GPU
                 sText_Constant_Buffer.m_vText_Offset[uiBuffer_Index].w = (float)(uszText[uiText_Index] / (TgUINT_E32)(sFont_TX.m_fTX_X / sFont_TX.m_fTX_Cell_X));
             };
 
-            if (uiBuffer_Index >= TgARRAY_COUNT(sText_Constant_Buffer.m_vText_Offset))
+            if ((bEnd_Process && uiBuffer_Index > 0) || (uiBuffer_Index >= TgARRAY_COUNT( sText_Constant_Buffer.m_vText_Offset )))
             {
                 tgKN_GPU_EXT__CMD__Render_Debug_Text( uCMD, uiBuffer_Index, &sText_Constant_Buffer );
                 uiBuffer_Index = 0;
@@ -498,18 +498,15 @@ TgVOID tgKN_GPU_DBG_Init_Mesh_Sphere( TgKN_GPU_DBG_PM_Generate_PC psGeom_Generat
     {
         if ((2 * psGeom_Generate->m_nuiMax_Vertex) >= TgARRAY_COUNT( KTgGM_ICOSAHEDRON_PN_INDEX_VERTEX ))
         {
+            TgRSIZE                             uiVert;
+
             psGeom_Generate->m_nuiVertex = TgARRAY_COUNT(KTgGM_ICOSAHEDRON_PN_INDEX_VERTEX) >> 1;
 
-            for (TgRSIZE uiVert = 0; uiVert < psGeom_Generate->m_nuiVertex; ++uiVert)
+            for (uiVert = 0; uiVert < psGeom_Generate->m_nuiVertex; ++uiVert)
             {
-                TgVEC_S_F32_04_1_C                  vK2 = tgMH_SET1_S_F32_04_1( 0.5F );
-                TgVEC_S_F32_04_1_C                  vKN = tgMH_NORM_S_F32_04_1( KTgGM_ICOSAHEDRON_PN_INDEX_VERTEX[2*uiVert].m_vS_F32_04_1 );
-                TgVEC_S_F32_04_1_C                  vKS = tgMH_MUL_S_F32_04_1( vK2, vKN );
-
                 TgCRITICAL(uiVert < psGeom_Generate->m_nuiMax_Vertex);
-
-                psGeom_Generate->m_psVertex[uiVert].m_vS0 = tgMH_Init_Point_ELEM_F32_04_1( vKS.x, vKS.y, vKS.z );
-                psGeom_Generate->m_psVertex[uiVert].m_vN0 = tgMH_Init_Vector_ELEM_F32_04_1( vKN.x, vKN.y, vKN.z );
+                psGeom_Generate->m_psVertex[uiVert].m_vS0 = KTgGM_ICOSAHEDRON_PN_INDEX_VERTEX[2*uiVert + 0].m_vF32_04_1;
+                psGeom_Generate->m_psVertex[uiVert].m_vN0 = KTgGM_ICOSAHEDRON_PN_INDEX_VERTEX[2*uiVert + 1].m_vF32_04_1;
             }
         }
         else
@@ -544,17 +541,20 @@ TgVOID tgKN_GPU_DBG_Init_Mesh_Sphere( TgKN_GPU_DBG_PM_Generate_PC psGeom_Generat
 }
 
 
-/* ---- tgKN_GPU_DBG_Init_Mesh_Capsule ------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ---- tgKN_GPU_DBG_Init_Mesh_Capsule_Cap_0 ------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgVOID tgKN_GPU_DBG_Init_Mesh_Capsule( TgKN_GPU_DBG_PM_Generate_PC psGeom_Generate )
+TgVOID tgKN_GPU_DBG_Init_Mesh_Capsule_Cap_0( TgKN_GPU_DBG_PM_Generate_PC psGeom_Generate )
 {
     TgRSIZE                             nuiIndex_Tube;
-    TgRSIZE                             uiIndex;
+    TgRSIZE                             uiIndex, nuiMax_Index;
+    TgUINT_E16_P                        puiIndex;
+
+    psGeom_Generate->m_nuiVertex = 0;
+    psGeom_Generate->m_nuiIndex = 0;
 
     if (nullptr == psGeom_Generate->m_puiIndex || 0 == psGeom_Generate->m_nuiMax_Index)
     {
-        psGeom_Generate->m_nuiMax_Index  = (TgARRAY_COUNT(KTgGM_ICOSAHEDRON_CAPSULE_PN_INDEX) - 36u)*(TgRSIZE)(tgPM_POW_F32( 4, (TgFLOAT32)psGeom_Generate->m_uiTessellate ));
-        psGeom_Generate->m_nuiMax_Index += 36u*(TgRSIZE)(tgPM_POW_F32( 2, (TgFLOAT32)psGeom_Generate->m_uiTessellate ));
+        psGeom_Generate->m_nuiMax_Index = (TgARRAY_COUNT(KTgGM_ICOSAHEDRON_CAPSULE_FULL_PN_INDEX) / 3) * (TgRSIZE)(tgPM_POW_F32( 4, (TgFLOAT32)psGeom_Generate->m_uiTessellate ));
         return;
     };
 
@@ -568,14 +568,9 @@ TgVOID tgKN_GPU_DBG_Init_Mesh_Capsule( TgKN_GPU_DBG_PM_Generate_PC psGeom_Genera
 
             for (uiVert= 0; uiVert < psGeom_Generate->m_nuiVertex; ++uiVert)
             {
-                TgVEC_S_F32_04_1_C                  vK2 = tgMH_SET1_S_F32_04_1( 0.5F );
-                TgVEC_S_F32_04_1_C                  vKN = tgMH_NORM_S_F32_04_1( KTgGM_ICOSAHEDRON_CAPSULE_PN_INDEX_VERTEX[2*uiVert].m_vS_F32_04_1 );
-                TgVEC_S_F32_04_1_C                  vKS = tgMH_MUL_S_F32_04_1( vK2, vKN );
-
                 TgCRITICAL(uiVert < psGeom_Generate->m_nuiMax_Vertex);
-
-                psGeom_Generate->m_psVertex[uiVert].m_vS0 = tgMH_Init_Point_ELEM_F32_04_1( vKS.x, vKS.y, vKS.z );
-                psGeom_Generate->m_psVertex[uiVert].m_vN0 = tgMH_Init_Vector_ELEM_F32_04_1( vKN.x, vKN.y, vKN.z );
+                psGeom_Generate->m_psVertex[uiVert].m_vS0 = KTgGM_ICOSAHEDRON_CAPSULE_PN_INDEX_VERTEX[2*uiVert + 0].m_vF32_04_1;
+                psGeom_Generate->m_psVertex[uiVert].m_vN0 = KTgGM_ICOSAHEDRON_CAPSULE_PN_INDEX_VERTEX[2*uiVert + 1].m_vF32_04_1;
             }
         }
         else
@@ -588,21 +583,189 @@ TgVOID tgKN_GPU_DBG_Init_Mesh_Capsule( TgKN_GPU_DBG_PM_Generate_PC psGeom_Genera
         psGeom_Generate->m_nuiVertex = TgARRAY_COUNT(KTgGM_ICOSAHEDRON_CAPSULE_PN_INDEX_VERTEX) >> 1;
     };
 
-    if (psGeom_Generate->m_puiIndex && psGeom_Generate->m_nuiMax_Index >= TgARRAY_COUNT(KTgGM_ICOSAHEDRON_CAPSULE_PN_INDEX))
-    {
-        psGeom_Generate->m_nuiIndex = TgARRAY_COUNT(KTgGM_ICOSAHEDRON_CAPSULE_PN_INDEX);
-        tgMM_Copy( psGeom_Generate->m_puiIndex, sizeof(KTgGM_ICOSAHEDRON_CAPSULE_PN_INDEX), KTgGM_ICOSAHEDRON_CAPSULE_PN_INDEX, sizeof(KTgGM_ICOSAHEDRON_CAPSULE_PN_INDEX) );
-    }
-    else
+    if (!(psGeom_Generate->m_puiIndex && psGeom_Generate->m_nuiMax_Index >= TgARRAY_COUNT(KTgGM_ICOSAHEDRON_CAPSULE_FULL_PN_INDEX) / 3))
     {
         return;
     }
+
+    nuiMax_Index = psGeom_Generate->m_nuiMax_Index;
+    puiIndex = psGeom_Generate->m_puiIndex;
+
+    psGeom_Generate->m_nuiMax_Index  = (TgARRAY_COUNT(KTgGM_ICOSAHEDRON_CAPSULE_FULL_PN_INDEX) - 36u)*(TgRSIZE)(tgPM_POW_F32( 4, (TgFLOAT32)psGeom_Generate->m_uiTessellate ));
+    psGeom_Generate->m_nuiMax_Index += 36u*(TgRSIZE)(tgPM_POW_F32( 2, (TgFLOAT32)psGeom_Generate->m_uiTessellate ));
+    psGeom_Generate->m_puiIndex = (TgUINT_E16_P)TgMALLOC_TEMP( psGeom_Generate->m_nuiMax_Index*sizeof(TgUINT_E16) );
+    tgMM_Copy( psGeom_Generate->m_puiIndex, psGeom_Generate->m_nuiMax_Index*sizeof(TgUINT_E16), KTgGM_ICOSAHEDRON_CAPSULE_FULL_PN_INDEX, sizeof(KTgGM_ICOSAHEDRON_CAPSULE_FULL_PN_INDEX) );
+    psGeom_Generate->m_nuiIndex = TgARRAY_COUNT(KTgGM_ICOSAHEDRON_CAPSULE_FULL_PN_INDEX);
 
     nuiIndex_Tube = 36;
     for (uiIndex = 0; uiIndex < psGeom_Generate->m_uiTessellate; ++uiIndex)
     {
         tgKN_GPU_DBG_Tessellate_Capsule( &nuiIndex_Tube, psGeom_Generate );
     };
+
+    TgDIAG(psGeom_Generate->m_nuiIndex == nuiMax_Index * 2 + nuiIndex_Tube);
+
+    tgMM_Copy( puiIndex, nuiMax_Index*sizeof(TgUINT_E16), psGeom_Generate->m_puiIndex, (psGeom_Generate->m_nuiIndex - nuiIndex_Tube)*sizeof(TgUINT_E16) / 2u );
+    TgFREE_TEMP(psGeom_Generate->m_puiIndex);
+    psGeom_Generate->m_nuiIndex -= nuiIndex_Tube;
+    psGeom_Generate->m_nuiIndex /= 2;
+    psGeom_Generate->m_puiIndex = puiIndex;
+    psGeom_Generate->m_nuiMax_Index = nuiMax_Index;
+
+    if (nullptr == psGeom_Generate->m_psVertex || 0 == psGeom_Generate->m_nuiMax_Vertex)
+    {
+        psGeom_Generate->m_nuiMax_Vertex = psGeom_Generate->m_nuiVertex;
+    };
+}
+
+
+/* ---- tgKN_GPU_DBG_Init_Mesh_Capsule_Cap_1 ------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgVOID tgKN_GPU_DBG_Init_Mesh_Capsule_Cap_1( TgKN_GPU_DBG_PM_Generate_PC psGeom_Generate )
+{
+    TgRSIZE                             nuiIndex_Tube;
+    TgRSIZE                             uiIndex, nuiMax_Index;
+    TgUINT_E16_P                        puiIndex;
+
+    psGeom_Generate->m_nuiVertex = 0;
+    psGeom_Generate->m_nuiIndex = 0;
+
+    if (nullptr == psGeom_Generate->m_puiIndex || 0 == psGeom_Generate->m_nuiMax_Index)
+    {
+        psGeom_Generate->m_nuiMax_Index = (TgARRAY_COUNT(KTgGM_ICOSAHEDRON_CAPSULE_FULL_PN_INDEX) / 3) * (TgRSIZE)(tgPM_POW_F32( 4, (TgFLOAT32)psGeom_Generate->m_uiTessellate ));
+        return;
+    };
+
+    if (psGeom_Generate->m_psVertex)
+    {
+        if ((2 * psGeom_Generate->m_nuiMax_Vertex) >= TgARRAY_COUNT( KTgGM_ICOSAHEDRON_CAPSULE_PN_INDEX_VERTEX ))
+        {
+            TgRSIZE                             uiVert;
+
+            psGeom_Generate->m_nuiVertex = TgARRAY_COUNT(KTgGM_ICOSAHEDRON_CAPSULE_PN_INDEX_VERTEX) >> 1;
+
+            for (uiVert= 0; uiVert < psGeom_Generate->m_nuiVertex; ++uiVert)
+            {
+                TgCRITICAL(uiVert < psGeom_Generate->m_nuiMax_Vertex);
+                psGeom_Generate->m_psVertex[uiVert].m_vS0 = KTgGM_ICOSAHEDRON_CAPSULE_PN_INDEX_VERTEX[2*uiVert + 0].m_vF32_04_1;
+                psGeom_Generate->m_psVertex[uiVert].m_vN0 = KTgGM_ICOSAHEDRON_CAPSULE_PN_INDEX_VERTEX[2*uiVert + 1].m_vF32_04_1;
+            }
+        }
+        else
+        {
+            return;
+        };
+    }
+    else
+    {
+        psGeom_Generate->m_nuiVertex = TgARRAY_COUNT(KTgGM_ICOSAHEDRON_CAPSULE_PN_INDEX_VERTEX) >> 1;
+    };
+
+    if (!(psGeom_Generate->m_puiIndex && psGeom_Generate->m_nuiMax_Index >= TgARRAY_COUNT(KTgGM_ICOSAHEDRON_CAPSULE_FULL_PN_INDEX) / 3))
+    {
+        return;
+    }
+
+    nuiMax_Index = psGeom_Generate->m_nuiMax_Index;
+    puiIndex = psGeom_Generate->m_puiIndex;
+
+    psGeom_Generate->m_nuiMax_Index  = (TgARRAY_COUNT(KTgGM_ICOSAHEDRON_CAPSULE_FULL_PN_INDEX) - 36u)*(TgRSIZE)(tgPM_POW_F32( 4, (TgFLOAT32)psGeom_Generate->m_uiTessellate ));
+    psGeom_Generate->m_nuiMax_Index += 36u*(TgRSIZE)(tgPM_POW_F32( 2, (TgFLOAT32)psGeom_Generate->m_uiTessellate ));
+    psGeom_Generate->m_puiIndex = (TgUINT_E16_P)TgMALLOC_TEMP( psGeom_Generate->m_nuiMax_Index*sizeof(TgUINT_E16) );
+    tgMM_Copy( psGeom_Generate->m_puiIndex, psGeom_Generate->m_nuiMax_Index*sizeof(TgUINT_E16), KTgGM_ICOSAHEDRON_CAPSULE_FULL_PN_INDEX, sizeof(KTgGM_ICOSAHEDRON_CAPSULE_FULL_PN_INDEX) );
+    psGeom_Generate->m_nuiIndex = TgARRAY_COUNT(KTgGM_ICOSAHEDRON_CAPSULE_FULL_PN_INDEX);
+
+    nuiIndex_Tube = 36;
+    for (uiIndex = 0; uiIndex < psGeom_Generate->m_uiTessellate; ++uiIndex)
+    {
+        tgKN_GPU_DBG_Tessellate_Capsule( &nuiIndex_Tube, psGeom_Generate );
+    };
+
+    TgDIAG(psGeom_Generate->m_nuiIndex == nuiMax_Index * 2 + nuiIndex_Tube);
+
+    tgMM_Copy( puiIndex, nuiMax_Index*sizeof(TgUINT_E16), psGeom_Generate->m_puiIndex + nuiMax_Index, (psGeom_Generate->m_nuiIndex - nuiIndex_Tube)*sizeof(TgUINT_E16) / 2u );
+    TgFREE_TEMP(psGeom_Generate->m_puiIndex);
+    psGeom_Generate->m_nuiIndex -= nuiIndex_Tube;
+    psGeom_Generate->m_nuiIndex /= 2;
+    psGeom_Generate->m_puiIndex = puiIndex;
+    psGeom_Generate->m_nuiMax_Index = nuiMax_Index;
+
+    if (nullptr == psGeom_Generate->m_psVertex || 0 == psGeom_Generate->m_nuiMax_Vertex)
+    {
+        psGeom_Generate->m_nuiMax_Vertex = psGeom_Generate->m_nuiVertex;
+    };
+}
+
+
+/* ---- tgKN_GPU_DBG_Init_Mesh_Capsule_Tube -------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgVOID tgKN_GPU_DBG_Init_Mesh_Capsule_Tube( TgKN_GPU_DBG_PM_Generate_PC psGeom_Generate )
+{
+    TgRSIZE                             nuiIndex_Tube;
+    TgRSIZE                             uiIndex, nuiMax_Index;
+    TgUINT_E16_P                        puiIndex;
+
+    psGeom_Generate->m_nuiVertex = 0;
+    psGeom_Generate->m_nuiIndex = 0;
+
+    if (nullptr == psGeom_Generate->m_puiIndex || 0 == psGeom_Generate->m_nuiMax_Index)
+    {
+        psGeom_Generate->m_nuiMax_Index = (TgARRAY_COUNT(KTgGM_ICOSAHEDRON_CAPSULE_FULL_PN_INDEX) / 3) * (TgRSIZE)(tgPM_POW_F32( 2, (TgFLOAT32)psGeom_Generate->m_uiTessellate ));
+        return;
+    };
+
+    if (psGeom_Generate->m_psVertex)
+    {
+        if ((2 * psGeom_Generate->m_nuiMax_Vertex) >= TgARRAY_COUNT( KTgGM_ICOSAHEDRON_CAPSULE_PN_INDEX_VERTEX ))
+        {
+            TgRSIZE                             uiVert;
+
+            psGeom_Generate->m_nuiVertex = TgARRAY_COUNT(KTgGM_ICOSAHEDRON_CAPSULE_PN_INDEX_VERTEX) >> 1;
+
+            for (uiVert= 0; uiVert < psGeom_Generate->m_nuiVertex; ++uiVert)
+            {
+                TgCRITICAL(uiVert < psGeom_Generate->m_nuiMax_Vertex);
+                psGeom_Generate->m_psVertex[uiVert].m_vS0 = KTgGM_ICOSAHEDRON_CAPSULE_PN_INDEX_VERTEX[2*uiVert + 0].m_vF32_04_1;
+                psGeom_Generate->m_psVertex[uiVert].m_vN0 = KTgGM_ICOSAHEDRON_CAPSULE_PN_INDEX_VERTEX[2*uiVert + 1].m_vF32_04_1;
+            }
+        }
+        else
+        {
+            return;
+        };
+    }
+    else
+    {
+        psGeom_Generate->m_nuiVertex = TgARRAY_COUNT(KTgGM_ICOSAHEDRON_CAPSULE_PN_INDEX_VERTEX) >> 1;
+    };
+
+    if (!(psGeom_Generate->m_puiIndex && psGeom_Generate->m_nuiMax_Index >= TgARRAY_COUNT(KTgGM_ICOSAHEDRON_CAPSULE_FULL_PN_INDEX) / 3))
+    {
+        return;
+    }
+
+    nuiMax_Index = psGeom_Generate->m_nuiMax_Index;
+    puiIndex = psGeom_Generate->m_puiIndex;
+
+    psGeom_Generate->m_nuiMax_Index  = (TgARRAY_COUNT(KTgGM_ICOSAHEDRON_CAPSULE_FULL_PN_INDEX) - 36u)*(TgRSIZE)(tgPM_POW_F32( 4, (TgFLOAT32)psGeom_Generate->m_uiTessellate ));
+    psGeom_Generate->m_nuiMax_Index += 36u*(TgRSIZE)(tgPM_POW_F32( 2, (TgFLOAT32)psGeom_Generate->m_uiTessellate ));
+    psGeom_Generate->m_puiIndex = (TgUINT_E16_P)TgMALLOC_TEMP( psGeom_Generate->m_nuiMax_Index*sizeof(TgUINT_E16) );
+    tgMM_Copy( psGeom_Generate->m_puiIndex, psGeom_Generate->m_nuiMax_Index*sizeof(TgUINT_E16), KTgGM_ICOSAHEDRON_CAPSULE_FULL_PN_INDEX, sizeof(KTgGM_ICOSAHEDRON_CAPSULE_FULL_PN_INDEX) );
+    psGeom_Generate->m_nuiIndex = TgARRAY_COUNT(KTgGM_ICOSAHEDRON_CAPSULE_FULL_PN_INDEX);
+
+    nuiIndex_Tube = 36;
+    for (uiIndex = 0; uiIndex < psGeom_Generate->m_uiTessellate; ++uiIndex)
+    {
+        tgKN_GPU_DBG_Tessellate_Capsule( &nuiIndex_Tube, psGeom_Generate );
+    };
+
+    TgDIAG(nuiMax_Index == nuiIndex_Tube);
+
+    tgMM_Copy( puiIndex, nuiMax_Index*sizeof(TgUINT_E16), psGeom_Generate->m_puiIndex + psGeom_Generate->m_nuiIndex - nuiIndex_Tube, nuiIndex_Tube*sizeof(TgUINT_E16) );
+    TgFREE_TEMP(psGeom_Generate->m_puiIndex);
+    psGeom_Generate->m_nuiIndex = nuiIndex_Tube;
+    psGeom_Generate->m_puiIndex = puiIndex;
+    psGeom_Generate->m_nuiMax_Index = nuiMax_Index;
 
     if (psGeom_Generate->m_psVertex)
     {
@@ -640,7 +803,6 @@ TgVOID tgKN_GPU_DBG_Init_Mesh_Cone( TgKN_GPU_DBG_PM_Generate_PC psGeom_Generate 
     {
         TgFLOAT32_C                         fCutAngle = KTgTWO_PI_F32 / (TgFLOAT32)(3 * (nuiRim_Points-1));
         TgUINT_E16_C                        nui16_Rim_Points = (TgUINT_E16)nuiRim_Points;
-        TgFLOAT32_C                         fRadius = 0.5F;
         TgUINT_E16                          uiIndex;
 
         /* Create a vertex  with a cap outward normal and a coincident vertex with a body outward normal. */
@@ -652,7 +814,7 @@ TgVOID tgKN_GPU_DBG_Init_Mesh_Cone( TgKN_GPU_DBG_PM_Generate_PC psGeom_Generate 
 
             tgPM_SINCOS_F32( &fCos0, &fSin0, fA0 );
 
-            uT0.m_vF32_04_1 = tgMH_Init_Vector_ELEM_F32_04_1( fRadius*fCos0, 1.0F, fRadius*fSin0 );
+            uT0.m_vF32_04_1 = tgMH_Init_Vector_ELEM_F32_04_1( fCos0, 1.0F, fSin0 );
             uT0.m_vF32_04_1 = tgMH_NORM_F32_04_1( uT0.m_vF32_04_1 );
             uT1.m_vF32_04_1 = tgMH_Init_Vector_ELEM_F32_04_1( fCos0*uT0.m_vS_F32_04_1.y, -fCos0*uT0.m_vS_F32_04_1.x - fSin0*uT0.m_vS_F32_04_1.z, fSin0*uT0.m_vS_F32_04_1.y );
             uT1.m_vF32_04_1 = tgMH_NORM_F32_04_1( uT1.m_vF32_04_1 );
@@ -701,7 +863,6 @@ TgVOID tgKN_GPU_DBG_Init_Mesh_Cylinder( TgKN_GPU_DBG_PM_Generate_PC psGeom_Gener
     {
         TgFLOAT32_C                         fCutAngle = KTgTWO_PI_F32 / (TgFLOAT32)(4u * (nuiRim_Points-1u));
         TgUINT_E16_C                        nui16_Rim_Points = (TgUINT_E16)nuiRim_Points;
-        TgFLOAT32_C                         fRadius = 0.5F;
         TgUINT_E16                          uiIndex;
 
         /* Create a vertex  with a cap outward normal and a coincident vertex with a body outward normal at both ends. */
@@ -712,13 +873,13 @@ TgVOID tgKN_GPU_DBG_Init_Mesh_Cylinder( TgKN_GPU_DBG_PM_Generate_PC psGeom_Gener
 
             tgPM_SINCOS_F32( &fCos0, &fSin0, fA0 );
 
-            psGeom_Generate->m_psVertex[psGeom_Generate->m_nuiVertex + 0].m_vS0 = tgMH_Init_Point_ELEM_F32_04_1( fRadius*fCos0, 1.0F, fRadius*fSin0 );
+            psGeom_Generate->m_psVertex[psGeom_Generate->m_nuiVertex + 0].m_vS0 = tgMH_Init_Point_ELEM_F32_04_1( fCos0, 1.0F, fSin0 );
             psGeom_Generate->m_psVertex[psGeom_Generate->m_nuiVertex + 0].m_vN0 = tgMH_Init_Vector_ELEM_F32_04_1( 0.0F, 1.0F, 0.0F );
-            psGeom_Generate->m_psVertex[psGeom_Generate->m_nuiVertex + 1].m_vS0 = tgMH_Init_Point_ELEM_F32_04_1( fRadius*fCos0, 1.0F, fRadius*fSin0 );
+            psGeom_Generate->m_psVertex[psGeom_Generate->m_nuiVertex + 1].m_vS0 = tgMH_Init_Point_ELEM_F32_04_1( fCos0, 1.0F, fSin0 );
             psGeom_Generate->m_psVertex[psGeom_Generate->m_nuiVertex + 1].m_vN0 = tgMH_Init_Vector_ELEM_F32_04_1( fCos0, 0.0F, fSin0 );
-            psGeom_Generate->m_psVertex[psGeom_Generate->m_nuiVertex + 2].m_vS0 = tgMH_Init_Point_ELEM_F32_04_1( fRadius*fCos0, -1.0F, fRadius*fSin0 );
+            psGeom_Generate->m_psVertex[psGeom_Generate->m_nuiVertex + 2].m_vS0 = tgMH_Init_Point_ELEM_F32_04_1( fCos0, -1.0F, fSin0 );
             psGeom_Generate->m_psVertex[psGeom_Generate->m_nuiVertex + 2].m_vN0 = tgMH_Init_Vector_ELEM_F32_04_1( fCos0, 0.0F, fSin0 );
-            psGeom_Generate->m_psVertex[psGeom_Generate->m_nuiVertex + 3].m_vS0 = tgMH_Init_Point_ELEM_F32_04_1( fRadius*fCos0, -1.0F, fRadius*fSin0 );
+            psGeom_Generate->m_psVertex[psGeom_Generate->m_nuiVertex + 3].m_vS0 = tgMH_Init_Point_ELEM_F32_04_1( fCos0, -1.0F, fSin0 );
             psGeom_Generate->m_psVertex[psGeom_Generate->m_nuiVertex + 3].m_vN0 = tgMH_Init_Vector_ELEM_F32_04_1( 0.0F, -1.0F, 0.0F );
         };
 
@@ -728,23 +889,23 @@ TgVOID tgKN_GPU_DBG_Init_Mesh_Cylinder( TgKN_GPU_DBG_PM_Generate_PC psGeom_Gener
         psGeom_Generate->m_psVertex[psGeom_Generate->m_nuiVertex + 1].m_vN0 = tgMH_Init_Vector_ELEM_F32_04_1( 0.0F, -1.0F, 0.0F );
         psGeom_Generate->m_nuiVertex += 2;
 
-        for (psGeom_Generate->m_nuiIndex = 0, uiIndex = 0; uiIndex < nui16_Rim_Points; ++uiIndex, psGeom_Generate->m_nuiIndex += 12)
+        for (psGeom_Generate->m_nuiIndex = 0, uiIndex = 0; uiIndex + 1 < nui16_Rim_Points; ++uiIndex, psGeom_Generate->m_nuiIndex += 12)
         {
             psGeom_Generate->m_puiIndex[12 * uiIndex + 0x0] = 4 * nui16_Rim_Points + 0u;
-            psGeom_Generate->m_puiIndex[12 * uiIndex + 0x1] = 4 * uiIndex + 0u;
-            psGeom_Generate->m_puiIndex[12 * uiIndex + 0x2] = 4 * uiIndex + 4u;
+            psGeom_Generate->m_puiIndex[12 * uiIndex + 0x1] = 4 * uiIndex + 4u;
+            psGeom_Generate->m_puiIndex[12 * uiIndex + 0x2] = 4 * uiIndex + 0u;
 
             psGeom_Generate->m_puiIndex[12 * uiIndex + 0x3] = 4 * uiIndex + 1u;
-            psGeom_Generate->m_puiIndex[12 * uiIndex + 0x4] = 4 * uiIndex + 2u;
-            psGeom_Generate->m_puiIndex[12 * uiIndex + 0x5] = 4 * uiIndex + 5u;
+            psGeom_Generate->m_puiIndex[12 * uiIndex + 0x4] = 4 * uiIndex + 5u;
+            psGeom_Generate->m_puiIndex[12 * uiIndex + 0x5] = 4 * uiIndex + 2u;
 
             psGeom_Generate->m_puiIndex[12 * uiIndex + 0x6] = 4 * uiIndex + 5u;
-            psGeom_Generate->m_puiIndex[12 * uiIndex + 0x7] = 4 * uiIndex + 2u;
-            psGeom_Generate->m_puiIndex[12 * uiIndex + 0x8] = 4 * uiIndex + 6u;
+            psGeom_Generate->m_puiIndex[12 * uiIndex + 0x7] = 4 * uiIndex + 6u;
+            psGeom_Generate->m_puiIndex[12 * uiIndex + 0x8] = 4 * uiIndex + 2u;
 
             psGeom_Generate->m_puiIndex[12 * uiIndex + 0x9] = 4 * nui16_Rim_Points + 1u;
-            psGeom_Generate->m_puiIndex[12 * uiIndex + 0xA] = 4 * uiIndex + 7u;
-            psGeom_Generate->m_puiIndex[12 * uiIndex + 0xB] = 4 * uiIndex + 3u;
+            psGeom_Generate->m_puiIndex[12 * uiIndex + 0xA] = 4 * uiIndex + 3u;
+            psGeom_Generate->m_puiIndex[12 * uiIndex + 0xB] = 4 * uiIndex + 7u;
         };
     };
 }
@@ -754,7 +915,7 @@ TgVOID tgKN_GPU_DBG_Init_Mesh_Cylinder( TgKN_GPU_DBG_PM_Generate_PC psGeom_Gener
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 TgVOID tgKN_GPU_DBG_Init_Mesh_Tube( TgKN_GPU_DBG_PM_Generate_PC psGeom_Generate )
 {
-    TgRSIZE                             nuiRim_Points = 4u * psGeom_Generate->m_uiTessellate;
+    TgRSIZE                             nuiRim_Points = 4u * (psGeom_Generate->m_uiTessellate + 1);
 
     if (nullptr == psGeom_Generate->m_psVertex || 0 == psGeom_Generate->m_nuiMax_Vertex || nullptr == psGeom_Generate->m_puiIndex || 0 == psGeom_Generate->m_nuiMax_Index)
     {
@@ -766,7 +927,6 @@ TgVOID tgKN_GPU_DBG_Init_Mesh_Tube( TgKN_GPU_DBG_PM_Generate_PC psGeom_Generate 
     {
         TgFLOAT32_C                         fCutAngle = KTgTWO_PI_F32 / (TgFLOAT32)(4u * (nuiRim_Points-1u));
         TgUINT_E16_C                        nui16_Rim_Points = (TgUINT_E16)nuiRim_Points;
-        TgFLOAT32_C                         fRadius = 0.5F;
         TgUINT_E16                          uiIndex;
 
         /* Create a vertex  with a cap outward normal and a coincident vertex with a body outward normal at both ends. */
@@ -777,13 +937,13 @@ TgVOID tgKN_GPU_DBG_Init_Mesh_Tube( TgKN_GPU_DBG_PM_Generate_PC psGeom_Generate 
 
             tgPM_SINCOS_F32( &fCos0, &fSin0, fA0 );
 
-            psGeom_Generate->m_psVertex[psGeom_Generate->m_nuiVertex + 0].m_vS0 = tgMH_Init_Point_ELEM_F32_04_1( fRadius*fCos0, 1.0F, fRadius*fSin0 );
+            psGeom_Generate->m_psVertex[psGeom_Generate->m_nuiVertex + 0].m_vS0 = tgMH_Init_Point_ELEM_F32_04_1( fCos0, 1.0F, fSin0 );
             psGeom_Generate->m_psVertex[psGeom_Generate->m_nuiVertex + 0].m_vN0 = tgMH_Init_Vector_ELEM_F32_04_1( -fCos0, 0.0F, -fSin0 );
-            psGeom_Generate->m_psVertex[psGeom_Generate->m_nuiVertex + 1].m_vS0 = tgMH_Init_Point_ELEM_F32_04_1( fRadius*fCos0, 1.0F, fRadius*fSin0 );
+            psGeom_Generate->m_psVertex[psGeom_Generate->m_nuiVertex + 1].m_vS0 = tgMH_Init_Point_ELEM_F32_04_1( fCos0, 1.0F, fSin0 );
             psGeom_Generate->m_psVertex[psGeom_Generate->m_nuiVertex + 1].m_vN0 = tgMH_Init_Vector_ELEM_F32_04_1( fCos0, 0.0F, fSin0 );
-            psGeom_Generate->m_psVertex[psGeom_Generate->m_nuiVertex + 2].m_vS0 = tgMH_Init_Point_ELEM_F32_04_1( fRadius*fCos0, -1.0F, fRadius*fSin0 );
+            psGeom_Generate->m_psVertex[psGeom_Generate->m_nuiVertex + 2].m_vS0 = tgMH_Init_Point_ELEM_F32_04_1( fCos0, -1.0F, fSin0 );
             psGeom_Generate->m_psVertex[psGeom_Generate->m_nuiVertex + 2].m_vN0 = tgMH_Init_Vector_ELEM_F32_04_1( fCos0, 0.0F, fSin0 );
-            psGeom_Generate->m_psVertex[psGeom_Generate->m_nuiVertex + 3].m_vS0 = tgMH_Init_Point_ELEM_F32_04_1( fRadius*fCos0, -1.0F, fRadius*fSin0 );
+            psGeom_Generate->m_psVertex[psGeom_Generate->m_nuiVertex + 3].m_vS0 = tgMH_Init_Point_ELEM_F32_04_1( fCos0, -1.0F, fSin0 );
             psGeom_Generate->m_psVertex[psGeom_Generate->m_nuiVertex + 3].m_vN0 = tgMH_Init_Vector_ELEM_F32_04_1( -fCos0, 0.0F, -fSin0 );
         };
 
@@ -823,78 +983,78 @@ TgVOID tgKN_GPU_DBG_Init_Mesh_Box( TgKN_GPU_DBG_PM_Generate_PC psGeom_Generate )
     {
         TgUINT_E16                            uiIndex;
 
-        psGeom_Generate->m_psVertex[ 0].m_vS0 = tgMH_Init_Point_ELEM_F32_04_1( 0.5F, -0.5F, -0.5F );
-        psGeom_Generate->m_psVertex[ 0].m_vN0 = tgMH_Init_Vector_ELEM_F32_04_1( 1.0F, 0.0F, 0.0F );
-        psGeom_Generate->m_psVertex[ 1].m_vS0 = tgMH_Init_Point_ELEM_F32_04_1( 0.5F, 0.5F, 0.5F );
-        psGeom_Generate->m_psVertex[ 1].m_vN0 = tgMH_Init_Vector_ELEM_F32_04_1( 1.0F, 0.0F, 0.0F );
-        psGeom_Generate->m_psVertex[ 2].m_vS0 = tgMH_Init_Point_ELEM_F32_04_1( 0.5F, -0.5F, 0.5F );
-        psGeom_Generate->m_psVertex[ 2].m_vN0 = tgMH_Init_Vector_ELEM_F32_04_1( 1.0F, 0.0F, 0.0F );
-        psGeom_Generate->m_psVertex[ 3].m_vS0 = tgMH_Init_Point_ELEM_F32_04_1( 0.5F, -0.5F, -0.5F );
-        psGeom_Generate->m_psVertex[ 3].m_vN0 = tgMH_Init_Vector_ELEM_F32_04_1( 1.0F, 0.0F, 0.0F );
-        psGeom_Generate->m_psVertex[ 4].m_vS0 = tgMH_Init_Point_ELEM_F32_04_1( 0.5F, 0.5F, -0.5F );
-        psGeom_Generate->m_psVertex[ 4].m_vN0 = tgMH_Init_Vector_ELEM_F32_04_1( 1.0F, 0.0F, 0.0F );
-        psGeom_Generate->m_psVertex[ 5].m_vS0 = tgMH_Init_Point_ELEM_F32_04_1( 0.5F, 0.5F, 0.5F );
-        psGeom_Generate->m_psVertex[ 5].m_vN0 = tgMH_Init_Vector_ELEM_F32_04_1( 1.0F, 0.0F, 0.0F );
-        psGeom_Generate->m_psVertex[ 6].m_vS0 = tgMH_Init_Point_ELEM_F32_04_1( -0.5F, 0.5F, -0.5F );
-        psGeom_Generate->m_psVertex[ 6].m_vN0 = tgMH_Init_Vector_ELEM_F32_04_1( 0.0F, 1.0F, 0.0F );
-        psGeom_Generate->m_psVertex[ 7].m_vS0 = tgMH_Init_Point_ELEM_F32_04_1( -0.5F, 0.5F, 0.5F );
-        psGeom_Generate->m_psVertex[ 7].m_vN0 = tgMH_Init_Vector_ELEM_F32_04_1( 0.0F, 1.0F, 0.0F );
-        psGeom_Generate->m_psVertex[ 8].m_vS0 = tgMH_Init_Point_ELEM_F32_04_1( 0.5F, 0.5F, 0.5F );
-        psGeom_Generate->m_psVertex[ 8].m_vN0 = tgMH_Init_Vector_ELEM_F32_04_1( 0.0F, 1.0F, 0.0F );
-        psGeom_Generate->m_psVertex[ 9].m_vS0 = tgMH_Init_Point_ELEM_F32_04_1( -0.5F, 0.5F, -0.5F );
-        psGeom_Generate->m_psVertex[ 9].m_vN0 = tgMH_Init_Vector_ELEM_F32_04_1( 0.0F, 1.0F, 0.0F );
-        psGeom_Generate->m_psVertex[10].m_vS0 = tgMH_Init_Point_ELEM_F32_04_1( 0.5F, 0.5F, 0.5F );
-        psGeom_Generate->m_psVertex[10].m_vN0 = tgMH_Init_Vector_ELEM_F32_04_1( 0.0F, 1.0F, 0.0F );
-        psGeom_Generate->m_psVertex[11].m_vS0 = tgMH_Init_Point_ELEM_F32_04_1( 0.5F, 0.5F, -0.5F );
-        psGeom_Generate->m_psVertex[11].m_vN0 = tgMH_Init_Vector_ELEM_F32_04_1( 0.0F, 1.0F, 0.0F );
-        psGeom_Generate->m_psVertex[12].m_vS0 = tgMH_Init_Point_ELEM_F32_04_1( -0.5F, -0.5F, 0.5F );
-        psGeom_Generate->m_psVertex[12].m_vN0 = tgMH_Init_Vector_ELEM_F32_04_1( 0.0F, 0.0F, 1.0F );
-        psGeom_Generate->m_psVertex[13].m_vS0 = tgMH_Init_Point_ELEM_F32_04_1( 0.5F, 0.5F, 0.5F );
-        psGeom_Generate->m_psVertex[13].m_vN0 = tgMH_Init_Vector_ELEM_F32_04_1( 0.0F, 0.0F, 1.0F );
-        psGeom_Generate->m_psVertex[14].m_vS0 = tgMH_Init_Point_ELEM_F32_04_1( -0.5F, 0.5F, 0.5F );
-        psGeom_Generate->m_psVertex[14].m_vN0 = tgMH_Init_Vector_ELEM_F32_04_1( 0.0F, 0.0F, 1.0F );
-        psGeom_Generate->m_psVertex[15].m_vS0 = tgMH_Init_Point_ELEM_F32_04_1( -0.5F, -0.5F, 0.5F );
-        psGeom_Generate->m_psVertex[15].m_vN0 = tgMH_Init_Vector_ELEM_F32_04_1( 0.0F, 0.0F, 1.0F );
-        psGeom_Generate->m_psVertex[16].m_vS0 = tgMH_Init_Point_ELEM_F32_04_1( 0.5F, -0.5F, 0.5F );
-        psGeom_Generate->m_psVertex[16].m_vN0 = tgMH_Init_Vector_ELEM_F32_04_1( 0.0F, 0.0F, 1.0F );
-        psGeom_Generate->m_psVertex[17].m_vS0 = tgMH_Init_Point_ELEM_F32_04_1( 0.5F, 0.5F, 0.5F );
-        psGeom_Generate->m_psVertex[17].m_vN0 = tgMH_Init_Vector_ELEM_F32_04_1( 0.0F, 0.0F, 1.0F );
-        psGeom_Generate->m_psVertex[18].m_vS0 = tgMH_Init_Point_ELEM_F32_04_1( -0.5F, -0.5F, -0.5F );
-        psGeom_Generate->m_psVertex[18].m_vN0 = tgMH_Init_Vector_ELEM_F32_04_1( -1.0F, 0.0F, 0.0F );
-        psGeom_Generate->m_psVertex[19].m_vS0 = tgMH_Init_Point_ELEM_F32_04_1( -0.5F, -0.5F, 0.5F );
-        psGeom_Generate->m_psVertex[19].m_vN0 = tgMH_Init_Vector_ELEM_F32_04_1( -1.0F, 0.0F, 0.0F );
-        psGeom_Generate->m_psVertex[20].m_vS0 = tgMH_Init_Point_ELEM_F32_04_1( -0.5F, 0.5F, 0.5F );
-        psGeom_Generate->m_psVertex[20].m_vN0 = tgMH_Init_Vector_ELEM_F32_04_1( -1.0F, 0.0F, 0.0F );
-        psGeom_Generate->m_psVertex[21].m_vS0 = tgMH_Init_Point_ELEM_F32_04_1( -0.5F, -0.5F, -0.5F );
-        psGeom_Generate->m_psVertex[21].m_vN0 = tgMH_Init_Vector_ELEM_F32_04_1( -1.0F, 0.0F, 0.0F );
-        psGeom_Generate->m_psVertex[22].m_vS0 = tgMH_Init_Point_ELEM_F32_04_1( -0.5F, 0.5F, 0.5F );
-        psGeom_Generate->m_psVertex[22].m_vN0 = tgMH_Init_Vector_ELEM_F32_04_1( -1.0F, 0.0F, 0.0F );
-        psGeom_Generate->m_psVertex[23].m_vS0 = tgMH_Init_Point_ELEM_F32_04_1( -0.5F, 0.5F, -0.5F );
-        psGeom_Generate->m_psVertex[23].m_vN0 = tgMH_Init_Vector_ELEM_F32_04_1( -1.0F, 0.0F, 0.0F );
-        psGeom_Generate->m_psVertex[24].m_vS0 = tgMH_Init_Point_ELEM_F32_04_1( -0.5F, -0.5F, -0.5F );
-        psGeom_Generate->m_psVertex[24].m_vN0 = tgMH_Init_Vector_ELEM_F32_04_1( 0.0F, -1.0F, 0.0F );
-        psGeom_Generate->m_psVertex[25].m_vS0 = tgMH_Init_Point_ELEM_F32_04_1( 0.5F, -0.5F, 0.5F );
-        psGeom_Generate->m_psVertex[25].m_vN0 = tgMH_Init_Vector_ELEM_F32_04_1( 0.0F, -1.0F, 0.0F );
-        psGeom_Generate->m_psVertex[26].m_vS0 = tgMH_Init_Point_ELEM_F32_04_1( -0.5F, -0.5F, 0.5F );
-        psGeom_Generate->m_psVertex[26].m_vN0 = tgMH_Init_Vector_ELEM_F32_04_1( 0.0F, -1.0F, 0.0F );
-        psGeom_Generate->m_psVertex[27].m_vS0 = tgMH_Init_Point_ELEM_F32_04_1( -0.5F, -0.5F, -0.5F );
-        psGeom_Generate->m_psVertex[27].m_vN0 = tgMH_Init_Vector_ELEM_F32_04_1( 0.0F, -1.0F, 0.0F );
-        psGeom_Generate->m_psVertex[28].m_vS0 = tgMH_Init_Point_ELEM_F32_04_1( 0.5F, -0.5F, -0.5F );
-        psGeom_Generate->m_psVertex[28].m_vN0 = tgMH_Init_Vector_ELEM_F32_04_1( 0.0F, -1.0F, 0.0F );
-        psGeom_Generate->m_psVertex[29].m_vS0 = tgMH_Init_Point_ELEM_F32_04_1( 0.5F, -0.5F, 0.5F );
-        psGeom_Generate->m_psVertex[29].m_vN0 = tgMH_Init_Vector_ELEM_F32_04_1( 0.0F, -1.0F, 0.0F );
-        psGeom_Generate->m_psVertex[30].m_vS0 = tgMH_Init_Point_ELEM_F32_04_1( -0.5F, -0.5F, -0.5F );
-        psGeom_Generate->m_psVertex[30].m_vN0 = tgMH_Init_Vector_ELEM_F32_04_1( 0.0F, 0.0F, -1.0F );
-        psGeom_Generate->m_psVertex[31].m_vS0 = tgMH_Init_Point_ELEM_F32_04_1( -0.5F, 0.5F, -0.5F );
-        psGeom_Generate->m_psVertex[31].m_vN0 = tgMH_Init_Vector_ELEM_F32_04_1( 0.0F, 0.0F, -1.0F );
-        psGeom_Generate->m_psVertex[32].m_vS0 = tgMH_Init_Point_ELEM_F32_04_1( 0.5F, 0.5F, -0.5F );
-        psGeom_Generate->m_psVertex[32].m_vN0 = tgMH_Init_Vector_ELEM_F32_04_1( 0.0F, 0.0F, -1.0F );
-        psGeom_Generate->m_psVertex[33].m_vS0 = tgMH_Init_Point_ELEM_F32_04_1( -0.5F, -0.5F, -0.5F );
-        psGeom_Generate->m_psVertex[33].m_vN0 = tgMH_Init_Vector_ELEM_F32_04_1( 0.0F, 0.0F, -1.0F );
-        psGeom_Generate->m_psVertex[34].m_vS0 = tgMH_Init_Point_ELEM_F32_04_1( 0.5F, 0.5F, -0.5F );
-        psGeom_Generate->m_psVertex[34].m_vN0 = tgMH_Init_Vector_ELEM_F32_04_1( 0.0F, 0.0F, -1.0F );
-        psGeom_Generate->m_psVertex[35].m_vS0 = tgMH_Init_Point_ELEM_F32_04_1( 0.5F, -0.5F, -0.5F );
-        psGeom_Generate->m_psVertex[35].m_vN0 = tgMH_Init_Vector_ELEM_F32_04_1( 0.0F, 0.0F, -1.0F );
+        psGeom_Generate->m_psVertex[ 0].m_vS0 = KTgGM_CUBE_PN_TRI_LIST_VERTEX[0].m_vF32_04_1;
+        psGeom_Generate->m_psVertex[ 0].m_vN0 = KTgGM_CUBE_PN_TRI_LIST_VERTEX[1].m_vF32_04_1;
+        psGeom_Generate->m_psVertex[ 1].m_vS0 = KTgGM_CUBE_PN_TRI_LIST_VERTEX[2].m_vF32_04_1;
+        psGeom_Generate->m_psVertex[ 1].m_vN0 = KTgGM_CUBE_PN_TRI_LIST_VERTEX[3].m_vF32_04_1;
+        psGeom_Generate->m_psVertex[ 2].m_vS0 = KTgGM_CUBE_PN_TRI_LIST_VERTEX[4].m_vF32_04_1;
+        psGeom_Generate->m_psVertex[ 2].m_vN0 = KTgGM_CUBE_PN_TRI_LIST_VERTEX[5].m_vF32_04_1;
+        psGeom_Generate->m_psVertex[ 3].m_vS0 = KTgGM_CUBE_PN_TRI_LIST_VERTEX[6].m_vF32_04_1;
+        psGeom_Generate->m_psVertex[ 3].m_vN0 = KTgGM_CUBE_PN_TRI_LIST_VERTEX[7].m_vF32_04_1;
+        psGeom_Generate->m_psVertex[ 4].m_vS0 = KTgGM_CUBE_PN_TRI_LIST_VERTEX[8].m_vF32_04_1;
+        psGeom_Generate->m_psVertex[ 4].m_vN0 = KTgGM_CUBE_PN_TRI_LIST_VERTEX[9].m_vF32_04_1;
+        psGeom_Generate->m_psVertex[ 5].m_vS0 = KTgGM_CUBE_PN_TRI_LIST_VERTEX[10].m_vF32_04_1;
+        psGeom_Generate->m_psVertex[ 5].m_vN0 = KTgGM_CUBE_PN_TRI_LIST_VERTEX[11].m_vF32_04_1;
+        psGeom_Generate->m_psVertex[ 6].m_vS0 = KTgGM_CUBE_PN_TRI_LIST_VERTEX[12].m_vF32_04_1;
+        psGeom_Generate->m_psVertex[ 6].m_vN0 = KTgGM_CUBE_PN_TRI_LIST_VERTEX[13].m_vF32_04_1;
+        psGeom_Generate->m_psVertex[ 7].m_vS0 = KTgGM_CUBE_PN_TRI_LIST_VERTEX[14].m_vF32_04_1;
+        psGeom_Generate->m_psVertex[ 7].m_vN0 = KTgGM_CUBE_PN_TRI_LIST_VERTEX[15].m_vF32_04_1;
+        psGeom_Generate->m_psVertex[ 8].m_vS0 = KTgGM_CUBE_PN_TRI_LIST_VERTEX[16].m_vF32_04_1;
+        psGeom_Generate->m_psVertex[ 8].m_vN0 = KTgGM_CUBE_PN_TRI_LIST_VERTEX[17].m_vF32_04_1;
+        psGeom_Generate->m_psVertex[ 9].m_vS0 = KTgGM_CUBE_PN_TRI_LIST_VERTEX[18].m_vF32_04_1;
+        psGeom_Generate->m_psVertex[ 9].m_vN0 = KTgGM_CUBE_PN_TRI_LIST_VERTEX[19].m_vF32_04_1;
+        psGeom_Generate->m_psVertex[10].m_vS0 = KTgGM_CUBE_PN_TRI_LIST_VERTEX[20].m_vF32_04_1;
+        psGeom_Generate->m_psVertex[10].m_vN0 = KTgGM_CUBE_PN_TRI_LIST_VERTEX[21].m_vF32_04_1;
+        psGeom_Generate->m_psVertex[11].m_vS0 = KTgGM_CUBE_PN_TRI_LIST_VERTEX[22].m_vF32_04_1;
+        psGeom_Generate->m_psVertex[11].m_vN0 = KTgGM_CUBE_PN_TRI_LIST_VERTEX[23].m_vF32_04_1;
+        psGeom_Generate->m_psVertex[12].m_vS0 = KTgGM_CUBE_PN_TRI_LIST_VERTEX[24].m_vF32_04_1;
+        psGeom_Generate->m_psVertex[12].m_vN0 = KTgGM_CUBE_PN_TRI_LIST_VERTEX[25].m_vF32_04_1;
+        psGeom_Generate->m_psVertex[13].m_vS0 = KTgGM_CUBE_PN_TRI_LIST_VERTEX[26].m_vF32_04_1;
+        psGeom_Generate->m_psVertex[13].m_vN0 = KTgGM_CUBE_PN_TRI_LIST_VERTEX[27].m_vF32_04_1;
+        psGeom_Generate->m_psVertex[14].m_vS0 = KTgGM_CUBE_PN_TRI_LIST_VERTEX[28].m_vF32_04_1;
+        psGeom_Generate->m_psVertex[14].m_vN0 = KTgGM_CUBE_PN_TRI_LIST_VERTEX[29].m_vF32_04_1;
+        psGeom_Generate->m_psVertex[15].m_vS0 = KTgGM_CUBE_PN_TRI_LIST_VERTEX[30].m_vF32_04_1;
+        psGeom_Generate->m_psVertex[15].m_vN0 = KTgGM_CUBE_PN_TRI_LIST_VERTEX[31].m_vF32_04_1;
+        psGeom_Generate->m_psVertex[16].m_vS0 = KTgGM_CUBE_PN_TRI_LIST_VERTEX[32].m_vF32_04_1;
+        psGeom_Generate->m_psVertex[16].m_vN0 = KTgGM_CUBE_PN_TRI_LIST_VERTEX[33].m_vF32_04_1;
+        psGeom_Generate->m_psVertex[17].m_vS0 = KTgGM_CUBE_PN_TRI_LIST_VERTEX[34].m_vF32_04_1;
+        psGeom_Generate->m_psVertex[17].m_vN0 = KTgGM_CUBE_PN_TRI_LIST_VERTEX[35].m_vF32_04_1;
+        psGeom_Generate->m_psVertex[18].m_vS0 = KTgGM_CUBE_PN_TRI_LIST_VERTEX[36].m_vF32_04_1;
+        psGeom_Generate->m_psVertex[18].m_vN0 = KTgGM_CUBE_PN_TRI_LIST_VERTEX[37].m_vF32_04_1;
+        psGeom_Generate->m_psVertex[19].m_vS0 = KTgGM_CUBE_PN_TRI_LIST_VERTEX[38].m_vF32_04_1;
+        psGeom_Generate->m_psVertex[19].m_vN0 = KTgGM_CUBE_PN_TRI_LIST_VERTEX[39].m_vF32_04_1;
+        psGeom_Generate->m_psVertex[20].m_vS0 = KTgGM_CUBE_PN_TRI_LIST_VERTEX[40].m_vF32_04_1;
+        psGeom_Generate->m_psVertex[20].m_vN0 = KTgGM_CUBE_PN_TRI_LIST_VERTEX[41].m_vF32_04_1;
+        psGeom_Generate->m_psVertex[21].m_vS0 = KTgGM_CUBE_PN_TRI_LIST_VERTEX[42].m_vF32_04_1;
+        psGeom_Generate->m_psVertex[21].m_vN0 = KTgGM_CUBE_PN_TRI_LIST_VERTEX[43].m_vF32_04_1;
+        psGeom_Generate->m_psVertex[22].m_vS0 = KTgGM_CUBE_PN_TRI_LIST_VERTEX[44].m_vF32_04_1;
+        psGeom_Generate->m_psVertex[22].m_vN0 = KTgGM_CUBE_PN_TRI_LIST_VERTEX[45].m_vF32_04_1;
+        psGeom_Generate->m_psVertex[23].m_vS0 = KTgGM_CUBE_PN_TRI_LIST_VERTEX[46].m_vF32_04_1;
+        psGeom_Generate->m_psVertex[23].m_vN0 = KTgGM_CUBE_PN_TRI_LIST_VERTEX[47].m_vF32_04_1;
+        psGeom_Generate->m_psVertex[24].m_vS0 = KTgGM_CUBE_PN_TRI_LIST_VERTEX[48].m_vF32_04_1;
+        psGeom_Generate->m_psVertex[24].m_vN0 = KTgGM_CUBE_PN_TRI_LIST_VERTEX[49].m_vF32_04_1;
+        psGeom_Generate->m_psVertex[25].m_vS0 = KTgGM_CUBE_PN_TRI_LIST_VERTEX[50].m_vF32_04_1;
+        psGeom_Generate->m_psVertex[25].m_vN0 = KTgGM_CUBE_PN_TRI_LIST_VERTEX[51].m_vF32_04_1;
+        psGeom_Generate->m_psVertex[26].m_vS0 = KTgGM_CUBE_PN_TRI_LIST_VERTEX[52].m_vF32_04_1;
+        psGeom_Generate->m_psVertex[26].m_vN0 = KTgGM_CUBE_PN_TRI_LIST_VERTEX[53].m_vF32_04_1;
+        psGeom_Generate->m_psVertex[27].m_vS0 = KTgGM_CUBE_PN_TRI_LIST_VERTEX[54].m_vF32_04_1;
+        psGeom_Generate->m_psVertex[27].m_vN0 = KTgGM_CUBE_PN_TRI_LIST_VERTEX[55].m_vF32_04_1;
+        psGeom_Generate->m_psVertex[28].m_vS0 = KTgGM_CUBE_PN_TRI_LIST_VERTEX[56].m_vF32_04_1;
+        psGeom_Generate->m_psVertex[28].m_vN0 = KTgGM_CUBE_PN_TRI_LIST_VERTEX[57].m_vF32_04_1;
+        psGeom_Generate->m_psVertex[29].m_vS0 = KTgGM_CUBE_PN_TRI_LIST_VERTEX[58].m_vF32_04_1;
+        psGeom_Generate->m_psVertex[29].m_vN0 = KTgGM_CUBE_PN_TRI_LIST_VERTEX[59].m_vF32_04_1;
+        psGeom_Generate->m_psVertex[30].m_vS0 = KTgGM_CUBE_PN_TRI_LIST_VERTEX[60].m_vF32_04_1;
+        psGeom_Generate->m_psVertex[30].m_vN0 = KTgGM_CUBE_PN_TRI_LIST_VERTEX[61].m_vF32_04_1;
+        psGeom_Generate->m_psVertex[31].m_vS0 = KTgGM_CUBE_PN_TRI_LIST_VERTEX[62].m_vF32_04_1;
+        psGeom_Generate->m_psVertex[31].m_vN0 = KTgGM_CUBE_PN_TRI_LIST_VERTEX[63].m_vF32_04_1;
+        psGeom_Generate->m_psVertex[32].m_vS0 = KTgGM_CUBE_PN_TRI_LIST_VERTEX[64].m_vF32_04_1;
+        psGeom_Generate->m_psVertex[32].m_vN0 = KTgGM_CUBE_PN_TRI_LIST_VERTEX[65].m_vF32_04_1;
+        psGeom_Generate->m_psVertex[33].m_vS0 = KTgGM_CUBE_PN_TRI_LIST_VERTEX[66].m_vF32_04_1;
+        psGeom_Generate->m_psVertex[33].m_vN0 = KTgGM_CUBE_PN_TRI_LIST_VERTEX[67].m_vF32_04_1;
+        psGeom_Generate->m_psVertex[34].m_vS0 = KTgGM_CUBE_PN_TRI_LIST_VERTEX[68].m_vF32_04_1;
+        psGeom_Generate->m_psVertex[34].m_vN0 = KTgGM_CUBE_PN_TRI_LIST_VERTEX[69].m_vF32_04_1;
+        psGeom_Generate->m_psVertex[35].m_vS0 = KTgGM_CUBE_PN_TRI_LIST_VERTEX[70].m_vF32_04_1;
+        psGeom_Generate->m_psVertex[35].m_vN0 = KTgGM_CUBE_PN_TRI_LIST_VERTEX[71].m_vF32_04_1;
 
         for (uiIndex = 0; uiIndex < 36; ++uiIndex)
         {
@@ -1027,6 +1187,7 @@ TgVOID tgKN_GPU__CMD__Render_Debug_Line_Internal( UTg2_KN_GPU_CMD_C uCMD, TgVEC_
 ================================================================================================================================================================================== */
 
 /* ---- tgKN_GPU_DBG_Tessellate_Mid_Point ---------------------------------------------------------------------------------------------------------------------------------------- */
+/*  Vertices are assumed to be on a sphere and the position is corrected to remain at a constant radius from the origin.                                                           */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 static TgUINT_E16 tgKN_GPU_DBG_Tessellate_Mid_Point( TgUINT_E16_C uiStart, TgUINT_E16_C uiEnd, TgKN_GPU_DBG_Geom_For_Tessellation_PCU psData )
 {
@@ -1050,16 +1211,17 @@ static TgUINT_E16 tgKN_GPU_DBG_Tessellate_Mid_Point( TgUINT_E16_C uiStart, TgUIN
 
     if (nullptr != psData->m_psGenerate->m_psVertex)
     {
-        TgVEC_F32_04_1_C                    vK2 = tgMH_Init_ELEM_F32_04_1( 0.5F, 0.5F, 0.5F, 0.0F );
-        TgVEC_F32_04_1_C                    vK0 = tgMH_ADD_F32_04_1( psData->m_psGenerate->m_psVertex[uiStart].m_vS0, psData->m_psGenerate->m_psVertex[uiEnd].m_vS0 );
-        TgVEC_F32_04_1_C                    vK1 = tgMH_MUL_F32_04_1( vK2, vK0 );
-        TgUN_V128_C                         uKN = { .m_vF32_04_1 = tgMH_NORM_F32_04_1( vK1 ) };
-        TgUN_V128_C                         uKS = { .m_vF32_04_1 = tgMH_MUL_F32_04_1( vK2, uKN.m_vF32_04_1 ) };
+        TgVEC_F32_04_1_C                    vK0 = tgMH_Init_ELEM_F32_04_1( 0.5F, 0.5F, 0.5F, 0.0F );
+        TgVEC_F32_04_1_C                    vK1 = tgMH_LEN_F32_04_1( tgMH_Init_Vector_F32_04_1( psData->m_psGenerate->m_psVertex[uiStart].m_vS0 ) );
+        TgVEC_F32_04_1_C                    vK2 = tgMH_ADD_F32_04_1( psData->m_psGenerate->m_psVertex[uiStart].m_vS0, psData->m_psGenerate->m_psVertex[uiEnd].m_vS0 );
+        TgVEC_F32_04_1_C                    vK3 = tgMH_MUL_F32_04_1( vK0, vK2 );
+        TgVEC_F32_04_1_C                    vKN = tgMH_NORM_F32_04_1( vK3 );
+        TgVEC_F32_04_1_C                    vKS = tgMH_MUL_F32_04_1( vK1, vKN );
 
         TgCRITICAL(psData->m_psGenerate->m_nuiVertex < psData->m_psGenerate->m_nuiMax_Vertex);
 
-        psData->m_psGenerate->m_psVertex[psData->m_psGenerate->m_nuiVertex].m_vS0 = tgMH_Init_Point_ELEM_F32_04_1( uKS.m_vS_F32_04_1.x, uKS.m_vS_F32_04_1.y, uKS.m_vS_F32_04_1.z );
-        psData->m_psGenerate->m_psVertex[psData->m_psGenerate->m_nuiVertex].m_vN0 = tgMH_Init_Vector_ELEM_F32_04_1( uKN.m_vS_F32_04_1.x, uKN.m_vS_F32_04_1.y, uKN.m_vS_F32_04_1.z );
+        psData->m_psGenerate->m_psVertex[psData->m_psGenerate->m_nuiVertex].m_vS0 = tgMH_Init_Point_F32_04_1( vKS );
+        psData->m_psGenerate->m_psVertex[psData->m_psGenerate->m_nuiVertex].m_vN0 = tgMH_Init_Vector_F32_04_1( vKN );
     };
 
     TgCRITICAL( psData->m_nuiEdge + 1 < psData->m_nuiMax_Edge );
@@ -1161,6 +1323,7 @@ static TgVOID tgKN_GPU_DBG_Tessellate_Capsule( TgRSIZE_PCU pnuiIndex_Tube, TgKN_
     TgRSIZE_C                           nbyIndex_Orig = psGenerate->m_nuiIndex*sizeof( TgUINT_E16 );
     TgRSIZE_C                           nbyVertex_Orig = psGenerate->m_nuiVertex * sizeof( STg2_KN_GPU_Vertex_Geom_02 );
     TgRSIZE_C                           nuiVertex_Orig = psGenerate->m_nuiVertex;
+    TgRSIZE_C                           nuiIndex_Orig = psGenerate->m_nuiIndex;
     TgRSIZE_C                           nuiIndex_Cap_Orig = psGenerate->m_nuiIndex - *pnuiIndex_Tube;
 
     TgKN_GPU_DBG_Geom_For_Tessellation  sTessellation;
@@ -1168,6 +1331,7 @@ static TgVOID tgKN_GPU_DBG_Tessellate_Capsule( TgRSIZE_PCU pnuiIndex_Tube, TgKN_
     TgRSIZE                             nuiIndex;
     TgRSIZE                             nuiNewIndex;
     TgUINT_E16                          nuiAdded_Vertex;
+    TgRSIZE                             nuiTest_Vertex;
 
     sTessellation.m_psGenerate = psGenerate;
     sTessellation.m_nuiMax_Edge = psGenerate->m_nuiVertex + 4 * nuiIndex_Cap_Orig;
@@ -1176,7 +1340,7 @@ static TgVOID tgKN_GPU_DBG_Tessellate_Capsule( TgRSIZE_PCU pnuiIndex_Tube, TgKN_
     sTessellation.m_puiEnd = (TgUINT_E16_P)TgMALLOC_POOL( sTessellation.m_nuiMax_Edge * sizeof( TgUINT_E16 ) );
     sTessellation.m_puiMid = (TgUINT_E16_P)TgMALLOC_POOL( sTessellation.m_nuiMax_Edge * sizeof( TgUINT_E16 ) );
     sTessellation.m_puiIndex_Orig = (TgUINT_E16_P)TgMALLOC_POOL( nbyIndex_Orig );
-    sTessellation.m_nuiIndex_Orig = psGenerate->m_nuiIndex;
+    sTessellation.m_nuiIndex_Orig = nuiIndex_Orig;
 
     TgCRITICAL_MSGF( nullptr != sTessellation.m_puiStart, STD_MSG_LITERAL_1, STD_MSG_POST, u8"Failed to allocate memory." );
     TgCRITICAL_MSGF( nullptr != sTessellation.m_puiEnd, STD_MSG_LITERAL_1, STD_MSG_POST, u8"Failed to allocate memory." );
@@ -1185,14 +1349,23 @@ static TgVOID tgKN_GPU_DBG_Tessellate_Capsule( TgRSIZE_PCU pnuiIndex_Tube, TgKN_
 
     TgMEMCPY_NOCACHE( sTessellation.m_puiIndex_Orig, nbyIndex_Orig, psGenerate->m_puiIndex, nbyIndex_Orig );
 
+    for (nuiIndex = 0; nuiIndex < nuiIndex_Cap_Orig >> 1; ++nuiIndex)
+    {
+        TgVERIFY( sTessellation.m_puiIndex_Orig[nuiIndex] < (nuiVertex_Orig >> 1) );
+    };
+    for (; nuiIndex < nuiIndex_Cap_Orig; ++nuiIndex)
+    {
+        TgVERIFY( sTessellation.m_puiIndex_Orig[nuiIndex] >= (nuiVertex_Orig >> 1) );
+    };
+
     /* The code overwrites the index buffer in place using the copy of the original buffer. */
-    psGenerate->m_nuiIndex = 0u;
+    psGenerate->m_nuiIndex = 0;
 
     psVertex_Orig = (STg2_KN_GPU_Vertex_Geom_02_P)TgMALLOC_POOL( nbyVertex_Orig >> 1 );
 
     /* General reminder: our capsule is created as two demi-spheres that are then separated from each other and the resulting faces defined to fill out the capsule. Taking
                          advantage of that construction method, we copy off the second half of the vertices at this point since we will overwrite their location for implementation
-                         simplicity. We can then copy them back when we tessellate the second half of the capsule. */
+                         simplicity. We can then copy them back when we tessellate the second half of the capsule. This way the index list continues to be separatable. */
 
     if (nullptr != psGenerate->m_psVertex)
     {
@@ -1217,16 +1390,7 @@ static TgVOID tgKN_GPU_DBG_Tessellate_Capsule( TgRSIZE_PCU pnuiIndex_Tube, TgKN_
     /* Re-index the old index data to take into account the separation of all the new vertices. */
     for (nuiIndex = nuiIndex_Cap_Orig >> 1; nuiIndex < nuiIndex_Cap_Orig; ++nuiIndex)
     {
-        TgVERIFY( sTessellation.m_puiIndex_Orig[nuiIndex] >= (nuiVertex_Orig >> 1) );
         sTessellation.m_puiIndex_Orig[nuiIndex] += nuiAdded_Vertex;
-    };
-
-    for (; nuiIndex < sTessellation.m_nuiIndex_Orig; ++nuiIndex)
-    {
-        if (sTessellation.m_puiIndex_Orig[nuiIndex] >= (nuiVertex_Orig >> 1) )
-        {
-            sTessellation.m_puiIndex_Orig[nuiIndex] += nuiAdded_Vertex;
-        };
     };
 
     /* Tessellate the first second of the capsule. */
@@ -1234,31 +1398,43 @@ static TgVOID tgKN_GPU_DBG_Tessellate_Capsule( TgRSIZE_PCU pnuiIndex_Tube, TgKN_
 
     /* Do not tessellate the faces in the tube section - create the additional faces caused by the extra vertices in the caps. */
 
-    for (nuiIndex = nuiIndex_Cap_Orig, nuiNewIndex = psGenerate->m_nuiIndex; nuiIndex < sTessellation.m_nuiIndex_Orig && nuiNewIndex < psGenerate->m_nuiMax_Index; nuiIndex += 6, nuiNewIndex += 12)
+    for (nuiIndex = nuiIndex_Cap_Orig; nuiIndex < nuiIndex_Orig; ++nuiIndex)
+    {
+        if (sTessellation.m_puiIndex_Orig[nuiIndex] >= (nuiVertex_Orig >> 1) )
+        {
+            sTessellation.m_puiIndex_Orig[nuiIndex] += nuiAdded_Vertex;
+        };
+    };
+
+    nuiTest_Vertex = psGenerate->m_nuiVertex;
+    for (nuiIndex = nuiIndex_Cap_Orig, nuiNewIndex = psGenerate->m_nuiIndex; nuiIndex < nuiIndex_Orig && nuiNewIndex < psGenerate->m_nuiMax_Index; nuiIndex += 6, nuiNewIndex += 12)
     {
         TgUINT_E16_C                        uiP0 = sTessellation.m_puiIndex_Orig[nuiIndex + 0];
         TgUINT_E16_C                        uiP1 = sTessellation.m_puiIndex_Orig[nuiIndex + 1];
         TgUINT_E16_C                        uiP2 = sTessellation.m_puiIndex_Orig[nuiIndex + 2];
-        TgUINT_E16_C                        uiP3 = sTessellation.m_puiIndex_Orig[nuiIndex + 5];
+        TgUINT_E16_C                        uiP4 = sTessellation.m_puiIndex_Orig[nuiIndex + 4];
+        TgUINT_E16_C                        uiP5 = sTessellation.m_puiIndex_Orig[nuiIndex + 5];
 
-        TgUINT_E16                          ui02 = tgKN_GPU_DBG_Tessellate_Mid_Point( uiP2, uiP0, &sTessellation );
-        TgUINT_E16                          ui13 = tgKN_GPU_DBG_Tessellate_Mid_Point( uiP1, uiP3, &sTessellation );
+        TgUINT_E16                          ui01 = tgKN_GPU_DBG_Tessellate_Mid_Point( uiP0, uiP1, &sTessellation );
+        TgUINT_E16                          ui45 = tgKN_GPU_DBG_Tessellate_Mid_Point( uiP4, uiP5, &sTessellation );
+
+        TgDIAG(nuiTest_Vertex == psGenerate->m_nuiVertex);
 
         psGenerate->m_puiIndex[nuiNewIndex + 0] = uiP0;
-        psGenerate->m_puiIndex[nuiNewIndex + 1] = uiP1;
-        psGenerate->m_puiIndex[nuiNewIndex + 2] = ui02;
+        psGenerate->m_puiIndex[nuiNewIndex + 1] = ui01;
+        psGenerate->m_puiIndex[nuiNewIndex + 2] = uiP2;
 
-        psGenerate->m_puiIndex[nuiNewIndex + 3] = ui02;
-        psGenerate->m_puiIndex[nuiNewIndex + 4] = uiP1;
-        psGenerate->m_puiIndex[nuiNewIndex + 5] = ui13;
+        psGenerate->m_puiIndex[nuiNewIndex + 3] = ui01;
+        psGenerate->m_puiIndex[nuiNewIndex + 4] = ui45;
+        psGenerate->m_puiIndex[nuiNewIndex + 5] = uiP2;
 
-        psGenerate->m_puiIndex[nuiNewIndex + 6] = ui02;
-        psGenerate->m_puiIndex[nuiNewIndex + 7] = ui13;
-        psGenerate->m_puiIndex[nuiNewIndex + 8] = uiP2;
+        psGenerate->m_puiIndex[nuiNewIndex + 6] = ui01;
+        psGenerate->m_puiIndex[nuiNewIndex + 7] = uiP1;
+        psGenerate->m_puiIndex[nuiNewIndex + 8] = ui45;
 
-        psGenerate->m_puiIndex[nuiNewIndex + 9] = uiP2;
-        psGenerate->m_puiIndex[nuiNewIndex + 10] = ui13;
-        psGenerate->m_puiIndex[nuiNewIndex + 11] = uiP3;
+        psGenerate->m_puiIndex[nuiNewIndex + 9] = uiP1;
+        psGenerate->m_puiIndex[nuiNewIndex + 10] = uiP4;
+        psGenerate->m_puiIndex[nuiNewIndex + 11] = ui45;
     };
 
     *pnuiIndex_Tube = nuiNewIndex - psGenerate->m_nuiIndex;

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 # Universal bash build script
 #  Linux - use directly with bash
 #  MacOS - use directly with bash
@@ -167,11 +167,9 @@ while :; do
                 thread="$2"
                 shift
                 case $thread in
-                    AND)
-                        ;;
                     POSIX)
                         ;;
-                    WIN)
+                    WINDOWS)
                         ;;
                     *)
                         die 'ERROR: Unknown THREAD parameter.'
@@ -186,11 +184,11 @@ while :; do
                 os="$2"
                 shift
                 case $os in
-                    AND)
+                    ANDROID)
                         ;;
                     POSIX)
                         ;;
-                    WIN)
+                    WINDOWS)
                         ;;
                     *)
                         die 'ERROR: Unknown OS parameter.'
@@ -235,6 +233,10 @@ while :; do
                     REF)
                         ;;
                     DX12)
+                        ;;
+                    METAL)
+                        ;;
+                    VULKAN)
                         ;;
                     *)
                         die 'ERROR: Unknown GPU parameter.'
@@ -323,8 +325,8 @@ fi
 
 if [ ! ${verbose} -eq 0 ]; then
   printf '\033[33;1m'
-  printf "CMAKE BUILD PATH: %s\n" ${CMAKE_BUILD_PATH}
-  printf '\033[0m'
+  printf "CMAKE BUILD PATH: %s" ${CMAKE_BUILD_PATH}
+  printf '\033[0m\n'
 fi
 
 
@@ -335,6 +337,8 @@ declare -a CMAKE_BUILD_COMMON_CMD # Empty Array
 
 if [ ! ${log_status} -eq 0 ]; then
     CMAKE_BUILD_COMMON_CMD+=(--log-level=STATUS)
+else
+    CMAKE_BUILD_COMMON_CMD+=(--log-level=WARNING)
 fi
 
 if [ ! ${fresh} -eq 0 ]; then
@@ -397,8 +401,8 @@ CMAKE_BUILD_COMMON_CMD+=(${CMAKE_BUILD_PATH:+-B "../build/${CMAKE_BUILD_PATH,,}"
 
 if [ ! ${verbose} -eq 0 ]; then
   printf '\033[33;1m'
-  printf "CMAKE COMMON: ${CMAKE_BUILD_COMMON_CMD[@]}\n"
-  printf '\033[0m'
+  echo "CMAKE COMMON: ${CMAKE_BUILD_COMMON_CMD[@]}"
+  printf '\033[0m\n'
 fi
 
 
@@ -430,6 +434,7 @@ printf '%s\n' "----        Audio API: ${audio^^}"
 printf '%s\n' "----       Build Type: ${build_type^^}"
 printf '%s\n' "----         Compiler: ${compiler^^}"
 printf '%s\n' "----    Build Manager: ${ide^^}"
+printf '%s %s\n' "----     Bash Version:" $BASH_VERSION
 printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -
 printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -
 printf '\033[0m'
@@ -443,8 +448,9 @@ printf '\033[0m'
 
 # CMAKE COMMAND LINE
 if [ ! ${verbose} -eq 0 ]; then
-  printf '\033[36;1m%s\033[0m\n' "CMAKE COMMAND: cmake ${CMAKE_BUILD_COMMON_CMD[@]}"
-  echo cmake "${CMAKE_BUILD_COMMON_CMD[@]}"
+  printf '\033[36;1m'
+  echo "CMAKE COMMAND: cmake ${CMAKE_BUILD_COMMON_CMD[@]}"
+  printf '\033[0m\n'
   cmake "${CMAKE_BUILD_COMMON_CMD[@]}"
 else
   cmake "${CMAKE_BUILD_COMMON_CMD[@]}" 1> /dev/null
@@ -455,16 +461,10 @@ CMAKE_BUILD_COMMON_CMD=(${CMAKE_BUILD_PATH:+--build "../build/${CMAKE_BUILD_PATH
 CMAKE_BUILD_COMMON_CMD+=(--config ${build_type^^})
 CMAKE_BUILD_COMMON_CMD+=(-- ${CMAKE_BUILD_POST_CMD[@]})
 if [ ! ${verbose} -eq 0 ]; then
-  printf '\033[36;1m%s\033[0m\n' "CMAKE COMMAND: cmake  ${CMAKE_BUILD_COMMON_CMD[@]}"
-  echo cmake "${CMAKE_BUILD_COMMON_CMD[@]}"
+  printf '\033[36;1m'
+  echo "CMAKE COMMAND: cmake  ${CMAKE_BUILD_COMMON_CMD[@]}"
+  printf '\033[0m\n'
   cmake "${CMAKE_BUILD_COMMON_CMD[@]}"
 else
   cmake "${CMAKE_BUILD_COMMON_CMD[@]}" 1> /dev/null
 fi
-
-# BUILD TAG
-if [ ! ${cicd_build} -eq 0 ]; then
-  git tag -d build__hlnx_${CMAKE_BUILD_PATH,,}
-  git tag build__hlnx_${CMAKE_BUILD_PATH,,} -m "Success" --no-edit -s
-fi
-

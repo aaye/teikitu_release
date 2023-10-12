@@ -92,7 +92,7 @@ FCN_V(tgMH_Init_Ortho_S)(
     @param [in] ARG2 Vector */
 TgINLINE TgVOID
 FCN_V(tgMH_Init_Basis_From_Vector_S)(
-    VEC_S_T(1,PCU) NONULL ARG0, VEC_S_T(1,PCU) NONULL ARG1, VEC_S_T(1,C) ARG2 );
+    VEC_S_T(1,PCU) TgANALYSIS_NO_NULL ARG0, VEC_S_T(1,PCU) TgANALYSIS_NO_NULL ARG1, VEC_S_T(1,C) ARG2 );
 
 
 
@@ -148,7 +148,7 @@ FCN_V(tgMH_UCX_S)(
     @return A vector that is the normalized cross product of the two vector arguments */
 TgINLINE VEC_S_T(1)
 FCN_V(tgMH_UCX_LEN_S)(
-    VAR_T(P) NONULL OUT0, VEC_S_T(1,C) ARG1, VEC_S_T(1,C) ARG2 );
+    VAR_T(P) TgANALYSIS_NO_NULL OUT0, VEC_S_T(1,C) ARG1, VEC_S_T(1,C) ARG2 );
 
 /** @addtogroup TGS_COMMON_MATH_VECTOR_CALC
     @brief Return a vector where the first three elements of ARG1 have been normalized
@@ -157,7 +157,7 @@ FCN_V(tgMH_UCX_LEN_S)(
     @return A vector that is the normalized cross product of the two vector arguments */
 TgINLINE VEC_S_T(1)
 FCN_V(tgMH_NORM3_LEN_S)(
-    VAR_T(P) NONULL OUT0, VEC_S_T(1,C) ARG1 );
+    VAR_T(P) TgANALYSIS_NO_NULL OUT0, VEC_S_T(1,C) ARG1 );
 
 /** @addtogroup TGS_COMMON_MATH_VECTOR_CALC
     @brief Return a vector where each element contains the dot product of the first three elements of the arguments
@@ -253,7 +253,7 @@ FCN_V(tgMH_QT_Init_Euler_Z_S)(
     @brief A vector holding the three Euler angles matching the rotation of the argument quaternion */
 TgINLINE TgVOID
 FCN_V(tgMH_Quat_To_Euler_ELEM_S)(
-    VAR_T(PCU) NONULL OUT0, VAR_T(PCU) NONULL OUT1, VAR_T(PCU) NONULL OUT2, VEC_S_T(1,C) ARG3 );
+    VAR_T(PCU) TgANALYSIS_NO_NULL OUT0, VAR_T(PCU) TgANALYSIS_NO_NULL OUT1, VAR_T(PCU) TgANALYSIS_NO_NULL OUT2, VEC_S_T(1,C) ARG3 );
 
 /** @addtogroup TGS_COMMON_MATH_QUAT
     @brief Return a vector holding the three Euler angles matching the rotation of the argument quaternion

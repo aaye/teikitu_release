@@ -598,7 +598,11 @@ TgVOID_P tgMM_Realloc( ETgMM_ALLOCATOR_C enAllocator, TgVOID_PC pMem, TgRSIZE_C 
 
 /* ---- tgMM_Init_MGR ------------------------------------------------------------------------------------------------------------------------------------------------------------ */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+#if defined(TgBUILD_FEATURE__MALLOC_OVERRIDE)
 TgRESULT tgMM_Init_MGR( TgVOID )
+#else
+TgRESULT tgMM_Init_MGR_Preload( TgVOID )
+#endif
 {
     STg2_MM_MGR                         sMGR;
     TgRSIZE                             uiIndex;
@@ -688,7 +692,11 @@ TgRESULT tgMM_Init_MGR( TgVOID )
 
 /* ---- tgMM_Free_MGR ------------------------------------------------------------------------------------------------------------------------------------------------------------ */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+#if defined(TgBUILD_FEATURE__MALLOC_OVERRIDE)
 TgRESULT tgMM_Free_MGR( TgVOID )
+#else
+TgRESULT tgMM_Free_MGR_Preload( TgVOID )
+#endif
 {
     TgRSIZE                             uiIndex;
 

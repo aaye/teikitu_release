@@ -24,3 +24,11 @@ CMakeSettings.json
 /build
 /teikitu_assets
 /teikitu_external/_*
+/teikitu_private/src/TgS KERNEL/DEBUG/*
+/teikitu_private/src/TgS KERNEL/RELEASE/*
+/teikitu_private/src/TgS KERNEL/FINAL/*
+/teikitu_private/src/TgS KERNEL/TOOLS/*
+/teikitu_private/tests/TgS KERNEL/DEBUG/*
+/teikitu_private/tests/TgS KERNEL/RELEASE/*
+/teikitu_private/tests/TgS KERNEL/FINAL/*
+/teikitu_private/tests/TgS KERNEL/TOOLS/*

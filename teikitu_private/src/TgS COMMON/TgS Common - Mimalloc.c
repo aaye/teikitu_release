@@ -65,7 +65,7 @@ TgRESULT tgMM_MI__Free_MGR( TgVOID )
 /* ---- tgMM_MI__Stats ----------------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 #if TgS_STAT__COMMON
-TgVOID tgMM_MI__Stats( TgRSIZE (pfnIO_PrintF)( STg2_Output_PC NONULL ARG0, TgCHAR_U8_CPC NONULL ARG1, ... ), STg2_Output_PC psOUT )
+TgVOID tgMM_MI__Stats( TgRSIZE (pfnIO_PrintF)( STg2_Output_PC ARG0, TgCHAR_U8_CPC ARG1, ... ), STg2_Output_PC psOUT )
 {
     TgPARAM_CHECK( nullptr!= pfnIO_PrintF );
     TgPARAM_CHECK( nullptr!= psOUT );

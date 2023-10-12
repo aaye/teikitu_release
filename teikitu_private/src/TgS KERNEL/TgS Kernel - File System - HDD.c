@@ -32,7 +32,7 @@ TgTYPE_STRUCT(STg2_KN_FS_HDD__Mount,)
     STg2_KN_FS_HDD__Mount_File_Table_P          m_asFS_File_Table;
 #if defined(TgBUILD_OS__POSIX)
     TgUINT_E08                                  m_uiPad[56];
-#elif defined(TgBUILD_OS__WIN)
+#elif defined(TgBUILD_OS__WINDOWS)
     TgUINT_E08                                  m_uiPad[TgCCL - 24];
 #endif
     STg2_UT_LF__HT_RW                           m_sFS_Path_Table;

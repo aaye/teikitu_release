@@ -105,7 +105,7 @@ tgFX__Client__Query_Id(
     @return UID for the FX to be used by the client. */
 TgEXTN TgFX_CLIENT_INST_ID
 tgFX__Client__Inst_FX_RAW(
-    ETgFX__EFFECT_C ARG0, TgVOID_CP NONULL ARG1, TgVOID_CP OKNULL ARG2, STg2_FX_Instance_CPCU NONULL ARG3, TgBOOL_C ARG4 );
+    ETgFX__EFFECT_C ARG0, TgVOID_CP TgANALYSIS_NO_NULL ARG1, TgVOID_CP OKNULL ARG2, STg2_FX_Instance_CPCU TgANALYSIS_NO_NULL ARG3, TgBOOL_C ARG4 );
 
 /** @brief Create a FX instance using a pointer to a raw data effect blob.
     @param [in] ARG0 Hash of the unique name (key) for this effect.
@@ -114,7 +114,7 @@ tgFX__Client__Inst_FX_RAW(
     @return UID for the FX to be used by the client. */
 TgEXTN TgFX_CLIENT_INST_ID
 tgFX__Client__Inst_FX_Hash(
-    TgUINT_MAX_C ARG0, STg2_FX_Instance_CPCU NONULL ARG1, TgBOOL_C ARG2 );
+    TgUINT_MAX_C ARG0, STg2_FX_Instance_CPCU TgANALYSIS_NO_NULL ARG1, TgBOOL_C ARG2 );
 
 /** @brief Create a FX instance using a pointer to a raw data effect blob.
     @param [in] ARG0 UID for the FX data to be used for this instance.
@@ -123,7 +123,7 @@ tgFX__Client__Inst_FX_Hash(
     @return UID for the FX to be used by the client. */
 TgEXTN TgFX_CLIENT_INST_ID
 tgFX__Client__Inst_FX(
-    TgFX_EFFECT_ID_C ARG0, STg2_FX_Instance_CPCU NONULL ARG1, TgBOOL_C ARG2 );
+    TgFX_EFFECT_ID_C ARG0, STg2_FX_Instance_CPCU TgANALYSIS_NO_NULL ARG1, TgBOOL_C ARG2 );
 
 
 /** @brief Issue a command to gracefully stop the effect (fade out etc.). */
@@ -205,7 +205,7 @@ tgFX__Client__Wait_For_Update_Completion( TgVOID );
     @param [in] ARG1 Integer selecting the view index to be processed. */
 TgEXTN TgVOID
 tgFX__Client__Scene_Cull(
-    STg2_SE_Context_PC NONULL ARG0, TgRSIZE_C ARG1 );
+    STg2_SE_Context_PC TgANALYSIS_NO_NULL ARG0, TgRSIZE_C ARG1 );
 
 /** @brief This function is responsible for executing (or queuing) two jobs. The first establishes all of the FX headers that will be used during rendering to the draw the FX
            vertex buffers based on the FX that passed culling. The second job is to generate the data for these vertex buffers. Once completed the FX system has completed its
@@ -213,7 +213,7 @@ tgFX__Client__Scene_Cull(
     @param [in,out] ARG0 Pointer to a FX rendering data structure that is used to contain the results of the FX render generation data. */
 TgEXTN TgVOID
 tgFX__Render__Update(
-    STg2_FX_Rnd_Output_PC NONULL ARG0 );
+    STg2_FX_Rnd_Output_PC TgANALYSIS_NO_NULL ARG0 );
 
 /** @brief Wait for all of the render jobs to be completed. */
 TgEXTN TgVOID
@@ -230,7 +230,7 @@ tgFX__Client__Wait_For_Render_Completion( TgVOID );
 
 TgEXTN TgRESULT
 tgFX_Debug__Client__Reload_Effect(
-    TgFX_EFFECT_ID_C ARG0, STg2_Input_CPC NONULL ARG1, TgUINT_PTR_C ARG2, TgVOID(*)( TgUINT_PTR_C, TgFX_EFFECT_ID_C) );
+    TgFX_EFFECT_ID_C ARG0, STg2_Input_CPC TgANALYSIS_NO_NULL ARG1, TgUINT_PTR_C ARG2, TgVOID(*)( TgUINT_PTR_C, TgFX_EFFECT_ID_C) );
 
 TgEXTN TgCHAR_U8_CP
 tgFX_Debug__Client__Query_FX_Name(

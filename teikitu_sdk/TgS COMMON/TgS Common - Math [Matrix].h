@@ -26,7 +26,7 @@
     @param [out] OUT Destination matrix */
 TgINLINE TgVOID
 FCN_M(tgMH_CLR)(
-    MAT_T(PC) NONULL OUT );
+    MAT_T(PC) TgANALYSIS_NO_NULL OUT );
 
 
 
@@ -38,7 +38,7 @@ FCN_M(tgMH_CLR)(
     @param [in] ARG2 Matrix */
 TgINLINE TgVOID
 FCN_M(tgMH_MAX)(
-    MAT_T(PC) NONULL OUT0, MAT_T(CPC) NONULL ARG1, MAT_T(CPC) NONULL ARG2 );
+    MAT_T(PC) TgANALYSIS_NO_NULL OUT0, MAT_T(CPC) TgANALYSIS_NO_NULL ARG1, MAT_T(CPC) TgANALYSIS_NO_NULL ARG2 );
 
 /** @addtogroup TGS_COMMON_MATH_VECTOR_LOGICAL
     @brief Store a matrix where each element is the minimum of the corresponding elements in the argument matrices
@@ -47,7 +47,7 @@ FCN_M(tgMH_MAX)(
     @param [in] ARG2 Matrix */
 TgINLINE TgVOID
 FCN_M(tgMH_MIN)(
-    MAT_T(PC) NONULL OUT0, MAT_T(CPC) NONULL ARG1, MAT_T(CPC) NONULL ARG2 );
+    MAT_T(PC) TgANALYSIS_NO_NULL OUT0, MAT_T(CPC) TgANALYSIS_NO_NULL ARG1, MAT_T(CPC) TgANALYSIS_NO_NULL ARG2 );
 
 /** @addtogroup TGS_COMMON_MATH_VECTOR_LOGICAL
     @brief Store the result of a bit-wise and between both arguments
@@ -56,7 +56,7 @@ FCN_M(tgMH_MIN)(
     @param [in] ARG2 Matrix */
 TgINLINE TgVOID
 FCN_M(tgMH_AND)(
-    MAT_T(PC) NONULL OUT0, MAT_T(CPC) NONULL ARG1, MAT_T(CPC) NONULL ARG2 );
+    MAT_T(PC) TgANALYSIS_NO_NULL OUT0, MAT_T(CPC) TgANALYSIS_NO_NULL ARG1, MAT_T(CPC) TgANALYSIS_NO_NULL ARG2 );
 
 /** @addtogroup TGS_COMMON_MATH_VECTOR_LOGICAL
     @brief Store the result of a bit-wise or between both arguments
@@ -65,7 +65,7 @@ FCN_M(tgMH_AND)(
     @param [in] ARG2 Matrix */
 TgINLINE TgVOID
 FCN_M(tgMH_OR)(
-    MAT_T(PC) NONULL OUT0, MAT_T(CPC) NONULL ARG1, MAT_T(CPC) NONULL ARG2 );
+    MAT_T(PC) TgANALYSIS_NO_NULL OUT0, MAT_T(CPC) TgANALYSIS_NO_NULL ARG1, MAT_T(CPC) TgANALYSIS_NO_NULL ARG2 );
 
 /** @addtogroup TGS_COMMON_MATH_VECTOR_LOGICAL
     @brief Store the result of a bit-wise xor between both arguments
@@ -74,7 +74,7 @@ FCN_M(tgMH_OR)(
     @param [in] ARG2 Matrix */
 TgINLINE TgVOID
 FCN_M(tgMH_XOR)(
-    MAT_T(PC) NONULL OUT0, MAT_T(CPC) NONULL ARG1, MAT_T(CPC) NONULL ARG2 );
+    MAT_T(PC) TgANALYSIS_NO_NULL OUT0, MAT_T(CPC) TgANALYSIS_NO_NULL ARG1, MAT_T(CPC) TgANALYSIS_NO_NULL ARG2 );
 
 
 /* =============================================================================================================================================================================== */

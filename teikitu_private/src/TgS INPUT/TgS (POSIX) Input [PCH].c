@@ -1,6 +1,6 @@
 /* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
 /*  »Project«   Teikitu Gaming System (TgS) (∂)
-    »File«      TgS (WIN) Input [Static].c
+    »File«      TgS (WINDOWS) Input [Static].c
     »Author«    Andrew Aye (mailto: teikitu@andrewaye.com, https://www.andrew.aye.page)
     »Version«   5.19 | »GUID« 76B73546-7B98-46E1-9192-4E484C67D169 */
 /*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
@@ -12,6 +12,6 @@
 
 /* 2183: Empty Translation Unit */
 TgCLANG_WARN_SUPPRESS(missing-prototypes)
-void Prevent2183_WIN_Input_Static( TgVOID )
+void Prevent2183_WINDOWS_Input_Static( TgVOID )
 {
 }

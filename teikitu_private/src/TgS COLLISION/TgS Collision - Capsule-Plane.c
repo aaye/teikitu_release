@@ -92,18 +92,17 @@ TgRESULT FCN_VO(tgCO_PN_Penetrate_CP)(VEC_OBJ_T(STg2_CO_Packet,PC) psPacket, VEC
         VEC_OBJ_T(STg2_CO_Contact,P)        psContact;
         VEC_T(1)                            vDepth;
 
-        VEC_T(1,C)                          vUAX = FCN_V(tgMH_Query_Axis_1,3)( &psCP0->m_mReference_Frame );
-        VEC_T(1,C)                          vOG = FCN_V(tgMH_Query_Axis_3,3)( &psCP0->m_mReference_Frame );
-        VEC_T(1,C)                          vDist = FCN_VO(tgCO_PN_Sign_Dist_PT)( psPN0, vOG );
+        VEC_T(1,C)                          vCP_AX__PN_N = FCN_V(tgMH_DOT)( psPN0->m_vNormal, psCP0->m_vHAX ); /* Projection of the capsule primary extent onto the plane normal */
+        VEC_T(1,C)                          vPRX_Sign = FCN_V(tgMH_PRX_SGN)( vCP_AX__PN_N );  /* Sign of the projection with error range */
+        VEC_T(1,C)                          vCP_OG = FCN_V(tgMH_Query_Axis_3,3)( &psCP0->m_mReference_Frame ); /* Origin for the capsule */
+        VEC_T(1,C)                          vDist = FCN_VO(tgCO_PN_Sign_Dist_PT)( psPN0, vCP_OG ); /* Distance of the capsule origin from the plane */
 
-        VEC_T(1,C)                          vUAX_N = FCN_V(tgMH_DOT)( psPN0->m_vNormal, vUAX );
-        VEC_T(1,C)                          vE2 = FCN_V(tgMH_MUL)( psCP0->m_vExtent, FCN_V(tgMH_ABS)( vUAX_N ) );
-        VEC_T(1,C)                          vAx = FCN_V(tgMH_NEG)( FCN_V(tgMH_PRX_SGN)( vUAX_N ) );
-        VEC_T(1,C)                          vK0 = FCN_V(tgMH_MUL)( vAx, psCP0->m_vHAX );
-        VEC_T(1,C)                          vK5 = FCN_V(tgMH_MUL)( psCP0->m_vRadius, psPN0->m_vNormal );
-        VEC_T(1,C)                          vK6 = FCN_V(tgMH_ADD)( vOG, vK0 );
+        VEC_T(1,C)                          vα0 = FCN_V(tgMH_MAD)( vPRX_Sign, vCP_AX__PN_N, psCP0->m_vRadius ); /* Additional depth due to capsule axis and radius */
+        VEC_T(1,C)                          vα1 = FCN_V(tgMH_NMS)( vPRX_Sign, psCP0->m_vHAX, vCP_OG ); /* Point on axis of deepest penetration */
+        VEC_T(1,C)                          vα2 = FCN_V(tgMH_NMS)( psCP0->m_vRadius, psPN0->m_vNormal, vα1 ); /* Point of deepest penetration on the capsule surface */
+        VEC_T(1,C)                          vα3 = FCN_V(tgMH_DIV)( vCP_AX__PN_N, psCP0->m_vExtent ); /* Calculate the projection based on the primary unit axis */
 
-        vDepth = FCN_V(tgMH_SUB)( FCN_V(tgMH_ADD)( vE2, psCP0->m_vRadius ), vDist );
+        vDepth = FCN_V(tgMH_SUB)( vα0, vDist );
         if (FCN_V(tgMH_CMP_ALL_TO_BOOL)( FCN_V(tgMH_CMP_LT)( vDepth, FCN_V(tgMH_SET1)( TYPE_K(0) ) ) ))
         {
             return (KTgE_NO_INTERSECT);
@@ -111,7 +110,7 @@ TgRESULT FCN_VO(tgCO_PN_Penetrate_CP)(VEC_OBJ_T(STg2_CO_Packet,PC) psPacket, VEC
 
         psContact = psPacket->m_psContact + psPacket->m_nuiContact;
 
-        psContact->m_vS0 = FCN_V(tgMH_SUB)( vK6, vK5 );
+        psContact->m_vS0 = vα2;
         psContact->m_vN0 = psPN0->m_vNormal;
         psContact->m_vT0 = FCN_V(tgMH_SET1)( TYPE_K(0) );
         psContact->m_vDepth = vDepth;
@@ -120,18 +119,14 @@ TgRESULT FCN_VO(tgCO_PN_Penetrate_CP)(VEC_OBJ_T(STg2_CO_Packet,PC) psPacket, VEC
 
         /* If the capsule is at a 45 degree angle or less to the plane, create contact points at both extreme points of the capsule. */
 
-        if (FCN_V(tgMH_CMP_ALL_TO_BOOL)( FCN_V(tgMH_CMP_LT)( FCN_V(tgMH_ABS)( vUAX_N ), FCN_V(tgMH_SET1)( VAR_K(KTgSQRT1_2) ) ) ))
+        if (FCN_V(tgMH_CMP_ALL_TO_BOOL)( FCN_V(tgMH_CMP_LT)( FCN_V(tgMH_ABS)( vα3 ), FCN_V(tgMH_SET1)( VAR_K(KTgSQRT1_2) ) ) ))
         {
-            VEC_T(1,C)                          vE3_A = FCN_V(tgMH_SUB)( FCN_V(tgMH_SET1)( TYPE_K(1) ), FCN_V(tgMH_MUL)( vUAX_N, vUAX_N ) );
-            VEC_T(1,C)                          vE3 = FCN_V(tgMH_MUL)( psCP0->m_vRadius, FCN_V(tgMH_SQRT)( FCN_V(tgMH_ABS)( vE3_A ) ) );
-            VEC_T(1,C)                          vK2 = FCN_V(tgMH_MUL)( vUAX_N, vUAX );
-            VEC_T(1,C)                          vK4 = FCN_V(tgMH_SUB)( vK2, psPN0->m_vNormal );
-            VEC_T(1,C)                          vX0 = FCN_V(tgMH_NORM)( vK4 );
-            VEC_T(1,C)                          vK3 = FCN_V(tgMH_NEG)( vK0 );
-            VEC_T(1,C)                          vK1 = FCN_V(tgMH_ADD)( vOG, vK3 );
-            VEC_T(1,C)                          vK7 = FCN_V(tgMH_MUL)( vX0, psCP0->m_vRadius );
+            VEC_T(1,C)                          vPRX_Sign_NEG = FCN_V(tgMH_NEG)( vPRX_Sign );
+            VEC_T(1,C)                          vβ0 = FCN_V(tgMH_MAD)( vPRX_Sign_NEG, vCP_AX__PN_N, psCP0->m_vRadius ); /* Additional depth due to capsule axis and radius */
+            VEC_T(1,C)                          vβ1 = FCN_V(tgMH_NMS)( vPRX_Sign_NEG, psCP0->m_vHAX, vCP_OG ); /* Point on axis of least penetration */
+            VEC_T(1,C)                          vβ2 = FCN_V(tgMH_NMS)( psCP0->m_vRadius, psPN0->m_vNormal, vβ1 ); /* Point of deepest penetration for the above point */
 
-            vDepth = FCN_V(tgMH_SUB)( vE3, FCN_V(tgMH_ADD)( vE2, vDist ) );
+            vDepth = FCN_V(tgMH_SUB)( vβ0, vDist );
             if (FCN_V(tgMH_CMP_ALL_TO_BOOL)( FCN_V(tgMH_CMP_LT)( vDepth, FCN_V(tgMH_SET1)( TYPE_K(0) ) ) ))
             {
                 return (KTgS_OK);
@@ -144,7 +139,7 @@ TgRESULT FCN_VO(tgCO_PN_Penetrate_CP)(VEC_OBJ_T(STg2_CO_Packet,PC) psPacket, VEC
 
             psContact = psPacket->m_psContact + psPacket->m_nuiContact;
 
-            psContact->m_vS0 = FCN_V(tgMH_ADD)( vK1, vK7 );
+            psContact->m_vS0 = vβ2;
             psContact->m_vN0 = psPN0->m_vNormal;
             psContact->m_vT0 = FCN_V(tgMH_SET1)( TYPE_K(0) );
             psContact->m_vDepth = vDepth;
@@ -154,6 +149,40 @@ TgRESULT FCN_VO(tgCO_PN_Penetrate_CP)(VEC_OBJ_T(STg2_CO_Packet,PC) psPacket, VEC
 
         return (KTgS_OK);
     }
+}
+
+
+/* ---- FCN_VO(tgCO_CP_Penetrate_PN) --------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgRESULT FCN_VO(tgCO_CP_Penetrate_PN)( VEC_OBJ_T(STg2_CO_Packet,PC) psPacket, VEC_OBJ_T(TgTUBE,CPC) psCP0, VEC_OBJ_T(TgPLANE,CPC) psPN0 )
+{
+    TgRESULT                            iResult;
+    TgRSIZE                             nuiExisting_Contact, uiIndex;
+
+    TgPARAM_CHECK(FCN_VO(tgGM_TB_Is_Valid)( psCP0 ) && FCN_VO(tgGM_PN_Is_Valid)( psPN0 ));
+
+    if (0 == psPacket->m_nuiMaxContact || psPacket->m_nuiContact >= psPacket->m_nuiMaxContact || nullptr == psPacket->m_psContact)
+    {
+        return (KTgE_FAIL);
+    };
+
+    nuiExisting_Contact = psPacket->m_nuiContact;
+
+    iResult = FCN_VO(tgCO_PN_Penetrate_CP)( psPacket, psPN0, psCP0 );
+    if (TgFAILED(iResult) && (KTgE_MAX_CONTACTS != iResult))
+    {
+        return (iResult);
+    };
+
+    /* Need to reverse the contacts that were made in the reversed collision call. */
+    for (uiIndex = nuiExisting_Contact; uiIndex < psPacket->m_nuiContact; ++uiIndex)
+    {
+        VEC_OBJ_T(STg2_CO_Contact,PC)       psContact = psPacket->m_psContact + uiIndex;
+
+        psContact->m_vS0 = FCN_V(tgMH_MAD)( psContact->m_vDepth, psContact->m_vN0, psContact->m_vS0 );
+        psContact->m_vN0 = FCN_V(tgMH_NEG)( psContact->m_vN0 );
+    }
+    return (iResult);
 }
 
 

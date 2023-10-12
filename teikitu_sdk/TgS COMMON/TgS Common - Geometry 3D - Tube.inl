@@ -159,7 +159,9 @@ TgINLINE TgVOID FCN_VO(tgGM_TB_Set_Extent)( VEC_OBJ_T(TgTUBE,PCU) psTB0, VEC_T(1
         VEC_T(1,C)                          vC0 = FCN_V(tgMH_Query_Axis_3,3)( &psTB0->m_mReference_Frame );
         VEC_T(1,C)                          vA1 = FCN_V(tgMH_Query_Axis_1,3)( &psTB0->m_mReference_Frame );
 
-        psTB0->m_vHAX = FCN_V(tgMH_MUL)( vA1, psTB0->m_vExtent );
+        psTB0->m_vExtent = vExtent;
+
+        psTB0->m_vHAX = FCN_V(tgMH_MUL)( vA1, vExtent );
 
         vX0 = FCN_V(tgMH_ADD)( vC0, psTB0->m_vHAX );
         vX1 = FCN_V(tgMH_SUB)( vC0, psTB0->m_vHAX );

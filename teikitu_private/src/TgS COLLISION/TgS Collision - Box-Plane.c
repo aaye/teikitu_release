@@ -31,11 +31,6 @@
 /* == Collision ================================================================================================================================================================== */
 
 /* ---- FCN_VO(tgCO_BX_Closest_PM_PN) -------------------------------------------------------------------------------------------------------------------------------------------- */
-/* Input:  tgBX0: Box primitive                                                                                                                                                    */
-/* Input:  psPN0: Plane primitive                                                                                                                                                  */
-/* Output: tyB0,tyB1,tyB2: Parametric parameters to generate the point of closest proximity on the box (one for each axis)                                                         */
-/* Output: vPN0: Point of closest proximity on the plane                                                                                                                           */
-/* Return: Minimal distance between the two primitives or negative type max if they intersect or are invalid.                                                                      */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 VEC_T(1) FCN_VO(tgCO_BX_Closest_PM_PN)( VEC_T(1,PC) pvBX0, VEC_T(1,PC) pvBX1, VEC_T(1,PC) pvBX2, VEC_T(1,PC) pvPN0, VEC_OBJ_T(TgBOX,CPC) psBX0, VEC_OBJ_T(TgPLANE,CPC) psPN0 )
 {
@@ -71,14 +66,6 @@ VEC_T(1) FCN_VO(tgCO_BX_Closest_PM_PN)( VEC_T(1,PC) pvBX0, VEC_T(1,PC) pvBX1, VE
 
 
 /* ---- FCN_VO(tgCO_PN_Penetrate_BX) --------------------------------------------------------------------------------------------------------------------------------------------- */
-/* Input:  tgPacket: The current series of contact points for this query-series, and contact generation parameters.                                                                */
-/* Input:  psPN0: Plane primitive                                                                                                                                                  */
-/* Input:  tgBX0: Box primitive - contact points are generated on this primitive                                                                                                   */
-/* Output: tgPacket: Points of penetration between the two primitives are added to it                                                                                              */
-/* Return: Result Code                                                                                                                                                             */
-/*                                                                                                                                                                                 */
-/*   This routine will create up to four contact points.  Collisions/Physics systems need the best(closest) approximation of the contact surface.  To represent the planananananan */
-/* of contact between one box face and the plane, its necessary to use all four points that define the box rectangle (face).                                                       */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 TgRESULT FCN_VO(tgCO_PN_Penetrate_BX)( VEC_OBJ_T(STg2_CO_Packet,PC) psPacket, VEC_OBJ_T(TgPLANE,CPC) psPN0, VEC_OBJ_T(TgBOX,CPC) psBX0 )
 {
@@ -94,9 +81,6 @@ TgRESULT FCN_VO(tgCO_PN_Penetrate_BX)( VEC_OBJ_T(STg2_CO_Packet,PC) psPacket, VE
     FCN_V(tgMH_Query_Reference_Frame,3)( vBX0_UX + 0, vBX0_UX + 1, vBX0_UX + 2, &vBX0_OG, &psBX0->m_mReference_Frame );
 
     {
-        //VEC_T(1)                            vTest, vX0, vX1, vX2, vX3, vDist, vX4, vP0;
-        //VEC_UN_T(1)                         uUX0_N, uUX1_N, uUX2_N;
-        //VEC_T(1)                            vK0;
         VEC_T(1)                            vMin_Extent0, vMin_Extent1, vMin_Extent2;
         VEC_T(1)                            vMin0, vMin1, vMin2, vDepth, vPnt, vTest;
         VEC_OBJ_T(STg2_CO_Contact,P)        psContact;
@@ -276,7 +260,7 @@ TgRESULT FCN_VO(tgCO_PN_Penetrate_BX)( VEC_OBJ_T(STg2_CO_Packet,PC) psPacket, VE
 
         psContact = psPacket->m_psContact + psPacket->m_nuiContact;
 
-        psContact->m_vS0 = FCN_V(tgMH_SUB)( FCN_V(tgMH_SUB)( vPnt, vMin0 ), vMin1 );
+        psContact->m_vS0 = FCN_V(tgMH_ADD)( FCN_V(tgMH_ADD)( vPnt, vMin0 ), vMin1 );
         psContact->m_vN0 = vPlnN;
         psContact->m_vT0 = FCN_V(tgMH_SET1)( TYPE_K(0) );
         psContact->m_vDepth = vTest;
@@ -285,6 +269,40 @@ TgRESULT FCN_VO(tgCO_PN_Penetrate_BX)( VEC_OBJ_T(STg2_CO_Packet,PC) psPacket, VE
 
         return (KTgS_OK);
     };
+}
+
+
+/* ---- FCN_VO(tgCO_BX_Penetrate_PN) --------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgRESULT FCN_VO(tgCO_BX_Penetrate_PN)( VEC_OBJ_T(STg2_CO_Packet,PC) psPacket, VEC_OBJ_T(TgBOX,CPC) psBX0, VEC_OBJ_T(TgPLANE,CPC) psPN0 )
+{
+    TgRESULT                            iResult;
+    TgRSIZE                             nuiExisting_Contact, uiIndex;
+
+    TgPARAM_CHECK(FCN_VO(tgGM_BX_Is_Valid)( psBX0 ) && FCN_VO(tgGM_PN_Is_Valid)( psPN0 ));
+
+    if (0 == psPacket->m_nuiMaxContact || psPacket->m_nuiContact >= psPacket->m_nuiMaxContact || nullptr == psPacket->m_psContact)
+    {
+        return (KTgE_FAIL);
+    };
+
+    nuiExisting_Contact = psPacket->m_nuiContact;
+
+    iResult = FCN_VO(tgCO_PN_Penetrate_BX)( psPacket, psPN0, psBX0 );
+    if (TgFAILED(iResult) && (KTgE_MAX_CONTACTS != iResult))
+    {
+        return (iResult);
+    };
+
+    /* Need to reverse the contacts that were made in the reversed collision call. */
+    for (uiIndex = nuiExisting_Contact; uiIndex < psPacket->m_nuiContact; ++uiIndex)
+    {
+        VEC_OBJ_T(STg2_CO_Contact,PC)       psContact = psPacket->m_psContact + uiIndex;
+
+        psContact->m_vS0 = FCN_V(tgMH_MAD)( psContact->m_vDepth, psContact->m_vN0, psContact->m_vS0 );
+        psContact->m_vN0 = FCN_V(tgMH_NEG)( psContact->m_vN0 );
+    }
+    return (iResult);
 }
 
 

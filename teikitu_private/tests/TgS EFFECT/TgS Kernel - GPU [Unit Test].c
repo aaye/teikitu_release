@@ -9,10 +9,10 @@
     visit http://creativecommons.org/licenses/by-nc-sa/4.0/ or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. */
 /* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
 
-#if defined(TgBUILD_OS__WIN)
-#include "TgS COMMON/TgS (WIN) Common - Base - Include.h"
-#include "TgS KERNEL/TgS (WIN) Kernel.h"
-/*# defined(TgBUILD_OS__WIN) */
+#if defined(TgBUILD_OS__WINDOWS)
+#include "TgS COMMON/TgS (WINDOWS) Common - Base - Include.h"
+#include "TgS KERNEL/TgS (WINDOWS) Kernel.h"
+/*# defined(TgBUILD_OS__WINDOWS) */
 #endif
 
 /* ---- GPU - Unit Test ---------------------------------------------------------------------------------------------------------------------------------------------------------- */
@@ -80,7 +80,7 @@ static Test_Set                             s_sSET__EFFECT;
 static Test_Case                            s_sCASE__Kernel_GPU_Render_Simple;
 static Test_Case                            s_sCASE__Kernel_GPU_Compute;
 
-#if defined(TgBUILD_OS__WIN)
+#if defined(TgBUILD_OS__WINDOWS)
 #define KTgMACRO_MAX_TOTAL_WINDOWS          9
 static TgRSIZE_C                            s_nuiLimit_Windows = 9; /* Minimum of 1 */
 static struct
@@ -102,7 +102,7 @@ tgUT_KN_GPU_Base_Window_Update(
     HWND hWnd, TgUINT_E32 uMessage, TgUINT_E64 wParam, TgSINT_E64 lParam );
 /*# defined(TgBUILD_FEATURE__GRAPHICS) */
 #endif
-/*# defined(TgBUILD_OS__WIN) */
+/*# defined(TgBUILD_OS__WINDOWS) */
 #endif
 
 #if defined(TgBUILD_FEATURE__GRAPHICS)
@@ -227,7 +227,7 @@ TEST_METHOD( UNIT_TEST__TEST__KN_GPU_Render_Enumeration )
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 TEST_METHOD( UNIT_TEST__TEST__KN_GPU_Render_Init_Windows )
 {
-#if defined(TgBUILD_FEATURE__GRAPHICS) && defined(TgBUILD_OS__WIN)
+#if defined(TgBUILD_FEATURE__GRAPHICS) && defined(TgBUILD_OS__WINDOWS)
 
     STg2_KN_OS_Window_Configuration     sWin_Config;
     TgOSCHAR                            szBuffer[256];
@@ -270,7 +270,7 @@ TEST_METHOD( UNIT_TEST__TEST__KN_GPU_Render_Init_Windows )
         }
     }
 
-/*# defined(TgBUILD_FEATURE__GRAPHICS) && defined(TgBUILD_OS__WIN) */
+/*# defined(TgBUILD_FEATURE__GRAPHICS) && defined(TgBUILD_OS__WINDOWS) */
 #endif
     TEST_END_METHOD( KTgS_OK );
 }
@@ -368,7 +368,7 @@ TEST_METHOD( UNIT_TEST__TEST__KN_GPU_Render_Init_Select )
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 TEST_METHOD( UNIT_TEST__TEST__KN_GPU_Render_Init_Select_Windows )
 {
-#if defined(TgBUILD_FEATURE__GRAPHICS) && defined(TgBUILD_OS__WIN)
+#if defined(TgBUILD_FEATURE__GRAPHICS) && defined(TgBUILD_OS__WINDOWS)
 
     STg2_KN_GPU_Adapter_CP              apAdapter[KTgKN_GPU_MAX_ADAPTER];
     TgRSIZE                             uiAdapter;
@@ -429,7 +429,7 @@ TEST_METHOD( UNIT_TEST__TEST__KN_GPU_Render_Init_Select_Windows )
 
     Test__Expect_EQ( KTgS_OK, tgKN_GPU_Select_Context__Validate( &s_sSelect ) );
 
-/*# defined(TgBUILD_FEATURE__GRAPHICS) && defined(TgBUILD_OS__WIN) */
+/*# defined(TgBUILD_FEATURE__GRAPHICS) && defined(TgBUILD_OS__WINDOWS) */
 #endif
     TEST_END_METHOD( KTgS_OK );
 }
@@ -653,7 +653,7 @@ TEST_METHOD( UNIT_TEST__TEST__KN_GPU_Render_Simple )
 
     tgKN_GPU_Contexts__Free();
 
-#elif defined(TgBUILD_OS__WIN) /*# defined(TgBUILD_FEATURE__GRAPHICS) */
+#elif defined(TgBUILD_OS__WINDOWS) /*# defined(TgBUILD_FEATURE__GRAPHICS) */
 
     TgBOOL                              bAll_Windows_Closed;
     TgRSIZE                             uiLoopWait;
@@ -723,7 +723,7 @@ TEST_METHOD( UNIT_TEST__TEST__KN_GPU_Compute_Free )
 }
 
 
-#if defined(TgBUILD_FEATURE__GRAPHICS) && defined(TgBUILD_OS__WIN)
+#if defined(TgBUILD_FEATURE__GRAPHICS) && defined(TgBUILD_OS__WINDOWS)
 /* ---- tgUT_KN_GPU_Base_Window_Update ------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 static TgSINT_E64 __stdcall tgUT_KN_GPU_Base_Window_Update( HWND hWnd, TgUINT_E32 uMessage, TgUINT_E64 wParam, TgSINT_E64 lParam )
@@ -751,7 +751,7 @@ static TgSINT_E64 __stdcall tgUT_KN_GPU_Base_Window_Update( HWND hWnd, TgUINT_E3
         return (-1);
     };
 }
-/*# defined(TgBUILD_FEATURE__GRAPHICS) && defined(TgBUILD_OS__WIN) */
+/*# defined(TgBUILD_FEATURE__GRAPHICS) && defined(TgBUILD_OS__WINDOWS) */
 #endif
 
 

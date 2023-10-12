@@ -22,8 +22,9 @@
 
 #include "TgS COMMON/TgS Common.inl"
 
+#define TgS_UNIT_TEST__COMMON
 #define TgS_UNIT_TEST__PARTITION
-#define TgS_RING_LEVEL 0
+#define TgS_RING_LEVEL -1
 
 TgEXTN TgVOID                               tgCM_Unit_Test_Register( TgVOID );
 

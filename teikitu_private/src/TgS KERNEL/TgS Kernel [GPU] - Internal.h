@@ -192,7 +192,15 @@ tgKN_GPU_DBG_Init_Mesh_Sphere(
     TgKN_GPU_DBG_PM_Generate_PC ARG0 );
 
 TgEXTN TgVOID
-tgKN_GPU_DBG_Init_Mesh_Capsule(
+tgKN_GPU_DBG_Init_Mesh_Capsule_Cap_0(
+    TgKN_GPU_DBG_PM_Generate_PC ARG0 );
+
+TgEXTN TgVOID
+tgKN_GPU_DBG_Init_Mesh_Capsule_Cap_1(
+    TgKN_GPU_DBG_PM_Generate_PC ARG0 );
+
+TgEXTN TgVOID
+tgKN_GPU_DBG_Init_Mesh_Capsule_Tube(
     TgKN_GPU_DBG_PM_Generate_PC ARG0 );
 
 TgEXTN TgVOID

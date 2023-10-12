@@ -27,7 +27,7 @@
     @param [in] ARG1 Matrix */
 TgINLINE TgVOID
 FCN_M(tgMH_Init_ROT_S)(
-    MAT_S_T(PCU) NONULL OUT0, MAT_S_T(CPCU) NONULL ARG1 );
+    MAT_S_T(PCU) TgANALYSIS_NO_NULL OUT0, MAT_S_T(CPCU) TgANALYSIS_NO_NULL ARG1 );
 
 /** @addtogroup TGS_COMMON_MATH_VECTOR_LOAD
     @brief Initialize the translocation of the matrix (ARG0) to the location ARG1
@@ -35,7 +35,7 @@ FCN_M(tgMH_Init_ROT_S)(
     @param [in] ARG1 Vector */
 TgINLINE TgVOID
 FCN_M(tgMH_Init_T_S)(
-    MAT_S_T(PCU) NONULL OUT0, VEC_S_T(1,C) ARG1 );
+    MAT_S_T(PCU) TgANALYSIS_NO_NULL OUT0, VEC_S_T(1,C) ARG1 );
 
 /** @addtogroup TGS_COMMON_MATH_VECTOR_LOAD
     @brief Initialize the translocation of the matrix (ARG0) to the location ARG1-ARG3
@@ -45,7 +45,7 @@ FCN_M(tgMH_Init_T_S)(
     @param [in] ARG3 Z Location */
 TgINLINE TgVOID
 FCN_M(tgMH_Init_T_ELEM_S)(
-    MAT_S_T(PCU) NONULL OUT0, VAR_T(C) ARG1, VAR_T(C) ARG2, VAR_T(C) ARG3 );
+    MAT_S_T(PCU) TgANALYSIS_NO_NULL OUT0, VAR_T(C) ARG1, VAR_T(C) ARG2, VAR_T(C) ARG3 );
 
 /** @addtogroup TGS_COMMON_MATH_VECTOR_LOAD
     @brief Initialize the rotation of the matrix (ARG0) to an Euler rotation from the first three elements of the vector ARG1
@@ -53,7 +53,7 @@ FCN_M(tgMH_Init_T_ELEM_S)(
     @param [in] ARG1 Vector holding three Euler Angles */
 TgINLINE TgVOID
 FCN_M(tgMH_Init_Euler_S)(
-    MAT_S_T(PCU) NONULL OUT0, VEC_S_T(1,C) ARG1 );
+    MAT_S_T(PCU) TgANALYSIS_NO_NULL OUT0, VEC_S_T(1,C) ARG1 );
 
 /** @addtogroup TGS_COMMON_MATH_VECTOR_LOAD
     @brief Initialize the rotation of the matrix (ARG0) to an Euler rotation of ARG1-ARG3
@@ -63,7 +63,7 @@ FCN_M(tgMH_Init_Euler_S)(
     @param [in] ARG3 Euler Z angle */
 TgINLINE TgVOID
 FCN_M(tgMH_Init_Euler_ELEM_S)(
-    MAT_S_T(PCU) NONULL OUT0, VAR_T(C) ARG1, VAR_T(C) ARG2, VAR_T(C) ARG3 );
+    MAT_S_T(PCU) TgANALYSIS_NO_NULL OUT0, VAR_T(C) ARG1, VAR_T(C) ARG2, VAR_T(C) ARG3 );
 
 /** @addtogroup TGS_COMMON_MATH_VECTOR_LOAD
     @brief Initialize a matrix with a matching rotation of ARG1 around the X axis
@@ -71,7 +71,7 @@ FCN_M(tgMH_Init_Euler_ELEM_S)(
     @param [in] ARG1 Angle */
 TgINLINE TgVOID
 FCN_M(tgMH_Init_Euler_X_S)(
-    MAT_S_T(PCU) NONULL OUT0, VAR_T(C) ARG1 );
+    MAT_S_T(PCU) TgANALYSIS_NO_NULL OUT0, VAR_T(C) ARG1 );
 
 /** @addtogroup TGS_COMMON_MATH_VECTOR_LOAD
     @brief Initialize a matrix with a matching rotation of ARG1 around the Y axis
@@ -79,7 +79,7 @@ FCN_M(tgMH_Init_Euler_X_S)(
     @param [in] ARG1 Angle */
 TgINLINE TgVOID
 FCN_M(tgMH_Init_Euler_Y_S)(
-    MAT_S_T(PCU) NONULL OUT0, VAR_T(C) ARG1 );
+    MAT_S_T(PCU) TgANALYSIS_NO_NULL OUT0, VAR_T(C) ARG1 );
 
 /** @addtogroup TGS_COMMON_MATH_VECTOR_LOAD
     @brief Initialize a matrix with a matching rotation of ARG1 around the Z axis
@@ -87,7 +87,7 @@ FCN_M(tgMH_Init_Euler_Y_S)(
     @param [in] ARG1 Angle */
 TgINLINE TgVOID
 FCN_M(tgMH_Init_Euler_Z_S)(
-    MAT_S_T(PCU) NONULL OUT0, VAR_T(C) ARG1 );
+    MAT_S_T(PCU) TgANALYSIS_NO_NULL OUT0, VAR_T(C) ARG1 );
 
 /** @addtogroup TGS_COMMON_MATH_VECTOR_LOAD
     @brief Initialize a matrix with a matching rotation to the quaternion at ARG1
@@ -95,7 +95,7 @@ FCN_M(tgMH_Init_Euler_Z_S)(
     @param [in] ARG1 Quaternion */
 TgINLINE TgVOID
 FCN_M(tgMH_Init_Quat_S)(
-    MAT_S_T(PCU) NONULL OUT0, VEC_S_T(1,C) ARG1 );
+    MAT_S_T(PCU) TgANALYSIS_NO_NULL OUT0, VEC_S_T(1,C) ARG1 );
 
 /** @addtogroup TGS_COMMON_MATH_VECTOR_LOAD
     @brief Initialize an eigen matrix forming a basis based on the vector at ARG1
@@ -104,7 +104,7 @@ FCN_M(tgMH_Init_Quat_S)(
     @param [in] ARG2 Vector - Translation */
 TgINLINE TgVOID
 FCN_M(tgMH_Init_Reference_Frame_From_Vector_And_Position_S)(
-    MAT_S_T(PCU) NONULL OUT0, VEC_S_T(1,C) ARG1, VEC_S_T(1,C) ARG2 );
+    MAT_S_T(PCU) TgANALYSIS_NO_NULL OUT0, VEC_S_T(1,C) ARG1, VEC_S_T(1,C) ARG2 );
 
 /** @addtogroup TGS_COMMON_MATH_VECTOR_LOAD
     @brief Initialize an eigen matrix forming a basis based on the vector at ARG1
@@ -115,7 +115,7 @@ FCN_M(tgMH_Init_Reference_Frame_From_Vector_And_Position_S)(
     @param [in] ARG4 Vector - Translation */
 TgINLINE TgVOID
 FCN_M(tgMH_Init_Reference_Frame_From_Basis_Axes_And_Position_S)(
-    MAT_S_T(PCU) NONULL OUT0, VEC_S_T(1,C) ARG1, VEC_S_T(1,C) ARG2, VEC_S_T(1,C) ARG3, VEC_S_T(1,C) ARG4 );
+    MAT_S_T(PCU) TgANALYSIS_NO_NULL OUT0, VEC_S_T(1,C) ARG1, VEC_S_T(1,C) ARG2, VEC_S_T(1,C) ARG3, VEC_S_T(1,C) ARG4 );
 
 /** @addtogroup TGS_COMMON_MATH_VECTOR_LOAD
     @brief Initialize an eigen matrix forming a basis based on the vector at ARG1
@@ -124,7 +124,7 @@ FCN_M(tgMH_Init_Reference_Frame_From_Basis_Axes_And_Position_S)(
     @param [in] ARG2 Translation. */
 TgINLINE TgVOID
 FCN_M(tgMH_Init_Reference_Frame_From_Quaternion_Position_S)(
-    MAT_S_T(PCU) NONULL OUT0, VEC_S_T(1,C) ARG1, VEC_S_T(1,C) ARG2 );
+    MAT_S_T(PCU) TgANALYSIS_NO_NULL OUT0, VEC_S_T(1,C) ARG1, VEC_S_T(1,C) ARG2 );
 
 /** @addtogroup TGS_COMMON_MATH_VECTOR_LOAD
     @brief Initialize an eigen matrix forming a basis based on the vector at ARG1
@@ -134,7 +134,7 @@ FCN_M(tgMH_Init_Reference_Frame_From_Quaternion_Position_S)(
     @param [in] ARG3 Translation. */
 TgINLINE TgVOID
 FCN_M(tgMH_Init_Reference_Frame_From_Scale_Quaternion_Position_S)(
-    MAT_S_T(PCU) NONULL OUT0, VEC_S_T(1,C) ARG1, VEC_S_T(1,C) ARG2, VEC_S_T(1,C) ARG3 );
+    MAT_S_T(PCU) TgANALYSIS_NO_NULL OUT0, VEC_S_T(1,C) ARG1, VEC_S_T(1,C) ARG2, VEC_S_T(1,C) ARG3 );
 
 
 
@@ -145,7 +145,7 @@ FCN_M(tgMH_Init_Reference_Frame_From_Scale_Quaternion_Position_S)(
     @return true if the reference frame is valid and false otherwise */
 TgINLINE TgBOOL
 FCN_M(tgMH_Is_Valid_Reference_Frame_S)(
-    MAT_S_T(CPCU) NONULL ARG );
+    MAT_S_T(CPCU) TgANALYSIS_NO_NULL ARG );
 
 /** @addtogroup TGS_COMMON_MATH_VECTOR_CALC
     @brief Store the concatenation (multiplication) of the two arguments (ARG1 x ARG2)
@@ -154,7 +154,7 @@ FCN_M(tgMH_Is_Valid_Reference_Frame_S)(
     @param [in] ARG2 Matrix */
 TgINLINE TgVOID
 FCN_M(tgMH_CAT_S)(
-    MAT_S_T(PCU) NONULL OUT0, MAT_S_T(CPCU) NONULL ARG1, MAT_S_T(CPCU) NONULL ARG2 );
+    MAT_S_T(PCU) TgANALYSIS_NO_NULL OUT0, MAT_S_T(CPCU) TgANALYSIS_NO_NULL ARG1, MAT_S_T(CPCU) TgANALYSIS_NO_NULL ARG2 );
 
 /** @addtogroup TGS_COMMON_MATH_VECTOR_CALC
     @brief Store the inverse of the matrix at ARG2 in ARG0 and the determinant in ARG1
@@ -163,7 +163,7 @@ FCN_M(tgMH_CAT_S)(
     @param [in] ARG2 Matrix */
 TgINLINE TgVOID
 FCN_M(tgMH_INV_DET_S)(
-    VEC_S_T(4,PCU) NONULL OUT0, VAR_T(C) ARG1, MAT_S_T(CPCU) NONULL ARG2 );
+    VEC_S_T(4,PCU) TgANALYSIS_NO_NULL OUT0, VAR_T(C) ARG1, MAT_S_T(CPCU) TgANALYSIS_NO_NULL ARG2 );
 
 /** @addtogroup TGS_COMMON_MATH_VECTOR_CALC
     @brief Store the inverse of the matrix at ARG1 in ARG0
@@ -171,7 +171,7 @@ FCN_M(tgMH_INV_DET_S)(
     @param [in] ARG1 Matrix */
 TgINLINE TgVOID
 FCN_M(tgMH_INV_S)(
-    VEC_S_T(4,PCU) NONULL OUT0, MAT_S_T(CPCU) NONULL ARG1 );
+    VEC_S_T(4,PCU) TgANALYSIS_NO_NULL OUT0, MAT_S_T(CPCU) TgANALYSIS_NO_NULL ARG1 );
 
 /** @addtogroup TGS_COMMON_MATH_VECTOR_CALC
     @brief Return the determinant of the matrix at OUT0
@@ -179,7 +179,7 @@ FCN_M(tgMH_INV_S)(
     @return The determinant of the matrix at OUT0 */
 TgINLINE VAR_T()
 FCN_M(tgMH_DET_S)(
-    MAT_S_T(CPCU) NONULL ARG );
+    MAT_S_T(CPCU) TgANALYSIS_NO_NULL ARG );
 
 /** @addtogroup TGS_COMMON_MATH_VECTOR_CALC
     @brief Transform the vector at ARG1 by the matrix at ARG0
@@ -188,7 +188,7 @@ FCN_M(tgMH_DET_S)(
     @return The result of the transform of the vector at ARG1 by the matrix at ARG0 */
 TgINLINE VEC_S_T(1)
 FCN_M(tgMH_TX_S)(
-    VEC_S_T(1,C) ARG0, MAT_S_T(CPCU) NONULL ARG1 );
+    VEC_S_T(1,C) ARG0, MAT_S_T(CPCU) TgANALYSIS_NO_NULL ARG1 );
 
 /** @addtogroup TGS_COMMON_MATH_VECTOR_CALC
     @brief Transform the vector at ARG1 (and treated as a homogeneous point) by the matrix at ARG0
@@ -197,7 +197,7 @@ FCN_M(tgMH_TX_S)(
     @return The result of the transform of the vector at ARG1 (and treated as a homogeneous point) by the matrix at ARG0 */
 TgINLINE VEC_S_T(1)
 FCN_M(tgMH_TX_P_S)(
-    VEC_S_T(1,C) ARG0, MAT_S_T(CPCU) NONULL ARG1 );
+    VEC_S_T(1,C) ARG0, MAT_S_T(CPCU) TgANALYSIS_NO_NULL ARG1 );
 
 /** @addtogroup TGS_COMMON_MATH_VECTOR_CALC
     @brief Transform the vector at ARG1 (and treated as a homogeneous vector) by the matrix at ARG0
@@ -206,7 +206,7 @@ FCN_M(tgMH_TX_P_S)(
     @return The result of the transform of the vector at ARG1 (and treated as a homogeneous vector) by the matrix at ARG0 */
 TgINLINE VEC_S_T(1)
 FCN_M(tgMH_TX_V_S)(
-    VEC_S_T(1,C) ARG0, MAT_S_T(CPCU) NONULL ARG1 );
+    VEC_S_T(1,C) ARG0, MAT_S_T(CPCU) TgANALYSIS_NO_NULL ARG1 );
 
 /** @addtogroup TGS_COMMON_MATH_VECTOR_CALC
     @brief Return the first row from the matrix at ARG
@@ -214,7 +214,7 @@ FCN_M(tgMH_TX_V_S)(
     @return The first row from the matrix at ARG */
 TgINLINE VEC_S_T(1)
 FCN_M(tgMH_Query_Row_0_S)(
-    MAT_S_T(CPCU) NONULL ARG );
+    MAT_S_T(CPCU) TgANALYSIS_NO_NULL ARG );
 
 /** @addtogroup TGS_COMMON_MATH_VECTOR_CALC
     @brief Return the second row from the matrix at ARG
@@ -222,7 +222,7 @@ FCN_M(tgMH_Query_Row_0_S)(
     @return The second row from the matrix at ARG */
 TgINLINE VEC_S_T(1)
 FCN_M(tgMH_Query_Row_1_S)(
-    MAT_S_T(CPCU) NONULL ARG );
+    MAT_S_T(CPCU) TgANALYSIS_NO_NULL ARG );
 
 /** @addtogroup TGS_COMMON_MATH_VECTOR_CALC
     @brief Return the third row from the matrix at ARG
@@ -230,7 +230,7 @@ FCN_M(tgMH_Query_Row_1_S)(
     @return The third row from the matrix at ARG */
 TgINLINE VEC_S_T(1)
 FCN_M(tgMH_Query_Row_2_S)(
-    MAT_S_T(CPCU) NONULL ARG );
+    MAT_S_T(CPCU) TgANALYSIS_NO_NULL ARG );
 
 /** @addtogroup TGS_COMMON_MATH_VECTOR_CALC
     @brief Return the fourth row from the matrix at ARG
@@ -238,7 +238,7 @@ FCN_M(tgMH_Query_Row_2_S)(
     @return The fourth row from the matrix at ARG */
 TgINLINE VEC_S_T(1)
 FCN_M(tgMH_Query_Row_3_S)(
-    MAT_S_T(CPCU) NONULL ARG );
+    MAT_S_T(CPCU) TgANALYSIS_NO_NULL ARG );
 
 /** @addtogroup TGS_COMMON_MATH_VECTOR_CALC
     @brief Return the first column from the matrix at ARG
@@ -246,7 +246,7 @@ FCN_M(tgMH_Query_Row_3_S)(
     @return The first column from the matrix at ARG */
 TgINLINE VEC_S_T(1)
 FCN_M(tgMH_Query_Col_0_S)(
-    MAT_S_T(CPCU) NONULL ARG );
+    MAT_S_T(CPCU) TgANALYSIS_NO_NULL ARG );
 
 /** @addtogroup TGS_COMMON_MATH_VECTOR_CALC
     @brief Return the second column from the matrix at ARG
@@ -254,7 +254,7 @@ FCN_M(tgMH_Query_Col_0_S)(
     @return The second column from the matrix at ARG */
 TgINLINE VEC_S_T(1)
 FCN_M(tgMH_Query_Col_1_S)(
-    MAT_S_T(CPCU) NONULL ARG );
+    MAT_S_T(CPCU) TgANALYSIS_NO_NULL ARG );
 
 /** @addtogroup TGS_COMMON_MATH_VECTOR_CALC
     @brief Return the third column from the matrix at ARG
@@ -262,7 +262,7 @@ FCN_M(tgMH_Query_Col_1_S)(
     @return The third column from the matrix at ARG */
 TgINLINE VEC_S_T(1)
 FCN_M(tgMH_Query_Col_2_S)(
-    MAT_S_T(CPCU) NONULL ARG );
+    MAT_S_T(CPCU) TgANALYSIS_NO_NULL ARG );
 
 /** @addtogroup TGS_COMMON_MATH_VECTOR_CALC
     @brief Return the fourth column from the matrix at ARG
@@ -270,7 +270,7 @@ FCN_M(tgMH_Query_Col_2_S)(
     @return The fourth column from the matrix at ARG */
 TgINLINE VEC_S_T(1)
 FCN_M(tgMH_Query_Col_3_S)(
-    MAT_S_T(CPCU) NONULL ARG );
+    MAT_S_T(CPCU) TgANALYSIS_NO_NULL ARG );
 
 /** @addtogroup TGS_COMMON_MATH_VECTOR_CALC
     @brief Return the first row from the matrix at ARG, assuming it is used for homogeneous transformations
@@ -278,7 +278,7 @@ FCN_M(tgMH_Query_Col_3_S)(
     @return The first row from the matrix at ARG */
 TgINLINE VEC_S_T(1)
 FCN_M(tgMH_Query_Axis_0_S)(
-    MAT_S_T(CPCU) NONULL ARG );
+    MAT_S_T(CPCU) TgANALYSIS_NO_NULL ARG );
 
 /** @addtogroup TGS_COMMON_MATH_VECTOR_CALC
     @brief Return the second row from the matrix at ARG, assuming it is used for homogeneous transformations
@@ -286,7 +286,7 @@ FCN_M(tgMH_Query_Axis_0_S)(
     @return The second row from the matrix at ARG */
 TgINLINE VEC_S_T(1)
 FCN_M(tgMH_Query_Axis_1_S)(
-    MAT_S_T(CPCU) NONULL ARG );
+    MAT_S_T(CPCU) TgANALYSIS_NO_NULL ARG );
 
 /** @addtogroup TGS_COMMON_MATH_VECTOR_CALC
     @brief Return the third row from the matrix at ARG, assuming it is used for homogeneous transformations
@@ -294,7 +294,7 @@ FCN_M(tgMH_Query_Axis_1_S)(
     @return The third row from the matrix at ARG */
 TgINLINE VEC_S_T(1)
 FCN_M(tgMH_Query_Axis_2_S)(
-    MAT_S_T(CPCU) NONULL ARG );
+    MAT_S_T(CPCU) TgANALYSIS_NO_NULL ARG );
 
 /** @addtogroup TGS_COMMON_MATH_VECTOR_CALC
     @brief Return the fourth row from the matrix at ARG, assuming it is used for homogeneous transformations
@@ -302,7 +302,7 @@ FCN_M(tgMH_Query_Axis_2_S)(
     @return The fourth row from the matrix at ARG */
 TgINLINE VEC_S_T(1)
 FCN_M(tgMH_Query_Axis_3_S)(
-    MAT_S_T(CPCU) NONULL ARG );
+    MAT_S_T(CPCU) TgANALYSIS_NO_NULL ARG );
 
 /** @addtogroup TGS_COMMON_MATH_VECTOR_CALC
     @brief Initialize an eigen matrix forming a basis based on the vector at ARG1
@@ -311,9 +311,9 @@ FCN_M(tgMH_Query_Axis_3_S)(
     @param [out] OUT2 Vector - Ortho-normal basis vector 2 - Coplanar
     @param [out] OUT3 Vector - Translation
     @param [in] ARG4 Matrix */
-TgINLINE TgVOID
+TgINLINE TgRESULT
 FCN_M(tgMH_Query_Reference_Frame_S)(
-    VEC_S_T(1,PCU) NONULL ARG0, VEC_S_T(1,PCU) NONULL ARG1, VEC_S_T(1,PCU) NONULL ARG2, VEC_S_T(1,PCU) NONULL ARG3, MAT_S_T(CPCU) NONULL ARG4 );
+    VEC_S_T(1,PCU) TgANALYSIS_NO_NULL ARG0, VEC_S_T(1,PCU) TgANALYSIS_NO_NULL ARG1, VEC_S_T(1,PCU) TgANALYSIS_NO_NULL ARG2, VEC_S_T(1,PCU) TgANALYSIS_NO_NULL ARG3, MAT_S_T(CPCU) TgANALYSIS_NO_NULL ARG4 );
 
 /** @addtogroup TGS_COMMON_MATH_VECTOR_CALC
     @brief Store the three Euler angles that match the rotation of the matrix at ARG3
@@ -323,7 +323,7 @@ FCN_M(tgMH_Query_Reference_Frame_S)(
     @param [in] ARG3 Matrix */
 TgINLINE TgVOID
 FCN_M(tgMH_Matrix_To_Euler_ELEM_S)(
-    VAR_T(P) NONULL OUT0, VAR_T(P) NONULL OUT1, VAR_T(P) NONULL OUT2, MAT_S_T(CPC) ARG3 );
+    VAR_T(P) TgANALYSIS_NO_NULL OUT0, VAR_T(P) TgANALYSIS_NO_NULL OUT1, VAR_T(P) TgANALYSIS_NO_NULL OUT2, MAT_S_T(CPC) ARG3 );
 
 /** @addtogroup TGS_COMMON_MATH_VECTOR_CALC
     @brief Store the three Euler angles that match the rotation of the matrix at ARG3
@@ -331,7 +331,7 @@ FCN_M(tgMH_Matrix_To_Euler_ELEM_S)(
     @param [in] ARG1 Matrix */
 TgINLINE TgVOID
 FCN_M(tgMH_Matrix_To_Euler_S)(
-    VEC_S_T(1,PCU) NONULL OUT0, MAT_S_T(CPC) ARG1 );
+    VEC_S_T(1,PCU) TgANALYSIS_NO_NULL OUT0, MAT_S_T(CPC) ARG1 );
 
 /** @addtogroup TGS_COMMON_MATH_VECTOR_CALC
     @brief Store the quaternion that matches the rotation of the matrix at ARG3
@@ -339,7 +339,7 @@ FCN_M(tgMH_Matrix_To_Euler_S)(
     @param [in] ARG1 Matrix */
 TgINLINE TgVOID
 FCN_M(tgMH_Matrix_To_Quat_S)(
-    VEC_S_T(1,PCU) NONULL OUT0, MAT_S_T(CPC) ARG1 );
+    VEC_S_T(1,PCU) TgANALYSIS_NO_NULL OUT0, MAT_S_T(CPC) ARG1 );
 
 
 
@@ -353,7 +353,7 @@ FCN_M(tgMH_Matrix_To_Quat_S)(
     @param [out] OUT0 Destination matrix */
 TgINLINE TgVOID
 FCN_M(tgMH_CLI_S)(
-    MAT_S_T(PCU) NONULL OUT0 );
+    MAT_S_T(PCU) TgANALYSIS_NO_NULL OUT0 );
 
 
 
@@ -364,7 +364,7 @@ FCN_M(tgMH_CLI_S)(
     @param [in] ARG1  */
 TgINLINE TgVOID
 FCN_M(tgMH_Set_Rot_S)(
-    MAT_S_T(PCU) NONULL OUT0, MAT_S_T(CPCU) NONULL ARG1 );
+    MAT_S_T(PCU) TgANALYSIS_NO_NULL OUT0, MAT_S_T(CPCU) TgANALYSIS_NO_NULL ARG1 );
 
 /** @addtogroup TGS_COMMON_MATH_VECTOR_LOAD
     @brief Set the translocation of the matrix (ARG0) to the location ARG1
@@ -372,7 +372,7 @@ FCN_M(tgMH_Set_Rot_S)(
     @param [in] ARG1 Vector */
 TgINLINE TgVOID
 FCN_M(tgMH_Set_T_S)(
-    MAT_S_T(PCU) NONULL OUT0, VEC_S_T(1,C) ARG1 );
+    MAT_S_T(PCU) TgANALYSIS_NO_NULL OUT0, VEC_S_T(1,C) ARG1 );
 
 /** @addtogroup TGS_COMMON_MATH_VECTOR_LOAD
     @brief Set the translocation of the matrix (ARG0) to the location ARG1-ARG3
@@ -382,7 +382,7 @@ FCN_M(tgMH_Set_T_S)(
     @param [in] ARG3 Z Location */
 TgINLINE TgVOID
 FCN_M(tgMH_Set_T_ELEM_S)(
-    MAT_S_T(PCU) NONULL OUT0, VAR_T(C) ARG1, VAR_T(C) ARG2, VAR_T(C) ARG3 );
+    MAT_S_T(PCU) TgANALYSIS_NO_NULL OUT0, VAR_T(C) ARG1, VAR_T(C) ARG2, VAR_T(C) ARG3 );
 
 /** @addtogroup TGS_COMMON_MATH_VECTOR_LOAD
     @brief Set the rotation of the matrix (ARG0) to an Euler rotation from the first three elements of the vector ARG1
@@ -390,7 +390,7 @@ FCN_M(tgMH_Set_T_ELEM_S)(
     @param [in] ARG1 Vector holding three Euler Angles */
 TgINLINE TgVOID
 FCN_M(tgMH_Set_Euler_S)(
-    MAT_S_T(PCU) NONULL OUT0, VEC_S_T(1,C) ARG1 );
+    MAT_S_T(PCU) TgANALYSIS_NO_NULL OUT0, VEC_S_T(1,C) ARG1 );
 
 /** @addtogroup TGS_COMMON_MATH_VECTOR_LOAD
     @brief Set the rotation of the matrix (ARG0) to an Euler rotation of ARG1-ARG3
@@ -400,7 +400,7 @@ FCN_M(tgMH_Set_Euler_S)(
     @param [in] ARG3 Euler Z angle */
 TgINLINE TgVOID
 FCN_M(tgMH_Set_Euler_ELEM_S)(
-    MAT_S_T(PCU) NONULL OUT0, VAR_T(C) ARG1, VAR_T(C) ARG2, VAR_T(C) ARG3 );
+    MAT_S_T(PCU) TgANALYSIS_NO_NULL OUT0, VAR_T(C) ARG1, VAR_T(C) ARG2, VAR_T(C) ARG3 );
 
 /** @addtogroup TGS_COMMON_MATH_VECTOR_LOAD
     @brief Set the rotation of the matrix (ARG0) to a matching rotation of ARG1 around the X axis
@@ -408,7 +408,7 @@ FCN_M(tgMH_Set_Euler_ELEM_S)(
     @param [in] ARG1 Euler X angle */
 TgINLINE TgVOID
 FCN_M(tgMH_Set_Euler_X_S)(
-    MAT_S_T(PCU) NONULL OUT0, VAR_T(C) ARG1 );
+    MAT_S_T(PCU) TgANALYSIS_NO_NULL OUT0, VAR_T(C) ARG1 );
 
 /** @addtogroup TGS_COMMON_MATH_VECTOR_LOAD
     @brief Set the rotation of the matrix (ARG0) to a matching rotation of ARG1 around the Y axis
@@ -416,7 +416,7 @@ FCN_M(tgMH_Set_Euler_X_S)(
     @param [in] ARG1 Euler Y angle */
 TgINLINE TgVOID
 FCN_M(tgMH_Set_Euler_Y_S)(
-    MAT_S_T(PCU) NONULL OUT0, VAR_T(C) ARG1 );
+    MAT_S_T(PCU) TgANALYSIS_NO_NULL OUT0, VAR_T(C) ARG1 );
 
 /** @addtogroup TGS_COMMON_MATH_VECTOR_LOAD
     @brief Set the rotation of the matrix (ARG0) to a matching rotation of ARG1 around the Z axis
@@ -424,7 +424,7 @@ FCN_M(tgMH_Set_Euler_Y_S)(
     @param [in] ARG1 Euler Z angle */
 TgINLINE TgVOID
 FCN_M(tgMH_Set_Euler_Z_S)(
-    MAT_S_T(PCU) NONULL OUT0, VAR_T(C) ARG1 );
+    MAT_S_T(PCU) TgANALYSIS_NO_NULL OUT0, VAR_T(C) ARG1 );
 
 /** @addtogroup TGS_COMMON_MATH_VECTOR_LOAD
     @brief Set the rotation of the matrix (ARG0) to a matching rotation of the quaternion ARG1
@@ -432,7 +432,7 @@ FCN_M(tgMH_Set_Euler_Z_S)(
     @param [in] ARG1 Quaternion */
 TgINLINE TgVOID
 FCN_M(tgMH_Set_Quat_S)(
-    MAT_S_T(PCU) NONULL OUT0, VEC_S_T(1,C) ARG1 );
+    MAT_S_T(PCU) TgANALYSIS_NO_NULL OUT0, VEC_S_T(1,C) ARG1 );
 
 
 
@@ -444,7 +444,7 @@ FCN_M(tgMH_Set_Quat_S)(
     @param [in] ARG2 Matrix */
 TgINLINE TgVOID
 FCN_M(tgMH_ADD_S)(
-    MAT_S_T(PCU) NONULL OUT0, MAT_S_T(CPCU) NONULL ARG1, MAT_S_T(CPCU) NONULL ARG2 );
+    MAT_S_T(PCU) TgANALYSIS_NO_NULL OUT0, MAT_S_T(CPCU) TgANALYSIS_NO_NULL ARG1, MAT_S_T(CPCU) TgANALYSIS_NO_NULL ARG2 );
 
 /** @addtogroup TGS_COMMON_MATH_VECTOR_ART
     @brief Store a matrix that is assigned the per-element operation ARG1 * ARG2
@@ -453,7 +453,7 @@ FCN_M(tgMH_ADD_S)(
     @param [in] ARG2 Matrix */
 TgINLINE TgVOID
 FCN_M(tgMH_MUL_S)(
-    MAT_S_T(PCU) NONULL OUT0, MAT_S_T(CPCU) NONULL ARG1, MAT_S_T(CPCU) NONULL ARG2 );
+    MAT_S_T(PCU) TgANALYSIS_NO_NULL OUT0, MAT_S_T(CPCU) TgANALYSIS_NO_NULL ARG1, MAT_S_T(CPCU) TgANALYSIS_NO_NULL ARG2 );
 
 /** @addtogroup TGS_COMMON_MATH_VECTOR_ART
     @brief Store a matrix that is assigned the per-element operation ARG1 / ARG2
@@ -462,7 +462,7 @@ FCN_M(tgMH_MUL_S)(
     @param [in] ARG2 Matrix */
 TgINLINE TgVOID
 FCN_M(tgMH_DIV_S)(
-    MAT_S_T(PCU) NONULL OUT0, MAT_S_T(CPCU) NONULL ARG1, MAT_S_T(CPCU) NONULL ARG2 );
+    MAT_S_T(PCU) TgANALYSIS_NO_NULL OUT0, MAT_S_T(CPCU) TgANALYSIS_NO_NULL ARG1, MAT_S_T(CPCU) TgANALYSIS_NO_NULL ARG2 );
 
 /** @addtogroup TGS_COMMON_MATH_VECTOR_ART
     @brief Store a matrix that is assigned the per-element operation ARG1 - ARG2
@@ -471,7 +471,7 @@ FCN_M(tgMH_DIV_S)(
     @param [in] ARG2 Matrix */
 TgINLINE TgVOID
 FCN_M(tgMH_SUB_S)(
-    MAT_S_T(PCU) NONULL OUT0, MAT_S_T(CPCU) NONULL ARG1, MAT_S_T(CPCU) NONULL ARG2 );
+    MAT_S_T(PCU) TgANALYSIS_NO_NULL OUT0, MAT_S_T(CPCU) TgANALYSIS_NO_NULL ARG1, MAT_S_T(CPCU) TgANALYSIS_NO_NULL ARG2 );
 
 /** @addtogroup TGS_COMMON_MATH_VECTOR_ART
     @brief Store a matrix that is assigned the per-element operation -ARG1
@@ -479,7 +479,7 @@ FCN_M(tgMH_SUB_S)(
     @param [in] ARG1 Matrix */
 TgINLINE TgVOID
 FCN_M(tgMH_NEG_S)(
-    MAT_S_T(PCU) NONULL OUT0, MAT_S_T(CPCU) NONULL ARG1 );
+    MAT_S_T(PCU) TgANALYSIS_NO_NULL OUT0, MAT_S_T(CPCU) TgANALYSIS_NO_NULL ARG1 );
 
 
 
@@ -489,7 +489,7 @@ FCN_M(tgMH_NEG_S)(
     @param [in] ARG Matrix */
 TgINLINE TgBOOL
 FCN_M(tgMH_NAN_S)(
-    MAT_S_T(CPCU) NONULL ARG );
+    MAT_S_T(CPCU) TgANALYSIS_NO_NULL ARG );
 
 
 /* =============================================================================================================================================================================== */

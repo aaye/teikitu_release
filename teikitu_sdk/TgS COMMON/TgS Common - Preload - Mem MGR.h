@@ -93,27 +93,27 @@ TgTYPE_STRUCT(STg2_MM_MGR,)
     TgRESULT                                    (*m_pfnFree_MGR)( TgVOID );
 
 #if TgS_STAT__COMMON
-    TgVOID                                      (*m_pfnStats)( TgRSIZE (*ARG0)( STg2_Output_PC NONULL ARG0, TgCHAR_U8_CPC NONULL ARG1, ... ), STg2_Output_PC ARG1 );
+    TgVOID                                      (*m_pfnStats)( TgRSIZE (*ARG0)( STg2_Output_PC TgANALYSIS_NO_NULL ARG0, TgCHAR_U8_CPC TgANALYSIS_NO_NULL ARG1, ... ), STg2_Output_PC ARG1 );
 #endif
 
                                                 /** @brief Return the size of the memory region starting at ARG2. @return Result Code.
                                                     @param [out] OUT0 Pointer to hold the amount of reserved memory.
                                                     @param [out] OUT1 Pointer to hold the amount of allocated memory.
                                                     @param [in] ARG2 Pointer to the start of a reserved or allocated region of memory. */
-    TgRESULT                                    (*m_pfnSize)( TgUINT_E32_P NONULL OUT0, TgUINT_E32_P NONULL OUT1, TgVOID_CPC NONULL ARG2 );
+    TgRESULT                                    (*m_pfnSize)( TgUINT_E32_P TgANALYSIS_NO_NULL OUT0, TgUINT_E32_P TgANALYSIS_NO_NULL OUT1, TgVOID_CPC TgANALYSIS_NO_NULL ARG2 );
 
                                                 /** @brief Allocate a region of memory (size ARG2) @return Result Code.
                                                     @param [out] OUT0 Pointer to a memory information header.
                                                     @param [out] OUT1 Returned pointer to the beginning of the requested allocated region of memory.
                                                     @param [in] ARG2 Size of the region to allocate.
                                                     @param [in] ARG3 Required alignement for allocation. */
-    TgRESULT                                    (*m_pfnMalloc)( TgMEM_INFO_HEADER_P NONULL OUT0, TgVOID_PP NONULL OUT1, TgRSIZE_C ARG2, TgRSIZE_C ARG3 );
+    TgRESULT                                    (*m_pfnMalloc)( TgMEM_INFO_HEADER_P TgANALYSIS_NO_NULL OUT0, TgVOID_PP TgANALYSIS_NO_NULL OUT1, TgRSIZE_C ARG2, TgRSIZE_C ARG3 );
 
                                                 /** @brief Allocate a region of memory (size ARG2). @return Result Code.
                                                     @param [out] OUT0 Pointer to a memory information header.
                                                     @param [out] OUT1 Returned pointer to the beginning of the requested reserved region of memory.
                                                     @param [in] ARG2 Size of the region to reserve. */
-    TgRESULT                                    (*m_pfnReserve)( TgMEM_INFO_HEADER_P NONULL OUT0, TgVOID_PP NONULL OUT1, TgRSIZE_C ARG2 );
+    TgRESULT                                    (*m_pfnReserve)( TgMEM_INFO_HEADER_P TgANALYSIS_NO_NULL OUT0, TgVOID_PP TgANALYSIS_NO_NULL OUT1, TgRSIZE_C ARG2 );
 
                                                 /** @brief Allocate a region of memory (size ARG2). @return Result Code.
                                                     @param [out] OUT0 Pointer to a memory information header.
@@ -121,12 +121,12 @@ TgTYPE_STRUCT(STg2_MM_MGR,)
                                                                          of the commit block or is nullptr otherwise.
                                                     @param [in] ARG2 Offset from the pointer base to the start of the region to commit.
                                                     @param [in] ARG3 Size of the region to commit. */
-    TgRESULT                                    (*m_pfnCommit)( TgMEM_INFO_HEADER_P NONULL OUT0, TgVOID_PP NONULL OUT1, TgRSIZE_C ARG2, TgRSIZE_C ARG3 );
+    TgRESULT                                    (*m_pfnCommit)( TgMEM_INFO_HEADER_P TgANALYSIS_NO_NULL OUT0, TgVOID_PP TgANALYSIS_NO_NULL OUT1, TgRSIZE_C ARG2, TgRSIZE_C ARG3 );
 
                                                 /** @brief Allocate a region of memory (size ARG2). @return Result Code.
                                                     @param [out] OUT0 Pointer to a memory information header.
                                                     @param [in] ARG1 Pointer to a region of memory to free (deallocate). */
-    TgRESULT                                    (*m_pfnFree)( TgMEM_INFO_HEADER_P NONULL OUT0, TgVOID_PC NONULL ARG1 );
+    TgRESULT                                    (*m_pfnFree)( TgMEM_INFO_HEADER_P TgANALYSIS_NO_NULL OUT0, TgVOID_PC TgANALYSIS_NO_NULL ARG1 );
 
                                                 /** @brief Allocate a region of memory (size ARG2). @return Result Code.
                                                     @param [out] OUT0 Pointer to a memory information header for the new region of memory.
@@ -136,7 +136,7 @@ TgTYPE_STRUCT(STg2_MM_MGR,)
                                                     @param [in] ARG4 Size of the region to allocate.
                                                     @param [in] ARG5 Alignment for the allocation. */
     TgRESULT                                    (*m_pfnRealloc)(
-                                                     TgMEM_INFO_HEADER_P NONULL OUT0, TgVOID_PP OUT1, TgMEM_INFO_HEADER_P OUT2, TgVOID_PC ARG3, TgRSIZE_C ARG4, TgRSIZE_C ARG5 );
+                                                     TgMEM_INFO_HEADER_P TgANALYSIS_NO_NULL OUT0, TgVOID_PP OUT1, TgMEM_INFO_HEADER_P OUT2, TgVOID_PC ARG3, TgRSIZE_C ARG4, TgRSIZE_C ARG5 );
 
     TgVOID                                      (*m_pfnFree_Thread_Local)( TgVOID ) TgATTRIBUTE_NO_EXCEPT;
 };
@@ -267,7 +267,7 @@ tgMM_Commit(
     @param [in] ARG1 Pointer to the start of a region of memory that was reserved. */
 TgEXTN PREMM_API TgVOID
 tgMM_Free(
-    ETgMM_ALLOCATOR_C ARG0, TgVOID_PC NONULL ARG1 );
+    ETgMM_ALLOCATOR_C ARG0, TgVOID_PC TgANALYSIS_NO_NULL ARG1 );
 
 /** @brief Reallocate the memory at ARG1 to a size of ARG2.
     @param [in] ARG0 Memory allocator to be used for the function call.

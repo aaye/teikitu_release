@@ -79,8 +79,7 @@ TgVOID tgPH_Body_Init_Do_Command( TgVOID_CPC pCommand_Buffer, TgRSIZE_C nbyComma
 
     /* Acquire the body, assuming the identifier is still valid. */
     psBY = tgPH_Body_Get_Body_From_ID( uCMD.pCommand->tiID );
-
-    if (nullptr == psBY)
+    if (nullptr == psBY) TgATTRIBUTE_UNLIKELY
     {
         TgERROR_MSGF( false, STD_MSG_LITERAL_1, STD_MSG_POST, u8"Stale Body ID submitted for init." );
         return;
@@ -100,7 +99,7 @@ TgVOID tgPH_Body_Init_Do_Command( TgVOID_CPC pCommand_Buffer, TgRSIZE_C nbyComma
     psBY->m_vTime_Factor = KTgONE_F32_04_1;
     psBY->m_fDisable_Timer = KTgPH_MAX_DISABLE_TIMER;
 
-    psBY->m_bEnabled = true;
+    psBY->m_bUpdate = false;
 
     psBY->m_uiUsed_Index = TgSTD_ATOMIC(fetch_add_explicit)( g_axnuiPH_Body_Total__Used + psBY->m_tiBody.m_uiWorld, 1, TgSTD_MEMORY_ORDER(relaxed) );
     g_aapsPH_Body_Used[psBY->m_tiBody.m_uiWorld][psBY->m_uiUsed_Index] = psBY;
@@ -128,8 +127,7 @@ TgVOID tgPH_Body_Reset_Do_Command( TgVOID_CPC pCommand_Buffer, TgRSIZE_C nbyComm
 
     /* Acquire the body, assuming the identifier is still valid. */
     psBY = tgPH_Body_Get_Body_From_ID( uCMD.pCommand->tiID );
-
-    if (nullptr == psBY)
+    if (nullptr == psBY) TgATTRIBUTE_UNLIKELY
     {
         TgERROR_MSGF( false, STD_MSG_LITERAL_1, STD_MSG_POST, u8"Stale Body ID submitted for reset." );
         return;
@@ -190,21 +188,21 @@ TgVOID tgPH_Body_Reset_Do_Command( TgVOID_CPC pCommand_Buffer, TgRSIZE_C nbyComm
 
 /* ---- tgPH_Body_Add_Force_At_Location ------------------------------------------------------------------------------------------------------------------------------------------ */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-PHYSICS_FUNCTION_DEFER_DEFINITION__COPY(Body_Add_Force_At_Location_Command, Body, BODY, STg2_PH_Force_Command_Data, UNUSED,
+PHYSICS_FUNCTION_DEFER_DEFINITION__COPY(Body_Add_Force_At_Location_Command, Body, BODY, STg2_PH_Force_Command_Data,
     {
         TgVEC_F32_04_1_C                    v00 = tgMH_SUB_F32_04_1( uCMD.pCommand->Val.m_vS0, psBody->m_sMass.m_vCG );
         TgVEC_F32_04_1_C                    v01 = tgMH_CX_F32_04_1( v00, uCMD.pCommand->Val.m_vF0 );
 
         psBody->m_vPF = tgMH_ADD_F32_04_1( psBody->m_vPF, uCMD.pCommand->Val.m_vF0 );
         psBody->m_vPT = tgMH_ADD_F32_04_1( psBody->m_vPT, v01 );
-        psBody->m_fDisable_Timer = 0.0F;
+        psBody->m_fDisable_Timer = KTgPH_MAX_DISABLE_TIMER;
     }
 )
 
 
 /* ---- tgPH_Body_Apply_Drag ----------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-PHYSICS_FUNCTION_DEFER_DEFINITION__ASSIGN(Body_Apply_Drag_Command, Body, BODY, TgFLOAT32, UNUSED,
+PHYSICS_FUNCTION_DEFER_DEFINITION__ASSIGN(Body_Apply_Drag_Command, Body, BODY, TgFLOAT32,
 
     if (!(uCMD.pCommand->Val >= 0.0F) || !(uCMD.pCommand->Val <= 1.0F))
     {
@@ -216,14 +214,14 @@ PHYSICS_FUNCTION_DEFER_DEFINITION__ASSIGN(Body_Apply_Drag_Command, Body, BODY, T
 
         psBody->m_vLV = tgMH_MUL_F32_04_1( vDrag, psBody->m_vLV );
         psBody->m_vAV = tgMH_MUL_F32_04_1( vDrag, psBody->m_vAV );
-        psBody->m_fDisable_Timer = 0.0F;
+        psBody->m_fDisable_Timer = KTgPH_MAX_DISABLE_TIMER;
     };
 )
 
 
 /* ---- tgPH_Body_Add_Form_Command ----------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-PHYSICS_FUNCTION_DEFER_DEFINITION__COPY(Body_Add_Form_Command, Body, BODY, STg2_PH_Form_Command_Data, UNUSED,
+PHYSICS_FUNCTION_DEFER_DEFINITION__COPY(Body_Add_Form_Command, Body, BODY, STg2_PH_Form_Command_Data,
 
     tgPH_Body_Add_Form_IMM( uCMD.pCommand->tiID, uCMD.pCommand->Val.m_tiFM0, &uCMD.pCommand->Val.m_sMass );
 
@@ -232,7 +230,7 @@ PHYSICS_FUNCTION_DEFER_DEFINITION__COPY(Body_Add_Form_Command, Body, BODY, STg2_
 
 /* ---- tgPH_Body_Remove_Form_Command -------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-PHYSICS_FUNCTION_DEFER_DEFINITION__COPY(Body_Remove_Form_Command, Body, BODY, STg2_PH_Form_Command_Data, UNUSED,
+PHYSICS_FUNCTION_DEFER_DEFINITION__COPY(Body_Remove_Form_Command, Body, BODY, STg2_PH_Form_Command_Data,
 
     tgPH_Body_Remove_Form_IMM( uCMD.pCommand->Val.m_tiFM0 );
 
@@ -308,62 +306,74 @@ PHYSICS_FUNCTION_QUERY_DEFINITION__ASSIGN(Body,BODY,Mass,TgVEC_F32_04_1,m_sMass.
 PHYSICS_FUNCTION_QUERY_DEFINITION__ASSIGN(Body,BODY,Inverse_Mass,TgVEC_F32_04_1,m_sMass.m_uInv_Mass.m_vF32_04_1)
 
 PHYSICS_FUNCTION_QUERY_DEFINITION__ASSIGN(Body,BODY,Last_Position_W,TgVEC_F32_04_1,m_vPos_Last_Valid_O2W)
-PHYSICS_FUNCTION_DEFER_DEFINITION__ASSIGN(Body_Set_Position_W,Body,BODY,TgVEC_F32_04_1,m_vPos_O2W,
+PHYSICS_FUNCTION_DEFER_DEFINITION__ASSIGN(Body_Set_Position_W,Body,BODY,TgVEC_F32_04_1,
     psBody->m_vPos_O2W = tgMH_Init_Point_F32_04_1( uCMD.pCommand->Val );
     psBody->m_vPos_Last_Valid_O2W = psBody->m_vPos_O2W;
     psBody->m_fDisable_Timer = KTgPH_MAX_DISABLE_TIMER;
+    tgPH_Body_Set_Update_IMM(psBody,true);
     tgPH_Body_Update__WRITE( psBody, true ); )
 PHYSICS_FUNCTION_QUERY_DEFINITION__ASSIGN(Body,BODY,Position_W,TgVEC_F32_04_1,m_vPos_O2W)
-PHYSICS_FUNCTION_DEFER_DEFINITION__ASSIGN(Body_Set_Rotation_W,Body,BODY,TgVEC_F32_04_1,m_vRot_O2W,
+PHYSICS_FUNCTION_DEFER_DEFINITION__ASSIGN(Body_Set_Rotation_W,Body,BODY,TgVEC_F32_04_1,
     psBody->m_vRot_O2W = uCMD.pCommand->Val;
     tgMH_Init_Quat_F32_04_3(&psBody->m_mRot_O2W, psBody->m_vRot_O2W);
     psBody->m_fDisable_Timer = KTgPH_MAX_DISABLE_TIMER;
+    tgPH_Body_Set_Update_IMM(psBody,true);
     tgPH_Body_Update__WRITE( psBody, true ); )
 PHYSICS_FUNCTION_QUERY_DEFINITION__ASSIGN(Body,BODY,Rotation_W,TgVEC_F32_04_1,m_vRot_O2W)
 PHYSICS_FUNCTION_QUERY_DEFINITION__COPY(Body,BODY,Final_Transform_W,TgVEC_F32_04_3,m_mFinal_O2W)
 
-PHYSICS_FUNCTION_DEFER_DEFINITION__ASSIGN(Body_Add_Linear_Velocity,Body,BODY,TgVEC_F32_04_1,m_vLV,
+PHYSICS_FUNCTION_DEFER_DEFINITION__ASSIGN(Body_Add_Linear_Velocity,Body,BODY,TgVEC_F32_04_1,
     psBody->m_vLV = tgMH_ADD_F32_04_1( psBody->m_vLV, tgMH_Init_Vector_F32_04_1( uCMD.pCommand->Val ) );
-    psBody->m_fDisable_Timer = KTgPH_MAX_DISABLE_TIMER; )
-PHYSICS_FUNCTION_DEFER_DEFINITION__ASSIGN(Body_Set_Linear_Velocity,Body,BODY,TgVEC_F32_04_1,m_vLV,
+    psBody->m_fDisable_Timer = KTgPH_MAX_DISABLE_TIMER;
+    tgPH_Body_Set_Update_IMM(psBody,true);)
+PHYSICS_FUNCTION_DEFER_DEFINITION__ASSIGN(Body_Set_Linear_Velocity,Body,BODY,TgVEC_F32_04_1,
     psBody->m_vLV = tgMH_Init_Vector_F32_04_1( uCMD.pCommand->Val );
-    psBody->m_fDisable_Timer = KTgPH_MAX_DISABLE_TIMER; )
+    psBody->m_fDisable_Timer = KTgPH_MAX_DISABLE_TIMER;
+    tgPH_Body_Set_Update_IMM(psBody,true);)
 PHYSICS_FUNCTION_QUERY_DEFINITION__ASSIGN(Body,BODY,Linear_Velocity,TgVEC_F32_04_1,m_vLV)
-PHYSICS_FUNCTION_DEFER_DEFINITION__ASSIGN(Body_Add_Force,Body,BODY,TgVEC_F32_04_1,m_vXF,
+PHYSICS_FUNCTION_DEFER_DEFINITION__ASSIGN(Body_Add_Force,Body,BODY,TgVEC_F32_04_1,
     psBody->m_vXF = tgMH_ADD_F32_04_1( psBody->m_vXF, tgMH_Init_Vector_F32_04_1( uCMD.pCommand->Val ) );
-    psBody->m_fDisable_Timer = KTgPH_MAX_DISABLE_TIMER; )
+    psBody->m_fDisable_Timer = KTgPH_MAX_DISABLE_TIMER;
+    tgPH_Body_Set_Update_IMM(psBody,true);)
 PHYSICS_FUNCTION_QUERY_DEFINITION__ASSIGN(Body,BODY,Force,TgVEC_F32_04_1,m_vXF)
-PHYSICS_FUNCTION_DEFER_DEFINITION__ASSIGN(Body_Add_Persistent_Force,Body,BODY,TgVEC_F32_04_1,m_vPF,
+PHYSICS_FUNCTION_DEFER_DEFINITION__ASSIGN(Body_Add_Persistent_Force,Body,BODY,TgVEC_F32_04_1,
     psBody->m_vPF = tgMH_ADD_F32_04_1( psBody->m_vPF, tgMH_Init_Vector_F32_04_1( uCMD.pCommand->Val ) );
-    psBody->m_fDisable_Timer = KTgPH_MAX_DISABLE_TIMER; )
-PHYSICS_FUNCTION_DEFER_DEFINITION__ASSIGN(Body_Set_Persistent_Force,Body,BODY,TgVEC_F32_04_1,m_vPF,
+    psBody->m_fDisable_Timer = KTgPH_MAX_DISABLE_TIMER;
+    tgPH_Body_Set_Update_IMM(psBody,true);)
+PHYSICS_FUNCTION_DEFER_DEFINITION__ASSIGN(Body_Set_Persistent_Force,Body,BODY,TgVEC_F32_04_1,
     psBody->m_vPF = tgMH_Init_Vector_F32_04_1( uCMD.pCommand->Val );
-    psBody->m_fDisable_Timer = KTgPH_MAX_DISABLE_TIMER; )
+    psBody->m_fDisable_Timer = KTgPH_MAX_DISABLE_TIMER;
+    tgPH_Body_Set_Update_IMM(psBody,true);)
 PHYSICS_FUNCTION_QUERY_DEFINITION__ASSIGN(Body,BODY,Persistent_Force,TgVEC_F32_04_1,m_vPF)
 
-PHYSICS_FUNCTION_DEFER_DEFINITION__ASSIGN(Body_Add_Angular_Velocity,Body,BODY,TgVEC_F32_04_1,m_vAV,
+PHYSICS_FUNCTION_DEFER_DEFINITION__ASSIGN(Body_Add_Angular_Velocity,Body,BODY,TgVEC_F32_04_1,
     psBody->m_vAV = tgMH_ADD_F32_04_1( psBody->m_vAV, tgMH_Init_Vector_F32_04_1( uCMD.pCommand->Val ) );
-    psBody->m_fDisable_Timer = KTgPH_MAX_DISABLE_TIMER; )
-PHYSICS_FUNCTION_DEFER_DEFINITION__ASSIGN(Body_Set_Angular_Velocity,Body,BODY,TgVEC_F32_04_1,m_vAV,
+    psBody->m_fDisable_Timer = KTgPH_MAX_DISABLE_TIMER;
+    tgPH_Body_Set_Update_IMM(psBody,true);)
+PHYSICS_FUNCTION_DEFER_DEFINITION__ASSIGN(Body_Set_Angular_Velocity,Body,BODY,TgVEC_F32_04_1,
     psBody->m_vAV = tgMH_Init_Vector_F32_04_1( uCMD.pCommand->Val );
-    psBody->m_fDisable_Timer = KTgPH_MAX_DISABLE_TIMER; )
+    psBody->m_fDisable_Timer = KTgPH_MAX_DISABLE_TIMER;
+    tgPH_Body_Set_Update_IMM(psBody,true);)
 PHYSICS_FUNCTION_QUERY_DEFINITION__ASSIGN(Body,BODY,Angular_Velocity,TgVEC_F32_04_1,m_vAV)
-PHYSICS_FUNCTION_DEFER_DEFINITION__ASSIGN(Body_Add_Torque,Body,BODY,TgVEC_F32_04_1,m_vXT,
+PHYSICS_FUNCTION_DEFER_DEFINITION__ASSIGN(Body_Add_Torque,Body,BODY,TgVEC_F32_04_1,
     psBody->m_vXT = tgMH_ADD_F32_04_1( psBody->m_vXT, tgMH_Init_Vector_F32_04_1( uCMD.pCommand->Val ) );
-    psBody->m_fDisable_Timer = KTgPH_MAX_DISABLE_TIMER; )
+    psBody->m_fDisable_Timer = KTgPH_MAX_DISABLE_TIMER;
+    tgPH_Body_Set_Update_IMM(psBody,true);)
 PHYSICS_FUNCTION_QUERY_DEFINITION__ASSIGN(Body,BODY,Torque,TgVEC_F32_04_1,m_vXT)
-PHYSICS_FUNCTION_DEFER_DEFINITION__ASSIGN(Body_Add_Persistent_Torque,Body,BODY,TgVEC_F32_04_1,m_vPT,
+PHYSICS_FUNCTION_DEFER_DEFINITION__ASSIGN(Body_Add_Persistent_Torque,Body,BODY,TgVEC_F32_04_1,
     psBody->m_vPT = tgMH_ADD_F32_04_1( psBody->m_vPT, tgMH_Init_Vector_F32_04_1( uCMD.pCommand->Val ) );
-    psBody->m_fDisable_Timer = KTgPH_MAX_DISABLE_TIMER; )
-PHYSICS_FUNCTION_DEFER_DEFINITION__ASSIGN(Body_Set_Persistent_Torque,Body,BODY,TgVEC_F32_04_1,m_vPT,
+    psBody->m_fDisable_Timer = KTgPH_MAX_DISABLE_TIMER;
+    tgPH_Body_Set_Update_IMM(psBody,true);)
+PHYSICS_FUNCTION_DEFER_DEFINITION__ASSIGN(Body_Set_Persistent_Torque,Body,BODY,TgVEC_F32_04_1,
     psBody->m_vPT = tgMH_Init_Vector_F32_04_1( uCMD.pCommand->Val );
-    psBody->m_fDisable_Timer = KTgPH_MAX_DISABLE_TIMER; )
+    psBody->m_fDisable_Timer = KTgPH_MAX_DISABLE_TIMER;
+    tgPH_Body_Set_Update_IMM(psBody,true);)
 PHYSICS_FUNCTION_QUERY_DEFINITION__ASSIGN(Body,BODY,Persistent_Torque,TgVEC_F32_04_1,m_vPT)
 
 PHYSICS_FUNCTION_ACCESSOR_DEFINITION__SET_DEFER__ASSIGN(Body,BODY,Force_Field_Factor,TgVEC_F32_04_1,m_vForce_Field_Factor)
 PHYSICS_FUNCTION_ACCESSOR_DEFINITION__SET_DEFER__ASSIGN(Body,BODY,Time_Factor,TgVEC_F32_04_1,m_vTime_Factor)
 PHYSICS_FUNCTION_ACCESSOR_DEFINITION__ASSIGN(Body,BODY,Disable_Timer,TgFLOAT32,m_fDisable_Timer)
-PHYSICS_FUNCTION_QUERY_DEFINITION__ASSIGN(Body,BODY,Enabled,TgBOOL,m_bEnabled)
+PHYSICS_FUNCTION_QUERY_DEFINITION__ASSIGN(Body,BODY,Update,TgBOOL,m_bUpdate)
 PHYSICS_FUNCTION_QUERY_DEFINITION__ASSIGN(Body,BODY,Ragdoll,TgBOOL,m_bRagdoll)
 PHYSICS_FUNCTION_ACCESSOR_DEFINITION__SET_DEFER__ASSIGN(Body,BODY,CalcFM_FCN,TgPH_FCN_CALCFM,m_pfnCalcFM)
 PHYSICS_FUNCTION_ACCESSOR_DEFINITION__SET_DEFER__ASSIGN(Body,BODY,Contact_FCN,TgPH_FCN_CONTACT,m_pfnContact)
@@ -393,13 +403,13 @@ TgVOID tgPH_Body_Add_Form_IMM( TgPH_BODY_ID_C tiBY, TgPH_FORM_ID_C tiFM, STg2_PH
     STg2_PH_Mass                        sMass;
 
     psFM = tgPH_Form_Get_Form_From_ID( tiFM );
-    if (nullptr == psFM)
+    if (nullptr == psFM) TgATTRIBUTE_UNLIKELY
     {
         return;
     };
 
     psBY = tgPH_Body_Get_Body_From_ID( tiBY );
-    if (nullptr == psBY)
+    if (nullptr == psBY) TgATTRIBUTE_UNLIKELY
     {
         return;
     };
@@ -407,8 +417,9 @@ TgVOID tgPH_Body_Add_Form_IMM( TgPH_BODY_ID_C tiBY, TgPH_FORM_ID_C tiFM, STg2_PH
     #pragma region Add the form into the form list of the Body.
     psFM->m_tiBY = tiBY;
     psFM->m_tiNext = psBY->m_tiFM_Head;
-    psFM->m_bEnabled = psBY->m_bEnabled;
     psBY->m_tiFM_Head = tiFM;
+    psFM->m_uiCategory |= (1ULL << KTgPH_CATEGORY_BIT__ENABLE_COLLSION);
+    psFM->m_uiCategory |= psBY->m_bUpdate ? (1ULL << KTgPH_CATEGORY_BIT__FORM_IS_UPDATING) : 0;
     #pragma endregion
 
     #pragma region Have the form update its World transforms.
@@ -418,15 +429,11 @@ TgVOID tgPH_Body_Add_Form_IMM( TgPH_BODY_ID_C tiBY, TgPH_FORM_ID_C tiFM, STg2_PH
     #pragma region Move and rotate the Mass.
     tgMM_Copy( &sMass, sizeof(sMass), pMass, sizeof(STg2_PH_Mass) );
     tgPH_Mass_Rotate_Eul( &sMass, psFM->m_vRot_O2B );
-    tgPH_Mass_Move( &sMass, psFM->m_vPos_O2B );
+    tgPH_Mass_Move( &sMass, tgMH_Init_Vector_F32_04_1( psFM->m_vPos_O2B ) );
     #pragma endregion
 
     #pragma region Integrate the Mass characteristics into the body.
-    tgMH_ADD_F32_04_3( &psBY->m_sMass.m_mMOI, &psBY->m_sMass.m_mMOI, &sMass.m_mMOI );
-    tgMH_ADD_F32_04_3( &psBY->m_sMass.m_mInv_MOI, &psBY->m_sMass.m_mInv_MOI, &sMass.m_mInv_MOI );
-    psBY->m_sMass.m_vCG = tgMH_ADD_F32_04_1( psBY->m_sMass.m_vCG, sMass.m_vCG );
-    psBY->m_sMass.m_uMass.m_vF32_04_1 = tgMH_ADD_F32_04_1( psBY->m_sMass.m_uMass.m_vF32_04_1, sMass.m_uMass.m_vF32_04_1 );
-    psBY->m_sMass.m_uInv_Mass.m_vF32_04_1 = tgMH_ADD_F32_04_1( psBY->m_sMass.m_uInv_Mass.m_vF32_04_1, sMass.m_uInv_Mass.m_vF32_04_1 );
+    tgPH_Mass_Union_Mat( &psBY->m_sMass, &sMass );
     #pragma endregion
 }
 
@@ -436,7 +443,8 @@ TgVOID tgPH_Body_Add_Form_IMM( TgPH_BODY_ID_C tiBY, TgPH_FORM_ID_C tiFM, STg2_PH
 TgVOID tgPH_Body_Remove_Form_IMM( TgPH_FORM_ID_C tiFM )
 {
     STg2_PH_Form_PC                     psFM = tgPH_Form_Get_Form_From_ID( tiFM );
-    TgPH_FORM_ID                        tiFM1, tiFM2;
+    STg2_PH_Body_P                      psBY;
+    TgPH_FORM_ID_P                      ptiFM;
 
     /* Make sure we have a valid form. */
     if (nullptr == psFM) TgATTRIBUTE_UNLIKELY
@@ -444,49 +452,71 @@ TgVOID tgPH_Body_Remove_Form_IMM( TgPH_FORM_ID_C tiFM )
         return;
     };
 
-    /* Get the head of the linked list of forms attached to the body. */
-    if (TgFAILED(tgPH_Body_Query_First_Form_ID( &tiFM2, psFM->m_tiBY ))) TgATTRIBUTE_UNLIKELY
+    psFM->m_uiCategory &= ~(1ULL << KTgPH_CATEGORY_BIT__ENABLE_COLLSION);
+    psFM->m_uiCategory &= ~(1ULL << KTgPH_CATEGORY_BIT__FORM_IS_UPDATING);
+
+    /* Make sure we have a valid body. */
+    psBY = tgPH_Body_Get_Body_From_ID( psFM->m_tiBY );
+    if (nullptr == psFM) TgATTRIBUTE_UNLIKELY
     {
         return;
     };
 
-    tiFM1.m_uiKI = KTgID__INVALID_VALUE;
-    do
+    /* Get the head of the linked list of forms attached to the body. */
+    ptiFM = &psBY->m_tiFM_Head;
+    while (KTgID__INVALID_VALUE != ptiFM->m_uiKI)
     {
-        if (tiFM.m_uiKI == tiFM2.m_uiKI)
+        if (tiFM.m_uiKI == ptiFM->m_uiKI)
         {
-            if (KTgID__INVALID_VALUE == tiFM1.m_uiKI)
-            {
-                STg2_PH_Body_PC                     psBY = tgPH_Body_Get_Body_From_ID( psFM->m_tiBY );
-
-                if (nullptr == psBY) TgATTRIBUTE_UNLIKELY
-                {
-                    return;
-                };
-
-                psBY->m_tiFM_Head.m_uiKI = psFM->m_tiNext.m_uiKI;
-            }
-            else
-            {
-                STg2_PH_Form_PC                     psFM1 = tgPH_Form_Get_Form_From_ID( tiFM1 );
-
-                if (nullptr == psFM1) TgATTRIBUTE_UNLIKELY
-                {
-                    return;
-                };
-
-                psFM1->m_tiNext.m_uiKI = psFM->m_tiNext.m_uiKI;
-            };
-
-            psFM->m_tiNext.m_uiKI = KTgID__INVALID_VALUE;
-            psFM->m_bEnabled = false;
+            ptiFM->m_uiKI =  psFM->m_tiNext.m_uiKI;
             return;
         }
-        tiFM1.m_uiKI = tiFM2.m_uiKI;
-    }
-    while (TgSUCCEEDED(tgPH_Form_Query_Next_Form_ID( &tiFM2, tiFM1 )));
+        else
+        {
+            STg2_PH_Form_PC                     psFM1 = tgPH_Form_Get_Form_From_ID( *ptiFM );
+
+            if (nullptr == psFM1) TgATTRIBUTE_UNLIKELY
+            {
+                return;
+            };
+
+            ptiFM = &psFM->m_tiNext;
+        };
+    };
 }
 
+
+/* ---- tgPH_Body_Set_Update_IMM ------------------------------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+TgVOID tgPH_Body_Set_Update_IMM( STg2_PH_Body_PC psBY, TgBOOL_C bUpdate )
+{
+    if (bUpdate == (TgBOOL)psBY->m_bUpdate)
+    {
+        return;
+    };
+
+    psBY->m_bUpdate = bUpdate;
+
+    if (KTgID__INVALID_VALUE != psBY->m_tiFM_Head.m_uiKI)
+    {
+        STg2_PH_Form_P                      psFM = tgPH_Form_Get_Form_From_ID( psBY->m_tiFM_Head );
+
+        if (bUpdate)
+        {
+            for (;nullptr != psFM; psFM = tgPH_Form_Get_Form_From_ID( psFM->m_tiNext ))
+            {
+                psFM->m_uiCategory |= 1ULL << KTgPH_CATEGORY_BIT__FORM_IS_UPDATING;
+            };
+        }
+        else
+        {
+            for (;nullptr != psFM; psFM = tgPH_Form_Get_Form_From_ID( psFM->m_tiNext ))
+            {
+                psFM->m_uiCategory &= ~(1ULL << KTgPH_CATEGORY_BIT__FORM_IS_UPDATING);
+            };
+        };
+    };
+}
 
 
 

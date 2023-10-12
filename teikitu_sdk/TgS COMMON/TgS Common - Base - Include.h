@@ -45,11 +45,7 @@ TgCLANG_WARN_DISABLE_PUSH(everything)
 #include <cstdarg>                  /* va_XXX - variable argument support */
 #include <cfloat>                   /* [FLT,DBL,LDBL] MIN, MAX, DIG, EPSILON - Floating point constants */
 #include <cuchar>
-#if defined(TgBUILD_HOST_SYSTEM__HWIN)
-    #include "atomic.c++"               /* TgSTD_ATOMIC(XXX) - C11 atomic type and functions */
-#else
-    #include <atomic>
-#endif
+#include <atomic>
 
 #define NULL 0
 #undef NAN                          /* corecrt_math.h */
@@ -64,7 +60,7 @@ TgCLANG_WARN_DISABLE_PUSH(everything)
 #undef NULL                         /* stddef.h */
 #endif
 
-#if defined(TgBUILD_OS__WIN)
+#if defined(TgBUILD_OS__WINDOWS)
 #include <malloc.h>                 /* alloca */
 #endif
 

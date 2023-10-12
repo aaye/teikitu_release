@@ -52,9 +52,9 @@ TgRESULT tgPH_##FCN_NAME( TgPH_##OBJ_ID##_ID_C tiID, ATTRIBUTE_TYPE const Val ) 
     return (KTgS_OK);                                                                                                                                                               \
 }
 
-#define PHYSICS_FUNCTION_DEFINITION__COMMAND(FCN_NAME,OBJ_NAME,OBJ_ID,ATTRIBUTE_TYPE,FIELD,...)                                                                                     \
+#define PHYSICS_FUNCTION_DEFINITION__COMMAND(FCN_NAME,OBJ_NAME,OBJ_ID,ATTRIBUTE_TYPE,...)                                                                                           \
 TgWARN_DISABLE_PUSH(4820,padded)                                                                                                                                                    \
-static TgVOID tgPH_##FCN_NAME##_Do_Command( TgVOID_CPC NONULL pCommand_Buffer, TgRSIZE_C nbyCommand_Buffer )                                                                        \
+static TgVOID tgPH_##FCN_NAME##_Do_Command( TgVOID_CPC TgANALYSIS_NO_NULL pCommand_Buffer, TgRSIZE_C nbyCommand_Buffer )                                                            \
 {                                                                                                                                                                                   \
     typedef struct {                                                                                                                                                                \
         TgPH_##OBJ_ID##_ID TgALIGN(16) tiID;                                                                                                                                        \
@@ -82,7 +82,7 @@ static TgVOID tgPH_##FCN_NAME##_Do_Command( TgVOID_CPC NONULL pCommand_Buffer, T
 }                                                                                                                                                                                   \
 TgWARN_DISABLE_POP()
 
-#define PHYSICS_FUNCTION_DEFINITION__DEFER_COMMAND_ASSIGN(FCN_NAME,OBJ_NAME,OBJ_ID,ATTRIBUTE_TYPE,FIELD)                                                                            \
+#define PHYSICS_FUNCTION_DEFINITION__DEFER_COMMAND_ASSIGN(FCN_NAME,OBJ_NAME,OBJ_ID,ATTRIBUTE_TYPE)                                                                                  \
 TgWARN_DISABLE_PUSH(4820,padded)                                                                                                                                                    \
 TgRESULT tgPH_##FCN_NAME( TgPH_##OBJ_ID##_ID_C tiID, ATTRIBUTE_TYPE const Val )                                                                                                     \
 {                                                                                                                                                                                   \
@@ -95,7 +95,7 @@ TgRESULT tgPH_##FCN_NAME( TgPH_##OBJ_ID##_ID_C tiID, ATTRIBUTE_TYPE const Val ) 
 }                                                                                                                                                                                   \
 TgWARN_DISABLE_POP()
 
-#define PHYSICS_FUNCTION_DEFINITION__DEFER_COMMAND_COPY(FCN_NAME,OBJ_NAME,OBJ_ID,ATTRIBUTE_TYPE,FIELD)                                                                              \
+#define PHYSICS_FUNCTION_DEFINITION__DEFER_COMMAND_COPY(FCN_NAME,OBJ_NAME,OBJ_ID,ATTRIBUTE_TYPE)                                                                                    \
 TgWARN_DISABLE_PUSH(4820,padded)                                                                                                                                                    \
 TgRESULT tgPH_##FCN_NAME( TgPH_##OBJ_ID##_ID_C tiID, ATTRIBUTE_TYPE const * pVal )                                                                                                  \
 {                                                                                                                                                                                   \
@@ -145,13 +145,13 @@ TgWARN_DISABLE_POP()
 /* Definition for non-deferred query and deferred set. */
 
 #define PHYSICS_FUNCTION_SET_DEFER_DEFINITION__ASSIGN(OBJ_NAME,OBJ_ID,ATTRIBUTE,ATTRIBUTE_TYPE,FIELD)                                                                               \
-    PHYSICS_FUNCTION_DEFINITION__COMMAND(OBJ_NAME##_Set_##ATTRIBUTE,OBJ_NAME,OBJ_ID,ATTRIBUTE_TYPE,FIELD, ps##OBJ_NAME->FIELD = uCMD.pCommand->Val;)                                \
-    PHYSICS_FUNCTION_DEFINITION__DEFER_COMMAND_ASSIGN(OBJ_NAME##_Set_##ATTRIBUTE,OBJ_NAME,OBJ_ID,ATTRIBUTE_TYPE,FIELD)
+    PHYSICS_FUNCTION_DEFINITION__COMMAND(OBJ_NAME##_Set_##ATTRIBUTE,OBJ_NAME,OBJ_ID,ATTRIBUTE_TYPE, ps##OBJ_NAME->FIELD = uCMD.pCommand->Val;)                                      \
+    PHYSICS_FUNCTION_DEFINITION__DEFER_COMMAND_ASSIGN(OBJ_NAME##_Set_##ATTRIBUTE,OBJ_NAME,OBJ_ID,ATTRIBUTE_TYPE)
 
 #define PHYSICS_FUNCTION_SET_DEFER_DEFINITION__COPY(OBJ_NAME,OBJ_ID,ATTRIBUTE,ATTRIBUTE_TYPE,FIELD)                                                                                 \
-    PHYSICS_FUNCTION_DEFINITION__COMMAND(OBJ_NAME##_Set_##ATTRIBUTE,OBJ_NAME,OBJ_ID,ATTRIBUTE_TYPE,FIELD,                                                                           \
+    PHYSICS_FUNCTION_DEFINITION__COMMAND(OBJ_NAME##_Set_##ATTRIBUTE,OBJ_NAME,OBJ_ID,ATTRIBUTE_TYPE,                                                                                 \
         tgMM_Copy( (TgVOID_P)&ps##OBJ_NAME->FIELD, sizeof( ps##OBJ_NAME->FIELD ), (TgVOID_CP)&uCMD.pCommand->Val, sizeof( ATTRIBUTE_TYPE ) );)                                      \
-    PHYSICS_FUNCTION_DEFINITION__DEFER_COMMAND_COPY(OBJ_NAME##_Set_##ATTRIBUTE,OBJ_NAME,OBJ_ID,ATTRIBUTE_TYPE,FIELD)
+    PHYSICS_FUNCTION_DEFINITION__DEFER_COMMAND_COPY(OBJ_NAME##_Set_##ATTRIBUTE,OBJ_NAME,OBJ_ID,ATTRIBUTE_TYPE)
 
 #define PHYSICS_FUNCTION_ACCESSOR_DEFINITION__SET_DEFER__ASSIGN(OBJ_NAME,OBJ_ID,ATTRIBUTE,ATTRIBUTE_TYPE,FIELD)                                                                     \
     PHYSICS_FUNCTION_QUERY_DEFINITION__ASSIGN(OBJ_NAME,OBJ_ID,ATTRIBUTE,ATTRIBUTE_TYPE,FIELD)                                                                                       \
@@ -162,15 +162,15 @@ TgWARN_DISABLE_POP()
     PHYSICS_FUNCTION_SET_DEFER_DEFINITION__COPY(OBJ_NAME,OBJ_ID,ATTRIBUTE,ATTRIBUTE_TYPE,FIELD)
 
 
-/* Definition for non-deferred query and a deferred custom set. */
+/* Definition for a deferred custom set. */
 
-#define PHYSICS_FUNCTION_DEFER_DEFINITION__ASSIGN(FCN_NAME,OBJ_NAME,OBJ_ID,ATTRIBUTE_TYPE,FIELD,...)                                                                                \
-    PHYSICS_FUNCTION_DEFINITION__COMMAND(FCN_NAME,OBJ_NAME,OBJ_ID,ATTRIBUTE_TYPE,FIELD, __VA_ARGS__)                                                                                \
-    PHYSICS_FUNCTION_DEFINITION__DEFER_COMMAND_ASSIGN(FCN_NAME,OBJ_NAME,OBJ_ID,ATTRIBUTE_TYPE,FIELD)
+#define PHYSICS_FUNCTION_DEFER_DEFINITION__ASSIGN(FCN_NAME,OBJ_NAME,OBJ_ID,ATTRIBUTE_TYPE,...)                                                                                      \
+    PHYSICS_FUNCTION_DEFINITION__COMMAND(FCN_NAME,OBJ_NAME,OBJ_ID,ATTRIBUTE_TYPE, __VA_ARGS__)                                                                                      \
+    PHYSICS_FUNCTION_DEFINITION__DEFER_COMMAND_ASSIGN(FCN_NAME,OBJ_NAME,OBJ_ID,ATTRIBUTE_TYPE)
 
-#define PHYSICS_FUNCTION_DEFER_DEFINITION__COPY(FCN_NAME,OBJ_NAME,OBJ_ID,ATTRIBUTE_TYPE,FIELD,...)                                                                                  \
-    PHYSICS_FUNCTION_DEFINITION__COMMAND(FCN_NAME,OBJ_NAME,OBJ_ID,ATTRIBUTE_TYPE,FIELD, __VA_ARGS__)                                                                                \
-    PHYSICS_FUNCTION_DEFINITION__DEFER_COMMAND_COPY(FCN_NAME,OBJ_NAME,OBJ_ID,ATTRIBUTE_TYPE,FIELD)
+#define PHYSICS_FUNCTION_DEFER_DEFINITION__COPY(FCN_NAME,OBJ_NAME,OBJ_ID,ATTRIBUTE_TYPE,...)                                                                                        \
+    PHYSICS_FUNCTION_DEFINITION__COMMAND(FCN_NAME,OBJ_NAME,OBJ_ID,ATTRIBUTE_TYPE, __VA_ARGS__)                                                                                      \
+    PHYSICS_FUNCTION_DEFINITION__DEFER_COMMAND_COPY(FCN_NAME,OBJ_NAME,OBJ_ID,ATTRIBUTE_TYPE)
 
 
 

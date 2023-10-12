@@ -135,10 +135,8 @@
 /*  Configuration                                                                                                                                                                  */
 /* -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.--.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-. */
 
-//#define TgBUILD_DEBUG__PHYSICS__EXTENSIVE_DATA_CHECK
-
+#define TgBUILD_DEBUG__PHYSICS__EXTENSIVE_DATA_CHECK
 #define TgBUILD_FEATURE__PHYSICS__HISTORY
-//#define TgBUILD_FEATURE__PHYSICS__SWEEP_TESTS
 //#define TgBUILD_FEATURE__PHYSICS__CFM
 
 #define KTgPH_MAX_DISABLE_TIMER 1.0F
@@ -163,8 +161,16 @@ enum { KTgPH_MAX_SIMULATION_JOB                     = KTgKN_MAX_JOB_THREAD << 2,
        KTgPH_MAX_HISTORY_BODY                       = 1024,
 
        KTgPH_MAX_BONES                              = 96,
+
+       /* PA GRAPH requires last two bits, 0-47 are intersection test (0 != CategeoryA & CollideB && 0 != CategeoryB & CollideA),
+          48-61 are union tests (0 != CategeoryA & CollideB || 0 != CategeoryB & CollideA) */
+
+       KTgPH_CATEGORY_BIT__FORM_IS_UPDATING_GRAPH   = KTgPA_CATEGORY_BIT__RESERVED__USER_0,
+       KTgPH_CATEGORY_BIT__FORM_IS_UPDATING         = KTgPA_CATEGORY_BIT__LAST_OR_BIT,
+       KTgPH_CATEGORY_BIT__ENABLE_COLLSION          = 0,
 };
 
+TgEXTN TgUINT_E64_C                         KTgPH_CATEGORY_BIT_MASK__RESERVED;
 
 typedef enum TgCLANG_ATTRIBUTE(enum_extensibility(closed))
 {

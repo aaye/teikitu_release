@@ -28,7 +28,7 @@
     @param [in] ARG2 Matrix */
 TgINLINE TgVOID
 FCN_M(tgMH_CAT_34_44_S)(
-    MAT_S_T(PCU) NONULL OUT0, VEC_S_T(3,CPCU) NONULL ARG1, MAT_S_T(CPCU) NONULL ARG2 );
+    MAT_S_T(PCU) TgANALYSIS_NO_NULL OUT0, VEC_S_T(3,CPCU) TgANALYSIS_NO_NULL ARG1, MAT_S_T(CPCU) TgANALYSIS_NO_NULL ARG2 );
 
 /** @addtogroup TGS_COMMON_MATH_VECTOR_CALC
     @brief Store the concatenation (multiplication) of the two arguments (ARG1 x ARG2)
@@ -37,7 +37,7 @@ FCN_M(tgMH_CAT_34_44_S)(
     @param [in] ARG2 Matrix */
 TgINLINE TgVOID
 FCN_M(tgMH_CAT_44_34_S)(
-    MAT_S_T(PCU) NONULL OUT0, MAT_S_T(CPCU) NONULL ARG1, VEC_S_T(3,CPCU) NONULL ARG2 );
+    MAT_S_T(PCU) TgANALYSIS_NO_NULL OUT0, MAT_S_T(CPCU) TgANALYSIS_NO_NULL ARG1, VEC_S_T(3,CPCU) TgANALYSIS_NO_NULL ARG2 );
 
 /** @addtogroup TGS_COMMON_MATH_VECTOR_CALC
     @brief Store the transpose of the matrix ARG1
@@ -45,7 +45,7 @@ FCN_M(tgMH_CAT_44_34_S)(
     @param [in] ARG1 Matrix */
 TgINLINE TgVOID
 FCN_M(tgMH_TR_S)(
-    MAT_S_T(PCU) NONULL OUT0, MAT_S_T(CPCU) NONULL ARG1 );
+    MAT_S_T(PCU) TgANALYSIS_NO_NULL OUT0, MAT_S_T(CPCU) TgANALYSIS_NO_NULL ARG1 );
 
 
 
@@ -58,7 +58,7 @@ FCN_M(tgMH_TR_S)(
     @param [in] ARG3 Vector, Camera Up Direction */
 TgINLINE TgVOID
 FCN_M(tgMH_LookLH_S)(
-    MAT_S_T(PCU) NONULL OUT0, VEC_S_T(1,C) ARG1, VEC_S_T(1,C) ARG2, VEC_S_T(1,C) ARG3 );
+    MAT_S_T(PCU) TgANALYSIS_NO_NULL OUT0, VEC_S_T(1,C) ARG1, VEC_S_T(1,C) ARG2, VEC_S_T(1,C) ARG3 );
 
 /** @addtogroup TGS_COMMON_MATH_VECTOR_CALC
     @brief Store a right-handed view matrix
@@ -68,7 +68,7 @@ FCN_M(tgMH_LookLH_S)(
     @param [in] ARG3 Vector, Camera Up Direction */
 TgINLINE TgVOID
 FCN_M(tgMH_LookRH_S)(
-    MAT_S_T(PCU) NONULL OUT0, VEC_S_T(1,C) ARG1, VEC_S_T(1,C) ARG2, VEC_S_T(1,C) ARG3 );
+    MAT_S_T(PCU) TgANALYSIS_NO_NULL OUT0, VEC_S_T(1,C) ARG1, VEC_S_T(1,C) ARG2, VEC_S_T(1,C) ARG3 );
 
 /** @addtogroup TGS_COMMON_MATH_VECTOR_CALC
     @brief Store a left-handed view matrix
@@ -78,7 +78,7 @@ FCN_M(tgMH_LookRH_S)(
     @param [in] ARG3 Vector, Camera Up Direction */
 TgINLINE TgVOID
 FCN_M(tgMH_Look_S)(
-    MAT_S_T(PCU) NONULL OUT0, VEC_S_T(1,C) ARG1, VEC_S_T(1,C) ARG2, VEC_S_T(1,C) ARG3 );
+    MAT_S_T(PCU) TgANALYSIS_NO_NULL OUT0, VEC_S_T(1,C) ARG1, VEC_S_T(1,C) ARG2, VEC_S_T(1,C) ARG3 );
 
 /** @addtogroup TGS_COMMON_MATH_VECTOR_CALC
     @brief Store a projection left-handed matrix
@@ -89,7 +89,7 @@ FCN_M(tgMH_Look_S)(
     @param [in] ARG4 MaxZ */
 TgINLINE TgVOID
 FCN_M(tgMH_PProjLH_S)(
-    MAT_S_T(PCU) NONULL OUT0, VAR_T(C) ARG1, VAR_T(C) ARG2, VAR_T(C) ARG3, VAR_T(C) ARG4 );
+    MAT_S_T(PCU) TgANALYSIS_NO_NULL OUT0, VAR_T(C) ARG1, VAR_T(C) ARG2, VAR_T(C) ARG3, VAR_T(C) ARG4 );
 
 /** @addtogroup TGS_COMMON_MATH_VECTOR_CALC
     @brief Store a projection right-handed matrix
@@ -100,7 +100,7 @@ FCN_M(tgMH_PProjLH_S)(
     @param [in] ARG4 MaxZ */
 TgINLINE TgVOID
 FCN_M(tgMH_PProjRH_S)(
-    MAT_S_T(PCU) NONULL OUT0, VAR_T(C) ARG1, VAR_T(C) ARG2, VAR_T(C) ARG3, VAR_T(C) ARG4 );
+    MAT_S_T(PCU) TgANALYSIS_NO_NULL OUT0, VAR_T(C) ARG1, VAR_T(C) ARG2, VAR_T(C) ARG3, VAR_T(C) ARG4 );
 
 /** @addtogroup TGS_COMMON_MATH_VECTOR_CALC
     @brief Store a projection left-handed matrix
@@ -111,7 +111,7 @@ FCN_M(tgMH_PProjRH_S)(
     @param [in] ARG4 MaxZ */
 TgINLINE TgVOID
 FCN_M(tgMH_PProj_S)(
-    MAT_S_T(PCU) NONULL OUT0, VAR_T(C) ARG1, VAR_T(C) ARG2, VAR_T(C) ARG3, VAR_T(C) ARG4 );
+    MAT_S_T(PCU) TgANALYSIS_NO_NULL OUT0, VAR_T(C) ARG1, VAR_T(C) ARG2, VAR_T(C) ARG3, VAR_T(C) ARG4 );
 
 /** @addtogroup TGS_COMMON_MATH_VECTOR_CALC
     @brief Store a projection left-handed matrix
@@ -124,7 +124,7 @@ FCN_M(tgMH_PProj_S)(
     @param [in] ARG6 MaxZ */
 TgINLINE TgVOID
 FCN_M(tgMH_PProj_OffsetLH_S)(
-    MAT_S_T(PCU) NONULL OUT0, VAR_T(C) ARG1, VAR_T(C) ARG2, VAR_T(C) ARG3, VAR_T(C) ARG4, VAR_T(C) ARG5, VAR_T(C) ARG6 );
+    MAT_S_T(PCU) TgANALYSIS_NO_NULL OUT0, VAR_T(C) ARG1, VAR_T(C) ARG2, VAR_T(C) ARG3, VAR_T(C) ARG4, VAR_T(C) ARG5, VAR_T(C) ARG6 );
 
 /** @addtogroup TGS_COMMON_MATH_VECTOR_CALC
     @brief Store a projection right-handed matrix
@@ -137,7 +137,7 @@ FCN_M(tgMH_PProj_OffsetLH_S)(
     @param [in] ARG6 MaxZ */
 TgINLINE TgVOID
 FCN_M(tgMH_PProj_OffsetRH_S)(
-    MAT_S_T(PCU) NONULL OUT0, VAR_T(C) ARG1, VAR_T(C) ARG2, VAR_T(C) ARG3, VAR_T(C) ARG4, VAR_T(C) ARG5, VAR_T(C) ARG6 );
+    MAT_S_T(PCU) TgANALYSIS_NO_NULL OUT0, VAR_T(C) ARG1, VAR_T(C) ARG2, VAR_T(C) ARG3, VAR_T(C) ARG4, VAR_T(C) ARG5, VAR_T(C) ARG6 );
 
 /** @addtogroup TGS_COMMON_MATH_VECTOR_CALC
     @brief Store a projection left-handed offset matrix
@@ -150,7 +150,7 @@ FCN_M(tgMH_PProj_OffsetRH_S)(
     @param [in] ARG6 MaxZ */
 TgINLINE TgVOID
 FCN_M(tgMH_PProj_Offset_S)(
-    MAT_S_T(PCU) NONULL OUT0, VAR_T(C) ARG1, VAR_T(C) ARG2, VAR_T(C) ARG3, VAR_T(C) ARG4, VAR_T(C) ARG5, VAR_T(C) ARG6 );
+    MAT_S_T(PCU) TgANALYSIS_NO_NULL OUT0, VAR_T(C) ARG1, VAR_T(C) ARG2, VAR_T(C) ARG3, VAR_T(C) ARG4, VAR_T(C) ARG5, VAR_T(C) ARG6 );
 
 /** @addtogroup TGS_COMMON_MATH_VECTOR_CALC
     @brief Store a projection left-handed field of view matrix
@@ -161,7 +161,7 @@ FCN_M(tgMH_PProj_Offset_S)(
     @param [in] ARG4 MaxZ */
 TgINLINE TgVOID
 FCN_M(tgMH_PProj_FoVLH_S)(
-    MAT_S_T(PCU) NONULL OUT0, VAR_T(C) ARG1, VAR_T(C) ARG2, VAR_T(C) ARG3, VAR_T(C) ARG4 );
+    MAT_S_T(PCU) TgANALYSIS_NO_NULL OUT0, VAR_T(C) ARG1, VAR_T(C) ARG2, VAR_T(C) ARG3, VAR_T(C) ARG4 );
 
 /** @addtogroup TGS_COMMON_MATH_VECTOR_CALC
     @brief Store a projection right-handed field of view matrix
@@ -172,7 +172,7 @@ FCN_M(tgMH_PProj_FoVLH_S)(
     @param [in] ARG4 MaxZ */
 TgINLINE TgVOID
 FCN_M(tgMH_PProj_FoVRH_S)(
-    MAT_S_T(PCU) NONULL OUT0, VAR_T(C) ARG1, VAR_T(C) ARG2, VAR_T(C) ARG3, VAR_T(C) ARG4 );
+    MAT_S_T(PCU) TgANALYSIS_NO_NULL OUT0, VAR_T(C) ARG1, VAR_T(C) ARG2, VAR_T(C) ARG3, VAR_T(C) ARG4 );
 
 /** @addtogroup TGS_COMMON_MATH_VECTOR_CALC
     @brief Store a projection left-handed field of view matrix
@@ -183,7 +183,7 @@ FCN_M(tgMH_PProj_FoVRH_S)(
     @param [in] ARG4 MaxZ */
 TgINLINE TgVOID
 FCN_M(tgMH_PProj_FoV_S)(
-    MAT_S_T(PCU) NONULL OUT0, VAR_T(C) ARG1, VAR_T(C) ARG2, VAR_T(C) ARG3, VAR_T(C) ARG4 );
+    MAT_S_T(PCU) TgANALYSIS_NO_NULL OUT0, VAR_T(C) ARG1, VAR_T(C) ARG2, VAR_T(C) ARG3, VAR_T(C) ARG4 );
 
 /** @addtogroup TGS_COMMON_MATH_VECTOR_CALC
     @brief Store a orthographic left-handed matrix
@@ -194,7 +194,7 @@ FCN_M(tgMH_PProj_FoV_S)(
     @param [in] ARG4 MaxZ */
 TgINLINE TgVOID
 FCN_M(tgMH_OrthoLH_S)(
-    MAT_S_T(PCU) NONULL OUT0, VAR_T(C) ARG1, VAR_T(C) ARG2, VAR_T(C) ARG3, VAR_T(C) ARG4 );
+    MAT_S_T(PCU) TgANALYSIS_NO_NULL OUT0, VAR_T(C) ARG1, VAR_T(C) ARG2, VAR_T(C) ARG3, VAR_T(C) ARG4 );
 
 /** @addtogroup TGS_COMMON_MATH_VECTOR_CALC
     @brief Store a orthographic right-handed matrix
@@ -205,7 +205,7 @@ FCN_M(tgMH_OrthoLH_S)(
     @param [in] ARG4 MaxZ */
 TgINLINE TgVOID
 FCN_M(tgMH_OrthoRH_S)(
-    MAT_S_T(PCU) NONULL OUT0, VAR_T(C) ARG1, VAR_T(C) ARG2, VAR_T(C) ARG3, VAR_T(C) ARG4 );
+    MAT_S_T(PCU) TgANALYSIS_NO_NULL OUT0, VAR_T(C) ARG1, VAR_T(C) ARG2, VAR_T(C) ARG3, VAR_T(C) ARG4 );
 
 /** @addtogroup TGS_COMMON_MATH_VECTOR_CALC
     @brief Store a orthographic left-handed matrix
@@ -216,7 +216,7 @@ FCN_M(tgMH_OrthoRH_S)(
     @param [in] ARG4 MaxZ */
 TgINLINE TgVOID
 FCN_M(tgMH_Ortho_S)(
-    MAT_S_T(PCU) NONULL OUT0, VAR_T(C) ARG1, VAR_T(C) ARG2, VAR_T(C) ARG3, VAR_T(C) ARG4 );
+    MAT_S_T(PCU) TgANALYSIS_NO_NULL OUT0, VAR_T(C) ARG1, VAR_T(C) ARG2, VAR_T(C) ARG3, VAR_T(C) ARG4 );
 
 /** @addtogroup TGS_COMMON_MATH_VECTOR_CALC
     @brief Store a orthographic left-handed offset matrix
@@ -229,7 +229,7 @@ FCN_M(tgMH_Ortho_S)(
     @param [in] ARG6 MaxZ */
 TgINLINE TgVOID
 FCN_M(tgMH_Ortho_OffsetLH_S)(
-    MAT_S_T(PCU) NONULL OUT0, VAR_T(C) ARG1, VAR_T(C) ARG2, VAR_T(C) ARG3, VAR_T(C) ARG4, VAR_T(C) ARG5, VAR_T(C) ARG6 );
+    MAT_S_T(PCU) TgANALYSIS_NO_NULL OUT0, VAR_T(C) ARG1, VAR_T(C) ARG2, VAR_T(C) ARG3, VAR_T(C) ARG4, VAR_T(C) ARG5, VAR_T(C) ARG6 );
 
 /** @addtogroup TGS_COMMON_MATH_VECTOR_CALC
     @brief Store a orthographic right-handed offset matrix
@@ -242,7 +242,7 @@ FCN_M(tgMH_Ortho_OffsetLH_S)(
     @param [in] ARG6 MaxZ */
 TgINLINE TgVOID
 FCN_M(tgMH_Ortho_OffsetRH_S)(
-    MAT_S_T(PCU) NONULL OUT0, VAR_T(C) ARG1, VAR_T(C) ARG2, VAR_T(C) ARG3, VAR_T(C) ARG4, VAR_T(C) ARG5, VAR_T(C) ARG6 );
+    MAT_S_T(PCU) TgANALYSIS_NO_NULL OUT0, VAR_T(C) ARG1, VAR_T(C) ARG2, VAR_T(C) ARG3, VAR_T(C) ARG4, VAR_T(C) ARG5, VAR_T(C) ARG6 );
 
 /** @addtogroup TGS_COMMON_MATH_VECTOR_CALC
     @brief Store a orthographic left-handed offset matrix
@@ -255,7 +255,7 @@ FCN_M(tgMH_Ortho_OffsetRH_S)(
     @param [in] ARG6 MaxZ */
 TgINLINE TgVOID
 FCN_M(tgMH_Ortho_Offset_S)(
-    MAT_S_T(PCU) NONULL OUT0, VAR_T(C) ARG1, VAR_T(C) ARG2, VAR_T(C) ARG3, VAR_T(C) ARG4, VAR_T(C) ARG5, VAR_T(C) ARG6 );
+    MAT_S_T(PCU) TgANALYSIS_NO_NULL OUT0, VAR_T(C) ARG1, VAR_T(C) ARG2, VAR_T(C) ARG3, VAR_T(C) ARG4, VAR_T(C) ARG5, VAR_T(C) ARG6 );
 
 
 /* =============================================================================================================================================================================== */

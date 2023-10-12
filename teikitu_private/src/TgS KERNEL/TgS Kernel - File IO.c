@@ -47,7 +47,7 @@ TgRESULT tgKN_IF__Open( STg2_Input_File_PCU psIN_File, TgKN_FS_MOUNT_ID_C tiFS_M
 
 /* ---- tgKN_IF__Read ------------------------------------------------------------------------------------------------------------------------------------------------------------ */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgRSIZE tgKN_IF__Read( TgVOID_P NONULL pData, TgRSIZE_C nbyData, STg2_Input_PC NONULL psIN, TgATTRIBUTE_MAYBE_UNUSED TgRSIZE_C uiOffset, TgRSIZE_C uiRead )
+TgRSIZE tgKN_IF__Read( TgVOID_P pData, TgRSIZE_C nbyData, STg2_Input_PC psIN, TgATTRIBUTE_MAYBE_UNUSED TgRSIZE_C uiOffset, TgRSIZE_C uiRead )
 {
     union
     {

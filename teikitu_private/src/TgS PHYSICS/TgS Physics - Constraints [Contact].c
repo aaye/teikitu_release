@@ -120,7 +120,8 @@ TgVOID tgPH_Constraint_Contact__Problem_Definition( TgPH_WORLD_ID_C tiWorld, STg
         TgVEC_F32_04_1_CP                   pvRHS_0, pvRHS_1;
         TgVEC_F32_04_1                      vREST_04, vREST_05;
 
-        TgPARAM_CHECK(KTgID__INVALID_VALUE != psConstraint->m_tiBY0.m_uiKI);
+        TgDIAG((nullptr != psBY0) || (nullptr != psBY1));
+        TgDIAG(!tgMH_Is_PRX_CMP_EQ_F32_04_1( vNormal, KTgZERO_F32_04_1 ));
 
         tgMH_Init_Basis_From_Vector_F32_04_1( &vPN_T0, &vPN_T1, vNormal );
 
@@ -128,9 +129,9 @@ TgVOID tgPH_Constraint_Contact__Problem_Definition( TgPH_WORLD_ID_C tiWorld, STg
         avRHS_Component[1] = tgMH_SET1_F32_04_1( 0.0F );
         avRHS_Component[2] = tgMH_SET1_F32_04_1( 0.0F );
 
-        if (nullptr != psBY0 && psBY0->m_bEnabled)
+        if (nullptr != psBY0) /* Enabled state may have been toggled earlier during Problem Set creation and is ignored here to avoid issues with the solver. */
         {
-            TgVEC_F32_04_1_C                    vBY0_Pos_O2W = psUpdate_Simulation->m_avPos_W[psBY0->m_uiUsed_Index];
+            TgVEC_F32_04_1_C                    vBY0_Pos_O2W = psUpdate_Simulation->m_avBY_Pos_O2W[psBY0->m_uiUsed_Index];
             TgVEC_F32_04_1_C                    vContact_Rel_BY0 = tgMH_SUB_F32_04_1( psConstraint->m_sContact.m_sContact.m_vS0, vBY0_Pos_O2W );
             TgVEC_F32_04_1                      vREST_00, vREST_01;
 
@@ -163,9 +164,9 @@ TgVOID tgPH_Constraint_Contact__Problem_Definition( TgPH_WORLD_ID_C tiWorld, STg
             vREST_04 = KTgZERO_F32_04_1;
         };
 
-        if (nullptr != psBY1 && psBY1->m_bEnabled)
+        if (nullptr != psBY1) /* Enabled state may have been toggled earlier during Problem Set creation and is ignored here to avoid issues with the solver. */
         {
-            TgVEC_F32_04_1_C                    vBY1_Pos_O2W = psUpdate_Simulation->m_avPos_W[psBY1->m_uiUsed_Index];
+            TgVEC_F32_04_1_C                    vBY1_Pos_O2W = psUpdate_Simulation->m_avBY_Pos_O2W[psBY1->m_uiUsed_Index];
             TgVEC_F32_04_1_C                    vContact_Rel_BY1 = tgMH_SUB_F32_04_1( psConstraint->m_sContact.m_sContact.m_vS0, vBY1_Pos_O2W );
             TgVEC_F32_04_1                      vREST_02, vREST_03;
 
@@ -211,7 +212,7 @@ TgVOID tgPH_Constraint_Contact__Problem_Definition( TgPH_WORLD_ID_C tiWorld, STg
         };
         #pragma endregion
 
-    #if defined(TgBUILD_DEBUG__PHYSICS__EXTENSIVE_DATA_CHECK)
+    #if defined(TgBUILD_DEBUG__PHYSICS__EXTENSIVE_DATA_CHECK) && TgCOMPILE_ASSERT && TgCOMPILE_ASSERT__DIAG
         for (TgRSIZE uiTest = 0; uiTest < 3; ++uiTest)
         {
             TgDIAG(!tgMH_CMP_ANY_TO_BOOL_F32_04_1(tgMH_NAN_F32_04_1( pvCoefficients[uiTest*ETgPH_PCI__VEC_PER_DOF + ETgPH_PCI__JACOBIAN_LIN_BY_0] )));
@@ -219,8 +220,8 @@ TgVOID tgPH_Constraint_Contact__Problem_Definition( TgPH_WORLD_ID_C tiWorld, STg
             TgDIAG(!tgMH_CMP_ANY_TO_BOOL_F32_04_1(tgMH_NAN_F32_04_1( pvCoefficients[uiTest*ETgPH_PCI__VEC_PER_DOF + ETgPH_PCI__JACOBIAN_LIN_BY_1] )));
             TgDIAG(!tgMH_CMP_ANY_TO_BOOL_F32_04_1(tgMH_NAN_F32_04_1( pvCoefficients[uiTest*ETgPH_PCI__VEC_PER_DOF + ETgPH_PCI__JACOBIAN_ANG_BY_1] )));
             TgDIAG(!tgMH_CMP_ANY_TO_BOOL_F32_04_1(tgMH_NAN_F32_04_1( avRHS_Component[uiTest] )));
-        };
-    /*# defined(TgBUILD_DEBUG__PHYSICS__EXTENSIVE_DATA_CHECK) */
+        }
+    /*# defined(TgBUILD_DEBUG__PHYSICS__EXTENSIVE_DATA_CHECK) && TgCOMPILE_ASSERT && TgCOMPILE_ASSERT__DIAG */
     #endif
 
         #pragma region Construct RHS - Needs to be done in every constraint problem data function.
@@ -239,10 +240,10 @@ TgVOID tgPH_Constraint_Contact__Problem_Definition( TgPH_WORLD_ID_C tiWorld, STg
 
                 TgVEC_F32_04_1_C                    vRHS_0 = tgMH_MUL_F32_04_1( avRHS_Component[uiDoF], vStep_Size_RCP );
 
-            #if defined(TgBUILD_DEBUG__PHYSICS__EXTENSIVE_DATA_CHECK)
+            #if defined(TgBUILD_DEBUG__PHYSICS__EXTENSIVE_DATA_CHECK) && TgCOMPILE_ASSERT && TgCOMPILE_ASSERT__DIAG
                 TgDIAG(!tgMH_CMP_ANY_TO_BOOL_F32_04_1(tgMH_NAN_F32_04_1( vSUM_06 )));
                 TgDIAG(!tgMH_CMP_ANY_TO_BOOL_F32_04_1(tgMH_NAN_F32_04_1( vRHS_0 )));
-            /*# defined(TgBUILD_DEBUG__PHYSICS__EXTENSIVE_DATA_CHECK) */
+            /*# defined(TgBUILD_DEBUG__PHYSICS__EXTENSIVE_DATA_CHECK) && TgCOMPILE_ASSERT && TgCOMPILE_ASSERT__DIAG */
             #endif
 
                 auRHS[uiDoF].m_vF32_04_1 = tgMH_SUB_F32_04_1( vRHS_0, vSUM_06 );
@@ -253,12 +254,12 @@ TgVOID tgPH_Constraint_Contact__Problem_Definition( TgPH_WORLD_ID_C tiWorld, STg
             pvCoefficients[1*ETgPH_PCI__VEC_PER_DOF + ETgPH_PCI__MIN_MAX_CFM_RHS] = tgMH_Init_ELEM_F32_04_1(     -fμd,     fμd, fCFM, auRHS[1].m_vS_F32_04_1.x );
             pvCoefficients[2*ETgPH_PCI__VEC_PER_DOF + ETgPH_PCI__MIN_MAX_CFM_RHS] = tgMH_Init_ELEM_F32_04_1(     -fμd,     fμd, fCFM, auRHS[2].m_vS_F32_04_1.x );
 
-        #if defined(TgBUILD_DEBUG__PHYSICS__EXTENSIVE_DATA_CHECK)
+        #if defined(TgBUILD_DEBUG__PHYSICS__EXTENSIVE_DATA_CHECK) && TgCOMPILE_ASSERT && TgCOMPILE_ASSERT__DIAG
             for (TgRSIZE uiTest = 0; uiTest < 3; ++uiTest)
             {
                 TgDIAG(!tgMH_CMP_ANY_TO_BOOL_F32_04_1(tgMH_NAN_F32_04_1( pvCoefficients[uiTest*ETgPH_PCI__VEC_PER_DOF + ETgPH_PCI__MIN_MAX_CFM_RHS] )));
             };
-        /*# defined(TgBUILD_DEBUG__PHYSICS__EXTENSIVE_DATA_CHECK) */
+        /*# defined(TgBUILD_DEBUG__PHYSICS__EXTENSIVE_DATA_CHECK) && TgCOMPILE_ASSERT && TgCOMPILE_ASSERT__DIAG */
         #endif
         }
         #pragma endregion

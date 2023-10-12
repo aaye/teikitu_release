@@ -31,7 +31,7 @@
     @param [in,out] OUT1 Pointer to a value of the function type */
 TgINLINE TgVOID
 FCM(SWP)(
-    VAR_T(PCU) NONULL OUT0, VAR_T(PCU) NONULL OUT1 );
+    VAR_T(PCU) TgANALYSIS_NO_NULL OUT0, VAR_T(PCU) TgANALYSIS_NO_NULL OUT1 );
 
 /** @return The sign of the value in ARG [-1 for negative, 1 for positive and 0 otherwise]
     @param [in] ARG A value of the function type */
@@ -177,7 +177,7 @@ FCM(EQ)(
 
 /** @return True if parameter in ARG is a valid and finite number and false otherwise
     @param [in] ARG A value of the function type */
-TgINLINE TgBOOL
+TgEXTN TgBOOL
 FPM(NAN)(
     VAR_T(C) ARG );
 
@@ -211,7 +211,7 @@ FPM(COS)(
     @param [in] ARG2 A value of the function type */
 TgINLINE TgVOID
 FPM(SINCOS)(
-    VAR_T(PCU) NONULL OUT0, VAR_T(PCU) NONULL OUT1, VAR_T(C) ARG2 );
+    VAR_T(PCU) TgANALYSIS_NO_NULL OUT0, VAR_T(PCU) TgANALYSIS_NO_NULL OUT1, VAR_T(C) ARG2 );
 
 /** @return Tangent of the parameter in ARG
     @param [in] ARG A value of the function type */

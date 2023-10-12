@@ -77,7 +77,7 @@ TgINLINE VEC_T(1) FCN_V(tgMH_Init_Ortho)( VEC_T(1,C) v0 )
 
 /* ---- FCN_V(tgMH_Init_Basis_From_Vector) --------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID FCN_V(tgMH_Init_Basis_From_Vector)( VEC_T(1,PCU) NONULL vARG_0, VEC_T(1,PCU) NONULL vARG_1, VEC_T(1,C) vARG_2 )
+TgINLINE TgVOID FCN_V(tgMH_Init_Basis_From_Vector)( VEC_T(1,PCU) TgANALYSIS_NO_NULL vARG_0, VEC_T(1,PCU) TgANALYSIS_NO_NULL vARG_1, VEC_T(1,C) vARG_2 )
 {
     FCN_V(tgMH_Init_Basis_From_Vector_S)( (VEC_S_T(1,P))vARG_0, (VEC_S_T(1,P))vARG_1, *(VEC_S_T(1,CP))&vARG_2 );
 }

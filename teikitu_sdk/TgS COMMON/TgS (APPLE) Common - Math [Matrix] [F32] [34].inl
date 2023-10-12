@@ -204,7 +204,7 @@ TgINLINE TgVOID tgMH_Init_Reference_Frame_From_Vector_And_Position_F32_04_3( TgV
 
 /* ---- tgMH_Init_Reference_Frame_From_Basis_Axes_And_Position_F32_04_3 ---------------------------------------------------------------------------------------------------------  */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgMH_Init_Reference_Frame_From_Basis_Axes_And_Position_F32_04_3( TgVEC_F32_04_3_PC NONULL pmOUT_0, TgVEC_F32_04_1_C vA0, TgVEC_F32_04_1_C vA1,
+TgINLINE TgVOID tgMH_Init_Reference_Frame_From_Basis_Axes_And_Position_F32_04_3( TgVEC_F32_04_3_PC TgANALYSIS_NO_NULL pmOUT_0, TgVEC_F32_04_1_C vA0, TgVEC_F32_04_1_C vA1,
                                                                                  TgVEC_F32_04_1_C vA2, TgVEC_F32_04_1_C vC0 )
 {
     simd_float4x4 mM1 = simd_matrix( vA0, vA1, vA2, vC0 );
@@ -254,7 +254,7 @@ TgINLINE TgVOID tgMH_CAT_F32_04_3( TgVEC_F32_04_3_PC pmOUT_0, TgVEC_F32_04_3_CPC
 
 /* ---- tgMH_INV_DET_F32_04_3 ---------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgMH_INV_DET_F32_04_3( TgVEC_F32_04_4_PC NONULL pmOUT_0, TgVEC_F32_04_1_C vARG_1, TgVEC_F32_04_3_CPC pmARG_2 )
+TgINLINE TgVOID tgMH_INV_DET_F32_04_3( TgVEC_F32_04_4_PC TgANALYSIS_NO_NULL pmOUT_0, TgVEC_F32_04_1_C vARG_1, TgVEC_F32_04_3_CPC pmARG_2 )
 {
     *(simd_float4x4*)pmOUT_0 = simd_inverse( simd_matrix( pmARG_2->columns[0], pmARG_2->columns[1], pmARG_2->columns[2], KTgUNIT_W_V128.m_vF32_04_1 ) );
 }
@@ -262,7 +262,7 @@ TgINLINE TgVOID tgMH_INV_DET_F32_04_3( TgVEC_F32_04_4_PC NONULL pmOUT_0, TgVEC_F
 
 /* ---- tgMH_INV_F32_04_3 -------------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgMH_INV_F32_04_3( TgVEC_F32_04_4_PC NONULL pmOUT_0, TgVEC_F32_04_3_CPC pmARG_1 )
+TgINLINE TgVOID tgMH_INV_F32_04_3( TgVEC_F32_04_4_PC TgANALYSIS_NO_NULL pmOUT_0, TgVEC_F32_04_3_CPC pmARG_1 )
 {
     *(simd_float4x4*)pmOUT_0 = simd_inverse( simd_matrix( pmARG_1->columns[0], pmARG_1->columns[1], pmARG_1->columns[2], KTgUNIT_W_V128.m_vF32_04_1 ) );
 }
@@ -398,7 +398,7 @@ TgINLINE TgVEC_F32_04_1 tgMH_Query_Axis_3_F32_04_3( TgVEC_F32_04_3_CPC pmARG_0 )
 
 /* ---- tgMH_Query_Reference_Frame_F32_04_3 -------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgMH_Query_Reference_Frame_F32_04_3( TgVEC_F32_04_1_P pvOUT_0, TgVEC_F32_04_1_P pvOUT_1, TgVEC_F32_04_1_P pvOUT_2, TgVEC_F32_04_1_P pvOUT_3,
+TgINLINE TgRESULT tgMH_Query_Reference_Frame_F32_04_3( TgVEC_F32_04_1_P pvOUT_0, TgVEC_F32_04_1_P pvOUT_1, TgVEC_F32_04_1_P pvOUT_2, TgVEC_F32_04_1_P pvOUT_3,
                                                      TgVEC_F32_04_3_CPC pmARG_4 )
 {
     TgVEC_F32_04_4                      mM1;
@@ -409,6 +409,8 @@ TgINLINE TgVOID tgMH_Query_Reference_Frame_F32_04_3( TgVEC_F32_04_1_P pvOUT_0, T
     *pvOUT_1 = simd_make_float4( mM1.columns[1].xyz, 0.0F );
     *pvOUT_2 = simd_make_float4( mM1.columns[2].xyz, 0.0F );
     *pvOUT_3 = simd_make_float4( mM1.columns[3].xyz, 1.0F );
+
+    return KTgS_OK;
 }
 
 
@@ -467,7 +469,7 @@ TgINLINE TgVOID tgMH_CLI_F32_04_3( TgVEC_F32_04_3_PC pmOUT_0 )
 
 /* ---- tgMH_Set_Rot_F32_04_3 ---------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgMH_Set_Rot_F32_04_3( TgVEC_F32_04_3_PC NONULL pmOUT_0, TgVEC_F32_04_3_CPC pmARG_1 )
+TgINLINE TgVOID tgMH_Set_Rot_F32_04_3( TgVEC_F32_04_3_PC TgANALYSIS_NO_NULL pmOUT_0, TgVEC_F32_04_3_CPC pmARG_1 )
 {
     TgVEC_UN_PTR_F32_04_3               uM0;
     TgVEC_UN_CONST_PTR_F32_04_3         uM1;
@@ -480,7 +482,7 @@ TgINLINE TgVOID tgMH_Set_Rot_F32_04_3( TgVEC_F32_04_3_PC NONULL pmOUT_0, TgVEC_F
 
 /* ---- tgMH_Set_T_F32_04_3 ------------------------------------------------------------------------------------------------------------------------------------------------------ */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgMH_Set_T_F32_04_3( TgVEC_F32_04_3_PC NONULL pmOUT_0, TgVEC_F32_04_1_C vARG_1 )
+TgINLINE TgVOID tgMH_Set_T_F32_04_3( TgVEC_F32_04_3_PC TgANALYSIS_NO_NULL pmOUT_0, TgVEC_F32_04_1_C vARG_1 )
 {
     pmOUT_0->columns[0] = simd_make_float4( pmOUT_0->columns[0].xyz, vARG_1.x );
     pmOUT_0->columns[1] = simd_make_float4( pmOUT_0->columns[1].xyz, vARG_1.y );
@@ -490,7 +492,7 @@ TgINLINE TgVOID tgMH_Set_T_F32_04_3( TgVEC_F32_04_3_PC NONULL pmOUT_0, TgVEC_F32
 
 /* ---- tgMH_Set_T_ELEM_F32_04_3 ------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgMH_Set_T_ELEM_F32_04_3( TgVEC_F32_04_3_PC NONULL pmOUT_0, TgFLOAT32_C fARG_1, TgFLOAT32_C fARG_2, TgFLOAT32_C fARG_3 )
+TgINLINE TgVOID tgMH_Set_T_ELEM_F32_04_3( TgVEC_F32_04_3_PC TgANALYSIS_NO_NULL pmOUT_0, TgFLOAT32_C fARG_1, TgFLOAT32_C fARG_2, TgFLOAT32_C fARG_3 )
 {
     TgVEC_UN_PTR_F32_04_3               uM0;
 
@@ -501,7 +503,7 @@ TgINLINE TgVOID tgMH_Set_T_ELEM_F32_04_3( TgVEC_F32_04_3_PC NONULL pmOUT_0, TgFL
 
 /* ---- tgMH_Set_Euler_F32_04_3 -------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgMH_Set_Euler_F32_04_3( TgVEC_F32_04_3_PC NONULL pmOUT_0, TgVEC_F32_04_1_C vARG_1 )
+TgINLINE TgVOID tgMH_Set_Euler_F32_04_3( TgVEC_F32_04_3_PC TgANALYSIS_NO_NULL pmOUT_0, TgVEC_F32_04_1_C vARG_1 )
 {
     TgVEC_UN_PTR_F32_04_3               uM0;
     TgVEC_UN_F32_04_1                   uV0;
@@ -514,7 +516,7 @@ TgINLINE TgVOID tgMH_Set_Euler_F32_04_3( TgVEC_F32_04_3_PC NONULL pmOUT_0, TgVEC
 
 /* ---- tgMH_Set_Euler_ELEM_F32_04_3 --------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgMH_Set_Euler_ELEM_F32_04_3( TgVEC_F32_04_3_PC NONULL pmOUT_0, TgFLOAT32_C fARG_1, TgFLOAT32_C fARG_2, TgFLOAT32_C fARG_3 )
+TgINLINE TgVOID tgMH_Set_Euler_ELEM_F32_04_3( TgVEC_F32_04_3_PC TgANALYSIS_NO_NULL pmOUT_0, TgFLOAT32_C fARG_1, TgFLOAT32_C fARG_2, TgFLOAT32_C fARG_3 )
 {
     TgVEC_UN_PTR_F32_04_3               uM0;
 
@@ -525,7 +527,7 @@ TgINLINE TgVOID tgMH_Set_Euler_ELEM_F32_04_3( TgVEC_F32_04_3_PC NONULL pmOUT_0, 
 
 /* ---- tgMH_Set_Euler_X_F32_04_3 ------------------------------------------------------------------------------------------------------------------------------------------------ */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgMH_Set_Euler_X_F32_04_3( TgVEC_F32_04_3_PC NONULL pmOUT_0, TgFLOAT32_C fARG_1 )
+TgINLINE TgVOID tgMH_Set_Euler_X_F32_04_3( TgVEC_F32_04_3_PC TgANALYSIS_NO_NULL pmOUT_0, TgFLOAT32_C fARG_1 )
 {
     TgVEC_UN_PTR_F32_04_3               uM0;
 
@@ -536,7 +538,7 @@ TgINLINE TgVOID tgMH_Set_Euler_X_F32_04_3( TgVEC_F32_04_3_PC NONULL pmOUT_0, TgF
 
 /* ---- tgMH_Set_Euler_Y_F32_04_3 ------------------------------------------------------------------------------------------------------------------------------------------------ */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgMH_Set_Euler_Y_F32_04_3( TgVEC_F32_04_3_PC NONULL pmOUT_0, TgFLOAT32_C fARG_1 )
+TgINLINE TgVOID tgMH_Set_Euler_Y_F32_04_3( TgVEC_F32_04_3_PC TgANALYSIS_NO_NULL pmOUT_0, TgFLOAT32_C fARG_1 )
 {
     TgVEC_UN_PTR_F32_04_3               uM0;
 
@@ -547,7 +549,7 @@ TgINLINE TgVOID tgMH_Set_Euler_Y_F32_04_3( TgVEC_F32_04_3_PC NONULL pmOUT_0, TgF
 
 /* ---- tgMH_Set_Euler_Z_F32_04_3 ------------------------------------------------------------------------------------------------------------------------------------------------ */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgMH_Set_Euler_Z_F32_04_3( TgVEC_F32_04_3_PC NONULL pmOUT_0, TgFLOAT32_C fARG_1 )
+TgINLINE TgVOID tgMH_Set_Euler_Z_F32_04_3( TgVEC_F32_04_3_PC TgANALYSIS_NO_NULL pmOUT_0, TgFLOAT32_C fARG_1 )
 {
     TgVEC_UN_PTR_F32_04_3               uM0;
 
@@ -558,7 +560,7 @@ TgINLINE TgVOID tgMH_Set_Euler_Z_F32_04_3( TgVEC_F32_04_3_PC NONULL pmOUT_0, TgF
 
 /* ---- tgMH_Set_Quat_F32_04_3 --------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgMH_Set_Quat_F32_04_3( TgVEC_F32_04_3_PC NONULL pmOUT_0, TgVEC_F32_04_1_C qR0 )
+TgINLINE TgVOID tgMH_Set_Quat_F32_04_3( TgVEC_F32_04_3_PC TgANALYSIS_NO_NULL pmOUT_0, TgVEC_F32_04_1_C qR0 )
 {
     simd_float3x3 mM1 = simd_matrix3x3( simd_quaternion( qR0 ) );
     pmOUT_0->columns[0].xyz = mM1.columns[0];
@@ -569,7 +571,7 @@ TgINLINE TgVOID tgMH_Set_Quat_F32_04_3( TgVEC_F32_04_3_PC NONULL pmOUT_0, TgVEC_
 
 /* ---- tgMH_ADD_F32_04_3 -------------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgMH_ADD_F32_04_3( TgVEC_F32_04_3_PC pmOUT_0, TgVEC_F32_04_3_CPC pmARG_1, TgVEC_F32_04_3_CPC NONULL pmARG_2 )
+TgINLINE TgVOID tgMH_ADD_F32_04_3( TgVEC_F32_04_3_PC pmOUT_0, TgVEC_F32_04_3_CPC pmARG_1, TgVEC_F32_04_3_CPC TgANALYSIS_NO_NULL pmARG_2 )
 {
     *(simd_float3x4*)pmOUT_0 = simd_add( *(simd_float3x4 const*)pmARG_1, *(simd_float3x4 const*)pmARG_2 );
 }
@@ -577,7 +579,7 @@ TgINLINE TgVOID tgMH_ADD_F32_04_3( TgVEC_F32_04_3_PC pmOUT_0, TgVEC_F32_04_3_CPC
 
 /* ---- tgMH_MUL_F32_04_3 -------------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgMH_MUL_F32_04_3( TgVEC_F32_04_3_PC pmOUT_0, TgVEC_F32_04_3_CPC pmARG_1, TgVEC_F32_04_3_CPC NONULL pmARG_2 )
+TgINLINE TgVOID tgMH_MUL_F32_04_3( TgVEC_F32_04_3_PC pmOUT_0, TgVEC_F32_04_3_CPC pmARG_1, TgVEC_F32_04_3_CPC TgANALYSIS_NO_NULL pmARG_2 )
 {
     pmOUT_0->columns[0] = tgMH_MUL_F32_04_1( pmARG_1->columns[0], pmARG_2->columns[0] );
     pmOUT_0->columns[1] = tgMH_MUL_F32_04_1( pmARG_1->columns[1], pmARG_2->columns[1] );
@@ -587,7 +589,7 @@ TgINLINE TgVOID tgMH_MUL_F32_04_3( TgVEC_F32_04_3_PC pmOUT_0, TgVEC_F32_04_3_CPC
 
 /* ---- tgMH_DIV_F32_04_3 -------------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgMH_DIV_F32_04_3( TgVEC_F32_04_3_PC pmOUT_0, TgVEC_F32_04_3_CPC pmARG_1, TgVEC_F32_04_3_CPC NONULL pmARG_2 )
+TgINLINE TgVOID tgMH_DIV_F32_04_3( TgVEC_F32_04_3_PC pmOUT_0, TgVEC_F32_04_3_CPC pmARG_1, TgVEC_F32_04_3_CPC TgANALYSIS_NO_NULL pmARG_2 )
 {
     pmOUT_0->columns[0] = tgMH_DIV_F32_04_1( pmARG_1->columns[0], pmARG_2->columns[0] );
     pmOUT_0->columns[1] = tgMH_DIV_F32_04_1( pmARG_1->columns[1], pmARG_2->columns[1] );
@@ -597,7 +599,7 @@ TgINLINE TgVOID tgMH_DIV_F32_04_3( TgVEC_F32_04_3_PC pmOUT_0, TgVEC_F32_04_3_CPC
 
 /* ---- tgMH_SUB_F32_04_3 -------------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgMH_SUB_F32_04_3( TgVEC_F32_04_3_PC pmOUT_0, TgVEC_F32_04_3_CPC pmARG_1, TgVEC_F32_04_3_CPC NONULL pmARG_2 )
+TgINLINE TgVOID tgMH_SUB_F32_04_3( TgVEC_F32_04_3_PC pmOUT_0, TgVEC_F32_04_3_CPC pmARG_1, TgVEC_F32_04_3_CPC TgANALYSIS_NO_NULL pmARG_2 )
 {
     *(simd_float3x4*)pmOUT_0 = simd_sub( *(simd_float3x4 const*)pmARG_1, *(simd_float3x4 const*)pmARG_2 );
 }

@@ -294,40 +294,40 @@ TgINLINE TgRSIZE tgFX__Render__Trail_Render_Memory_Particle_01( STg2_FX__Trail_P
 
 TgFORCEINLINE TgVOID
 T_NAME(tgFX__Render__,_Init_Header)(
-    STg2_RN_Particle_Header_P NONULL ARG0, T_NAME(STg2_FX__,_P) NONULL ARG1 );
+    STg2_RN_Particle_Header_P TgANALYSIS_NO_NULL ARG0, T_NAME(STg2_FX__,_P) TgANALYSIS_NO_NULL ARG1 );
 
 TgINLINE TgRSIZE
 T_NAME(tgFX__Render__, _Render_Memory_Particle_00)(
-    T_NAME(STg2_FX__,_P) NONULL ARG0 );
+    T_NAME(STg2_FX__,_P) TgANALYSIS_NO_NULL ARG0 );
 
 TgINLINE TgRSIZE
 T_NAME(tgFX__Render__, _Render_Memory_Particle_01)(
-    T_NAME(STg2_FX__,_P) NONULL ARG0 );
+    T_NAME(STg2_FX__,_P) TgANALYSIS_NO_NULL ARG0 );
 
 
 static TgVOID
 T_NAME(tgFX__Render__,_Process_Headers)(
-    STg2_FX_Rnd_Output_PC NONULL ARG0, ETgFX_UPDATE_C ARG1 );
+    STg2_FX_Rnd_Output_PC TgANALYSIS_NO_NULL ARG0, ETgFX_UPDATE_C ARG1 );
 
 static TgRESULT
 T_NAME(tgFX__Render__Job__,_Process_Headers)(
-    STg2_Job_CPC NONULL ARG0 );
+    STg2_Job_CPC TgANALYSIS_NO_NULL ARG0 );
 
 static TgVOID
 T_NAME(tgFX__Render__,_Render_ReCalculate_CPU_Vertex_Buffer_Size_Required)(
-    STg2_FX_Rnd_Output_PC NONULL ARG0, TgFLOAT32_C ARG1 );
+    STg2_FX_Rnd_Output_PC TgANALYSIS_NO_NULL ARG0, TgFLOAT32_C ARG1 );
 
 static TgVOID
 T_NAME(tgFX__Render__,_Render_Allocate_CPU_Vertex_Buffer)(
-    STg2_FX_Rnd_Output_PC NONULL ARG0, TgRSIZE ARG1 );
+    STg2_FX_Rnd_Output_PC TgANALYSIS_NO_NULL ARG0, TgRSIZE ARG1 );
 
 static TgVOID
 T_NAME(tgFX__Render__,_Render_Generate)(
-    STg2_FX_Rnd_Output_PC NONULL ARG0 );
+    STg2_FX_Rnd_Output_PC TgANALYSIS_NO_NULL ARG0 );
 
 static TgRESULT
 T_NAME(tgFX__Render__Job__,_Render_Generate)(
-    STg2_Job_CPC NONULL ARG0 );
+    STg2_Job_CPC TgANALYSIS_NO_NULL ARG0 );
 
 TgCOMPILER_ASSERT( sizeof( STg2_UT_ST__ST_Node ) <= sizeof( T_NAME(STg2_FX__,) ), 0 );
 

@@ -16,7 +16,7 @@
 
 /* ---- tgCM_Path_Add_Separator -------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgRESULT tgCM_Path_Add_Separator( TgCHAR_U8_PC NONULL mbzDest, TgRSIZE_C nbyMaxDest )
+TgRESULT tgCM_Path_Add_Separator( TgCHAR_U8_PC mbzDest, TgRSIZE_C nbyMaxDest )
 {
     TgRSIZE                                 nbyDest;
 
@@ -43,7 +43,7 @@ TgRESULT tgCM_Path_Add_Separator( TgCHAR_U8_PC NONULL mbzDest, TgRSIZE_C nbyMaxD
 
 /* ---- tgCM_Path_Add_Extension -------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgRESULT tgCM_Path_Add_Extension( TgCHAR_U8_PC NONULL mbzDest, TgRSIZE_C nbyMaxDest, TgCHAR_U8_CPC NONULL mbzExt, TgRSIZE_C nbyMaxExt )
+TgRESULT tgCM_Path_Add_Extension( TgCHAR_U8_PC mbzDest, TgRSIZE_C nbyMaxDest, TgCHAR_U8_CPC mbzExt, TgRSIZE_C nbyMaxExt )
 {
     TgRSIZE                                 nbyDest;
     TgRSIZE                                 nbyExt;
@@ -83,7 +83,7 @@ TgRESULT tgCM_Path_Copy( TgCHAR_U8_PC mbzDest, TgRSIZE_C nbyMaxDest, TgCHAR_U8_C
 
 /* ---- tgCM_Path_Append --------------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgRESULT tgCM_Path_Append( TgCHAR_U8_PC NONULL mbzDest, TgRSIZE_C nbyMaxDest, TgCHAR_U8_CPC NONULL mbzSrc, TgRSIZE_C nbyMaxSrc )
+TgRESULT tgCM_Path_Append( TgCHAR_U8_PC mbzDest, TgRSIZE_C nbyMaxDest, TgCHAR_U8_CPC mbzSrc, TgRSIZE_C nbyMaxSrc )
 {
     TgRSIZE                                 nbyDest;
     TgRSIZE                                 nbySrc;
@@ -126,7 +126,7 @@ TgRESULT tgCM_Path_Append( TgCHAR_U8_PC NONULL mbzDest, TgRSIZE_C nbyMaxDest, Tg
 
 /* ---- tgCM_Path_Common_Prefix_Size_U08 ----------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgRSIZE tgCM_Path_Common_Prefix_Size_U08( TgCHAR_U8_CP NONULL mbzPath0, TgRSIZE nbyMaxPath0, TgCHAR_U8_CP NONULL mbzPath1, TgRSIZE nbyMaxPath1 )
+TgRSIZE tgCM_Path_Common_Prefix_Size_U08( TgCHAR_U8_CP mbzPath0, TgRSIZE nbyMaxPath0, TgCHAR_U8_CP mbzPath1, TgRSIZE nbyMaxPath1 )
 {
     TgRSIZE                                 nbyMatch, nbyChar;
 
@@ -167,7 +167,7 @@ TgRSIZE tgCM_Path_Common_Prefix_Size_U08( TgCHAR_U8_CP NONULL mbzPath0, TgRSIZE 
 
 /* ---- tgCM_Path_Common_Prefix_Size_Count --------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgRSIZE tgCM_Path_Common_Prefix_Size_Count( TgCHAR_U8_CP NONULL mbzPath0, TgRSIZE nbyMaxPath0, TgCHAR_U8_CP NONULL mbzPath1, TgRSIZE nbyMaxPath1 )
+TgRSIZE tgCM_Path_Common_Prefix_Size_Count( TgCHAR_U8_CP mbzPath0, TgRSIZE nbyMaxPath0, TgCHAR_U8_CP mbzPath1, TgRSIZE nbyMaxPath1 )
 {
     TgRSIZE                                 nuiMatch, nuiInMatch;;
 
@@ -204,7 +204,7 @@ TgRSIZE tgCM_Path_Common_Prefix_Size_Count( TgCHAR_U8_CP NONULL mbzPath0, TgRSIZ
 
 /* ---- tgCM_Path_Common_Prefix -------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgRESULT tgCM_Path_Common_Prefix( TgCHAR_U8_P mbzDest, TgRSIZE nbyMaxDest, TgCHAR_U8_CP NONULL mbzP0, TgRSIZE nbyMaxP0, TgCHAR_U8_CP NONULL mbzP1, TgRSIZE nbyMaxP1 )
+TgRESULT tgCM_Path_Common_Prefix( TgCHAR_U8_P mbzDest, TgRSIZE nbyMaxDest, TgCHAR_U8_CP mbzP0, TgRSIZE nbyMaxP0, TgCHAR_U8_CP mbzP1, TgRSIZE nbyMaxP1 )
 {
     TgCHAR_U8_P                             mbzNull;
     
@@ -254,7 +254,7 @@ TgRESULT tgCM_Path_Common_Prefix( TgCHAR_U8_P mbzDest, TgRSIZE nbyMaxDest, TgCHA
 
 /* ---- tgCM_Path_Remove_Separator ----------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgRESULT tgCM_Path_Remove_Separator( TgCHAR_U8_PC NONULL mbzDest, TgRSIZE_C nbyMaxDest )
+TgRESULT tgCM_Path_Remove_Separator( TgCHAR_U8_PC mbzDest, TgRSIZE_C nbyMaxDest )
 {
     TgRSIZE                                 nbyDest;
 
@@ -273,7 +273,7 @@ TgRESULT tgCM_Path_Remove_Separator( TgCHAR_U8_PC NONULL mbzDest, TgRSIZE_C nbyM
 
 /* ---- tgCM_Path_Remove_Extension ----------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgRESULT tgCM_Path_Remove_Extension( TgCHAR_U8_PC NONULL mbzDest, TgRSIZE_C nbyMaxDest )
+TgRESULT tgCM_Path_Remove_Extension( TgCHAR_U8_PC mbzDest, TgRSIZE_C nbyMaxDest )
 {
     TgRSIZE                                 nbyOffset;
 
@@ -291,7 +291,7 @@ TgRESULT tgCM_Path_Remove_Extension( TgCHAR_U8_PC NONULL mbzDest, TgRSIZE_C nbyM
 
 /* ---- tgCM_Path_Remove_File_Name ----------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgRESULT tgCM_Path_Remove_File_Name( TgCHAR_U8_PC NONULL mbzDest, TgRSIZE_C nbyMaxDest )
+TgRESULT tgCM_Path_Remove_File_Name( TgCHAR_U8_PC mbzDest, TgRSIZE_C nbyMaxDest )
 {
     TgRSIZE                                 nbyOffset;
 
@@ -309,7 +309,7 @@ TgRESULT tgCM_Path_Remove_File_Name( TgCHAR_U8_PC NONULL mbzDest, TgRSIZE_C nbyM
 
 /* ---- tgCM_Path_Rename_Extension ----------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgRESULT tgCM_Path_Rename_Extension( TgCHAR_U8_PC NONULL mbzDest, TgRSIZE_C nbyMaxDest, TgCHAR_U8_CPC NONULL mbzNewExt, TgRSIZE_C nbyMaxNewExt )
+TgRESULT tgCM_Path_Rename_Extension( TgCHAR_U8_PC mbzDest, TgRSIZE_C nbyMaxDest, TgCHAR_U8_CPC mbzNewExt, TgRSIZE_C nbyMaxNewExt )
 {
     TgRSIZE                                 nbyNewExt;
     TgRSIZE                                 nbyPrefix;
@@ -339,7 +339,7 @@ TgRESULT tgCM_Path_Rename_Extension( TgCHAR_U8_PC NONULL mbzDest, TgRSIZE_C nbyM
 
 /* ---- tgCM_Path_Remove_Folder -------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgRESULT tgCM_Path_Remove_Folder( TgCHAR_U8_P NONULL mbzDest, TgRSIZE nbyMaxDest )
+TgRESULT tgCM_Path_Remove_Folder( TgCHAR_U8_P mbzDest, TgRSIZE nbyMaxDest )
 {
     TgRSIZE                                 nbyOffset;
 
@@ -367,7 +367,7 @@ TgRESULT tgCM_Path_Remove_Folder( TgCHAR_U8_P NONULL mbzDest, TgRSIZE nbyMaxDest
 
 /* ---- tgCM_Path_Init ----------------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgRESULT tgCM_Path_Init( TgCHAR_U8_PC NONULL mbzDest, TgRSIZE nbyMaxDest, ... )
+TgRESULT tgCM_Path_Init( TgCHAR_U8_PC mbzDest, TgRSIZE nbyMaxDest, ... )
 {
     va_list                                 vaList;
     TgCHAR_U8_CP                            mbzPath;
@@ -440,7 +440,7 @@ TgRESULT tgCM_Path_Init( TgCHAR_U8_PC NONULL mbzDest, TgRSIZE nbyMaxDest, ... )
 
 /* ---- tgCM_Path_Find_Extension ------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgRESULT tgCM_Path_Find_Extension( TgRSIZE_P NONULL pnbyOffset, TgCHAR_U8_CPC NONULL mbzDest, TgRSIZE_C nbyMaxDest )
+TgRESULT tgCM_Path_Find_Extension( TgRSIZE_P pnbyOffset, TgCHAR_U8_CPC mbzDest, TgRSIZE_C nbyMaxDest )
 {
     TgRSIZE                                 nbyDest;
     TgCHAR_U8_CP                            mbzIter;
@@ -468,7 +468,7 @@ TgRESULT tgCM_Path_Find_Extension( TgRSIZE_P NONULL pnbyOffset, TgCHAR_U8_CPC NO
 
 /* ---- tgCM_Path_Find_File_Name ------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgRESULT tgCM_Path_Find_File_Name( TgRSIZE_P NONULL pnbyOffset, TgCHAR_U8_CPC NONULL mbzDest, TgRSIZE_C nbyMaxDest )
+TgRESULT tgCM_Path_Find_File_Name( TgRSIZE_P pnbyOffset, TgCHAR_U8_CPC mbzDest, TgRSIZE_C nbyMaxDest )
 {
     TgRSIZE                                 nbyDest;
     TgCHAR_U8_CP                            mbzIter;

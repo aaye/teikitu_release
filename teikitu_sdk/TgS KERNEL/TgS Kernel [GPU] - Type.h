@@ -20,8 +20,8 @@ TgTYPE_FORWARD_STRUCT( STg2_KN_GPU_CMD );
 TgTYPE_FORWARD_STRUCT( STg2_KN_GPU_EXT_CMD );
 TgTYPE_UNION( UTg2_KN_GPU_CMD )
 {
-    STg2_KN_GPU_CMD_P NONULL                    ps;
-    STg2_KN_GPU_EXT_CMD_P NONULL                psEXT;
+    STg2_KN_GPU_CMD_P TgANALYSIS_NO_NULL                    ps;
+    STg2_KN_GPU_EXT_CMD_P TgANALYSIS_NO_NULL                psEXT;
 };
 
 
@@ -334,6 +334,7 @@ TgTYPE_STRUCT(STg2_KN_GPU_CXT_EXEC_EXTN,)
 #define TgTYPE_HLSL_STRUCT(A, ...) TgTYPE_STRUCT_( A, __VA_ARGS__ )
 #include "TgS KERNEL/TgS Kernel [GPU] - Resource [HLSL] [Data].h"
 #undef TgTYPE_HLSL_STRUCT
+TgTYPE_DECLARE( STg2_KN_GPU_HLSL_CB_Debug_Model_Instance, STg2_KN_GPU_HLSL_CB_DMI);
 
 
 /* ---- GPU - Resource - Font ---------------------------------------------------------------------------------------------------------------------------------------------------- */

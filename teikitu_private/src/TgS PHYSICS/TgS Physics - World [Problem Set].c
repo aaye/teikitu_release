@@ -101,7 +101,7 @@ TgRESULT tgPH_Update_World__Build_Sets( TgPH_WORLD_ID_C tiWorld )
         /* Test the disabled bit for this body. */
         psBY = g_aapsPH_Body_Used[tiWorld.m_uiI][uiIndex_Body];
         TgDIAG_MSGF( psBY->m_uiUsed_Index == uiIndex_Body, STD_MSG_LITERAL_1, STD_MSG_POST, u8"Logic Failure: used index does not match used array index." );
-        if (true != psBY->m_bEnabled)
+        if (true != psBY->m_bUpdate)
             continue;
 
         /* Mark the body as visited. */
@@ -115,7 +115,10 @@ TgRESULT tgPH_Update_World__Build_Sets( TgPH_WORLD_ID_C tiWorld )
             /* Assign the body into the set. */
             psSolver_Set->m_apsBody[psSolver_Set->m_nuiBody] = psBY;
             ++psSolver_Set->m_nuiBody;
-            psBY->m_bEnabled = true;
+            if (!psBY->m_bUpdate)
+            {
+                tgPH_Body_Set_Update_IMM( psBY, true );
+            };
             #pragma endregion
 
             #pragma region Auto-Disable
@@ -245,14 +248,16 @@ TgRESULT tgPH_Update_World__Build_Sets( TgPH_WORLD_ID_C tiWorld )
             --nuiBody_Stack;
         };
 
-        /* Handle auto disable (sleeping) of the entire problem set - Facilitates sleeping a group of touching bodies. */
+        /* Handle auto disable (sleeping) of the entire problem set - Facilitates sleeping a group of touching bodies. It is important that both the velocity and the acceleration
+           are used to determine if a body is capable of being auto-disabled (1st and 2nd derivatives). It is possible that a body will be near zero at the epigee of motion but
+           the acceleration would then be non-zero. */
 
         if (fMax_Disable_Timer < psWorld->m_fStep_Size_Seconds)
         {
             do
             {
                 --psSolver_Set->m_nuiBody;
-                psSolver_Set->m_apsBody[psSolver_Set->m_nuiBody]->m_bEnabled = false;
+                tgPH_Body_Set_Update_IMM( psSolver_Set->m_apsBody[psSolver_Set->m_nuiBody], false );
             }
             while (psSolver_Set->m_nuiBody > uiSet_Start);
             continue;
@@ -364,7 +369,9 @@ TgVOID tgPH_Update_World__Update_Bodies_IMM( TgPH_WORLD_ID_C tiWorld, STg2_PH_So
             STg2_PH_Body_PC                     psBY = psSolver_Set->m_apsBody[uiIndex];
 
             psBY->m_vLV = tgMH_MAD_F32_04_1( psWorld->m_vStep_Size, psSolver_Set->m_avResult[psBY->m_uiUsed_Index*2 + 0], psBY->m_vLV );
+            TgDIAG(!tgMH_CMP_ANY_TO_BOOL_F32_04_1(tgMH_NAN_F32_04_1( psBY->m_vLV )));
             psBY->m_vAV = tgMH_MAD_F32_04_1( psWorld->m_vStep_Size, psSolver_Set->m_avResult[psBY->m_uiUsed_Index*2 + 1], psBY->m_vAV );
+            TgDIAG(!tgMH_CMP_ANY_TO_BOOL_F32_04_1(tgMH_NAN_F32_04_1( psBY->m_vAV )));
         };
     };
 
@@ -372,15 +379,17 @@ TgVOID tgPH_Update_World__Update_Bodies_IMM( TgPH_WORLD_ID_C tiWorld, STg2_PH_So
     {
         STg2_PH_Body_PC                     psBY = psSolver_Set->m_apsBody[uiIndex];
 
-        if (nullptr != psBY->m_pfnMoved) TgATTRIBUTE_UNLIKELY
+        if (!psBY->m_bUpdate)
+        {
+            psBY->m_vXF = tgMH_SET1_F32_04_1( 0.0F );
+            psBY->m_vXT = tgMH_SET1_F32_04_1( 0.0F );
+            continue;
+        }
+        else if (nullptr != psBY->m_pfnMoved) TgATTRIBUTE_UNLIKELY
         {
             psBY->m_pfnMoved( psBY->m_tiBody, psBY->m_uiContext );
         }
-        else if (!psBY->m_bEnabled)
-        {
-            continue;
-        }
-        else
+        else 
         {
             TgVEC_F32_04_1_C                    vScaled_Step_Size = tgMH_MUL_F32_04_1( psBY->m_vTime_Factor, psWorld->m_vStep_Size );
 
@@ -408,9 +417,18 @@ TgVOID tgPH_Update_World__Update_Bodies_IMM( TgPH_WORLD_ID_C tiWorld, STg2_PH_So
             TgVEC_F32_04_1_C                    vAV_Rescaled = tgMH_MUL_F32_04_1( vAV_LEN_MAX, vAV_NRM ); /* NOTE: This may be an invalid vector. */
             TgVEC_F32_04_1_C                    vAV = tgMH_SEL_F32_04_1( vAV_Unscaled, vAV_Rescaled, vAV_LEN_CMP ); /* Select the original vector (could be zero) or rescaled. */
 
-            TgVEC_F32_04_1_C                    vΔQ = tgMH_QT_MUL_F32_04_1( vAV, psBY->m_vRot_O2W );
-            TgVEC_F32_04_1_C                    vQ = tgMH_MAD_F32_04_1( vΔQ, vScaled_Step_Size, psBY->m_vRot_O2W );
+            TgVEC_UN_F32_04_1_C                 uAV = { .m_vF32_04_1 = vAV };
+            TgVEC_UN_F32_04_1_C                 uQR = { .m_vF32_04_1 = psBY->m_vRot_O2W };
+            TgVEC_S_F32_04_1_C                  vQR = uQR.m_vS_F32_04_1;
+            TgVEC_UN_F32_04_1_C                 uΔQ = { .m_vS_F32_04_1 = {
+                                                    .x = 0.5F*(-uAV.m_vS_F32_04_1.x * vQR.x - uAV.m_vS_F32_04_1.y * vQR.y - uAV.m_vS_F32_04_1.z * vQR.z),
+                                                    .y = 0.5F*( uAV.m_vS_F32_04_1.x * vQR.w + uAV.m_vS_F32_04_1.y * vQR.z - uAV.m_vS_F32_04_1.z * vQR.y),
+                                                    .z = 0.5F*(-uAV.m_vS_F32_04_1.x * vQR.z + uAV.m_vS_F32_04_1.y * vQR.w + uAV.m_vS_F32_04_1.z * vQR.x),
+                                                    .w = 0.5F*( uAV.m_vS_F32_04_1.x * vQR.y - uAV.m_vS_F32_04_1.y * vQR.x + uAV.m_vS_F32_04_1.z * vQR.w)
+                                                } };
+            TgVEC_F32_04_1_C                    vQ = tgMH_MAD_F32_04_1( uΔQ.m_vF32_04_1, vScaled_Step_Size, psBY->m_vRot_O2W );
             TgVEC_F32_04_1_C                    vQ_Normalized = tgMH_NORM_F32_04_1( vQ );
+
 
             #pragma endregion
 
@@ -430,11 +448,11 @@ TgVOID tgPH_Update_World__Update_Bodies_IMM( TgPH_WORLD_ID_C tiWorld, STg2_PH_So
             psBY->m_vXF = tgMH_SET1_F32_04_1( 0.0F );
 
             /* Update the angular velocity and rotation of the body. */
-            psBY->m_vAV = vAV;
+            psBY->m_vAV = uAV.m_vF32_04_1;
             psBY->m_vRot_O2W = vQ_Normalized;
             psBY->m_vXT = tgMH_SET1_F32_04_1( 0.0F );
 
-        #if defined(TgBUILD_DEBUG__PHYSICS__EXTENSIVE_DATA_CHECK)
+        #if defined(TgBUILD_DEBUG__PHYSICS__EXTENSIVE_DATA_CHECK) && TgCOMPILE_ASSERT && TgCOMPILE_ASSERT__DIAG
             TgDIAG(((TgVEC_S_F32_04_1_CP)&psBY->m_vPos_O2W)->w == 1.0F);
             TgDIAG(((TgVEC_S_F32_04_1_CP)&psBY->m_vAV)->w == 0.0F);
             TgDIAG(((TgVEC_S_F32_04_1_CP)&psBY->m_vLV)->w == 0.0F);
@@ -442,7 +460,7 @@ TgVOID tgPH_Update_World__Update_Bodies_IMM( TgPH_WORLD_ID_C tiWorld, STg2_PH_So
             TgDIAG(!tgMH_CMP_ANY_TO_BOOL_F32_04_1(tgMH_NAN_F32_04_1( psBY->m_vPos_O2W )));
             TgDIAG(!tgMH_CMP_ANY_TO_BOOL_F32_04_1(tgMH_NAN_F32_04_1( psBY->m_vAV )));
             TgDIAG(!tgMH_CMP_ANY_TO_BOOL_F32_04_1(tgMH_NAN_F32_04_1( psBY->m_vRot_O2W )));
-        /*# defined(TgBUILD_DEBUG__PHYSICS__EXTENSIVE_DATA_CHECK) */
+        /*# defined(TgBUILD_DEBUG__PHYSICS__EXTENSIVE_DATA_CHECK) && TgCOMPILE_ASSERT && TgCOMPILE_ASSERT__DIAG */
         #endif
 
             /* Update the final transforms, matrix rotation, and all connected Forms. */

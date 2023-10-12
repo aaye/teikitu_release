@@ -1,0 +1,197 @@
+From 4f3f355b3159eb6c60bbfb61e235c010472ff2a8 Mon Sep 17 00:00:00 2001
+From: Andrew Aye <andrew.aye@gmail.com>
+Date: Mon, 4 Jul 2022 18:28:59 -0700
+Subject: [PATCH] Update cmVisualStudio10TargetGenerator.cxx
+
+Teikitu Changes
+
+AAYE: Allow for the setting of the intermediate directory.
+
+Hard code LLVM Tool version to 14.0.5
+
+Teikitu: Unwind some of the changes.
+
+Revert "Update cmVisualStudio10TargetGenerator.cxx"
+
+This reverts commit c574680e4c6f26d2cad4e1a1baad556e974862ec.
+---
+ Source/cmGeneratorTarget.cxx               |  7 +++++
+ Source/cmGeneratorTarget.h                 |  3 ++-
+ Source/cmGlobalXCodeGenerator.cxx          | 31 +++++++++++++---------
+ Source/cmStateTypes.h                      |  4 ++-
+ Source/cmVisualStudio10TargetGenerator.cxx | 12 ++++++---
+ Source/kwsys/SystemTools.cxx               | 20 ++++++++++++++
+ 6 files changed, 59 insertions(+), 18 deletions(-)
+
+diff --git a/Source/cmGeneratorTarget.cxx b/Source/cmGeneratorTarget.cxx
+index 7d1fcf3e5c..52edca35f5 100644
+--- a/Source/cmGeneratorTarget.cxx
++++ b/Source/cmGeneratorTarget.cxx
+@@ -7040,6 +7040,10 @@ std::string cmGeneratorTarget::GetDirectory(
+         return info->OutDir;
+       case cmStateEnums::ImportLibraryArtifact:
+         return info->ImpDir;
++      case cmStateEnums::RuntimeDebugArtifact:
++          return info->PdbDir;
++      case cmStateEnums::RuntimeObjectArtifact:
++          return info->IntDir;
+     }
+   }
+   return "";
+@@ -7094,6 +7098,9 @@ cmGeneratorTarget::OutputInfo const* cmGeneratorTarget::GetOutputInfo(
+     if (!this->ComputePDBOutputDir("PDB", config, info.PdbDir)) {
+       info.PdbDir = info.OutDir;
+     }
++    if (!this->ComputePDBOutputDir("INTERMEDIATE", config, info.IntDir)) {
++        info.IntDir.clear();
++    }
+ 
+     // Now update the previously-prepared map entry.
+     i->second = info;
+diff --git a/Source/cmGeneratorTarget.h b/Source/cmGeneratorTarget.h
+index dca69fd001..43a72cf8ef 100644
+--- a/Source/cmGeneratorTarget.h
++++ b/Source/cmGeneratorTarget.h
+@@ -644,10 +644,11 @@ public:
+     std::string OutDir;
+     std::string ImpDir;
+     std::string PdbDir;
++    std::string IntDir;
+     bool empty() const
+     {
+       return this->OutDir.empty() && this->ImpDir.empty() &&
+-        this->PdbDir.empty();
++        this->PdbDir.empty() && this->IntDir.empty();
+     }
+   };
+ 
+diff --git a/Source/cmGlobalXCodeGenerator.cxx b/Source/cmGlobalXCodeGenerator.cxx
+index fd58f75f13..438bbd9766 100644
+--- a/Source/cmGlobalXCodeGenerator.cxx
++++ b/Source/cmGlobalXCodeGenerator.cxx
+@@ -1680,19 +1680,24 @@ void cmGlobalXCodeGenerator::ForceLinkerLanguage(cmGeneratorTarget* gtgt)
+ 
+   // Add an empty source file to the target that compiles with the
+   // linker language.  This should convince Xcode to choose the proper
+-  // language.
+-  cmMakefile* mf = gtgt->Target->GetMakefile();
+-  std::string fname = cmStrCat(
+-    gtgt->GetLocalGenerator()->GetCurrentBinaryDirectory(), "/CMakeFiles/",
+-    gtgt->GetName(), "-CMakeForceLinker.", cmSystemTools::LowerCase(llang));
+-  {
+-    cmGeneratedFileStream fout(fname);
+-    fout << "\n";
+-  }
+-  if (cmSourceFile* sf = mf->GetOrCreateSource(fname)) {
+-    sf->SetProperty("LANGUAGE", llang);
+-    gtgt->AddSource(fname);
+-  }
++  // language. 
++
++  // Need to do something more intelligent here to distinguish between
++  // C and C++ projects since the linker itself will be insufficient.
++  // In the mean time, I don't give a shit about this crap. AA_NOTE
++
++  // cmMakefile* mf = gtgt->Target->GetMakefile();
++  // std::string fname = cmStrCat(
++  //   gtgt->GetLocalGenerator()->GetCurrentBinaryDirectory(), "/CMakeFiles/",
++  //   gtgt->GetName(), "-CMakeForceLinker.", cmSystemTools::LowerCase(llang));
++  // {
++  //   cmGeneratedFileStream fout(fname);
++  //   fout << "\n";
++  // }
++  // if (cmSourceFile* sf = mf->GetOrCreateSource(fname)) {
++  //   sf->SetProperty("LANGUAGE", llang);
++  //   gtgt->AddSource(fname);
++  // }
+ }
+ 
+ bool cmGlobalXCodeGenerator::IsHeaderFile(cmSourceFile* sf)
+diff --git a/Source/cmStateTypes.h b/Source/cmStateTypes.h
+index 24b809b571..46921285a5 100644
+--- a/Source/cmStateTypes.h
++++ b/Source/cmStateTypes.h
+@@ -57,7 +57,9 @@ enum CacheEntryType
+ enum ArtifactType
+ {
+   RuntimeBinaryArtifact,
+-  ImportLibraryArtifact
++  ImportLibraryArtifact,
++  RuntimeDebugArtifact,
++  RuntimeObjectArtifact
+ };
+ }
+ 
+diff --git a/Source/cmVisualStudio10TargetGenerator.cxx b/Source/cmVisualStudio10TargetGenerator.cxx
+index 949d74956d..fd8357ddc4 100644
+--- a/Source/cmVisualStudio10TargetGenerator.cxx
++++ b/Source/cmVisualStudio10TargetGenerator.cxx
+@@ -2984,9 +2984,15 @@ void cmVisualStudio10TargetGenerator::WritePathAndIncrementalLinkOptions(
+       e1.WritePlatformConfigTag(
+         "IntDir", cond, R"($(Platform)\$(Configuration)\$(ProjectName)\)");
+     } else {
+-      std::string intermediateDir = cmStrCat(
+-        this->LocalGenerator->GetTargetDirectory(this->GeneratorTarget), '/',
+-        config, '/');
++      std::string intermediateDir = this->GeneratorTarget->GetDirectory(
++            config,cmStateEnums::RuntimeObjectArtifact);
++      if (intermediateDir.empty()) {
++        intermediateDir = cmStrCat(
++              this->LocalGenerator->GetTargetDirectory(this->GeneratorTarget), '/',
++              config, '/');
++      } else {
++          intermediateDir +=  "/";
++      }
+       std::string outDir;
+       std::string targetNameFull;
+       if (ttype == cmStateEnums::OBJECT_LIBRARY) {
+diff --git a/Source/kwsys/SystemTools.cxx b/Source/kwsys/SystemTools.cxx
+index 3bb78696c2..10cd1c19fd 100644
+--- a/Source/kwsys/SystemTools.cxx
++++ b/Source/kwsys/SystemTools.cxx
+@@ -2366,8 +2366,18 @@ bool SystemTools::FilesDiffer(const std::string& source,
+ 
+ #if defined(_WIN32)
+   kwsys::ifstream finSource(source.c_str(), (std::ios::binary | std::ios::in));
++  for (int niWait = 0; niWait < 60*1000/100; ++niWait) {
++      if (finSource) break;
++      Delay(100);
++      finSource.open(source.c_str(), (std::ios::binary | std::ios::in));
++  }
+   kwsys::ifstream finDestination(destination.c_str(),
+                                  (std::ios::binary | std::ios::in));
++  for (int niWait = 0; niWait < 60*1000/100; ++niWait) {
++      if (finDestination) break;
++      Delay(100);
++      finDestination.open(destination.c_str(), (std::ios::binary | std::ios::in));
++  }
+ #else
+   kwsys::ifstream finSource(source.c_str());
+   kwsys::ifstream finDestination(destination.c_str());
+@@ -2439,6 +2449,11 @@ SystemTools::CopyStatus SystemTools::CopyFileContentBlockwise(
+ {
+   // Open files
+   kwsys::ifstream fin(source.c_str(), std::ios::in | std::ios::binary);
++  for (int niWait = 0; niWait < 60*1000/100; ++niWait) {
++      if (fin) break;
++      Delay(100);
++      fin.open(source.c_str(), (std::ios::binary | std::ios::in));
++  }
+   if (!fin) {
+     return CopyStatus{ Status::POSIX_errno(), CopyStatus::SourcePath };
+   }
+@@ -2451,6 +2466,11 @@ SystemTools::CopyStatus SystemTools::CopyFileContentBlockwise(
+ 
+   kwsys::ofstream fout(destination.c_str(),
+                        std::ios::out | std::ios::trunc | std::ios::binary);
++  for (int niWait = 0; niWait < 60*1000/100; ++niWait) {
++      if (fout) break;
++      Delay(100);
++      fout.open(destination.c_str(), (std::ios::out | std::ios::trunc | std::ios::binary));
++  }
+   if (!fout) {
+     return CopyStatus{ Status::POSIX_errno(), CopyStatus::DestPath };
+   }
+-- 
+2.41.0.windows.3
+

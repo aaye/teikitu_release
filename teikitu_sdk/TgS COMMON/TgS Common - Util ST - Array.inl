@@ -21,7 +21,7 @@
 
 TgEXTN TgRESULT
 tgCM_UT_ST__AR__Internal_ReAllocate(
-    STg2_UT_ST__AR_PCU NONULL psAR, TgRSIZE_C uiCount );
+    STg2_UT_ST__AR_PCU psAR, TgRSIZE_C uiCount );
 
 
 
@@ -32,7 +32,7 @@ tgCM_UT_ST__AR__Internal_ReAllocate(
 
 /* ---- tgCM_UT_ST__AR__Init ----------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgRESULT tgCM_UT_ST__AR__Init( STg2_UT_ST__AR_PCU NONULL psAR, TgRSIZE_C nbyStride, TgUINT_E08_P puiBuffer, TgRSIZE_C nbyBuffer )
+TgINLINE TgRESULT tgCM_UT_ST__AR__Init( STg2_UT_ST__AR_PCU psAR, TgRSIZE_C nbyStride, TgUINT_E08_P puiBuffer, TgRSIZE_C nbyBuffer )
 {
     TgPARAM_CHECK(psAR);
 
@@ -55,7 +55,7 @@ TgINLINE TgRESULT tgCM_UT_ST__AR__Init( STg2_UT_ST__AR_PCU NONULL psAR, TgRSIZE_
 
 /* ---- tgCM_UT_ST__AR__Free ----------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgCM_UT_ST__AR__Free( STg2_UT_ST__AR_PCU NONULL psAR )
+TgINLINE TgVOID tgCM_UT_ST__AR__Free( STg2_UT_ST__AR_PCU psAR )
 {
     TgPARAM_CHECK(psAR);
     if (psAR->m_bFixed)
@@ -71,7 +71,7 @@ TgINLINE TgVOID tgCM_UT_ST__AR__Free( STg2_UT_ST__AR_PCU NONULL psAR )
 
 /* ---- tgCM_UT_ST__AR__Copy ----------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgRESULT tgCM_UT_ST__AR__Copy( STg2_UT_ST__AR_PCU NONULL psAR0, STg2_UT_ST__AR_CPCU NONULL psAR1 )
+TgINLINE TgRESULT tgCM_UT_ST__AR__Copy( STg2_UT_ST__AR_PCU psAR0, STg2_UT_ST__AR_CPCU psAR1 )
 {
     TgPARAM_CHECK(psAR0 && psAR1);
     if (psAR0 == psAR1)
@@ -88,7 +88,7 @@ TgINLINE TgRESULT tgCM_UT_ST__AR__Copy( STg2_UT_ST__AR_PCU NONULL psAR0, STg2_UT
 
 /* ---- tgCM_UT_ST__AR__Push_Back ------------------------------------------------------------------------------------------------------------------------------------------------ */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgRESULT tgCM_UT_ST__AR__Push_Back( STg2_UT_ST__AR_PCU NONULL psAR, TgVOID_P NONULL pElement )
+TgINLINE TgRESULT tgCM_UT_ST__AR__Push_Back( STg2_UT_ST__AR_PCU psAR, TgVOID_P pElement )
 {
     TgPARAM_CHECK(psAR && pElement);
     if (psAR->m_puiLast != psAR->m_puiEnd)
@@ -113,7 +113,7 @@ TgINLINE TgRESULT tgCM_UT_ST__AR__Push_Back( STg2_UT_ST__AR_PCU NONULL psAR, TgV
 
 /* ---- tgCM_UT_ST__AR__Insert_Element ------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgRESULT tgCM_UT_ST__AR__Insert_Element( STg2_UT_ST__AR_PCU NONULL psAR, TgRSIZE_C uiIndex, TgVOID_P NONULL pElement )
+TgINLINE TgRESULT tgCM_UT_ST__AR__Insert_Element( STg2_UT_ST__AR_PCU psAR, TgRSIZE_C uiIndex, TgVOID_P pElement )
 {
     TgPARAM_CHECK(psAR && pElement);
     if (psAR->m_puiStart + uiIndex*psAR->m_uiStride == psAR->m_puiLast)
@@ -129,7 +129,7 @@ TgINLINE TgRESULT tgCM_UT_ST__AR__Insert_Element( STg2_UT_ST__AR_PCU NONULL psAR
 
 /* ---- tgCM_UT_ST__AR__Insert_Copy ---------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgRESULT tgCM_UT_ST__AR__Insert_Copy( STg2_UT_ST__AR_PCU NONULL psAR, TgRSIZE_C uiIndex, STg2_UT_ST__AR_CPCU NONULL psAR1 )
+TgINLINE TgRESULT tgCM_UT_ST__AR__Insert_Copy( STg2_UT_ST__AR_PCU psAR, TgRSIZE_C uiIndex, STg2_UT_ST__AR_CPCU psAR1 )
 {
     TgPARAM_CHECK(psAR && psAR1);
     return (tgCM_UT_ST__AR__Insert_Range( psAR, uiIndex, psAR1->m_puiStart, psAR1->m_puiLast ));
@@ -138,7 +138,7 @@ TgINLINE TgRESULT tgCM_UT_ST__AR__Insert_Copy( STg2_UT_ST__AR_PCU NONULL psAR, T
 
 /* ---- tgCM_UT_ST__AR__Pop_Back ------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgCM_UT_ST__AR__Pop_Back( STg2_UT_ST__AR_PCU NONULL psAR )
+TgINLINE TgVOID tgCM_UT_ST__AR__Pop_Back( STg2_UT_ST__AR_PCU psAR )
 {
     TgPARAM_CHECK(psAR);
     if (psAR->m_puiStart == psAR->m_puiLast)
@@ -155,7 +155,7 @@ TgINLINE TgVOID tgCM_UT_ST__AR__Pop_Back( STg2_UT_ST__AR_PCU NONULL psAR )
 
 /* ---- tgCM_UT_ST__AR__Erase_Element -------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgCM_UT_ST__AR__Erase_Element( STg2_UT_ST__AR_PCU NONULL psAR, TgRSIZE_C uiIndex )
+TgINLINE TgVOID tgCM_UT_ST__AR__Erase_Element( STg2_UT_ST__AR_PCU psAR, TgRSIZE_C uiIndex )
 {
     TgUINT_E08_P                        puiData;
     TgUINT_E08_P                        puiLast;
@@ -189,7 +189,7 @@ TgINLINE TgVOID tgCM_UT_ST__AR__Erase_Element( STg2_UT_ST__AR_PCU NONULL psAR, T
 
 /* ---- tgCM_UT_ST__AR__Clear ---------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgCM_UT_ST__AR__Clear( STg2_UT_ST__AR_PCU NONULL psAR )
+TgINLINE TgVOID tgCM_UT_ST__AR__Clear( STg2_UT_ST__AR_PCU psAR )
 {
     TgUINT_E08_P                        puiData;
     TgRSIZE                             nuiElement;
@@ -224,7 +224,7 @@ TgINLINE TgVOID tgCM_UT_ST__AR__Clear( STg2_UT_ST__AR_PCU NONULL psAR )
 
 /* ---- tgCM_UT_ST__AR__Get_Data ------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID_P tgCM_UT_ST__AR__Get_Data( STg2_UT_ST__AR_PCU NONULL psAR )
+TgINLINE TgVOID_P tgCM_UT_ST__AR__Get_Data( STg2_UT_ST__AR_PCU psAR )
 {
     TgPARAM_CHECK(psAR);
     return (psAR->m_puiStart);
@@ -233,7 +233,7 @@ TgINLINE TgVOID_P tgCM_UT_ST__AR__Get_Data( STg2_UT_ST__AR_PCU NONULL psAR )
 
 /* ---- tgCM_UT_ST__AR__Get_Index ------------------------------------------------------------------------------------------------------------------------------------------------ */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID_P tgCM_UT_ST__AR__Get_Index( STg2_UT_ST__AR_PCU NONULL psAR, TgRSIZE_C uiIndex )
+TgINLINE TgVOID_P tgCM_UT_ST__AR__Get_Index( STg2_UT_ST__AR_PCU psAR, TgRSIZE_C uiIndex )
 {
     TgUINT_E08_P                        puiData;
 
@@ -249,7 +249,7 @@ TgINLINE TgVOID_P tgCM_UT_ST__AR__Get_Index( STg2_UT_ST__AR_PCU NONULL psAR, TgR
 
 /* ---- tgCM_UT_ST__AR__Get_Front ------------------------------------------------------------------------------------------------------------------------------------------------ */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID_P tgCM_UT_ST__AR__Get_Front( STg2_UT_ST__AR_PCU NONULL psAR )
+TgINLINE TgVOID_P tgCM_UT_ST__AR__Get_Front( STg2_UT_ST__AR_PCU psAR )
 {
     TgPARAM_CHECK(psAR);
     return (psAR->m_puiStart == psAR->m_puiLast ? nullptr : psAR->m_puiStart);
@@ -258,7 +258,7 @@ TgINLINE TgVOID_P tgCM_UT_ST__AR__Get_Front( STg2_UT_ST__AR_PCU NONULL psAR )
 
 /* ---- tgCM_UT_ST__AR__Get_Back ------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID_P tgCM_UT_ST__AR__Get_Back( STg2_UT_ST__AR_PCU NONULL psAR )
+TgINLINE TgVOID_P tgCM_UT_ST__AR__Get_Back( STg2_UT_ST__AR_PCU psAR )
 {
     TgPARAM_CHECK(psAR);
     return (psAR->m_puiStart == psAR->m_puiLast ? nullptr : psAR->m_puiLast - psAR->m_uiStride);
@@ -267,7 +267,7 @@ TgINLINE TgVOID_P tgCM_UT_ST__AR__Get_Back( STg2_UT_ST__AR_PCU NONULL psAR )
 
 /* ---- tgCM_UT_ST__AR__Query_Index ---------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgRESULT tgCM_UT_ST__AR__Query_Index( TgVOID_P NONULL pElement, TgRSIZE_C uiSize, STg2_UT_ST__AR_PCU NONULL psAR, TgRSIZE_C uiIndex )
+TgINLINE TgRESULT tgCM_UT_ST__AR__Query_Index( TgVOID_P pElement, TgRSIZE_C uiSize, STg2_UT_ST__AR_PCU psAR, TgRSIZE_C uiIndex )
 {
     TgUINT_E08_P                        puiData;
 
@@ -288,7 +288,7 @@ TgINLINE TgRESULT tgCM_UT_ST__AR__Query_Index( TgVOID_P NONULL pElement, TgRSIZE
 
 /* ---- tgCM_UT_ST__AR__Query_Front ---------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgRESULT tgCM_UT_ST__AR__Query_Front( TgVOID_P NONULL pElement, TgRSIZE_C uiSize, STg2_UT_ST__AR_PCU NONULL psAR )
+TgINLINE TgRESULT tgCM_UT_ST__AR__Query_Front( TgVOID_P pElement, TgRSIZE_C uiSize, STg2_UT_ST__AR_PCU psAR )
 {
     TgUINT_E08_P                        puiData;
 
@@ -309,7 +309,7 @@ TgINLINE TgRESULT tgCM_UT_ST__AR__Query_Front( TgVOID_P NONULL pElement, TgRSIZE
 
 /* ---- tgCM_UT_ST__AR__Query_Back ----------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgRESULT tgCM_UT_ST__AR__Query_Back( TgVOID_P NONULL pElement, TgRSIZE_C uiSize, STg2_UT_ST__AR_PCU NONULL psAR )
+TgINLINE TgRESULT tgCM_UT_ST__AR__Query_Back( TgVOID_P pElement, TgRSIZE_C uiSize, STg2_UT_ST__AR_PCU psAR )
 {
     TgUINT_E08_P                        puiData;
 
@@ -330,7 +330,7 @@ TgINLINE TgRESULT tgCM_UT_ST__AR__Query_Back( TgVOID_P NONULL pElement, TgRSIZE_
 
 /* ---- tgCM_UT_ST__AR__Empty ---------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgBOOL tgCM_UT_ST__AR__Empty( STg2_UT_ST__AR_PCU NONULL psAR )
+TgINLINE TgBOOL tgCM_UT_ST__AR__Empty( STg2_UT_ST__AR_PCU psAR )
 {
     TgPARAM_CHECK(psAR);
     return (psAR->m_puiStart == psAR->m_puiLast);
@@ -339,7 +339,7 @@ TgINLINE TgBOOL tgCM_UT_ST__AR__Empty( STg2_UT_ST__AR_PCU NONULL psAR )
 
 /* ---- tgCM_UT_ST__AR__Capacity ------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgRSIZE tgCM_UT_ST__AR__Capacity( STg2_UT_ST__AR_PCU NONULL psAR )
+TgINLINE TgRSIZE tgCM_UT_ST__AR__Capacity( STg2_UT_ST__AR_PCU psAR )
 {
     TgPARAM_CHECK(psAR);
     return (nullptr == psAR->m_puiStart ? 0 : ((TgRSIZE)(psAR->m_puiEnd - psAR->m_puiStart)) / psAR->m_uiStride);
@@ -348,7 +348,7 @@ TgINLINE TgRSIZE tgCM_UT_ST__AR__Capacity( STg2_UT_ST__AR_PCU NONULL psAR )
 
 /* ---- tgCM_UT_ST__AR__Count ---------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgRSIZE tgCM_UT_ST__AR__Count( STg2_UT_ST__AR_PCU NONULL psAR )
+TgINLINE TgRSIZE tgCM_UT_ST__AR__Count( STg2_UT_ST__AR_PCU psAR )
 {
     TgPARAM_CHECK(psAR);
     return (nullptr == psAR->m_puiStart ? 0 : ((TgRSIZE)(psAR->m_puiLast - psAR->m_puiStart)) / psAR->m_uiStride);
@@ -357,7 +357,7 @@ TgINLINE TgRSIZE tgCM_UT_ST__AR__Count( STg2_UT_ST__AR_PCU NONULL psAR )
 
 /* ---- tgCM_UT_ST__AR__Resize --------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgRESULT tgCM_UT_ST__AR__Resize( STg2_UT_ST__AR_PCU NONULL psAR, TgRSIZE_C uiCount, TgVOID_P NONULL pElement )
+TgINLINE TgRESULT tgCM_UT_ST__AR__Resize( STg2_UT_ST__AR_PCU psAR, TgRSIZE_C uiCount, TgVOID_P pElement )
 {
     TgRSIZE                             nuiElement;
 
@@ -382,7 +382,7 @@ TgINLINE TgRESULT tgCM_UT_ST__AR__Resize( STg2_UT_ST__AR_PCU NONULL psAR, TgRSIZ
 
 /* ---- tgCM_UT_ST__AR__Reserve -------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgRESULT tgCM_UT_ST__AR__Reserve( STg2_UT_ST__AR_PCU NONULL psAR, TgRSIZE_C uiCount )
+TgINLINE TgRESULT tgCM_UT_ST__AR__Reserve( STg2_UT_ST__AR_PCU psAR, TgRSIZE_C uiCount )
 {
     TgPARAM_CHECK(psAR);
     if (tgCM_UT_ST__AR__Capacity( psAR ) >= uiCount)
@@ -399,7 +399,7 @@ TgINLINE TgRESULT tgCM_UT_ST__AR__Reserve( STg2_UT_ST__AR_PCU NONULL psAR, TgRSI
 
 /* ---- tgCM_UT_ST__AR__Shrink --------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgRESULT tgCM_UT_ST__AR__Shrink( STg2_UT_ST__AR_PCU NONULL psAR, TgRSIZE_C uiCount )
+TgINLINE TgRESULT tgCM_UT_ST__AR__Shrink( STg2_UT_ST__AR_PCU psAR, TgRSIZE_C uiCount )
 {
     TgPARAM_CHECK(psAR);
     if (tgCM_UT_ST__AR__Capacity( psAR ) <= uiCount)

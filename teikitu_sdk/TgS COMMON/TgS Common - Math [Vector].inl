@@ -247,7 +247,8 @@ TgINLINE TgBOOL FCN_V(tgMH_CMP_ALL_TO_BOOL)( VEC_T(1,C) v0 )
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 TgINLINE TgBOOL FCN_V(tgMH_CMP_ANY_TO_BOOL)( VEC_T(1,C) v0 )
 {
-    return (FCN_V(tgMH_CMP_ANY_TO_BOOL_S)( *(VEC_S_T(1,CP))&v0 ));
+    VEC_UN_T(1,C)                       uV0 = { VEC_UN_1_MEMBER() = v0 };
+    return (FCN_V(tgMH_CMP_ANY_TO_BOOL_S)( VEC_S_UN_1_MEMBER(uV0) ));
 }
 
 

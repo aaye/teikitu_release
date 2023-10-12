@@ -177,28 +177,28 @@ tgUSZ_To_Lower_Length_U08(
     @return True if the character is considered to be part of the functions criteria, and false otherwise */
 TgEXTN TgBOOL
 FCN_CHAR(Is_Print)(
-    CHAR(CP) NONULL ARG );
+    CHAR(CP) TgANALYSIS_NO_NULL ARG );
 
 /** @brief Test to see if a character is considered to be in the set white space*/
 /** @param [in] ARG Character to be processed
     @return True if the character is considered to be part of the functions criteria, and false otherwise */
 TgEXTN TgBOOL
 FCN_CHAR(Is_Space)(
-    CHAR(CP) NONULL ARG );
+    CHAR(CP) TgANALYSIS_NO_NULL ARG );
 
 /** @brief Convert a string to lower case
     @param [out] OUT0 Output location for the converted string (assumed to be large enough for the operation)
     @param [in] ARG1 String to be processed */
 TgEXTN TgVOID
 FCN_CHAR(To_Lower)(
-    CHAR(P) NONULL OUT0, CHAR(CP) NONULL ARG1 );
+    CHAR(P) TgANALYSIS_NO_NULL OUT0, CHAR(CP) TgANALYSIS_NO_NULL ARG1 );
 
 /** @brief Convert a string to upper case
     @param [out] OUT0 Output location for the converted string (assumed to be large enough for the operation)
     @param [in] ARG1 String to be processed */
 TgEXTN TgVOID
 FCN_CHAR(To_Upper)(
-    CHAR(P) NONULL OUT0, CHAR(CP) NONULL ARG1 );
+    CHAR(P) TgANALYSIS_NO_NULL OUT0, CHAR(CP) TgANALYSIS_NO_NULL ARG1 );
 
 
 /* ---- String ------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
@@ -210,7 +210,7 @@ FCN_CHAR(To_Upper)(
     @return KTgS_OK on success and KTgE_FAIL (or other failure error code) otherwise */
 TgEXTN TgRESULT
 FCN(Hash)(
-    TgUINT_MAX_P NONULL OUT0, CHAR(CPC) NONULL ARG1, TgRSIZE_C ARG2 );
+    TgUINT_MAX_P TgANALYSIS_NO_NULL OUT0, CHAR(CPC) TgANALYSIS_NO_NULL ARG1, TgRSIZE_C ARG2 );
 
 /** @brief Output a string representation of the value in ARG2
     @param [out] OUT0 Destination for resulting output
@@ -219,74 +219,74 @@ FCN(Hash)(
     @return KTgS_OK on success and KTgE_FAIL (or other failure error code) otherwise */
 TgEXTN TgRESULT
 FCN(From_U08)(
-    CHAR(PC) NONULL OUT0, TgRSIZE_C ARG1, TgUINT_E08_C ARG2 );
+    CHAR(PC) TgANALYSIS_NO_NULL OUT0, TgRSIZE_C ARG1, TgUINT_E08_C ARG2 );
 
 /** @copydoc tgUSZ_From_U08 */
 TgEXTN TgRESULT
 FCN(From_U16)(
-    CHAR(PC) NONULL OUT0, TgRSIZE_C ARG1, TgUINT_E16_C ARG2 );
+    CHAR(PC) TgANALYSIS_NO_NULL OUT0, TgRSIZE_C ARG1, TgUINT_E16_C ARG2 );
 
 /** @copydoc tgUSZ_From_U08 */
 TgEXTN TgRESULT
 FCN(From_U32)(
-    CHAR(PC) NONULL OUT0, TgRSIZE_C ARG1, TgUINT_E32_C ARG2 );
+    CHAR(PC) TgANALYSIS_NO_NULL OUT0, TgRSIZE_C ARG1, TgUINT_E32_C ARG2 );
 
 /** @copydoc tgUSZ_From_U08 */
 TgEXTN TgRESULT
 FCN(From_U64)(
-    CHAR(PC) NONULL OUT0, TgRSIZE_C ARG1, TgUINT_E64_C ARG2 );
+    CHAR(PC) TgANALYSIS_NO_NULL OUT0, TgRSIZE_C ARG1, TgUINT_E64_C ARG2 );
 
 /** @copydoc tgUSZ_From_U08 */
 TgEXTN TgRESULT
 FCN(From_S08)(
-    CHAR(PC) NONULL OUT0, TgRSIZE_C ARG1, TgSINT_E08_C ARG2 );
+    CHAR(PC) TgANALYSIS_NO_NULL OUT0, TgRSIZE_C ARG1, TgSINT_E08_C ARG2 );
 
 /** @copydoc tgUSZ_From_U08 */
 TgEXTN TgRESULT
 FCN(From_S16)(
-    CHAR(PC) NONULL OUT0, TgRSIZE_C ARG1, TgSINT_E16_C ARG2 );
+    CHAR(PC) TgANALYSIS_NO_NULL OUT0, TgRSIZE_C ARG1, TgSINT_E16_C ARG2 );
 
 /** @copydoc tgUSZ_From_U08 */
 TgEXTN TgRESULT
 FCN(From_S32)(
-    CHAR(PC) NONULL OUT0, TgRSIZE_C ARG1, TgSINT_E32_C ARG2 );
+    CHAR(PC) TgANALYSIS_NO_NULL OUT0, TgRSIZE_C ARG1, TgSINT_E32_C ARG2 );
 
 /** @copydoc tgUSZ_From_U08 */
 TgEXTN TgRESULT
 FCN(From_S64)(
-    CHAR(PC) NONULL OUT0, TgRSIZE_C ARG1, TgSINT_E64_C ARG2 );
+    CHAR(PC) TgANALYSIS_NO_NULL OUT0, TgRSIZE_C ARG1, TgSINT_E64_C ARG2 );
 
 
 /** @copydoc tgUSZ_From_U08 */
 TgEXTN TgRESULT
 FCN(From_F32)(
-    CHAR(PC) NONULL OUT0, TgRSIZE_C ARG1, TgFLOAT32_C ARG2 );
+    CHAR(PC) TgANALYSIS_NO_NULL OUT0, TgRSIZE_C ARG1, TgFLOAT32_C ARG2 );
 
 /** @copydoc tgUSZ_From_U08 */
 TgEXTN TgRESULT
 FCN(From_F64)(
-    CHAR(PC) NONULL OUT0, TgRSIZE_C ARG1, TgFLOAT64_C ARG2 );
+    CHAR(PC) TgANALYSIS_NO_NULL OUT0, TgRSIZE_C ARG1, TgFLOAT64_C ARG2 );
 
 
 /** @copydoc tgUSZ_From_U08 */
 TgEXTN TgRESULT
 FCN(Formatted_From_U32)(
-    CHAR(PC) NONULL OUT0, TgRSIZE_C ARG1, TgUINT_E32_C ARG2 );
+    CHAR(PC) TgANALYSIS_NO_NULL OUT0, TgRSIZE_C ARG1, TgUINT_E32_C ARG2 );
 
 /** @copydoc tgUSZ_From_U08 */
 TgEXTN TgRESULT
 FCN(Formatted_From_U64)(
-    CHAR(PC) NONULL OUT0, TgRSIZE_C ARG1, TgUINT_E64_C ARG2 );
+    CHAR(PC) TgANALYSIS_NO_NULL OUT0, TgRSIZE_C ARG1, TgUINT_E64_C ARG2 );
 
 /** @copydoc tgUSZ_From_U08 */
 TgEXTN TgRESULT
 FCN(Formatted_From_S32)(
-    CHAR(PC) NONULL OUT0, TgRSIZE_C ARG1, TgSINT_E32_C ARG2 );
+    CHAR(PC) TgANALYSIS_NO_NULL OUT0, TgRSIZE_C ARG1, TgSINT_E32_C ARG2 );
 
 /** @copydoc tgUSZ_From_U08 */
 TgEXTN TgRESULT
 FCN(Formatted_From_S64)(
-    CHAR(PC) NONULL OUT0, TgRSIZE_C ARG1, TgSINT_E64_C ARG2 );
+    CHAR(PC) TgANALYSIS_NO_NULL OUT0, TgRSIZE_C ARG1, TgSINT_E64_C ARG2 );
 
 
 /** @brief Convert a string representation of a number into its numeric value
@@ -295,58 +295,58 @@ FCN(Formatted_From_S64)(
     @return KTgS_OK on success and KTgE_FAIL (or other failure error code) otherwise */
 TgINLINE TgBOOL
 FCN(To_Bool)(
-    CHAR(CPC) NONULL ARG0, TgRSIZE_C ARG1 );
+    CHAR(CPC) TgANALYSIS_NO_NULL ARG0, TgRSIZE_C ARG1 );
 
 /** @copydoc tgUSZ_To_Bool */
 TgINLINE TgUINT_E08
 FCN(To_U08)(
-    CHAR(CPC) NONULL ARG0, TgRSIZE_C ARG1 );
+    CHAR(CPC) TgANALYSIS_NO_NULL ARG0, TgRSIZE_C ARG1 );
 
 /** @copydoc tgUSZ_To_Bool */
 TgINLINE TgUINT_E16
 FCN(To_U16)(
-    CHAR(CPC) NONULL ARG0, TgRSIZE_C ARG1 );
+    CHAR(CPC) TgANALYSIS_NO_NULL ARG0, TgRSIZE_C ARG1 );
 
 /** @copydoc tgUSZ_To_Bool */
 TgEXTN TgUINT_E32
 FCN(To_U32)(
-    CHAR(CPC) NONULL ARG0, TgRSIZE_C ARG1 );
+    CHAR(CPC) TgANALYSIS_NO_NULL ARG0, TgRSIZE_C ARG1 );
 
 /** @copydoc tgUSZ_To_Bool */
 TgEXTN TgUINT_E64
 FCN(To_U64)(
-    CHAR(CPC) NONULL ARG0, TgRSIZE_C ARG1 );
+    CHAR(CPC) TgANALYSIS_NO_NULL ARG0, TgRSIZE_C ARG1 );
 
 /** @copydoc tgUSZ_To_Bool */
 TgINLINE TgSINT_E08
 FCN(To_S08)(
-    CHAR(CPC) NONULL ARG0, TgRSIZE_C ARG1 );
+    CHAR(CPC) TgANALYSIS_NO_NULL ARG0, TgRSIZE_C ARG1 );
 
 /** @copydoc tgUSZ_To_Bool */
 TgINLINE TgSINT_E16
 FCN(To_S16)(
-    CHAR(CPC) NONULL ARG0, TgRSIZE_C ARG1 );
+    CHAR(CPC) TgANALYSIS_NO_NULL ARG0, TgRSIZE_C ARG1 );
 
 /** @copydoc tgUSZ_To_Bool */
 TgEXTN TgSINT_E32
 FCN(To_S32)(
-    CHAR(CPC) NONULL ARG0, TgRSIZE_C ARG1 );
+    CHAR(CPC) TgANALYSIS_NO_NULL ARG0, TgRSIZE_C ARG1 );
 
 /** @copydoc tgUSZ_To_Bool */
 TgEXTN TgSINT_E64
 FCN(To_S64)(
-    CHAR(CPC) NONULL ARG0, TgRSIZE_C ARG1 );
+    CHAR(CPC) TgANALYSIS_NO_NULL ARG0, TgRSIZE_C ARG1 );
 
 
 /** @copydoc tgUSZ_To_Bool */
 TgEXTN TgFLOAT32
 FCN(To_F32)(
-    CHAR(CPC) NONULL ARG0, TgRSIZE_C ARG1 );
+    CHAR(CPC) TgANALYSIS_NO_NULL ARG0, TgRSIZE_C ARG1 );
 
 /** @copydoc tgUSZ_To_Bool */
 TgEXTN TgFLOAT64
 FCN(To_F64)(
-    CHAR(CPC) NONULL ARG0, TgRSIZE_C ARG1 );
+    CHAR(CPC) TgANALYSIS_NO_NULL ARG0, TgRSIZE_C ARG1 );
 
 
 /** @brief Output the number of characters in the string at ARG0
@@ -356,7 +356,7 @@ FCN(To_F64)(
     @return KTgS_OK on success and KTgE_FAIL (or other failure error code) otherwise */
 TgEXTN TgRESULT
 FCN(Length_Count)(
-    TgRSIZE_P NONULL OUT0, CHAR(CP) NONULL ARG1, TgRSIZE ARG2 );
+    TgRSIZE_P TgANALYSIS_NO_NULL OUT0, CHAR(CP) TgANALYSIS_NO_NULL ARG1, TgRSIZE ARG2 );
 
 /** @return The number of bytes in the string at ARG0
     @param [in] ARG0 String to be processed.
@@ -364,7 +364,7 @@ FCN(Length_Count)(
     @return Length of the string in bytes of ARG0, not including the terminating null. */
 TgEXTN TgRSIZE
 FCN(Length_U08)(
-    CHAR(CPC) NONULL ARG0, TgRSIZE_C ARG1 );
+    CHAR(CPC) TgANALYSIS_NO_NULL ARG0, TgRSIZE_C ARG1 );
 
 /** @brief Output the number of bytes and the count of characters in the string at ARG0
     @param [out] OUT0 Destination structure that holds both the count of characters and size in bytes
@@ -373,7 +373,7 @@ FCN(Length_U08)(
     @return KTgS_OK on success and KTgE_FAIL (or other failure error code) otherwise */
 TgEXTN TgRESULT
 FCN(Length)(
-    STg1_Text_Length_P NONULL OUT0, CHAR(CP) NONULL ARG1, TgRSIZE ARG2 );
+    STg1_Text_Length_P TgANALYSIS_NO_NULL OUT0, CHAR(CP) TgANALYSIS_NO_NULL ARG1, TgRSIZE ARG2 );
 
 
 
@@ -392,7 +392,7 @@ FCN(Length)(
     @return KTgS_OK on success and KTgE_FAIL or other error code otherwise */
 TgINLINE TgRESULT
 FCN(Compare)(
-    TgSINT_E08_P NONULL OUT0, CHAR(CPC) NONULL ARG1, TgRSIZE_C ARG2, TgRSIZE_C ARG3, CHAR(CPC) NONULL ARG4, TgRSIZE_C ARG5, TgRSIZE_C ARG6 );
+    TgSINT_E08_P TgANALYSIS_NO_NULL OUT0, CHAR(CPC) TgANALYSIS_NO_NULL ARG1, TgRSIZE_C ARG2, TgRSIZE_C ARG3, CHAR(CPC) TgANALYSIS_NO_NULL ARG4, TgRSIZE_C ARG5, TgRSIZE_C ARG6 );
 
 /** @brief Perform a case insensitive lexicographical comparison of two strings up to the minimum of ARG3 and ARG6
     @param [out] OUT0 Negative if ARG0 appears before ARG2 in lexicographical order, zero if they compare equal, and negative otherwise
@@ -405,7 +405,7 @@ FCN(Compare)(
     @return KTgS_OK on success and KTgE_FAIL or other error code otherwise */
 TgINLINE TgRESULT
 FCN(Compare_NoCase)(
-    TgSINT_E08_P NONULL OUT0, CHAR(CPC) NONULL ARG1, TgRSIZE_C ARG2, TgRSIZE_C ARG3, CHAR(CPC) NONULL ARG4, TgRSIZE_C ARG5, TgRSIZE_C ARG6 );
+    TgSINT_E08_P TgANALYSIS_NO_NULL OUT0, CHAR(CPC) TgANALYSIS_NO_NULL ARG1, TgRSIZE_C ARG2, TgRSIZE_C ARG3, CHAR(CPC) TgANALYSIS_NO_NULL ARG4, TgRSIZE_C ARG5, TgRSIZE_C ARG6 );
 
 /** @brief Perform a lexicographical comparison of two strings up to ARG5 number of bytes
     @param [out] OUT0 Negative if ARG0 appears before ARG2 in lexicographical order, zero if they compare equal, and negative otherwise
@@ -419,7 +419,7 @@ FCN(Compare_NoCase)(
     @return KTgS_OK on success and KTgE_FAIL or other error code otherwise */
 TgINLINE TgRESULT
 FCN(CompareN)(
-    TgSINT_E08_P NONULL OUT0, CHAR(CPC) NONULL ARG1, TgRSIZE_C ARG2, TgRSIZE_C ARG3, CHAR(CPC) NONULL ARG4, TgRSIZE_C ARG5, TgRSIZE_C ARG6, TgRSIZE_C ARG7 );
+    TgSINT_E08_P TgANALYSIS_NO_NULL OUT0, CHAR(CPC) TgANALYSIS_NO_NULL ARG1, TgRSIZE_C ARG2, TgRSIZE_C ARG3, CHAR(CPC) TgANALYSIS_NO_NULL ARG4, TgRSIZE_C ARG5, TgRSIZE_C ARG6, TgRSIZE_C ARG7 );
 
 /** @brief Perform a case insensitive lexicographical comparison of two strings up to ARG5 number of bytes
     @param [out] OUT0 Negative if ARG0 appears before ARG2 in lexicographical order, zero if they compare equal, and negative otherwise
@@ -433,7 +433,7 @@ FCN(CompareN)(
     @return KTgS_OK on success and KTgE_FAIL or other error code otherwise */
 TgINLINE TgRESULT
 FCN(CompareN_NoCase)(
-    TgSINT_E08_P NONULL OUT0, CHAR(CPC) NONULL ARG1, TgRSIZE_C ARG2, TgRSIZE_C ARG3, CHAR(CPC) NONULL ARG4, TgRSIZE_C ARG5, TgRSIZE_C ARG6, TgRSIZE_C ARG7 );
+    TgSINT_E08_P TgANALYSIS_NO_NULL OUT0, CHAR(CPC) TgANALYSIS_NO_NULL ARG1, TgRSIZE_C ARG2, TgRSIZE_C ARG3, CHAR(CPC) TgANALYSIS_NO_NULL ARG4, TgRSIZE_C ARG5, TgRSIZE_C ARG6, TgRSIZE_C ARG7 );
 
 
 
@@ -445,7 +445,7 @@ FCN(CompareN_NoCase)(
     @return KTgS_OK on success and KTgE_FAIL (or other failure error code) otherwise */
 TgEXTN TgRESULT
 FCN(To_Upper)(
-    CHAR(P) NONULL OUT0, TgRSIZE ARG1, CHAR(CP) NONULL ARG2, TgRSIZE ARG3 );
+    CHAR(P) TgANALYSIS_NO_NULL OUT0, TgRSIZE ARG1, CHAR(CP) TgANALYSIS_NO_NULL ARG2, TgRSIZE ARG3 );
 
 /** @brief Convert the string in ARG2 to lower case and outputs it into ARG0
     @param [out] OUT0 Destination for resulting output
@@ -455,7 +455,7 @@ FCN(To_Upper)(
     @return KTgS_OK on success and KTgE_FAIL (or other failure error code) otherwise */
 TgEXTN TgRESULT
 FCN(To_Lower)(
-    CHAR(P) NONULL OUT0, TgRSIZE ARG1, CHAR(CP) NONULL ARG2, TgRSIZE ARG3 );
+    CHAR(P) TgANALYSIS_NO_NULL OUT0, TgRSIZE ARG1, CHAR(CP) TgANALYSIS_NO_NULL ARG2, TgRSIZE ARG3 );
 
 
 
@@ -467,7 +467,7 @@ FCN(To_Lower)(
     @return KTgS_OK on success and KTgE_FAIL (or other failure error code) otherwise */
 TgEXTN TgRESULT
 FCN(Copy)(
-    CHAR(PC) NONULL OUT0, TgRSIZE_C ARG1, CHAR(CPC) NONULL ARG2, TgRSIZE_C ARG3 );
+    CHAR(PC) TgANALYSIS_NO_NULL OUT0, TgRSIZE_C ARG1, CHAR(CPC) TgANALYSIS_NO_NULL ARG2, TgRSIZE_C ARG3 );
 
 /** @brief Append the string at ARG2 to the string at ARG0
     @param [in,out] OUT0 Destination for resulting output
@@ -477,7 +477,7 @@ FCN(Copy)(
     @return KTgS_OK on success and KTgE_FAIL (or other failure error code) otherwise */
 TgEXTN TgRESULT
 FCN(Append)(
-    CHAR(PC) NONULL OUT0, TgRSIZE_C ARG1, CHAR(CPC) NONULL ARG2, TgRSIZE_C ARG3 );
+    CHAR(PC) TgANALYSIS_NO_NULL OUT0, TgRSIZE_C ARG1, CHAR(CPC) TgANALYSIS_NO_NULL ARG2, TgRSIZE_C ARG3 );
 
 /** @brief Copy the string in ARG2 to ARG0, up to a maximum of ARG4 characters
     @param [out] OUT0 Destination for resulting output
@@ -488,7 +488,7 @@ FCN(Append)(
     @return KTgS_OK on success and KTgE_FAIL (or other failure error code) otherwise */
 TgEXTN TgRESULT
 FCN(CopyN)(
-    CHAR(PC) NONULL OUT0, TgRSIZE_C ARG1, CHAR(CPC) NONULL ARG2, TgRSIZE_C ARG3, TgRSIZE_C ARG4 );
+    CHAR(PC) TgANALYSIS_NO_NULL OUT0, TgRSIZE_C ARG1, CHAR(CPC) TgANALYSIS_NO_NULL ARG2, TgRSIZE_C ARG3, TgRSIZE_C ARG4 );
 
 /** @brief Append the string in ARG2 to ARG0, up to a maximum of ARG4 characters
     @param [in,out] OUT0 Destination for resulting output
@@ -499,7 +499,7 @@ FCN(CopyN)(
     @return KTgS_OK on success and KTgE_FAIL (or other failure error code) otherwise */
 TgEXTN TgRESULT
 FCN(AppendN)(
-    CHAR(PC) NONULL OUT0, TgRSIZE_C ARG1, CHAR(CPC) NONULL ARG2, TgRSIZE_C ARG3, TgRSIZE_C ARG4 );
+    CHAR(PC) TgANALYSIS_NO_NULL OUT0, TgRSIZE_C ARG1, CHAR(CPC) TgANALYSIS_NO_NULL ARG2, TgRSIZE_C ARG3, TgRSIZE_C ARG4 );
 
 
 
@@ -512,7 +512,7 @@ FCN(AppendN)(
     @return KTgS_OK on success and KTgE_FAIL (or other failure error code) otherwise */
 TgEXTN TgRESULT
 FCN(Token)(
-    CHAR(PP) OUT0, CHAR(PC) OKNULL ARG1, TgRSIZE_P NONULL ARG2, CHAR(CPC) NONULL ARG3, CHAR(PP) NONULL ARG4 );
+    CHAR(PP) OUT0, CHAR(PC) OKNULL ARG1, TgRSIZE_P TgANALYSIS_NO_NULL ARG2, CHAR(CPC) TgANALYSIS_NO_NULL ARG3, CHAR(PP) TgANALYSIS_NO_NULL ARG4 );
 
 /** @brief Finds the first occurrence of the character ARG1 in the string at ARG0
     @param [out] OUT0 Offset in ARG1 to the first instance of the string in ARG3
@@ -522,7 +522,7 @@ FCN(Token)(
     @return KTgS_OK on success and KTgE_FAIL (or other failure error code) otherwise */
 TgEXTN TgRESULT
 FCN(StrChr)(
-    TgRSIZE_P NONULL OUT0, CHAR(CPC) NONULL ARG1, TgRSIZE_C ARG2, CHAR(C) ARG3 );
+    TgRSIZE_P TgANALYSIS_NO_NULL OUT0, CHAR(CPC) TgANALYSIS_NO_NULL ARG1, TgRSIZE_C ARG2, CHAR(C) ARG3 );
 
 /** @brief Finds the first occurrence of the string pointed at ARG1 in the string at ARG0
     @param [out] OUT0 Offset in ARG1 to the first instance of the string in ARG3
@@ -533,7 +533,7 @@ FCN(StrChr)(
     @return KTgS_OK on success and KTgE_FAIL (or other failure error code) otherwise */
 TgEXTN TgRESULT
 FCN(StrStr)(
-    TgRSIZE_P NONULL OUT0, CHAR(CPC) NONULL ARG1, TgRSIZE_C ARG2, CHAR(CPC) NONULL ARG3, TgRSIZE_C ARG4 );
+    TgRSIZE_P TgANALYSIS_NO_NULL OUT0, CHAR(CPC) TgANALYSIS_NO_NULL ARG1, TgRSIZE_C ARG2, CHAR(CPC) TgANALYSIS_NO_NULL ARG3, TgRSIZE_C ARG4 );
 
 /** @brief Parse the source string taking into account c-style comments, and quotations
     @param [out] OUT0 Array of token pointers
@@ -543,7 +543,7 @@ FCN(StrStr)(
     @return Number of tokens written into the array at ARG1 */
 TgEXTN TgSINT_E32
 FCN(Token_List)(
-    CHAR(PP) NONULL OUT0, TgSINT_E32_C ARG1, CHAR(PC) NONULL ARG2, TgRSIZE_C ARG3 );
+    CHAR(PP) TgANALYSIS_NO_NULL OUT0, TgSINT_E32_C ARG1, CHAR(PC) TgANALYSIS_NO_NULL ARG2, TgRSIZE_C ARG3 );
 
 
 
@@ -554,7 +554,7 @@ FCN(Token_List)(
     @return KTgS_OK on success and KTgE_FAIL (or other failure error code) otherwise */
 TgEXTN TgRESULT
 FCN(LengthVF_Count)(
-    TgRSIZE_P NONULL OUT0, CHAR(CPC) NONULL ARG1, va_list ARG2 );
+    TgRSIZE_P TgANALYSIS_NO_NULL OUT0, CHAR(CPC) TgANALYSIS_NO_NULL ARG1, va_list ARG2 );
 
 /** @brief Outputs the result of processing ARG2 into the string at ARG0
     @param [out] OUT0 Destination for resulting output
@@ -564,7 +564,7 @@ FCN(LengthVF_Count)(
     @return KTgS_OK on success and KTgE_FAIL (or other failure error code) otherwise */
 TgEXTN TgRESULT
 FCN(PrintVF)(
-    CHAR(PC) NONULL OUT0, TgRSIZE_C ARG1, CHAR(CPC) NONULL ARG2, va_list ARG3 );
+    CHAR(PC) TgANALYSIS_NO_NULL OUT0, TgRSIZE_C ARG1, CHAR(CPC) TgANALYSIS_NO_NULL ARG2, va_list ARG3 );
 
 /** @brief Appends the resultant output of processing ARG2 to the end of the string in ARG0
     @param [in,out] OUT0 Destination for resulting output
@@ -574,7 +574,7 @@ FCN(PrintVF)(
     @return KTgS_OK on success and KTgE_FAIL (or other failure error code) otherwise */
 TgEXTN TgRESULT
 FCN(AppendVF)(
-    CHAR(PC) NONULL OUT0, TgRSIZE_C ARG1, CHAR(CPC) NONULL ARG2, va_list ARG3 );
+    CHAR(PC) TgANALYSIS_NO_NULL OUT0, TgRSIZE_C ARG1, CHAR(CPC) TgANALYSIS_NO_NULL ARG2, va_list ARG3 );
 
 /** @brief Outputs the result of processing ARG2 into the string at ARG0
     @param [out] OUT0 Destination for resulting output
@@ -584,7 +584,7 @@ FCN(AppendVF)(
     @return KTgS_OK on success and KTgE_FAIL (or other failure error code) otherwise */
 TgEXTN TgRESULT
 FCN(PrintF)(
-    CHAR(PC) NONULL OUT0, TgRSIZE_C ARG1, CHAR(CPC) NONULL ARG2, ... );
+    CHAR(PC) TgANALYSIS_NO_NULL OUT0, TgRSIZE_C ARG1, CHAR(CPC) TgANALYSIS_NO_NULL ARG2, ... );
 
 /** @brief Appends the resultant output of processing ARG2 to the end of the string in ARG0
     @param [in,out] OUT0 Destination for resulting output
@@ -594,7 +594,7 @@ FCN(PrintF)(
     @return KTgS_OK on success and KTgE_FAIL (or other failure error code) otherwise */
 TgEXTN TgRESULT
 FCN(AppendF)(
-    CHAR(PC) NONULL OUT0, TgRSIZE_C ARG1, CHAR(CPC) NONULL ARG2, ... );
+    CHAR(PC) TgANALYSIS_NO_NULL OUT0, TgRSIZE_C ARG1, CHAR(CPC) TgANALYSIS_NO_NULL ARG2, ... );
 
 
 
@@ -606,7 +606,7 @@ FCN(AppendF)(
     @return KTgS_OK on success and KTgE_FAIL (or other failure error code) otherwise */
 TgEXTN TgRESULT
 FCN(Convert_NSZ)(
-    CHAR(PC) NONULL OUT0, TgRSIZE_C ARG1, TgCHAR_NC_CPC NONULL ARG2, TgRSIZE_C ARG3 );
+    CHAR(PC) TgANALYSIS_NO_NULL OUT0, TgRSIZE_C ARG1, TgCHAR_NC_CPC TgANALYSIS_NO_NULL ARG2, TgRSIZE_C ARG3 );
 
 /** @brief Converts the string in ARG2 into the format for OUT0
     @param [out] OUT0 Destination for resulting output
@@ -616,7 +616,7 @@ FCN(Convert_NSZ)(
     @return KTgS_OK on success and KTgE_FAIL (or other failure error code) otherwise */
 TgEXTN TgRESULT
 FCN(Convert_WSZ)(
-    CHAR(PC) NONULL OUT0, TgRSIZE_C ARG1, TgCHAR_WC_CPC NONULL ARG2, TgRSIZE_C ARG3 );
+    CHAR(PC) TgANALYSIS_NO_NULL OUT0, TgRSIZE_C ARG1, TgCHAR_WC_CPC TgANALYSIS_NO_NULL ARG2, TgRSIZE_C ARG3 );
 
 /** @brief Converts the string in ARG2 into the format for OUT0
     @param [out] OUT0 Destination for resulting output
@@ -626,7 +626,7 @@ FCN(Convert_WSZ)(
     @return KTgS_OK on success and KTgE_FAIL (or other failure error code) otherwise */
 TgEXTN TgRESULT
 FCN(Convert_USZ)(
-    CHAR(PC) NONULL OUT0, TgRSIZE_C ARG1, TgCHAR_U8_CPC NONULL ARG2, TgRSIZE_C ARG3 );
+    CHAR(PC) TgANALYSIS_NO_NULL OUT0, TgRSIZE_C ARG1, TgCHAR_U8_CPC TgANALYSIS_NO_NULL ARG2, TgRSIZE_C ARG3 );
 
 
 #include "TgS COMMON/TgS Common - Base - Defines [Template] [Text].h_inc"

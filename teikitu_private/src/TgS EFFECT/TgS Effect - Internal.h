@@ -13,9 +13,11 @@
 
 #include "TgS Common.h"
 #include "TgS Collision.h"
+#include "TgS Partition.h"
 #include "TgS Kernel.h"
 #include "TgS Kernel [GPU].h"
 #include "TgS Utility.h"
+#include "TgS Physics.h"
 #include "TgS Render.h"
 #include "TgS Script.h"
 #include "TgS Sound.h"
@@ -238,7 +240,7 @@ tgFX__Render__Job__Allocate_Render_Buffers(
 
 TgEXTN TgVOID
 tgFX__Render__Submit_Job__Allocate_Render_Buffers(
-    STg2_FX_Rnd_Output_PC NONULL ARG0 );
+    STg2_FX_Rnd_Output_PC TgANALYSIS_NO_NULL ARG0 );
 
 /*# defined(STg2_JobTgBUILD_FEATURE__GRAPHICS_VFX) */
 #endif
@@ -289,7 +291,7 @@ tgFX__Client__UnBind_Effect(
     @return Result Code. */
 TgEXTN TgRESULT
 tgFX_Integrate_AnimData_F32_04_1(
-    TgVEC_F32_04_1_P NONULL OUT0, STg2_FX_AnimData_P NONULL ARG1, TgVEC_F32_04_1_C ARG2, TgVEC_F32_04_1_C ARG3 );
+    TgVEC_F32_04_1_P TgANALYSIS_NO_NULL OUT0, STg2_FX_AnimData_P TgANALYSIS_NO_NULL ARG1, TgVEC_F32_04_1_C ARG2, TgVEC_F32_04_1_C ARG3 );
 
 /** @brief Using the provided FX animation data, evaluate the function at the given time value.
     @param [out] OUT0 Pointer to a location to store the output of the function.
@@ -298,7 +300,7 @@ tgFX_Integrate_AnimData_F32_04_1(
     @return Result Code. */
 TgEXTN TgRESULT
 tgFX_Evaluate_AnimData_F32_04_1( 
-    TgVEC_F32_04_1_P NONULL OUT0, STg2_FX_AnimData_P NONULL ARG1, TgVEC_F32_04_1_C ARG2 );
+    TgVEC_F32_04_1_P TgANALYSIS_NO_NULL OUT0, STg2_FX_AnimData_P TgANALYSIS_NO_NULL ARG1, TgVEC_F32_04_1_C ARG2 );
 
 /** @brief Using the provided FX animation data, evaluate the function at the given time value.
     @param [out] OUT0 Pointer to a location to store the output of the function.
@@ -307,7 +309,7 @@ tgFX_Evaluate_AnimData_F32_04_1(
     @return Result Code. */
 TgEXTN TgRESULT
 tgFX_Evaluate_Single_AnimData_UXX(
-    TgUINT_MAX_P NONULL OUT0, STg2_FX_AnimData_P NONULL ARG1, TgFLOAT32_C ARG2 );
+    TgUINT_MAX_P TgANALYSIS_NO_NULL OUT0, STg2_FX_AnimData_P TgANALYSIS_NO_NULL ARG1, TgFLOAT32_C ARG2 );
 
 
 

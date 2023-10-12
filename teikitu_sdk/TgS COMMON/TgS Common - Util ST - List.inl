@@ -23,7 +23,7 @@
 
 /* ---- tgCM_UT_ST__LT__Init ----------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgRESULT tgCM_UT_ST__LT__Init( STg2_UT_ST__LT_PCU NONULL psMP_LT )
+TgINLINE TgRESULT tgCM_UT_ST__LT__Init( STg2_UT_ST__LT_PCU psMP_LT )
 {
     TgPARAM_CHECK(psMP_LT);
     psMP_LT->m_sNode.m_pPrev_Node = &psMP_LT->m_sNode;
@@ -34,7 +34,7 @@ TgINLINE TgRESULT tgCM_UT_ST__LT__Init( STg2_UT_ST__LT_PCU NONULL psMP_LT )
 
 /* ---- tgCM_UT_ST__LT__Free ----------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgCM_UT_ST__LT__Free( STg2_UT_ST__LT_PCU NONULL psMP_LT )
+TgINLINE TgVOID tgCM_UT_ST__LT__Free( STg2_UT_ST__LT_PCU psMP_LT )
 {
     TgPARAM_CHECK(psMP_LT && psMP_LT->m_sNode.m_pPrev_Node && psMP_LT->m_sNode.m_pNext_Node);
     TgERROR(tgCM_UT_ST__LT__Is_Empty( psMP_LT ));
@@ -43,7 +43,7 @@ TgINLINE TgVOID tgCM_UT_ST__LT__Free( STg2_UT_ST__LT_PCU NONULL psMP_LT )
 
 /* ---- tgCM_UT_ST__LT__Push_Front ----------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgCM_UT_ST__LT__Push_Front( STg2_UT_ST__LT_PCU NONULL psMP_LT, STg2_UT_ST__LT_Node_PC NONULL psNode )
+TgINLINE TgVOID tgCM_UT_ST__LT__Push_Front( STg2_UT_ST__LT_PCU psMP_LT, STg2_UT_ST__LT_Node_PC psNode )
 {
     TgPARAM_CHECK(psMP_LT->m_sNode.m_pPrev_Node && psMP_LT->m_sNode.m_pNext_Node && psNode);
     psNode->m_pPrev_Node = &psMP_LT->m_sNode;
@@ -57,7 +57,7 @@ TgINLINE TgVOID tgCM_UT_ST__LT__Push_Front( STg2_UT_ST__LT_PCU NONULL psMP_LT, S
 
 /* ---- tgCM_UT_ST__LT__Push_Back ------------------------------------------------------------------------------------------------------------------------------------------------ */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgCM_UT_ST__LT__Push_Back( STg2_UT_ST__LT_PCU NONULL psMP_LT, STg2_UT_ST__LT_Node_PC NONULL psNode )
+TgINLINE TgVOID tgCM_UT_ST__LT__Push_Back( STg2_UT_ST__LT_PCU psMP_LT, STg2_UT_ST__LT_Node_PC psNode )
 {
     TgPARAM_CHECK(psMP_LT && psMP_LT->m_sNode.m_pPrev_Node && psMP_LT->m_sNode.m_pNext_Node && psNode);
     psNode->m_pPrev_Node = psMP_LT->m_sNode.m_pPrev_Node;
@@ -71,7 +71,7 @@ TgINLINE TgVOID tgCM_UT_ST__LT__Push_Back( STg2_UT_ST__LT_PCU NONULL psMP_LT, ST
 
 /* ---- tgCM_UT_ST__LT__Pop_Front ------------------------------------------------------------------------------------------------------------------------------------------------ */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE STg2_UT_ST__LT_Node_P tgCM_UT_ST__LT__Pop_Front( STg2_UT_ST__LT_PCU NONULL psMP_LT )
+TgINLINE STg2_UT_ST__LT_Node_P tgCM_UT_ST__LT__Pop_Front( STg2_UT_ST__LT_PCU psMP_LT )
 {
     STg2_UT_ST__LT_Node_P                  psNode;
 
@@ -91,7 +91,7 @@ TgINLINE STg2_UT_ST__LT_Node_P tgCM_UT_ST__LT__Pop_Front( STg2_UT_ST__LT_PCU NON
 
 /* ---- tgCM_UT_ST__LT__Pop_Back ------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE STg2_UT_ST__LT_Node_P tgCM_UT_ST__LT__Pop_Back( STg2_UT_ST__LT_PCU NONULL psMP_LT )
+TgINLINE STg2_UT_ST__LT_Node_P tgCM_UT_ST__LT__Pop_Back( STg2_UT_ST__LT_PCU psMP_LT )
 {
     STg2_UT_ST__LT_Node_P                  psNode;
 
@@ -111,7 +111,7 @@ TgINLINE STg2_UT_ST__LT_Node_P tgCM_UT_ST__LT__Pop_Back( STg2_UT_ST__LT_PCU NONU
 
 /* ---- tgCM_UT_ST__LT__Insert --------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgCM_UT_ST__LT__Insert( STg2_UT_ST__LT_Node_PC NONULL psNodeAt, STg2_UT_ST__LT_Node_PC NONULL psNewNode )
+TgINLINE TgVOID tgCM_UT_ST__LT__Insert( STg2_UT_ST__LT_Node_PC psNodeAt, STg2_UT_ST__LT_Node_PC psNewNode )
 {
     TgPARAM_CHECK(psNodeAt && psNewNode);
     psNewNode->m_pPrev_Node = psNodeAt->m_pPrev_Node;
@@ -123,7 +123,7 @@ TgINLINE TgVOID tgCM_UT_ST__LT__Insert( STg2_UT_ST__LT_Node_PC NONULL psNodeAt, 
 
 /* ---- tgCM_UT_ST__LT__Remove --------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgCM_UT_ST__LT__Remove( STg2_UT_ST__LT_Node_PC NONULL psNode )
+TgINLINE TgVOID tgCM_UT_ST__LT__Remove( STg2_UT_ST__LT_Node_PC psNode )
 {
     TgPARAM_CHECK(psNode && psNode->m_pPrev_Node && psNode->m_pNext_Node);
     psNode->m_pPrev_Node->m_pNext_Node = psNode->m_pNext_Node;
@@ -137,7 +137,7 @@ TgINLINE TgVOID tgCM_UT_ST__LT__Remove( STg2_UT_ST__LT_Node_PC NONULL psNode )
 
 /* ---- tgCM_UT_ST__LT__Is_Empty ------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgBOOL tgCM_UT_ST__LT__Is_Empty( STg2_UT_ST__LT_PCU NONULL psMP_LT )
+TgINLINE TgBOOL tgCM_UT_ST__LT__Is_Empty( STg2_UT_ST__LT_PCU psMP_LT )
 {
     TgPARAM_CHECK(psMP_LT && psMP_LT->m_sNode.m_pPrev_Node && psMP_LT->m_sNode.m_pNext_Node);
     return (psMP_LT->m_sNode.m_pPrev_Node == &psMP_LT->m_sNode);

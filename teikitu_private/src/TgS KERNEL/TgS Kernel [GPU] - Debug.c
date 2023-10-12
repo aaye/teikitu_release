@@ -146,7 +146,9 @@ TgRESULT tgKN_GPU__Execute__Init_Debug( TgKN_GPU_CXT_EXEC_ID_C tiCXT_EXEC )
         TgVOID                              (* const pfnInit_Mesh[])( TgKN_GPU_DBG_PM_Generate_PC ) = { tgKN_GPU_DBG_Init_Mesh_Plane,
                                                                                                         tgKN_GPU_DBG_Init_Mesh_Box,
                                                                                                         tgKN_GPU_DBG_Init_Mesh_Sphere,
-                                                                                                        tgKN_GPU_DBG_Init_Mesh_Capsule,
+                                                                                                        tgKN_GPU_DBG_Init_Mesh_Capsule_Cap_0,
+                                                                                                        tgKN_GPU_DBG_Init_Mesh_Capsule_Cap_1,
+                                                                                                        tgKN_GPU_DBG_Init_Mesh_Capsule_Tube,
                                                                                                         tgKN_GPU_DBG_Init_Mesh_Cone,
                                                                                                         tgKN_GPU_DBG_Init_Mesh_Cylinder,
                                                                                                         tgKN_GPU_DBG_Init_Mesh_Tube };
@@ -163,6 +165,9 @@ TgRESULT tgKN_GPU__Execute__Init_Debug( TgKN_GPU_CXT_EXEC_ID_C tiCXT_EXEC )
             pfnInit_Mesh[enPM - ETgKN_GPU_DEBUG_PM_3D_START]( &sGenerate ); /* Calculate the size of the vertex pool needed. */
             sGenerate.m_psVertex = (STg2_KN_GPU_Vertex_Geom_02_P)TgMALLOC_POOL( sGenerate.m_nuiMax_Vertex  * sizeof( STg2_KN_GPU_Vertex_Geom_02 ) );
             pfnInit_Mesh[enPM - ETgKN_GPU_DEBUG_PM_3D_START]( &sGenerate ); /* Calculate the final geometry. This is inefficient as tessellation is run twice. */
+
+            TgDIAG(sGenerate.m_nuiIndex <= sGenerate.m_nuiMax_Index);
+            TgDIAG(sGenerate.m_nuiVertex <= sGenerate.m_nuiMax_Vertex);
 
             tgKN_GPU_EXT__Execute__Register_Debug_Geometry( uCMD, enPM, &sGenerate );
 

@@ -27,12 +27,18 @@ static TgRESULT
 tgPH_Update_World__Job__Simulate_Batch(
     STg2_Job_CPC ARG0 );
 
+/** @brief Responsible for the setup and queuing of collide batch jobs. @return Result Code.
+    @param [in] ARG0 Pointer to a job data structure. */
+static TgRESULT
+tgPH_Update_World__Job__Collision(
+    STg2_Job_CPC ARG0 );
+
 /** @brief Responsible for taking a set of Forms and determining any collisions that have taken place during the World step. This is done assuming that the Forms will continue
            moving along the same path as they are currently configured. Forms can be configured to engage or ignore classes of collision objects. The Forms will be tested against
            each other, and against the World collision representation. During this pass anti-tunneling measures are taken to mitigate tunneling issues.  @return Result Code.
     @param [in] ARG0 Pointer to a job data structure. */
 static TgRESULT
-tgPH_Update_World__Job__Collide_Batch(
+tgPH_Update_World__Job__Collide_Simple_Batch(
     STg2_Job_CPC ARG0 );
 
 /** @brief Master function that iterates through all active bodies (and constraints) to create sets that are self-contained. Once a set is completed, then a job is created
@@ -100,6 +106,7 @@ PHYSICS_FUNCTION_ACCESSOR_DEFINITION__ASSIGN(World,WORLD,Pause_State,TgBOOL,m_ui
 PHYSICS_FUNCTION_ACCESSOR_DEFINITION__ASSIGN(World,WORLD,Single_Step,TgBOOL,m_uiSingle_Step)
 PHYSICS_FUNCTION_ACCESSOR_DEFINITION__ASSIGN(World,WORLD,Simulation_Enable,TgBOOL,m_uiSimulate)
 PHYSICS_FUNCTION_ACCESSOR_DEFINITION__ASSIGN(World,WORLD,Collision_Enable,TgBOOL,m_uiCollide)
+PHYSICS_FUNCTION_ACCESSOR_DEFINITION__ASSIGN(World,WORLD,Collision_Simple_Override,TgBOOL,m_uiCollision_Simple)
 
 
 
@@ -126,7 +133,9 @@ TgRESULT tgPH_World_Init_Internal( STg2_PH_World_P psWorld )
 #if defined(TgBUILD_FEATURE__PHYSICS__CFM)
     psWorld->m_fCFM = 0.0001F; // PIOMA - TODO FILL THIS OUT
 #endif
-    psWorld->m_fStep_Size_Seconds = 1.0F / 60.0F;
+    psWorld->m_fStep_Size_Seconds = 1.0F / 240.0F;
+    psWorld->m_pfnCollision_Update = tgPH_Update_World__Collide__Partition_Manager_IMM;
+    psWorld->m_tiPA_Graph = tgPA_Graph_PNS_Init();
 
     psWorld->m_vThreshold__Depth = tgMH_SET1_F32_04_1( 0.001F ); // PIOMA
     psWorld->m_vThreshold__LV_LSQ = tgMH_Init_Vector_ELEM_F32_04_1( 0.001F, 0.001F, 0.001F ); // PIOMA
@@ -153,7 +162,7 @@ TgRESULT tgPH_World_Init_Internal( STg2_PH_World_P psWorld )
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 TgRESULT tgPH_World_Reset_Internal( STg2_PH_World_P psWorld )
 {
-    (void)psWorld;
+    tgPA_Graph_PNS_Free( psWorld->m_tiPA_Graph );
     return KTgE_FAIL;
 }
 
@@ -165,7 +174,7 @@ TgVOID tgPH_Update_World__Init_Jobs( TgVOID )
     TgRSIZE                             uiWorld_Index;
 
     tgMM_Set_U08_0x00( &g_asPH__Job__Update_World__Simulate_Batch, sizeof( g_asPH__Job__Update_World__Simulate_Batch ) );
-    tgMM_Set_U08_0x00( &g_asPH__Job__Update_World__Collide_Batch, sizeof( g_asPH__Job__Update_World__Collide_Batch ) );
+    tgMM_Set_U08_0x00( &g_asPH__Job__Update_World__Collision, sizeof( g_asPH__Job__Update_World__Collision ) );
     tgMM_Set_U08_0x00( &g_asPH__Job__Update_World__Build_Sets, sizeof( g_asPH__Job__Update_World__Build_Sets ) );
     tgMM_Set_U08_0x00( &g_asPH__Job__Update_World__Solve_Sets, sizeof( g_asPH__Job__Update_World__Solve_Sets ) );
     tgMM_Set_U08_0x00( &g_asPH__Job__Update_World__Finish, sizeof( g_asPH__Job__Update_World__Finish ) );
@@ -173,7 +182,7 @@ TgVOID tgPH_Update_World__Init_Jobs( TgVOID )
     for (uiWorld_Index = 0; uiWorld_Index < ETgPH_MAX_WORLD; ++uiWorld_Index)
     {
         TgSTD_ATOMIC(store)( g_axuiPH_FENCE__UPDATE_WORLD__SIMULATE_BATCH + uiWorld_Index, 0u );
-        TgSTD_ATOMIC(store)( g_axuiPH_FENCE__UPDATE_WORLD__COLLIDE_BATCH + uiWorld_Index, 0u );
+        TgSTD_ATOMIC(store)( g_axuiPH_FENCE__UPDATE_WORLD__COLLISION + uiWorld_Index, 0u );
         TgSTD_ATOMIC(store)( g_axuiPH_FENCE__UPDATE_WORLD__BUILD_SETS + uiWorld_Index, 0u );
         TgSTD_ATOMIC(store)( g_axuiPH_FENCE__UPDATE_WORLD__SOLVE_SETS + uiWorld_Index, 0u );
         TgSTD_ATOMIC(store)( g_axuiPH_FENCE__UPDATE_WORLD__FINISH + uiWorld_Index, 0u );
@@ -181,11 +190,11 @@ TgVOID tgPH_Update_World__Init_Jobs( TgVOID )
         g_asPH__Job__Update_World__Simulate_Batch[uiWorld_Index].m_pfnExecute = tgPH_Update_World__Job__Simulate_Batch;
         g_asPH__Job__Update_World__Simulate_Batch[uiWorld_Index].m_pxuiTrigger = g_axuiPH_FENCE__UPDATE_WORLD__FINISH + uiWorld_Index;
 
-        g_asPH__Job__Update_World__Collide_Batch[uiWorld_Index].m_pfnExecute = tgPH_Update_World__Job__Collide_Batch;
-        g_asPH__Job__Update_World__Collide_Batch[uiWorld_Index].m_pxuiTrigger = g_axuiPH_FENCE__UPDATE_WORLD__SIMULATE_BATCH + uiWorld_Index;
+        g_asPH__Job__Update_World__Collision[uiWorld_Index].m_pfnExecute = tgPH_Update_World__Job__Collision;
+        g_asPH__Job__Update_World__Collision[uiWorld_Index].m_pxuiTrigger = g_axuiPH_FENCE__UPDATE_WORLD__SIMULATE_BATCH + uiWorld_Index;
 
         g_asPH__Job__Update_World__Build_Sets[uiWorld_Index].m_pfnExecute = tgPH_Update_World__Job__Build_Sets;
-        g_asPH__Job__Update_World__Build_Sets[uiWorld_Index].m_pxuiTrigger = g_axuiPH_FENCE__UPDATE_WORLD__COLLIDE_BATCH + uiWorld_Index;
+        g_asPH__Job__Update_World__Build_Sets[uiWorld_Index].m_pxuiTrigger = g_axuiPH_FENCE__UPDATE_WORLD__COLLISION + uiWorld_Index;
 
         g_asPH__Job__Update_World__Solve_Sets[uiWorld_Index].m_pfnExecute = tgPH_Update_World__Job__Solve_Sets;
 
@@ -246,16 +255,17 @@ TgRESULT tgPH_Update_World( TgPH_WORLD_ID_C tiWorld )
         bRunCollision = !bIs_Paused && (0 != psWorld->m_uiCollide) && (psWorld->m_uiCollide_Min_Batch_Size > 0) && (nuiForm_World > 0);
 
         /* Allocate memory for Body Predicted Motion. */
-        TgVERIFY(nullptr == g_asPH_Update__Simulation[tiWorld.m_uiI].m_avPos_W);
-        TgVERIFY(nullptr == g_asPH_Update__Simulation[tiWorld.m_uiI].m_avRot_W);
-        g_asPH_Update__Simulation[tiWorld.m_uiI].m_avPos_W = (TgVEC_F32_04_1_P)TgMALLOC_POOL( sizeof(TgVEC_F32_04_1) * nuiBody_World );
-        g_asPH_Update__Simulation[tiWorld.m_uiI].m_avRot_W = (TgVEC_F32_04_1_P)TgMALLOC_POOL( sizeof(TgVEC_F32_04_1) * nuiBody_World );
+        g_asPH_Update__Simulation[tiWorld.m_uiI].m_avBY_Pos_O2W = (TgVEC_F32_04_1_P)TgMALLOC_POOL( sizeof(TgVEC_F32_04_1) * nuiBody_World );
+        g_asPH_Update__Simulation[tiWorld.m_uiI].m_avRHS_LA = (TgVEC_F32_04_1_P)TgMALLOC_POOL( sizeof(TgVEC_F32_04_1) * 2 * nuiBody_World );
+        g_asPH_Update__Simulation[tiWorld.m_uiI].m_amFM_Final_O2W = (TgVEC_F32_04_3_P)TgMALLOC_POOL( sizeof(TgVEC_F32_04_3) * nuiForm_World );
+        g_asPH_Update__Simulation[tiWorld.m_uiI].m_avFM_Pos_O2W = (TgVEC_F32_04_1_P)TgMALLOC_POOL( sizeof(TgVEC_F32_04_1) * nuiForm_World );
+        g_asPH_Update__Simulation[tiWorld.m_uiI].m_asFM_BA_W = (TgBOXAA_F32_04_P)TgMALLOC_POOL( sizeof(TgBOXAA_F32_04) * nuiForm_World );
 
         /* Simulation Pass: Determine the forces and moments assuming no constraints */
-        if (bRunSimulation)
+        if (bRunSimulation || bRunCollision)
         {
+            STg2_Job_PC                         psJob = g_asPH__Job__Update_World__Simulate_Batch + tiWorld.m_uiI;
             TgRSIZE                             uiSimulate_Min_Batch_Size;
-            STg2_Job_P                          psJob;
             TgRSIZE                             uiBody_Index;
 
             /* Calculate the number of jobs (batches) to create, and the number of bodies per job (batch). */
@@ -265,16 +275,11 @@ TgRESULT tgPH_Update_World( TgPH_WORLD_ID_C tiWorld )
                 uiSimulate_Min_Batch_Size = (nuiBody_World + KTgPH_MAX_SIMULATION_JOB - 1) / KTgPH_MAX_SIMULATION_JOB;
             };
 
-            /* Allocate memory for the output data structure from simulation for the solver. */
-            TgVERIFY(nullptr == g_asPH_Update__Simulation[tiWorld.m_uiI].m_avRHS_LA);
-            g_asPH_Update__Simulation[tiWorld.m_uiI].m_avRHS_LA = (TgVEC_F32_04_1_P)TgMALLOC_POOL( sizeof(TgVEC_F32_04_1) * 2 * nuiBody_World );
-
             /* Set the fence to be the total number of bodies in the world. */
             TgVERIFY(0 == TgSTD_ATOMIC(load_explicit)( g_axuiPH_FENCE__UPDATE_WORLD__SIMULATE_BATCH + tiWorld.m_uiI, TgSTD_MEMORY_ORDER(relaxed) ));
             TgSTD_ATOMIC(store)( g_axuiPH_FENCE__UPDATE_WORLD__SIMULATE_BATCH + tiWorld.m_uiI, nuiBody_World );
 
             /* Create all of the jobs necessary to batch the simulation calls for all bodies. */
-            psJob = g_asPH__Job__Update_World__Simulate_Batch + tiWorld.m_uiI;
             for (uiBody_Index = 0; uiBody_Index < nuiBody_World; uiBody_Index += uiSimulate_Min_Batch_Size)
             {
                 union { STg2_PH_Job__Update_World__Simulate_Data_P psSimulate_Data; TgUINT_E08_P pui; } const sJob_Data = { .pui  = psJob->m_auiData };
@@ -290,73 +295,43 @@ TgRESULT tgPH_Update_World( TgPH_WORLD_ID_C tiWorld )
                     tgPH_Update_World__Job__Simulate_Batch( psJob );
                 };
             };
-        }
-        else if (bRunCollision)
-        {
-            STg2_PH_Update__Simulation_CPC      psUpdate_Simulation = g_asPH_Update__Simulation + tiWorld.m_uiI;
-            TgRSIZE                             uiIndex;
-
-            /* Collision uses the predicted motion to determine collision. */
-
-            for (uiIndex = 0; uiIndex < nuiBody_World; ++uiIndex)
-            {
-                STg2_PH_Body_PC                     psBY = g_aapsPH_Body_Used[tiWorld.m_uiI][uiIndex];
-
-                TgVEC_F32_04_1_C                    vLA = tgMH_MUL_F32_04_1( psBY->m_sMass.m_uInv_Mass.m_vF32_04_1, psBY->m_vXF ); /* Predicted Linear Acceleration */
-                TgVEC_F32_04_1_C                    vLV = tgMH_MAD_F32_04_1( psWorld->m_vStep_Size, vLA, psBY->m_vLV ); /* Predicted Linear Velocity */
-
-                TgVEC_F32_04_1_C                    vAA = tgMH_TX_F32_04_3( psBY->m_vXT, &psBY->m_mInverse_Inertia_Tensor ); /* Predicted Angular Acceleration */
-                TgVEC_F32_04_1_C                    vAV = tgMH_MAD_F32_04_1( psWorld->m_vStep_Size, vAA, psBY->m_vAV ); /* Predicted Angular Velocity */
-                TgVEC_F32_04_1_C                    vΔQ = tgMH_QT_MUL_F32_04_1( vAV, psBY->m_vRot_O2W ); /* Predicted change in Rotation */
-                TgVEC_F32_04_1_C                    vQ = tgMH_MAD_F32_04_1( vΔQ, psWorld->m_vStep_Size, psBY->m_vRot_O2W ); /* Predicted Rotation */
-
-                psUpdate_Simulation->m_avPos_W[uiIndex] = tgMH_MAD_F32_04_1( psWorld->m_vStep_Size, vLV, psBY->m_vPos_O2W ); /* Predicted Position */
-                psUpdate_Simulation->m_avRot_W[uiIndex] = tgMH_NORM_F32_04_1( vQ ); /* Predicted Rotation */
-            }
-        }
+        };
 
         TgDIAG(tgCM_UT_LF__ST__Is_Empty( &g_asPH_Update__Constraint_IMM[tiWorld.m_uiI].m_sStack ));
 
         /* Collision Pass: Check for collisions, prevent tunnelling and create contact constraints. */
         if (bRunCollision)
         {
-            TgRSIZE                             uiCollide_Min_Batch_Size;
-            STg2_Job_P                          psJob;
-            TgRSIZE                             uiForm_Index;
+            STg2_Job_PC                         psJob = g_asPH__Job__Update_World__Collision + tiWorld.m_uiI;
+            union { STg2_PH_Job__Update_World__Collide_Data_P psCollide_Data; TgUINT_E08_P pui; } const sJob_Data = { .pui  = psJob->m_auiData };
 
             TgDIAG(0 == TgSTD_ATOMIC(load)( g_aaxnuiPH_Constraint_Total__Used_By_Type[tiWorld.m_uiI] + ETgPH_CONSTRAINT__CONTACT));
-
-            /* Calculate the number of jobs (batches) to create, and the number of bodies per job (batch). */
-            uiCollide_Min_Batch_Size = psWorld->m_uiCollide_Min_Batch_Size;
-            if (((nuiForm_World + uiCollide_Min_Batch_Size - 1) / uiCollide_Min_Batch_Size) >= KTgPH_MAX_COLLIDE_JOB)
-            {
-                uiCollide_Min_Batch_Size = (nuiForm_World + KTgPH_MAX_COLLIDE_JOB - 1) / KTgPH_MAX_COLLIDE_JOB;
-            };
+            TgDIAG(sJob_Data.psCollide_Data);
 
             /* Set the fence to be the total number of forms in the world. */
-            TgVERIFY(0 == TgSTD_ATOMIC(load_explicit)( g_axuiPH_FENCE__UPDATE_WORLD__COLLIDE_BATCH + tiWorld.m_uiI, TgSTD_MEMORY_ORDER(relaxed) ));
-            TgSTD_ATOMIC(store)( g_axuiPH_FENCE__UPDATE_WORLD__COLLIDE_BATCH + tiWorld.m_uiI, nuiForm_World );
+            TgVERIFY(0 == TgSTD_ATOMIC(load_explicit)( g_axuiPH_FENCE__UPDATE_WORLD__COLLISION + tiWorld.m_uiI, TgSTD_MEMORY_ORDER(relaxed) ));
+            TgSTD_ATOMIC(store)( g_axuiPH_FENCE__UPDATE_WORLD__COLLISION + tiWorld.m_uiI, 1 );
+
+        #if defined(TgBUILD_DEBUG__PHYSICS)
+            g_nuiPH_Debug__Contact = 0;
+        /*# defined(TgBUILD_DEBUG__PHYSICS) */
+        #endif
 
             /* Create all of the jobs necessary to batch the collide calls for all forms. */
-            psJob = g_asPH__Job__Update_World__Collide_Batch + tiWorld.m_uiI;
-            for (uiForm_Index = 0; uiForm_Index < nuiForm_World; uiForm_Index += uiCollide_Min_Batch_Size)
+
+            psJob->m_pfnExecute = tgPH_Update_World__Job__Collision;
+            sJob_Data.psCollide_Data->m_tiWorld = tiWorld;
+            sJob_Data.psCollide_Data->m_uiForm_Index_Begin = 0;
+            sJob_Data.psCollide_Data->m_uiForm_Index_End = nuiForm_World;
+
+            if (TgFAILED(tgJM_Queue_Job( g_sJob_Queue__Client_Normal, psJob )))
             {
-                union { STg2_PH_Job__Update_World__Collide_Data_P psCollide_Data; TgUINT_E08_P pui; } const sJob_Data = { .pui  = psJob->m_auiData };
-                TgERROR(sJob_Data.psCollide_Data);
-
-                sJob_Data.psCollide_Data->m_tiWorld = tiWorld;
-                sJob_Data.psCollide_Data->m_uiForm_Index_Begin = uiForm_Index;
-                sJob_Data.psCollide_Data->m_uiForm_Index_End = tgCM_MIN_UMAX( uiForm_Index + uiCollide_Min_Batch_Size, nuiForm_World );
-
-                if (TgFAILED(tgJM_Queue_Job( g_sJob_Queue__Client_Normal, psJob )))
+                TgERROR_MSGF( false, STD_MSG_LITERAL_1, STD_MSG_POST, u8"Failed to submit job." );
+                while (0 != TgSTD_ATOMIC(load_explicit)( psJob->m_pxuiTrigger, TgSTD_MEMORY_ORDER(relaxed) ))
                 {
-                    TgERROR_MSGF( false, STD_MSG_LITERAL_1, STD_MSG_POST, u8"Failed to submit job." );
-                    while (0 != TgSTD_ATOMIC(load_explicit)( psJob->m_pxuiTrigger, TgSTD_MEMORY_ORDER(relaxed) ))
-                    {
-                        tgTR_Pause();
-                    };
-                    tgPH_Update_World__Job__Collide_Batch( psJob );
+                    tgTR_Pause();
                 };
+                psJob->m_pfnExecute( psJob );
             };
         };
 
@@ -372,7 +347,7 @@ TgRESULT tgPH_Update_World( TgPH_WORLD_ID_C tiWorld )
             TgSTD_ATOMIC(store)( g_axuiPH_FENCE__UPDATE_WORLD__BUILD_SETS + tiWorld.m_uiI, 1 );
 
             sJob_Data.psBuild_Set_Data->m_tiWorld = tiWorld;
-            psJob->m_pxuiTrigger = (bRunCollision ? g_axuiPH_FENCE__UPDATE_WORLD__COLLIDE_BATCH : g_axuiPH_FENCE__UPDATE_WORLD__SIMULATE_BATCH) + tiWorld.m_uiI;
+            psJob->m_pxuiTrigger = (bRunCollision ? g_axuiPH_FENCE__UPDATE_WORLD__COLLISION : g_axuiPH_FENCE__UPDATE_WORLD__SIMULATE_BATCH) + tiWorld.m_uiI;
             if (TgFAILED(tgJM_Queue_Job( g_sJob_Queue__Client_Normal, psJob )))
             {
                 TgERROR_MSGF( false, STD_MSG_LITERAL_1, STD_MSG_POST, u8"Failed to submit job." );
@@ -390,8 +365,10 @@ TgRESULT tgPH_Update_World( TgPH_WORLD_ID_C tiWorld )
             TgERROR(psJob_Finish_Data.psBuild_Sets_Data);
 
             psJob_Finish_Data.psBuild_Sets_Data->m_tiWorld = tiWorld;
+            psJob_Finish_Data.psBuild_Sets_Data->m_bCollision = bRunCollision;
+            psJob_Finish_Data.psBuild_Sets_Data->m_bSimulation = bRunSimulation;
 
-            while (0 != TgSTD_ATOMIC(load_explicit)( g_axuiPH_FENCE__UPDATE_WORLD__COLLIDE_BATCH + tiWorld.m_uiI, TgSTD_MEMORY_ORDER(relaxed) ))
+            while (0 != TgSTD_ATOMIC(load_explicit)( g_axuiPH_FENCE__UPDATE_WORLD__COLLISION + tiWorld.m_uiI, TgSTD_MEMORY_ORDER(relaxed) ))
             {
                 tgTR_Pause();
             };
@@ -414,8 +391,8 @@ TgRESULT tgPH_Update_World__Job__Solve_Sets( STg2_Job_CPC psJob )
     TgPARAM_CHECK(sJob_Data.psSolve_Sets_Data);
     TgPARAM_CHECK (nullptr != tgPH_World_Get_World_From_ID( sJob_Data.psSolve_Sets_Data->m_tiWorld ));
 
-    PROFILE_ARRAY_START( sJob_Data.psSolve_Sets_Data->m_tiWorld.m_uiI, PH_SOLVE_SETS, tgPH_Update_World__Job__Solver_Batch ); /* Profile Tag for this particular world. */
-    PROFILE_START( PH_SOLVE_SETS_TOTAL, tgPH_Update_World__Job__Solver_Batch ); /* Profile Tag for all of the batches. */
+    PROFILE_ARRAY_START( sJob_Data.psSolve_Sets_Data->m_tiWorld.m_uiI, PH_SOLVE_SETS, tgPH_Update_World__Job__Solve_Sets ); /* Profile Tag for this particular world. */
+    PROFILE_START( PH_SOLVE_SETS_TOTAL, tgPH_Update_World__Job__Solve_Sets ); /* Profile Tag for all of the batches. */
 
     if (0 != sSolver_Set.m_nuiDoF)
     {
@@ -425,8 +402,8 @@ TgRESULT tgPH_Update_World__Job__Solve_Sets( STg2_Job_CPC psJob )
     tgPH_Constraint_Contact__Free_All_IMM( &sSolver_Set ); /* Free all the constraints there were created this step in this World. */
     tgPH_Update_World__Free_Solver_Set( &sSolver_Set ); /* Need to free the memory allocated for the solver set. */
 
-    PROFILE_STOP( PH_SOLVE_SETS_TOTAL, tgPH_Update_World__Job__Solver_Batch );
-    PROFILE_ARRAY_STOP( sJob_Data.psSolve_Sets_Data->m_tiWorld.m_uiI, PH_SOLVE_SETS, tgPH_Update_World__Job__Solver_Batch );
+    PROFILE_STOP( PH_SOLVE_SETS_TOTAL, tgPH_Update_World__Job__Solve_Sets );
+    PROFILE_ARRAY_STOP( sJob_Data.psSolve_Sets_Data->m_tiWorld.m_uiI, PH_SOLVE_SETS, tgPH_Update_World__Job__Solve_Sets );
 
     TgSTD_ATOMIC(fetch_sub_explicit)( g_axuiPH_FENCE__UPDATE_WORLD__SOLVE_SETS + sJob_Data.psSolve_Sets_Data->m_tiWorld.m_uiI, 1, TgSTD_MEMORY_ORDER(seq_cst) );
 
@@ -452,13 +429,13 @@ static TgRESULT tgPH_Update_World__Job__Simulate_Batch( STg2_Job_CPC psJob )
     TgPARAM_CHECK(sJob_Data.psSimulate_Data);
     TgPARAM_CHECK(nullptr != tgPH_World_Get_World_From_ID( sJob_Data.psSimulate_Data->m_tiWorld ));
 
-    PROFILE_ARRAY_START( sJob_Data.psSimulate_Data->m_tiWorld.m_uiI, PH_SIMULATE_BATCH, tgPH_Update_World__Job__Solver_Batch ); /* Profile Tag for this particular world. */
-    PROFILE_START( PH_SIMULATE_BATCH_TOTAL, tgPH_Update_World__Job__Solver_Batch ); /* Profile Tag for all of the batches. */
+    PROFILE_ARRAY_START( sJob_Data.psSimulate_Data->m_tiWorld.m_uiI, PH_SIMULATE_BATCH, tgPH_Update_World__Job__Simulate_Batch ); /* Profile Tag for this particular world. */
+    PROFILE_START( PH_SIMULATE_BATCH_TOTAL, tgPH_Update_World__Job__Simulate_Batch ); /* Profile Tag for all of the batches. */
 
     tgPH_Update_World__Simulate_Batch_IMM( psSimulate_Data->m_tiWorld, psSimulate_Data->m_uiBody_Index_Begin, psSimulate_Data->m_uiBody_Index_End );
 
-    PROFILE_STOP( PH_SIMULATE_BATCH_TOTAL, tgPH_Update_World__Job__Solver_Batch );
-    PROFILE_ARRAY_STOP( sJob_Data.psSimulate_Data->m_tiWorld.m_uiI, PH_SIMULATE_BATCH, tgPH_Update_World__Job__Solver_Batch );
+    PROFILE_STOP( PH_SIMULATE_BATCH_TOTAL, tgPH_Update_World__Job__Simulate_Batch );
+    PROFILE_ARRAY_STOP( sJob_Data.psSimulate_Data->m_tiWorld.m_uiI, PH_SIMULATE_BATCH, tgPH_Update_World__Job__Simulate_Batch );
 
     nuiObject_Complete = sJob_Data.psSimulate_Data->m_uiBody_Index_End - sJob_Data.psSimulate_Data->m_uiBody_Index_Begin;
     TgSTD_ATOMIC(fetch_sub_explicit)( g_axuiPH_FENCE__UPDATE_WORLD__SIMULATE_BATCH + sJob_Data.psSimulate_Data->m_tiWorld.m_uiI, nuiObject_Complete, TgSTD_MEMORY_ORDER(seq_cst) );
@@ -467,9 +444,85 @@ static TgRESULT tgPH_Update_World__Job__Simulate_Batch( STg2_Job_CPC psJob )
 }
 
 
-/* ---- tgPH_Update_World__Job__Collide_Batch ------------------------------------------------------------------------------------------------------------------------------------ */
+/* ---- tgPH_Update_World__Job__Collision ---------------------------------------------------------------------------------------------------------------------------------------- */
+/* SYNC: READS Forms, Bodies, Constraints (in Child Functions)                                                                                                                     */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-static TgRESULT tgPH_Update_World__Job__Collide_Batch( STg2_Job_CPC psJob )
+static TgRESULT tgPH_Update_World__Job__Collision( STg2_Job_CPC psJob )
+{
+    union { STg2_PH_Job__Update_World__Collide_Data_CP psCollide_Data; TgUINT_E08_CP pui; } const sJob = { .pui  = psJob->m_auiData };
+    TgRSIZE_C                           nuiForm_World = sJob.psCollide_Data->m_uiForm_Index_End;
+    TgPH_WORLD_ID_C                     tiWorld = sJob.psCollide_Data->m_tiWorld;
+    STg2_PH_World_CPC                   psWorld = tgPH_World_Get_World_From_ID( tiWorld );
+
+    TgPARAM_CHECK(sJob.psCollide_Data);
+    TgDIAG(sJob.psCollide_Data);
+    TgPARAM_CHECK (nullptr != tgPH_World_Get_World_From_ID( tiWorld ));
+
+    PROFILE_ARRAY_START( tiWorld.m_uiI, PH_COLLISION_WORLD, tgPH_Update_World__Job__Collision );
+    PROFILE_START( PH_COLLISION_WORLD_TOTAL, tgPH_Update_World__Job__Collision );
+
+    TgDIAG(0 == TgSTD_ATOMIC(load)( g_aaxnuiPH_Constraint_Total__Used_By_Type[tiWorld.m_uiI] + ETgPH_CONSTRAINT__CONTACT));
+
+    /* Check to see if we are using the Simple Collision processor. */
+    if (nullptr == psWorld->m_pfnCollision_Update || KTgID__INVALID_VALUE == psWorld->m_tiPA_Graph.m_uiKI || psWorld->m_uiCollision_Simple)
+    {
+        STg2_Job_PC                         psJob_Batch = g_asPH__Job__Update_World__Collision + tiWorld.m_uiI;
+        union { STg2_PH_Job__Update_World__Collide_Data_P psCollide_Data; TgUINT_E08_P pui; } const sJob_Batch = { .pui  = psJob_Batch->m_auiData };
+
+        TgRSIZE                             uiCollide_Min_Batch_Size;
+        TgRSIZE                             uiForm_Index;
+
+        /* Calculate the number of jobs (batches) to create, and the number of bodies per job (batch). */
+        uiCollide_Min_Batch_Size = psWorld->m_uiCollide_Min_Batch_Size;
+        if (((nuiForm_World + uiCollide_Min_Batch_Size - 1) / uiCollide_Min_Batch_Size) >= KTgPH_MAX_COLLIDE_JOB)
+        {
+            uiCollide_Min_Batch_Size = (nuiForm_World + KTgPH_MAX_COLLIDE_JOB - 1) / KTgPH_MAX_COLLIDE_JOB;
+        };
+
+        /* Set the fence to be the total number of forms in the world. */
+        TgVERIFY(1 == TgSTD_ATOMIC(load_explicit)( g_axuiPH_FENCE__UPDATE_WORLD__COLLISION + tiWorld.m_uiI, TgSTD_MEMORY_ORDER(relaxed) ));
+        TgSTD_ATOMIC(fetch_add)( g_axuiPH_FENCE__UPDATE_WORLD__COLLISION + tiWorld.m_uiI, nuiForm_World );
+
+        /* Create all of the jobs necessary to batch the collide calls for all forms. */
+        for (uiForm_Index = 0; uiForm_Index < nuiForm_World; uiForm_Index += uiCollide_Min_Batch_Size)
+        {
+            psJob_Batch->m_pfnExecute = tgPH_Update_World__Job__Collide_Simple_Batch;
+            sJob_Batch.psCollide_Data->m_tiWorld = tiWorld;
+            sJob_Batch.psCollide_Data->m_uiForm_Index_Begin = uiForm_Index;
+            sJob_Batch.psCollide_Data->m_uiForm_Index_End = tgCM_MIN_UMAX( uiForm_Index + uiCollide_Min_Batch_Size, nuiForm_World );
+
+            if (TgFAILED(tgJM_Queue_Job( g_sJob_Queue__Client_Normal, psJob_Batch )))
+            {
+                TgERROR_MSGF( false, STD_MSG_LITERAL_1, STD_MSG_POST, u8"Failed to submit job." );
+                while (0 != TgSTD_ATOMIC(load_explicit)( psJob_Batch->m_pxuiTrigger, TgSTD_MEMORY_ORDER(relaxed) ))
+                {
+                    tgTR_Pause();
+                };
+                psJob_Batch->m_pfnExecute( psJob_Batch );
+            };
+        };
+
+        PROFILE_STOP( PH_COLLISION_WORLD_TOTAL, tgPH_Update_World__Job__Collision );
+        PROFILE_ARRAY_STOP( tiWorld.m_uiI, PH_COLLISION_WORLD, tgPH_Update_World__Job__Collision );
+    }
+    else
+    {
+        PROFILE_STOP( PH_COLLISION_WORLD_TOTAL, tgPH_Update_World__Job__Collision );
+        PROFILE_ARRAY_STOP( tiWorld.m_uiI, PH_COLLISION_WORLD, tgPH_Update_World__Job__Collision );
+
+        /* We are using a Partition Manager Graph to contain the Collision Space. */
+        psWorld->m_pfnCollision_Update( tiWorld );
+    };
+
+    TgSTD_ATOMIC(fetch_sub_explicit)( g_axuiPH_FENCE__UPDATE_WORLD__COLLISION + tiWorld.m_uiI, 1, TgSTD_MEMORY_ORDER(seq_cst) );
+
+    return (KTgS_OK);
+}
+
+
+/* ---- tgPH_Update_World__Job__Collide_Simple_Batch ----------------------------------------------------------------------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+static TgRESULT tgPH_Update_World__Job__Collide_Simple_Batch( STg2_Job_CPC psJob )
 {
     union { STg2_PH_Job__Update_World__Collide_Data_CP psCollide_Data; TgUINT_E08_CP pui; } const sJob_Data = { .pui  = psJob->m_auiData };
     TgPH_WORLD_ID_C                     tiWorld = sJob_Data.psCollide_Data->m_tiWorld;
@@ -478,16 +531,16 @@ static TgRESULT tgPH_Update_World__Job__Collide_Batch( STg2_Job_CPC psJob )
     TgPARAM_CHECK(sJob_Data.psCollide_Data);
     TgPARAM_CHECK (nullptr != tgPH_World_Get_World_From_ID( tiWorld ));
 
-    PROFILE_ARRAY_START( tiWorld.m_uiI, PH_COLLIDE_BATCH, tgPH_Update_World__Job__Solver_Batch ); /* Profile Tag for this particular world. */
-    PROFILE_START( PH_COLLIDE_BATCH_TOTAL, tgPH_Update_World__Job__Solver_Batch ); /* Profile Tag for all of the batches. */
+    PROFILE_ARRAY_START( tiWorld.m_uiI, PH_COLLISION_CONTACT_PAIR_GENEARTION, tgPH_Update_World__Job__Collide_Simple_Batch );
+    PROFILE_START( PH_COLLISION_CONTACT_PAIR_GENEARTION_TOTAL, tgPH_Update_World__Job__Collide_Simple_Batch );
 
-    tgPH_Update_World__Collide_Batch( tiWorld, sJob_Data.psCollide_Data->m_uiForm_Index_Begin, sJob_Data.psCollide_Data->m_uiForm_Index_End );
+    tgPH_Update_World__Collide__Simple_IMM( tiWorld, sJob_Data.psCollide_Data->m_uiForm_Index_Begin, sJob_Data.psCollide_Data->m_uiForm_Index_End );
 
-    PROFILE_STOP( PH_COLLIDE_BATCH_TOTAL, tgPH_Update_World__Job__Solver_Batch );
-    PROFILE_ARRAY_STOP( tiWorld.m_uiI, PH_COLLIDE_BATCH, tgPH_Update_World__Job__Solver_Batch );
+    PROFILE_STOP( PH_COLLISION_CONTACT_PAIR_GENEARTION_TOTAL, tgPH_Update_World__Job__Collide_Simple_Batch );
+    PROFILE_ARRAY_STOP( tiWorld.m_uiI, PH_COLLISION_CONTACT_PAIR_GENEARTION, tgPH_Update_World__Job__Collide_Simple_Batch );
 
     nuiObject_Complete = sJob_Data.psCollide_Data->m_uiForm_Index_End - sJob_Data.psCollide_Data->m_uiForm_Index_Begin;
-    TgSTD_ATOMIC(fetch_sub_explicit)( g_axuiPH_FENCE__UPDATE_WORLD__COLLIDE_BATCH + tiWorld.m_uiI, nuiObject_Complete, TgSTD_MEMORY_ORDER(seq_cst) );
+    TgSTD_ATOMIC(fetch_sub_explicit)( g_axuiPH_FENCE__UPDATE_WORLD__COLLISION + tiWorld.m_uiI, nuiObject_Complete, TgSTD_MEMORY_ORDER(seq_cst) );
 
     return (KTgS_OK);
 }
@@ -507,14 +560,14 @@ static TgRESULT tgPH_Update_World__Job__Build_Sets( STg2_Job_CPC psJob )
     TgPARAM_CHECK (nullptr != tgPH_World_Get_World_From_ID( tiWorld ));
     TgPARAM_CHECK (TgSTD_ATOMIC(load_explicit)( g_axnuiPH_Body_Total__Used + tiWorld.m_uiI, TgSTD_MEMORY_ORDER(relaxed) ) > 0);
 
-    PROFILE_ARRAY_START( tiWorld.m_uiI, PH_BUILD_SETS, tgPH_Update_World__Job__Solver_Batch );
-    PROFILE_START( PH_BUILD_SETS_TOTAL, tgPH_Update_World__Job__Solver_Batch );
+    PROFILE_ARRAY_START( tiWorld.m_uiI, PH_BUILD_SETS, tgPH_Update_World__Job__Build_Sets );
+    PROFILE_START( PH_BUILD_SETS_TOTAL, tgPH_Update_World__Job__Build_Sets );
 
     tgPH_Constraint__Bind_IMM( tiWorld );
     tgPH_Update_World__Build_Sets( tiWorld );
 
-    PROFILE_STOP( PH_BUILD_SETS_TOTAL, tgPH_Update_World__Job__Solver_Batch );
-    PROFILE_ARRAY_STOP( tiWorld.m_uiI, PH_BUILD_SETS, tgPH_Update_World__Job__Solver_Batch );
+    PROFILE_STOP( PH_BUILD_SETS_TOTAL, tgPH_Update_World__Job__Build_Sets );
+    PROFILE_ARRAY_STOP( tiWorld.m_uiI, PH_BUILD_SETS, tgPH_Update_World__Job__Build_Sets );
 
     TgSTD_ATOMIC(fetch_sub_explicit)( g_axuiPH_FENCE__UPDATE_WORLD__BUILD_SETS + tiWorld.m_uiI, 1, TgSTD_MEMORY_ORDER(seq_cst) );
 
@@ -522,6 +575,9 @@ static TgRESULT tgPH_Update_World__Job__Build_Sets( STg2_Job_CPC psJob )
     TgVERIFY(1 == TgSTD_ATOMIC(load_explicit)( g_axuiPH_FENCE__UPDATE_WORLD + tiWorld.m_uiI, TgSTD_MEMORY_ORDER(relaxed) ));
 
     psJob_Finish_Data.psBuild_Sets_Data->m_tiWorld = tiWorld;
+    psJob_Finish_Data.psBuild_Sets_Data->m_bCollision = true;
+    psJob_Finish_Data.psBuild_Sets_Data->m_bSimulation = true;
+
     if (TgFAILED(tgJM_Queue_Job( g_sJob_Queue__Client_Normal, psFinish_Job )))
     {
         TgERROR_MSGF( false, STD_MSG_LITERAL_1, STD_MSG_POST, u8"Failed to submit job." );
@@ -539,28 +595,77 @@ static TgRESULT tgPH_Update_World__Job__Build_Sets( STg2_Job_CPC psJob )
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 static TgRESULT tgPH_Update_World__Job__Finish( STg2_Job_CPC psJob )
 {
-    union { STg2_PH_Job__Update_World__Build_Set_Data_CP psJob; TgUINT_E08_CP pui; } const psData = { .pui  = psJob->m_auiData };
-    TgPH_WORLD_ID_C                     tiWorld = psData.psJob->m_tiWorld;
-
-    TgPARAM_CHECK(psData.psJob);
-    TgPARAM_CHECK(nullptr != g_asPH_Update__Simulation[tiWorld.m_uiI].m_avPos_W);
-    TgPARAM_CHECK(nullptr != g_asPH_Update__Simulation[tiWorld.m_uiI].m_avRot_W);
-
-    if (nullptr != g_asPH_Update__Simulation[tiWorld.m_uiI].m_avPos_W)
+    union { STg2_PH_Job__Update_World__Build_Set_Data_CP psJob; TgUINT_E08_CP pui; } const sData = { .pui  = psJob->m_auiData };
+    TgPH_WORLD_ID_C                     tiWorld = sData.psJob->m_tiWorld;
+    STg2_PH_World_PC                    psWorld = tgPH_World_Get_World_From_ID( tiWorld );
+    union
     {
-        TgFREE_POOL( g_asPH_Update__Simulation[tiWorld.m_uiI].m_avPos_W );
-        g_asPH_Update__Simulation[tiWorld.m_uiI].m_avPos_W = nullptr;
-    }
-    if (nullptr != g_asPH_Update__Simulation[tiWorld.m_uiI].m_avRot_W)
+        STg2_PH_Constraint_P                psCT;
+        STg2_UT_ST__ST_Node_P               psNode;
+        
+    }                                   uCT;
+
+    TgPARAM_CHECK(sData.psJob);
+    TgPARAM_CHECK(nullptr != g_asPH_Update__Simulation[tiWorld.m_uiI].m_avBY_Pos_O2W);
+    TgPARAM_CHECK(nullptr != g_asPH_Update__Simulation[tiWorld.m_uiI].m_avRHS_LA);
+    TgPARAM_CHECK(nullptr != g_asPH_Update__Simulation[tiWorld.m_uiI].m_amFM_Final_O2W);
+    TgPARAM_CHECK(nullptr != g_asPH_Update__Simulation[tiWorld.m_uiI].m_avFM_Pos_O2W);
+    TgPARAM_CHECK(nullptr != g_asPH_Update__Simulation[tiWorld.m_uiI].m_asFM_BA_W);
+
+    if (nullptr != g_asPH_Update__Simulation[tiWorld.m_uiI].m_avBY_Pos_O2W)
     {
-        TgFREE_POOL( g_asPH_Update__Simulation[tiWorld.m_uiI].m_avRot_W );
-        g_asPH_Update__Simulation[tiWorld.m_uiI].m_avRot_W = nullptr;
+        TgFREE_POOL( g_asPH_Update__Simulation[tiWorld.m_uiI].m_avBY_Pos_O2W );
+        g_asPH_Update__Simulation[tiWorld.m_uiI].m_avBY_Pos_O2W = nullptr;
     }
     if (nullptr != g_asPH_Update__Simulation[tiWorld.m_uiI].m_avRHS_LA)
     {
         TgFREE_POOL( g_asPH_Update__Simulation[tiWorld.m_uiI].m_avRHS_LA );
         g_asPH_Update__Simulation[tiWorld.m_uiI].m_avRHS_LA = nullptr;
     }
+    if (nullptr != g_asPH_Update__Simulation[tiWorld.m_uiI].m_amFM_Final_O2W)
+    {
+        TgFREE_POOL( g_asPH_Update__Simulation[tiWorld.m_uiI].m_amFM_Final_O2W );
+        g_asPH_Update__Simulation[tiWorld.m_uiI].m_amFM_Final_O2W = nullptr;
+    }
+    if (nullptr != g_asPH_Update__Simulation[tiWorld.m_uiI].m_avFM_Pos_O2W)
+    {
+        TgFREE_POOL( g_asPH_Update__Simulation[tiWorld.m_uiI].m_avFM_Pos_O2W );
+        g_asPH_Update__Simulation[tiWorld.m_uiI].m_avFM_Pos_O2W = nullptr;
+    }
+    if (nullptr != g_asPH_Update__Simulation[tiWorld.m_uiI].m_asFM_BA_W)
+    {
+        TgFREE_POOL( g_asPH_Update__Simulation[tiWorld.m_uiI].m_asFM_BA_W );
+        g_asPH_Update__Simulation[tiWorld.m_uiI].m_asFM_BA_W = nullptr;
+    }
+
+    /* In the case where we have run Collision but not Simulation then all Contacts are in the deferred state (on the stack) and need to be cleared. */
+    uCT.psNode = tgCM_UT_LF__ST__Pop( &g_asPH_Update__Constraint_IMM[tiWorld.m_uiI].m_sStack );
+    while (uCT.psNode)
+    {
+    #if defined(TgBUILD_DEBUG__PHYSICS)
+        if (g_nuiPH_Debug__Contact < KTgPH_DEBUG_MAX_CONTACT)
+        {
+            g_auPH_Debug__Contact[g_nuiPH_Debug__Contact].m_vF32_04_1 = uCT.psCT->m_sContact.m_sContact.m_vS0;
+            ++g_nuiPH_Debug__Contact;
+        };
+    /*# defined(TgBUILD_DEBUG__PHYSICS) */
+    #endif
+        tgMM_Set_U08_0x00( uCT.psCT, sizeof(STg2_PH_Constraint) );
+        tgCM_UT_LF__ST__Push( &g_asPH_Constraint_Free_Stack[tiWorld.m_uiI].m_sStack, uCT.psNode );
+        uCT.psNode = tgCM_UT_LF__ST__Pop( &g_asPH_Update__Constraint_IMM[tiWorld.m_uiI].m_sStack );
+    };
+
+    if (sData.psJob->m_bCollision && !sData.psJob->m_bSimulation)
+    {
+        TgRSIZE_C                           nuiBody_World = TgSTD_ATOMIC(load_explicit)( g_axnuiPH_Body_Total__Used + tiWorld.m_uiI, TgSTD_MEMORY_ORDER(relaxed) );
+        TgRSIZE                             uiIndex;
+
+        for (uiIndex = 0; uiIndex < nuiBody_World; ++uiIndex)
+        {
+            g_aapsPH_Body_Used[tiWorld.m_uiI][uiIndex]->m_vXF = tgMH_SET1_F32_04_1( 0.0F );
+            g_aapsPH_Body_Used[tiWorld.m_uiI][uiIndex]->m_vXT = tgMH_SET1_F32_04_1( 0.0F );
+        };
+    };
 
     TgDIAG(0 == TgSTD_ATOMIC(load)( g_aaxnuiPH_Constraint_Total__Used_By_Type[tiWorld.m_uiI] + ETgPH_CONSTRAINT__CONTACT));
 
@@ -573,6 +678,8 @@ static TgRESULT tgPH_Update_World__Job__Finish( STg2_Job_CPC psJob )
 
     PROFILE_STOP( PH_CMD_BUFFER_EXECEUTE_TOTAL, tgPH_Update_World__Job__Finish );
     PROFILE_ARRAY_STOP( tiWorld.m_uiI, PH_CMD_BUFFER_EXECEUTE, tgPH_Update_World__Job__Finish );
+
+    psWorld->m_uiSingle_Step = 0;
 
     TgSTD_ATOMIC(fetch_sub_explicit)( g_axuiPH_FENCE__UPDATE_WORLD + tiWorld.m_uiI, 1, TgSTD_MEMORY_ORDER(seq_cst) );
 

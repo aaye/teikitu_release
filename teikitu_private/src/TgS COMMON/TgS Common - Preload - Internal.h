@@ -58,13 +58,23 @@ tgMM_OS__Preload_Process_Done( TgVOID ) TgATTRIBUTE_NO_EXCEPT;
 
 /** @brief Standard Module function: First part of initialization process. Set the state of the module.
     @return Result Code. */
+#if defined(TgBUILD_FEATURE__MALLOC_OVERRIDE)
 TgEXTN TgRESULT
 tgMM_Init_MGR( TgVOID );
+#else
+TgEXTN TgRESULT
+tgMM_Init_MGR_Preload( TgVOID );
+#endif
 
 /** @brief Standard Module function: Final part of shutdown process. Release any remaining allocated memory, and reset the state of the module.
     @return Result Code. */
+#if defined(TgBUILD_FEATURE__MALLOC_OVERRIDE)
 TgEXTN TgRESULT
 tgMM_Free_MGR( TgVOID );
+#else
+TgEXTN TgRESULT
+tgMM_Free_MGR_Preload( TgVOID );
+#endif
 
 TgEXTN TgUINT_PTR_A                         g_xuiProcess_Init;
 TgEXTN TgBOOL                               g_bOS_MM_Redirected;

@@ -40,7 +40,7 @@ tgCM_UT_LF__HT_RW__Remove_Internal(
 
 /* ---- tgCM_UT_LF__HT_RW__Free -------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgCM_UT_LF__HT_RW__Free( STg2_UT_LF__HT_RW_PCU NONULL psHash_Table )
+TgINLINE TgVOID tgCM_UT_LF__HT_RW__Free( STg2_UT_LF__HT_RW_PCU psHash_Table )
 {
     if (nullptr != psHash_Table->m_pReserved)
     {
@@ -60,7 +60,7 @@ TgINLINE TgVOID tgCM_UT_LF__HT_RW__Free( STg2_UT_LF__HT_RW_PCU NONULL psHash_Tab
 
 /* ---- tgCM_UT_LF__HT_RW__Clear ------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgVOID tgCM_UT_LF__HT_RW__Clear( STg2_UT_LF__HT_RW_PCU NONULL psHash_Table )
+TgINLINE TgVOID tgCM_UT_LF__HT_RW__Clear( STg2_UT_LF__HT_RW_PCU psHash_Table )
 {
     tgMM_Set_U08_0x00( psHash_Table->m_psHash_List, psHash_Table->m_nuiTop_Level_Node * sizeof( STg2_UT_ST__HT_Node_P ) );
 
@@ -92,7 +92,7 @@ TgINLINE TgVOID tgCM_UT_LF__HT_RW__Clear( STg2_UT_LF__HT_RW_PCU NONULL psHash_Ta
 
 /* ---- tgCM_UT_LF__HT_RW__Find_Internal ----------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgRESULT tgCM_UT_LF__HT_RW__Find_Internal( TgVOID_P NONULL pOutVal, STg2_UT_LF__HT_RW_PCU NONULL psHash_Table, TgUINT_MAX_C uiHash )
+TgINLINE TgRESULT tgCM_UT_LF__HT_RW__Find_Internal( TgVOID_P pOutVal, STg2_UT_LF__HT_RW_PCU psHash_Table, TgUINT_MAX_C uiHash )
 {
     TgRSIZE                             uiIndex;
 
@@ -113,7 +113,7 @@ TgINLINE TgRESULT tgCM_UT_LF__HT_RW__Find_Internal( TgVOID_P NONULL pOutVal, STg
 
 /* ---- tgCM_UT_LF__HT_RW__Find_Yield -------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgRESULT tgCM_UT_LF__HT_RW__Find_Yield( TgVOID_P NONULL pOutVal, STg2_UT_LF__HT_RW_PCU NONULL psHash_Table, TgUINT_MAX_C uiHash )
+TgINLINE TgRESULT tgCM_UT_LF__HT_RW__Find_Yield( TgVOID_P pOutVal, STg2_UT_LF__HT_RW_PCU psHash_Table, TgUINT_MAX_C uiHash )
 {
     TgRESULT                            iResult;
 
@@ -126,7 +126,7 @@ TgINLINE TgRESULT tgCM_UT_LF__HT_RW__Find_Yield( TgVOID_P NONULL pOutVal, STg2_U
 
 /* ---- tgCM_UT_LF__HT_RW__Find_Spin --------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgRESULT tgCM_UT_LF__HT_RW__Find_Spin( TgVOID_P NONULL pOutVal, STg2_UT_LF__HT_RW_PCU NONULL psHash_Table, TgUINT_MAX_C uiHash )
+TgINLINE TgRESULT tgCM_UT_LF__HT_RW__Find_Spin( TgVOID_P pOutVal, STg2_UT_LF__HT_RW_PCU psHash_Table, TgUINT_MAX_C uiHash )
 {
     TgRESULT                            iResult;
 
@@ -139,7 +139,7 @@ TgINLINE TgRESULT tgCM_UT_LF__HT_RW__Find_Spin( TgVOID_P NONULL pOutVal, STg2_UT
 
 /* ---- tgCM_UT_LF__HT_RW__Find -------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgRESULT tgCM_UT_LF__HT_RW__Find( TgVOID_P NONULL pOutVal, STg2_UT_LF__HT_RW_PCU NONULL psHash_Table, TgUINT_MAX_C uiHash )
+TgINLINE TgRESULT tgCM_UT_LF__HT_RW__Find( TgVOID_P pOutVal, STg2_UT_LF__HT_RW_PCU psHash_Table, TgUINT_MAX_C uiHash )
 {
     TgRESULT                            iResult;
 
@@ -155,7 +155,7 @@ TgINLINE TgRESULT tgCM_UT_LF__HT_RW__Find( TgVOID_P NONULL pOutVal, STg2_UT_LF__
 
 /* ---- tgCM_UT_LF__HT_RW__Insert_Yield ------------------------------------------------------------------------------------------------------------------------------------------ */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgRESULT tgCM_UT_LF__HT_RW__Insert_Yield( STg2_UT_LF__HT_RW_PCU NONULL psHash_Table, TgUINT_MAX_C uiHash, TgVOID_CP pValue )
+TgINLINE TgRESULT tgCM_UT_LF__HT_RW__Insert_Yield( STg2_UT_LF__HT_RW_PCU psHash_Table, TgUINT_MAX_C uiHash, TgVOID_CP pValue )
 {
     TgRESULT                            iResult;
 
@@ -168,7 +168,7 @@ TgINLINE TgRESULT tgCM_UT_LF__HT_RW__Insert_Yield( STg2_UT_LF__HT_RW_PCU NONULL 
 
 /* ---- tgCM_UT_LF__HT_RW__Insert_Spin ------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgRESULT tgCM_UT_LF__HT_RW__Insert_Spin( STg2_UT_LF__HT_RW_PCU NONULL psHash_Table, TgUINT_MAX_C uiHash, TgVOID_CP pValue )
+TgINLINE TgRESULT tgCM_UT_LF__HT_RW__Insert_Spin( STg2_UT_LF__HT_RW_PCU psHash_Table, TgUINT_MAX_C uiHash, TgVOID_CP pValue )
 {
     TgRESULT                            iResult;
 
@@ -181,7 +181,7 @@ TgINLINE TgRESULT tgCM_UT_LF__HT_RW__Insert_Spin( STg2_UT_LF__HT_RW_PCU NONULL p
 
 /* ---- tgCM_UT_LF__HT_RW__Insert ------------------------------------------------------------------------------------------------------------------------------------------------ */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgRESULT tgCM_UT_LF__HT_RW__Insert( STg2_UT_LF__HT_RW_PCU NONULL psHash_Table, TgUINT_MAX_C uiHash, TgVOID_CP pValue )
+TgINLINE TgRESULT tgCM_UT_LF__HT_RW__Insert( STg2_UT_LF__HT_RW_PCU psHash_Table, TgUINT_MAX_C uiHash, TgVOID_CP pValue )
 {
     TgRESULT                            iResult;
 
@@ -197,7 +197,7 @@ TgINLINE TgRESULT tgCM_UT_LF__HT_RW__Insert( STg2_UT_LF__HT_RW_PCU NONULL psHash
 
 /* ---- tgCM_UT_LF__HT_RW__Update_Internal --------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgRESULT tgCM_UT_LF__HT_RW__Update_Internal( STg2_UT_LF__HT_RW_PCU NONULL psHash_Table, TgUINT_MAX_C uiHash, TgVOID_CP pValue )
+TgINLINE TgRESULT tgCM_UT_LF__HT_RW__Update_Internal( STg2_UT_LF__HT_RW_PCU psHash_Table, TgUINT_MAX_C uiHash, TgVOID_CP pValue )
 {
     TgRSIZE                             uiIndex;
 
@@ -223,7 +223,7 @@ TgINLINE TgRESULT tgCM_UT_LF__HT_RW__Update_Internal( STg2_UT_LF__HT_RW_PCU NONU
 
 /* ---- tgCM_UT_LF__HT_RW__Update_Yield ------------------------------------------------------------------------------------------------------------------------------------------ */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgRESULT tgCM_UT_LF__HT_RW__Update_Yield( STg2_UT_LF__HT_RW_PCU NONULL psHash_Table, TgUINT_MAX_C uiHash, TgVOID_CP pValue )
+TgINLINE TgRESULT tgCM_UT_LF__HT_RW__Update_Yield( STg2_UT_LF__HT_RW_PCU psHash_Table, TgUINT_MAX_C uiHash, TgVOID_CP pValue )
 {
     TgRESULT                            iResult;
 
@@ -236,7 +236,7 @@ TgINLINE TgRESULT tgCM_UT_LF__HT_RW__Update_Yield( STg2_UT_LF__HT_RW_PCU NONULL 
 
 /* ---- tgCM_UT_LF__HT_RW__Update_Spin ------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgRESULT tgCM_UT_LF__HT_RW__Update_Spin( STg2_UT_LF__HT_RW_PCU NONULL psHash_Table, TgUINT_MAX_C uiHash, TgVOID_CP pValue )
+TgINLINE TgRESULT tgCM_UT_LF__HT_RW__Update_Spin( STg2_UT_LF__HT_RW_PCU psHash_Table, TgUINT_MAX_C uiHash, TgVOID_CP pValue )
 {
     TgRESULT                            iResult;
 
@@ -249,7 +249,7 @@ TgINLINE TgRESULT tgCM_UT_LF__HT_RW__Update_Spin( STg2_UT_LF__HT_RW_PCU NONULL p
 
 /* ---- tgCM_UT_LF__HT_RW__Update ------------------------------------------------------------------------------------------------------------------------------------------------ */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgRESULT tgCM_UT_LF__HT_RW__Update( STg2_UT_LF__HT_RW_PCU NONULL psHash_Table, TgUINT_MAX_C uiHash, TgVOID_CP pValue )
+TgINLINE TgRESULT tgCM_UT_LF__HT_RW__Update( STg2_UT_LF__HT_RW_PCU psHash_Table, TgUINT_MAX_C uiHash, TgVOID_CP pValue )
 {
     TgRESULT                            iResult;
 
@@ -265,7 +265,7 @@ TgINLINE TgRESULT tgCM_UT_LF__HT_RW__Update( STg2_UT_LF__HT_RW_PCU NONULL psHash
 
 /* ---- tgCM_UT_LF__HT_RW__Remove_Yield ------------------------------------------------------------------------------------------------------------------------------------------ */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgRESULT tgCM_UT_LF__HT_RW__Remove_Yield( STg2_UT_LF__HT_RW_PCU NONULL psHash_Table, TgUINT_MAX_C uiHash )
+TgINLINE TgRESULT tgCM_UT_LF__HT_RW__Remove_Yield( STg2_UT_LF__HT_RW_PCU psHash_Table, TgUINT_MAX_C uiHash )
 {
     TgRESULT                            iResult;
 
@@ -278,7 +278,7 @@ TgINLINE TgRESULT tgCM_UT_LF__HT_RW__Remove_Yield( STg2_UT_LF__HT_RW_PCU NONULL 
 
 /* ---- tgCM_UT_LF__HT_RW__Remove_Spin ------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgRESULT tgCM_UT_LF__HT_RW__Remove_Spin( STg2_UT_LF__HT_RW_PCU NONULL psHash_Table, TgUINT_MAX_C uiHash )
+TgINLINE TgRESULT tgCM_UT_LF__HT_RW__Remove_Spin( STg2_UT_LF__HT_RW_PCU psHash_Table, TgUINT_MAX_C uiHash )
 {
     TgRESULT                            iResult;
 
@@ -291,7 +291,7 @@ TgINLINE TgRESULT tgCM_UT_LF__HT_RW__Remove_Spin( STg2_UT_LF__HT_RW_PCU NONULL p
 
 /* ---- tgCM_UT_LF__HT_RW__Remove ------------------------------------------------------------------------------------------------------------------------------------------------ */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgRESULT tgCM_UT_LF__HT_RW__Remove( STg2_UT_LF__HT_RW_PCU NONULL psHash_Table, TgUINT_MAX_C uiHash )
+TgINLINE TgRESULT tgCM_UT_LF__HT_RW__Remove( STg2_UT_LF__HT_RW_PCU psHash_Table, TgUINT_MAX_C uiHash )
 {
     TgRESULT                            iResult;
 

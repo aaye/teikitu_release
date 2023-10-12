@@ -61,7 +61,7 @@ enum { KTgKN_GPU_MAX_HOST_CONTEXT                   =     1,    /**< Maximum num
        KTgKN_GPU_MAX_DEBUG_TEXT                    = TgCOMPILE__CONSOLE ? 64 : KTgCN_OSLOG_MAX_LINE + 32,
        KTgKN_GPU_MAX_DEBUG_UI                      =     32,
        KTgKN_GPU_MAX_DEBUG_LINE                    =     32,
-       KTgKN_GPU_MAX_DEBUG_GEOM                    =    128,
+       KTgKN_GPU_MAX_DEBUG_GEOM                    =    512,
 /*# defined(TgCOMPILE__RENDER_DEBUG_OUTPUT) */
 #endif
 
@@ -179,7 +179,9 @@ TgTYPE_ENUM_FLAG(ETgKN_GPU_DEBUG_PM, TgSINT_E32,
     ETgKN_GPU_DEBUG_PM_3D_PLANE = ETgKN_GPU_DEBUG_PM_3D_START,
     ETgKN_GPU_DEBUG_PM_3D_BOX,
     ETgKN_GPU_DEBUG_PM_3D_SPHERE,
-    ETgKN_GPU_DEBUG_PM_3D_CAPSULE,
+    ETgKN_GPU_DEBUG_PM_3D_CAPSULE_CAP_0,
+    ETgKN_GPU_DEBUG_PM_3D_CAPSULE_CAP_1,
+    ETgKN_GPU_DEBUG_PM_3D_CAPSULE_TUBE,
     ETgKN_GPU_DEBUG_PM_3D_CONE,
     ETgKN_GPU_DEBUG_PM_3D_CYLINDER,
     ETgKN_GPU_DEBUG_PM_3D_TUBE,

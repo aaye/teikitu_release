@@ -31,19 +31,19 @@
     @return True if the point has been culled and false otherwise */
 TgEXTN TgBOOL
 FCN_VO(tgGM_CT_Is_Point_Culled)(
-    VEC_OBJ_T(TgCTRI,CPCU) NONULL ARG0, VEC_T(1,C) ARG1, VEC_T(1,C) ARG2 );
+    VEC_OBJ_T(TgCTRI,CPCU) TgANALYSIS_NO_NULL ARG0, VEC_T(1,C) ARG1, VEC_T(1,C) ARG2 );
 
 /** @brief Calculate the edge planes of the triangle
     @param [in,out] ARG Pointer to the geometry object (triangle w/collision) */
 TgINLINE TgVOID
 FCN_VO(tgGM_CT_Reset_Flags)(
-    VEC_OBJ_T(TgCTRI,PCU) NONULL ARG );
+    VEC_OBJ_T(TgCTRI,PCU) TgANALYSIS_NO_NULL ARG );
 
 /** @brief Calculate the normal of the triangle
     @param [in,out] ARG Pointer to the geometry object (triangle w/collision) */
 TgINLINE TgVOID
 FCN_VO(tgGM_CT_Calc_Normal)(
-    VEC_OBJ_T(TgCTRI,PCU) NONULL ARG );
+    VEC_OBJ_T(TgCTRI,PCU) TgANALYSIS_NO_NULL ARG );
 
 /** @brief Project the geometry object (triangle w/collision) along the direction vector
     @param [in] ARG1 Pointer to a geometry object (triangle w/collision)
@@ -52,20 +52,20 @@ FCN_VO(tgGM_CT_Calc_Normal)(
     @returnn Position vector - Resulting position based on bary-centric values in the arguments */
 TgINLINE VEC_T(1)
 FCN_VO(tgGM_CT_Calc_Point)(
-    VEC_OBJ_T(TgCTRI,CPCU) NONULL ARG1, VEC_T(1,C) ARG2, VEC_T(1,C) ARG3 );
+    VEC_OBJ_T(TgCTRI,CPCU) TgANALYSIS_NO_NULL ARG1, VEC_T(1,C) ARG2, VEC_T(1,C) ARG3 );
 
 /** @brief Invalidate the geometry object (triangle w/collision)
     @param [out] OUT Pointer to the geometry object (triangle w/collision) */
 TgINLINE TgVOID
 FCN_VO(tgGM_CT_Reset)(
-    VEC_OBJ_T(TgCTRI,PCU) NONULL OUT );
+    VEC_OBJ_T(TgCTRI,PCU) TgANALYSIS_NO_NULL OUT );
 
 /** @brief Validate the integrity of the geometry object (triangle w/collision)
     @param [in] ARG Pointer to a geometry object (triangle w/collision)
     @return True if the geometry object (triangle w/collision) is valid and false otherwise */
 TgINLINE TgBOOL
 FCN_VO(tgGM_CT_Is_Valid)(
-    VEC_OBJ_T(TgCTRI,CPCU) NONULL ARG );
+    VEC_OBJ_T(TgCTRI,CPCU) TgANALYSIS_NO_NULL ARG );
 
 /** @brief Determine the point on the geometry object (triangle w/collision) that is furthest along the direction of ARG1
     @param [in] ARG0 Pointer to a geometry object (triangle w/collision)
@@ -73,21 +73,21 @@ FCN_VO(tgGM_CT_Is_Valid)(
     @return The point on the geometry object (triangle w/collision) that is furthest along the direction of ARG1 */
 TgINLINE VEC_T(1)
 FCN_VO(tgGM_CT_Support_Point)(
-    VEC_OBJ_T(TgCTRI,CPCU) NONULL ARG0, VEC_T(1,C) ARG1 );
+    VEC_OBJ_T(TgCTRI,CPCU) TgANALYSIS_NO_NULL ARG0, VEC_T(1,C) ARG1 );
 
 /** @brief Calculate the surface area of the geometry object (triangle w/collision)
     @param [in] ARG Pointer to a geometry object (triangle w/collision)
     @return The surface area of the geometry object (triangle w/collision) */
 TgINLINE VEC_T(1)
 FCN_VO(tgGM_CT_Area)(
-    VEC_OBJ_T(TgCTRI,CPCU) NONULL ARG );
+    VEC_OBJ_T(TgCTRI,CPCU) TgANALYSIS_NO_NULL ARG );
 
 /** @brief Calculate the minimum necessary Axis-Aligned Bounding Box to contain the geometry object (triangle w/collision)
     @param [out] ARG0 Pointer to an axis-aligned bounding box object
     @param [in] ARG1 Pointer to a geometry object (triangle w/collision) */
 TgINLINE TgVOID
 FCN_VO(tgGM_CT_BA)(
-    VEC_OBJ_T(TgBOXAA,PCU) NONULL ARG0, VEC_OBJ_T(TgCTRI,CPCU) NONULL ARG1 );
+    VEC_OBJ_T(TgBOXAA,PCU) TgANALYSIS_NO_NULL ARG0, VEC_OBJ_T(TgCTRI,CPCU) TgANALYSIS_NO_NULL ARG1 );
 
 /** @brief Calculate the minimum necessary Axis-Aligned Bounding Box to contain the swept geometry object (triangle w/collision)
     @param [out] ARG0 Pointer to an axis-aligned bounding box object
@@ -95,7 +95,7 @@ FCN_VO(tgGM_CT_BA)(
     @param [in] ARG2 Pointer to a vector describing the swept direction and magnitude */
 TgINLINE TgVOID
 FCN_VO(tgGM_CT_Sweep_BA)(
-    VEC_OBJ_T(TgBOXAA,PCU) NONULL ARG0, VEC_OBJ_T(TgCTRI,CPCU) NONULL ARG1, VEC_T(1,C) ARG2 );
+    VEC_OBJ_T(TgBOXAA,PCU) TgANALYSIS_NO_NULL ARG0, VEC_OBJ_T(TgCTRI,CPCU) TgANALYSIS_NO_NULL ARG1, VEC_T(1,C) ARG2 );
 
 /** @brief Project the geometry object (triangle w/collision) along the direction vector
     @param [out] OUT0 Pointer to a scalar value to hold the lower bound of the projection
@@ -104,7 +104,7 @@ FCN_VO(tgGM_CT_Sweep_BA)(
     @param [in] ARG3 Direction vector */
 TgINLINE TgVOID
 FCN_VO(tgGM_CT_Project)(
-    VEC_T(1,PCU) NONULL ARG0, VEC_T(1,PCU) NONULL ARG1, VEC_OBJ_T(TgCTRI,CPCU) NONULL ARG2, VEC_T(1,C) ARG3 );
+    VEC_T(1,PCU) TgANALYSIS_NO_NULL ARG0, VEC_T(1,PCU) TgANALYSIS_NO_NULL ARG1, VEC_OBJ_T(TgCTRI,CPCU) TgANALYSIS_NO_NULL ARG2, VEC_T(1,C) ARG3 );
 
 /** @brief Test to see if a point is either on or in the geometry object (triangle w/collision)
     @param [in] ARG0 Pointer to a geometry object (triangle w/collision)
@@ -112,14 +112,14 @@ FCN_VO(tgGM_CT_Project)(
     @return True if the position is either on or in the geometry object (triangle w/collision) and false otherwise */
 TgINLINE TgBOOL
 FCN_VO(tgGM_CT_Is_Contained)(
-    VEC_OBJ_T(TgCTRI,CPCU) NONULL ARG0, VEC_T(1,C) ARG1 );
+    VEC_OBJ_T(TgCTRI,CPCU) TgANALYSIS_NO_NULL ARG0, VEC_T(1,C) ARG1 );
 
 /** @brief Transform the geometry object (triangle w/collision) at ARG0 by the matrix at ARG1
     @param [in,out] ARG0 Pointer to a geometry object (triangle w/collision)
     @param [in] ARG1 Column-Major matrix (3x4) containing rotation and translation */
 TgINLINE TgVOID
 FCN_VO(tgGM_CT_TX)(
-    VEC_OBJ_T(TgCTRI,PCU) NONULL ARG0, VEC_T(3,CPCU) NONULL ARG1 );
+    VEC_OBJ_T(TgCTRI,PCU) TgANALYSIS_NO_NULL ARG0, VEC_T(3,CPCU) TgANALYSIS_NO_NULL ARG1 );
 
 /** @brief Transform the geometry object (triangle w/collision) at ARG1 by the matrix at ARG2 and store it in ARG0
     @param [out] ARG0 Pointer to a geometry object (triangle w/collision)
@@ -127,7 +127,7 @@ FCN_VO(tgGM_CT_TX)(
     @param [in] ARG2 Column-Major matrix (3x4) containing rotation and translation */
 TgINLINE TgVOID
 FCN_VO(tgGM_CT_Copy_TX)(
-    VEC_OBJ_T(TgCTRI,PCU) NONULL ARG0, VEC_OBJ_T(TgCTRI,CPCU) NONULL ARG1, VEC_T(3,CPCU) NONULL ARG2 );
+    VEC_OBJ_T(TgCTRI,PCU) TgANALYSIS_NO_NULL ARG0, VEC_OBJ_T(TgCTRI,CPCU) TgANALYSIS_NO_NULL ARG1, VEC_T(3,CPCU) TgANALYSIS_NO_NULL ARG2 );
 
 
 /** @brief Initialize a new geometry object (triangle w/collision) with the function arguments
@@ -139,7 +139,7 @@ FCN_VO(tgGM_CT_Copy_TX)(
     @param [in] ARG4 Direction vector - normal */
 TgINLINE TgVOID
 FCN_VO(tgGM_CT_Init_PN)(
-    VEC_OBJ_T(TgCTRI,PCU) NONULL ARG0, VEC_T(1,C) ARG1, VEC_T(1,C) ARG2, VEC_T(1,C) ARG3, VEC_T(1,C) ARG4 );
+    VEC_OBJ_T(TgCTRI,PCU) TgANALYSIS_NO_NULL ARG0, VEC_T(1,C) ARG1, VEC_T(1,C) ARG2, VEC_T(1,C) ARG3, VEC_T(1,C) ARG4 );
 
 /** @brief Initialize a new geometry object (triangle w/collision) with the function arguments
     @param [out] ARG0 Pointer to a geometry object (triangle w/collision)
@@ -148,7 +148,7 @@ FCN_VO(tgGM_CT_Init_PN)(
     @param [in] ARG3 Position vector - third point  */
 TgINLINE TgVOID
 FCN_VO(tgGM_CT_Init_P)(
-    VEC_OBJ_T(TgCTRI,PCU) NONULL ARG0, VEC_T(1,C) ARG1, VEC_T(1,C) ARG2, VEC_T(1,C) ARG3 );
+    VEC_OBJ_T(TgCTRI,PCU) TgANALYSIS_NO_NULL ARG0, VEC_T(1,C) ARG1, VEC_T(1,C) ARG2, VEC_T(1,C) ARG3 );
 
 /** @brief Initialize a new geometry object (triangle w/collision) with the function arguments
     @note Consistency of the normal with the two edges is left to the caller
@@ -159,7 +159,7 @@ FCN_VO(tgGM_CT_Init_P)(
     @param [in] ARG4 Direction vector - normal */
 TgINLINE TgVOID
 FCN_VO(tgGM_CT_Init_EN)(
-    VEC_OBJ_T(TgCTRI,PCU) NONULL ARG0, VEC_T(1,C) ARG1, VEC_T(1,C) ARG2, VEC_T(1,C) ARG3, VEC_T(1,C) ARG4 );
+    VEC_OBJ_T(TgCTRI,PCU) TgANALYSIS_NO_NULL ARG0, VEC_T(1,C) ARG1, VEC_T(1,C) ARG2, VEC_T(1,C) ARG3, VEC_T(1,C) ARG4 );
 
 /** @brief Initialize a new geometry object (triangle w/collision) with the function arguments
     @param [out] ARG0 Pointer to a geometry object (triangle w/collision)
@@ -168,28 +168,28 @@ FCN_VO(tgGM_CT_Init_EN)(
     @param [in] ARG3 Direction vector - edge from point 0 to point 2 */
 TgINLINE TgVOID
 FCN_VO(tgGM_CT_Init_E)(
-    VEC_OBJ_T(TgCTRI,PCU) NONULL ARG0, VEC_T(1,C) ARG1, VEC_T(1,C) ARG2, VEC_T(1,C) ARG3 );
+    VEC_OBJ_T(TgCTRI,PCU) TgANALYSIS_NO_NULL ARG0, VEC_T(1,C) ARG1, VEC_T(1,C) ARG2, VEC_T(1,C) ARG3 );
 
 /** @brief Initialize a geometry object (triangle w/collision) from a geometry object (triangle)
     @param [out] ARG0 Pointer to a geometry object (triangle w/collision)
     @param [in] ARG1 Pointer to a geometry object (triangle) */
 TgINLINE TgVOID
 FCN_VO(tgGM_CT_Init_PT)(
-    VEC_OBJ_T(TgCTRI,PCU) NONULL ARG0, VEC_OBJ_T(TgPTRI,CPCU) NONULL ARG1 );
+    VEC_OBJ_T(TgCTRI,PCU) TgANALYSIS_NO_NULL ARG0, VEC_OBJ_T(TgPTRI,CPCU) TgANALYSIS_NO_NULL ARG1 );
 
 /** @brief Initialize a geometry object (triangle w/collision) from a geometry object (triangle)
     @param [out] ARG0 Pointer to a geometry object (triangle w/collision)
     @param [in] ARG1 Pointer to a geometry object (triangle w/edge) */
 TgINLINE TgVOID
 FCN_VO(tgGM_CT_Init_ET)(
-    VEC_OBJ_T(TgCTRI,PCU) NONULL ARG0, VEC_OBJ_T(TgETRI,CPCU) NONULL ARG1 );
+    VEC_OBJ_T(TgCTRI,PCU) TgANALYSIS_NO_NULL ARG0, VEC_OBJ_T(TgETRI,CPCU) TgANALYSIS_NO_NULL ARG1 );
 
 /** @brief Copy the one geometry object (triangle w/collision) to another of the same type
     @param [out] ARG0 Pointer to a geometry object (triangle w/collision)
     @param [in] ARG1 Pointer to a geometry object (triangle w/collision) */
 TgINLINE TgVOID
 FCN_VO(tgGM_CT_Copy)(
-    VEC_OBJ_T(TgCTRI,PCU) NONULL ARG0, VEC_OBJ_T(TgCTRI,CPCU) NONULL ARG1 );
+    VEC_OBJ_T(TgCTRI,PCU) TgANALYSIS_NO_NULL ARG0, VEC_OBJ_T(TgCTRI,CPCU) TgANALYSIS_NO_NULL ARG1 );
 
 
 /** @brief Set the origin / first point of the triangle
@@ -197,49 +197,49 @@ FCN_VO(tgGM_CT_Copy)(
     @param [in] ARG1 Position vector */
 TgINLINE TgVOID
 FCN_VO(tgGM_CT_Set_Origin)(
-    VEC_OBJ_T(TgCTRI,PCU) NONULL ARG0, VEC_T(1,C) ARG1 );
+    VEC_OBJ_T(TgCTRI,PCU) TgANALYSIS_NO_NULL ARG0, VEC_T(1,C) ARG1 );
 
 /** @brief Set the first point of the triangle
     @param [in,out] ARG0 Pointer to a geometry object (triangle w/collision)
     @param [in] ARG1 Position vector */
 TgINLINE TgVOID
 FCN_VO(tgGM_CT_Set_Point_0)(
-    VEC_OBJ_T(TgCTRI,PCU) NONULL ARG0, VEC_T(1,C) ARG1 );
+    VEC_OBJ_T(TgCTRI,PCU) TgANALYSIS_NO_NULL ARG0, VEC_T(1,C) ARG1 );
 
 /** @brief Set the second point of the triangle
     @param [in,out] ARG0 Pointer to a geometry object (triangle w/collision)
     @param [in] ARG1 Position vector */
 TgINLINE TgVOID
 FCN_VO(tgGM_CT_Set_Point_1)(
-    VEC_OBJ_T(TgCTRI,PCU) NONULL ARG0, VEC_T(1,C) ARG1 );
+    VEC_OBJ_T(TgCTRI,PCU) TgANALYSIS_NO_NULL ARG0, VEC_T(1,C) ARG1 );
 
 /** @brief Set the third point of the triangle
     @param [in,out] ARG0 Pointer to a geometry object (triangle w/collision)
     @param [in] ARG1 Position vector */
 TgINLINE TgVOID
 FCN_VO(tgGM_CT_Set_Point_2)(
-    VEC_OBJ_T(TgCTRI,PCU) NONULL ARG0, VEC_T(1,C) ARG1 );
+    VEC_OBJ_T(TgCTRI,PCU) TgANALYSIS_NO_NULL ARG0, VEC_T(1,C) ARG1 );
 
 /** @brief Set the first edge of the triangle between point 0 and point 1
     @param [in,out] ARG0 Pointer to a geometry object (triangle w/collision)
     @param [in] ARG1 Direction vector - edge between point 0 and point 1 */
 TgINLINE TgVOID
 FCN_VO(tgGM_CT_Set_Edge_0)(
-    VEC_OBJ_T(TgCTRI,PCU) NONULL ARG0, VEC_T(1,C) ARG1 );
+    VEC_OBJ_T(TgCTRI,PCU) TgANALYSIS_NO_NULL ARG0, VEC_T(1,C) ARG1 );
 
 /** @brief Set the first edge of the triangle between point 1 and point 2
     @param [in,out] ARG0 Pointer to a geometry object (triangle w/collision)
     @param [in] ARG1 Direction vector - edge between point 1 and point 2 */
 TgINLINE TgVOID
 FCN_VO(tgGM_CT_Set_Edge_1)(
-    VEC_OBJ_T(TgCTRI,PCU) NONULL ARG0, VEC_T(1,C) ARG1 );
+    VEC_OBJ_T(TgCTRI,PCU) TgANALYSIS_NO_NULL ARG0, VEC_T(1,C) ARG1 );
 
 /** @brief Set the first edge of the triangle between point 2 and point 0
     @param [in,out] ARG0 Pointer to a geometry object (triangle w/collision)
     @param [in] ARG1 Direction vector - edge between point 2 and point 0 */
 TgINLINE TgVOID
 FCN_VO(tgGM_CT_Set_Edge_2)(
-    VEC_OBJ_T(TgCTRI,PCU) NONULL ARG0, VEC_T(1,C) ARG1 );
+    VEC_OBJ_T(TgCTRI,PCU) TgANALYSIS_NO_NULL ARG0, VEC_T(1,C) ARG1 );
 
 /** @brief Set the collision flags for the triangle
     @param [in,out] ARG0 Pointer to a geometry object (triangle w/collision)
@@ -254,35 +254,35 @@ FCN_VO(tgGM_CT_Set_Flags)(
     @return The origin / first point of the triangle */
 TgINLINE VEC_T(1)
 FCN_VO(tgGM_CT_Query_Origin)(
-    VEC_OBJ_T(TgCTRI,CPCU) NONULL ARG );
+    VEC_OBJ_T(TgCTRI,CPCU) TgANALYSIS_NO_NULL ARG );
 
 /** @brief Return the normal of the plane
     @param [in] ARG Pointer to a geometry object (triangle w/collision)
     @return The normal of the plane */
 TgINLINE VEC_T(1)
 FCN_VO(tgGM_CT_Query_Normal)(
-    VEC_OBJ_T(TgCTRI,CPCU) NONULL ARG );
+    VEC_OBJ_T(TgCTRI,CPCU) TgANALYSIS_NO_NULL ARG );
 
 /** @brief Return the first point of the triangle
     @param [in] ARG Pointer to a geometry object (triangle w/collision)
     @return The first point of the triangle */
 TgINLINE VEC_T(1)
 FCN_VO(tgGM_CT_Query_Point_0)(
-    VEC_OBJ_T(TgCTRI,CPCU) NONULL ARG );
+    VEC_OBJ_T(TgCTRI,CPCU) TgANALYSIS_NO_NULL ARG );
 
 /** @brief Return the second point of the triangle
     @param [in] ARG Pointer to a geometry object (triangle w/collision)
     @return The second point of the triangle */
 TgINLINE VEC_T(1)
 FCN_VO(tgGM_CT_Query_Point_1)(
-    VEC_OBJ_T(TgCTRI,CPCU) NONULL ARG );
+    VEC_OBJ_T(TgCTRI,CPCU) TgANALYSIS_NO_NULL ARG );
 
 /** @brief Return the third point of the triangle
     @param [in] ARG Pointer to a geometry object (triangle w/collision)
     @return The third point of the triangle */
 TgINLINE VEC_T(1)
 FCN_VO(tgGM_CT_Query_Point_2)(
-    VEC_OBJ_T(TgCTRI,CPCU) NONULL ARG );
+    VEC_OBJ_T(TgCTRI,CPCU) TgANALYSIS_NO_NULL ARG );
 
 /** @brief Return the specified point
     @param [in,out] ARG0 Pointer to a geometry object (triangle w/collision)
@@ -290,28 +290,28 @@ FCN_VO(tgGM_CT_Query_Point_2)(
     @return The specified point */
 TgINLINE VEC_T(1)
 FCN_VO(tgGM_CT_Query_Point)(
-    VEC_OBJ_T(TgCTRI,CPCU) NONULL ARG0, TgRSIZE_C ARG1 );
+    VEC_OBJ_T(TgCTRI,CPCU) TgANALYSIS_NO_NULL ARG0, TgRSIZE_C ARG1 );
 
 /** @brief Return the first edge of the triangle (point 0 to point 1)
     @param [in] ARG Pointer to a geometry object (triangle w/collision)
     @return The first edge of the triangle (point 0 to point 1) */
 TgINLINE VEC_T(1)
 FCN_VO(tgGM_CT_Query_Edge_0)(
-    VEC_OBJ_T(TgCTRI,CPCU) NONULL ARG );
+    VEC_OBJ_T(TgCTRI,CPCU) TgANALYSIS_NO_NULL ARG );
 
 /** @brief Return the second edge of the triangle (point 1 to point 2)
     @param [in] ARG Pointer to a geometry object (triangle w/collision)
     @return The second edge of the triangle (point 1 to point 2) */
 TgINLINE VEC_T(1)
 FCN_VO(tgGM_CT_Query_Edge_1)(
-    VEC_OBJ_T(TgCTRI,CPCU) NONULL ARG );
+    VEC_OBJ_T(TgCTRI,CPCU) TgANALYSIS_NO_NULL ARG );
 
 /** @brief Return the third edge of the triangle (point 2 to point 0)
     @param [in] ARG Pointer to a geometry object (triangle w/collision)
     @return The third edge of the triangle (point 2 to point 0) */
 TgINLINE VEC_T(1)
 FCN_VO(tgGM_CT_Query_Edge_2)(
-    VEC_OBJ_T(TgCTRI,CPCU) NONULL ARG );
+    VEC_OBJ_T(TgCTRI,CPCU) TgANALYSIS_NO_NULL ARG );
 
 /** @brief Return the specified edge
     @param [in] ARG0 Pointer to a geometry object (triangle w/collision)
@@ -319,28 +319,28 @@ FCN_VO(tgGM_CT_Query_Edge_2)(
     @return The specified edge */
 TgINLINE VEC_T(1)
 FCN_VO(tgGM_CT_Query_Edge)(
-    VEC_OBJ_T(TgCTRI,CPCU) NONULL ARG0, TgRSIZE_C ARG1 );
+    VEC_OBJ_T(TgCTRI,CPCU) TgANALYSIS_NO_NULL ARG0, TgRSIZE_C ARG1 );
 
 /** @brief Return a pointer to a geometry object (triangle)
     @param [in] ARG Pointer to a geometry object (triangle w/collision)
     @return A pointer to a geometry object (triangle) */
 TgINLINE VEC_OBJ_T(TgPTRI,CP)
 FCN_VO(tgGM_CT_Query_PT)(
-    VEC_OBJ_T(TgCTRI,CPCU) NONULL ARG );
+    VEC_OBJ_T(TgCTRI,CPCU) TgANALYSIS_NO_NULL ARG );
 
 /** @brief Return a pointer to a geometry object (triangle w/edge)
     @param [in] ARG Pointer to a geometry object (triangle w/collision)
     @return A pointer to a geometry object (triangle w/edge) */
 TgINLINE VEC_OBJ_T(TgETRI,CP)
 FCN_VO(tgGM_CT_Query_ET)(
-    VEC_OBJ_T(TgCTRI,CPCU) NONULL ARG );
+    VEC_OBJ_T(TgCTRI,CPCU) TgANALYSIS_NO_NULL ARG );
 
 /** @brief Return the entire bitfield of collision flags
     @param [in] ARG Pointer to a geometry object (triangle w/collision)
     @return The entire bitfield of collision flags */
 TgINLINE TgUINT_E32
 FCN_VO(tgGM_CT_Query_Flags)(
-    VEC_OBJ_T(TgCTRI,CPCU) NONULL ARG );
+    VEC_OBJ_T(TgCTRI,CPCU) TgANALYSIS_NO_NULL ARG );
 
 
 /** @brief Set the collision flag for the specified point
@@ -349,28 +349,28 @@ FCN_VO(tgGM_CT_Query_Flags)(
     @param [in] ARG2 Boolean - True to enable the point and false otherwise */
 TgINLINE TgVOID
 FCN_VO(tgGM_CT_Set_Test_Point)(
-    VEC_OBJ_T(TgCTRI,PCU) NONULL ARG0, TgRSIZE_C ARG1, TgBOOL_C ARG2 );
+    VEC_OBJ_T(TgCTRI,PCU) TgANALYSIS_NO_NULL ARG0, TgRSIZE_C ARG1, TgBOOL_C ARG2 );
 
 /** @brief Set the collision flag for the first point
     @param [in,out] ARG0 Pointer to a geometry object (triangle w/collision)
     @param [in] ARG1 Boolean - True to enable the point and false otherwise */
 TgINLINE TgVOID
 FCN_VO(tgGM_CT_Set_Test_Point_0)(
-    VEC_OBJ_T(TgCTRI,PCU) NONULL ARG0, TgBOOL_C ARG1 );
+    VEC_OBJ_T(TgCTRI,PCU) TgANALYSIS_NO_NULL ARG0, TgBOOL_C ARG1 );
 
 /** @brief Set the collision flag for the second point
     @param [in,out] ARG0 Pointer to a geometry object (triangle w/collision)
     @param [in] ARG1 Boolean - True to enable the point and false otherwise */
 TgINLINE TgVOID
 FCN_VO(tgGM_CT_Set_Test_Point_1)(
-    VEC_OBJ_T(TgCTRI,PCU) NONULL ARG0, TgBOOL_C ARG1 );
+    VEC_OBJ_T(TgCTRI,PCU) TgANALYSIS_NO_NULL ARG0, TgBOOL_C ARG1 );
 
 /** @brief Set the collision flag for the third point
     @param [in,out] ARG0 Pointer to a geometry object (triangle w/collision)
     @param [in] ARG1 Boolean - True to enable the point and false otherwise */
 TgINLINE TgVOID
 FCN_VO(tgGM_CT_Set_Test_Point_2)(
-    VEC_OBJ_T(TgCTRI,PCU) NONULL ARG0, TgBOOL_C ARG1 );
+    VEC_OBJ_T(TgCTRI,PCU) TgANALYSIS_NO_NULL ARG0, TgBOOL_C ARG1 );
 
 /** @brief Set the collision flag for the specified edge
     @param [in,out] ARG0 Pointer to a geometry object (triangle w/collision)
@@ -378,28 +378,28 @@ FCN_VO(tgGM_CT_Set_Test_Point_2)(
     @param [in] ARG2 Boolean - True to enable the edge and false otherwise */
 TgINLINE TgVOID
 FCN_VO(tgGM_CT_Set_Test_Edge)(
-    VEC_OBJ_T(TgCTRI,PCU) NONULL ARG0, TgRSIZE_C ARG1, TgBOOL_C ARG2 );
+    VEC_OBJ_T(TgCTRI,PCU) TgANALYSIS_NO_NULL ARG0, TgRSIZE_C ARG1, TgBOOL_C ARG2 );
 
 /** @brief Set the collision flag for the first edge (point 0 to point1)
     @param [in,out] ARG0 Pointer to a geometry object (triangle w/collision)
     @param [in] ARG1 Boolean - True to enable the edge and false otherwise */
 TgINLINE TgVOID
 FCN_VO(tgGM_CT_Set_Test_Edge_0)(
-    VEC_OBJ_T(TgCTRI,PCU) NONULL ARG0, TgBOOL_C ARG1 );
+    VEC_OBJ_T(TgCTRI,PCU) TgANALYSIS_NO_NULL ARG0, TgBOOL_C ARG1 );
 
 /** @brief Set the collision flag for the first edge (point 0 to point2)
     @param [in,out] ARG0 Pointer to a geometry object (triangle w/collision)
     @param [in] ARG1 Boolean - True to enable the edge and false otherwise */
 TgINLINE TgVOID
 FCN_VO(tgGM_CT_Set_Test_Edge_1)(
-    VEC_OBJ_T(TgCTRI,PCU) NONULL ARG0, TgBOOL_C ARG1 );
+    VEC_OBJ_T(TgCTRI,PCU) TgANALYSIS_NO_NULL ARG0, TgBOOL_C ARG1 );
 
 /** @brief Set the collision flag for the first edge (point 1 to point2)
     @param [in,out] ARG0 Pointer to a geometry object (triangle w/collision)
     @param [in] ARG1 Boolean - True to enable the edge and false otherwise */
 TgINLINE TgVOID
 FCN_VO(tgGM_CT_Set_Test_Edge_2)(
-    VEC_OBJ_T(TgCTRI,PCU) NONULL ARG0, TgBOOL_C ARG1 );
+    VEC_OBJ_T(TgCTRI,PCU) TgANALYSIS_NO_NULL ARG0, TgBOOL_C ARG1 );
 
 
 /** @brief Determine if the specified point should be considered during collision testing
@@ -408,28 +408,28 @@ FCN_VO(tgGM_CT_Set_Test_Edge_2)(
     @return True if the specified point should be considered during collision testing and false otherwise */
 TgINLINE TgBOOL
 FCN_VO(tgGM_CT_Test_Point)(
-    VEC_OBJ_T(TgCTRI,CPCU) NONULL ARG0, TgRSIZE_C ARG1 );
+    VEC_OBJ_T(TgCTRI,CPCU) TgANALYSIS_NO_NULL ARG0, TgRSIZE_C ARG1 );
 
 /** @brief Determine if the first point should be considered during collision testing
     @param [in] ARG Pointer to a geometry object (triangle w/collision)
     @return True if the first point should be considered during collision testing and false otherwise */
 TgINLINE TgBOOL
 FCN_VO(tgGM_CT_Test_Point_0)(
-    VEC_OBJ_T(TgCTRI,CPCU) NONULL ARG );
+    VEC_OBJ_T(TgCTRI,CPCU) TgANALYSIS_NO_NULL ARG );
 
 /** @brief Determine if the second point should be considered during collision testing
     @param [in] ARG Pointer to a geometry object (triangle w/collision)
     @return True if the second point should be considered during collision testing and false otherwise */
 TgINLINE TgBOOL
 FCN_VO(tgGM_CT_Test_Point_1)(
-    VEC_OBJ_T(TgCTRI,CPCU) NONULL ARG );
+    VEC_OBJ_T(TgCTRI,CPCU) TgANALYSIS_NO_NULL ARG );
 
 /** @brief Determine if the third point should be considered during collision testing
     @param [in] ARG Pointer to a geometry object (triangle w/collision)
     @return True if the third point should be considered during collision testing and false otherwise */
 TgINLINE TgBOOL
 FCN_VO(tgGM_CT_Test_Point_2)(
-    VEC_OBJ_T(TgCTRI,CPCU) NONULL ARG );
+    VEC_OBJ_T(TgCTRI,CPCU) TgANALYSIS_NO_NULL ARG );
 
 /** @brief Determine if the specified point should be considered during collision testing
     @param [in] ARG0 Pointer to a geometry object (triangle w/collision)
@@ -437,28 +437,28 @@ FCN_VO(tgGM_CT_Test_Point_2)(
     @return True if the specified point should be considered during collision testing and false otherwise */
 TgINLINE TgBOOL
 FCN_VO(tgGM_CT_Test_Edge)(
-    VEC_OBJ_T(TgCTRI,CPCU) NONULL ARG0, TgRSIZE_C ARG1 );
+    VEC_OBJ_T(TgCTRI,CPCU) TgANALYSIS_NO_NULL ARG0, TgRSIZE_C ARG1 );
 
 /** @brief Determine if the first edge should be considered during collision testing
     @param [in] ARG Pointer to a geometry object (triangle w/collision)
     @return True if the first edge should be considered during collision testing and false otherwise */
 TgINLINE TgBOOL
 FCN_VO(tgGM_CT_Test_Edge_0)(
-    VEC_OBJ_T(TgCTRI,CPCU) NONULL ARG );
+    VEC_OBJ_T(TgCTRI,CPCU) TgANALYSIS_NO_NULL ARG );
 
 /** @brief Determine if the second edge should be considered during collision testing
     @param [in] ARG Pointer to a geometry object (triangle w/collision)
     @return True if the second edge should be considered during collision testing and false otherwise */
 TgINLINE TgBOOL
 FCN_VO(tgGM_CT_Test_Edge_1)(
-    VEC_OBJ_T(TgCTRI,CPCU) NONULL ARG );
+    VEC_OBJ_T(TgCTRI,CPCU) TgANALYSIS_NO_NULL ARG );
 
 /** @brief Determine if the third edge should be considered during collision testing
     @param [in] ARG Pointer to a geometry object (triangle w/collision)
     @return True if the third edge should be considered during collision testing and false otherwise */
 TgINLINE TgBOOL
 FCN_VO(tgGM_CT_Test_Edge_2)(
-    VEC_OBJ_T(TgCTRI,CPCU) NONULL ARG );
+    VEC_OBJ_T(TgCTRI,CPCU) TgANALYSIS_NO_NULL ARG );
 
 
 /** @} TGS_COMMON_GEOMETRY_CT */

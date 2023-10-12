@@ -233,7 +233,7 @@ tgPH_Material_Set_Density(
     @param [in] ARG1 UID for the Form to be queried. */
 TgEXTN TgRESULT
 tgPH_Material_Query_Density(
-    TgFLOAT32_PC NONULL OUT0, TgPH_MATERIAL_ID_C ARG1 );
+    TgFLOAT32_PC TgANALYSIS_NO_NULL OUT0, TgPH_MATERIAL_ID_C ARG1 );
 
 /** @brief Setter for the density of the material. @return Result Code.
     @param [in] ARG0 UID for the Form to be manipulated.
@@ -247,7 +247,7 @@ tgPH_Material_Set_Hardness_Brinell(
     @param [in] ARG1 UID for the Form to be queried. */
 TgEXTN TgRESULT
 tgPH_Material_Query_Hardness_Brinell(
-    TgFLOAT32_PC NONULL OUT0, TgPH_MATERIAL_ID_C ARG1 );
+    TgFLOAT32_PC TgANALYSIS_NO_NULL OUT0, TgPH_MATERIAL_ID_C ARG1 );
 
 /** @brief Setter for yield strength. Default materials assumed that it is measured in Pascals. @return Result Code.
     @param [in] ARG0 UID for the Form to be manipulated.
@@ -261,7 +261,7 @@ tgPH_Material_Set_Tensile_Strength_Ultimate(
     @param [in] ARG1 UID for the Form to be queried. */
 TgEXTN TgRESULT
 tgPH_Material_Query_Tensile_Strength_Ultimate(
-    TgFLOAT32_PC NONULL OUT0, TgPH_MATERIAL_ID_C ARG1 );
+    TgFLOAT32_PC TgANALYSIS_NO_NULL OUT0, TgPH_MATERIAL_ID_C ARG1 );
 
 /** @brief Setter for tensile strength. Default materials assumed that it is measured in Pascals. @return Result Code.
     @param [in] ARG0 UID for the Form to be manipulated.
@@ -275,7 +275,7 @@ tgPH_Material_Set_Tensile_Strength_Yield(
     @param [in] ARG1 UID for the Form to be queried. */
 TgEXTN TgRESULT
 tgPH_Material_Query_Tensile_Strength_Yield(
-    TgFLOAT32_PC NONULL OUT0, TgPH_MATERIAL_ID_C ARG1 );
+    TgFLOAT32_PC TgANALYSIS_NO_NULL OUT0, TgPH_MATERIAL_ID_C ARG1 );
 
 /** @brief Setter for tensile strength. Default materials assumed that it is measured in percentage. @return Result Code.
     @param [in] ARG0 UID for the Form to be manipulated.
@@ -289,7 +289,7 @@ tgPH_Material_Set_Elongation_At_Break(
     @param [in] ARG1 UID for the Form to be queried. */
 TgEXTN TgRESULT
 tgPH_Material_Query_Elongation_At_Break(
-    TgFLOAT32_PC NONULL OUT0, TgPH_MATERIAL_ID_C ARG1 );
+    TgFLOAT32_PC TgANALYSIS_NO_NULL OUT0, TgPH_MATERIAL_ID_C ARG1 );
 
 /** @brief Setter for the Modulus of Elasticity. Default materials assumed that it is measured in Pascals. @return Result Code.
     @param [in] ARG0 UID for the Form to be manipulated.
@@ -303,7 +303,7 @@ tgPH_Material_Set_Modulus_Elasticity(
     @param [in] ARG1 UID for the Form to be queried. */
 TgEXTN TgRESULT
 tgPH_Material_Query_Modulus_Elasticity(
-    TgFLOAT32_PC NONULL OUT0, TgPH_MATERIAL_ID_C ARG1 );
+    TgFLOAT32_PC TgANALYSIS_NO_NULL OUT0, TgPH_MATERIAL_ID_C ARG1 );
 
 /** @brief Setter for poisson ratio. @return Result Code.
     @param [in] ARG0 UID for the Form to be manipulated.
@@ -317,7 +317,7 @@ tgPH_Material_Set_Poisson_Ratio(
     @param [in] ARG1 UID for the Form to be queried. */
 TgEXTN TgRESULT
 tgPH_Material_Query_Poisson_Ratio(
-     TgFLOAT32_PC NONULL OUT0, TgPH_MATERIAL_ID_C ARG1 );
+     TgFLOAT32_PC TgANALYSIS_NO_NULL OUT0, TgPH_MATERIAL_ID_C ARG1 );
 
 /** @brief Setter for shear modulus. Default materials assumed that it is measured in Pascals. @return Result Code.
     @param [in] ARG0 UID for the Form to be manipulated.
@@ -331,7 +331,7 @@ tgPH_Material_Set_Shear_Modulus(
     @param [in] ARG1 UID for the Form to be queried. */
 TgEXTN TgRESULT
 tgPH_Material_Query_Shear_Modulus(
-    TgFLOAT32_PC NONULL OUT0, TgPH_MATERIAL_ID_C ARG1 );
+    TgFLOAT32_PC TgANALYSIS_NO_NULL OUT0, TgPH_MATERIAL_ID_C ARG1 );
 
 
 /*                                                                                                                                                   Material -- Thermal Component */
@@ -348,7 +348,7 @@ tgPH_Material_Set_Thermal_Expansion(
     @param [in] ARG1 UID for the Form to be queried. */
 TgEXTN TgRESULT
 tgPH_Material_Query_Thermal_Expansion(
-    TgFLOAT32_PC NONULL OUT0, TgPH_MATERIAL_ID_C ARG1 );
+    TgFLOAT32_PC TgANALYSIS_NO_NULL OUT0, TgPH_MATERIAL_ID_C ARG1 );
 
 /** @brief Setter for thermal conductivity. Default materials assumed that it is measured in W/mK. @return Result Code.
     @param [in] ARG0 UID for the Form to be manipulated.
@@ -362,7 +362,7 @@ tgPH_Material_Set_Thermal_Conductivity(
     @param [in] ARG1 UID for the Form to be queried. */
 TgEXTN TgRESULT
 tgPH_Material_Query_Thermal_Conductivity(
-    TgFLOAT32_PC NONULL OUT0, TgPH_MATERIAL_ID_C ARG1 );
+    TgFLOAT32_PC TgANALYSIS_NO_NULL OUT0, TgPH_MATERIAL_ID_C ARG1 );
 
 /** @brief Setter for melting temperature. Default materials assumed that it is measured in Celsius. @return Result Code.
     @param [in] ARG0 UID for the Form to be manipulated.
@@ -376,7 +376,7 @@ tgPH_Material_Set_Melting_Temperature(
     @param [in] ARG1 UID for the Form to be queried. */
 TgEXTN TgRESULT
 tgPH_Material_Query_Melting_Temperature(
-    TgFLOAT32_PC NONULL OUT0, TgPH_MATERIAL_ID_C ARG1 );
+    TgFLOAT32_PC TgANALYSIS_NO_NULL OUT0, TgPH_MATERIAL_ID_C ARG1 );
 
 /** @brief Setter for melting temperature. Default materials assumed that it is measured in Celsius. @return Result Code.
     @param [in] ARG0 UID for the Form to be manipulated.
@@ -390,7 +390,7 @@ tgPH_Material_Set_Boiling_Temperature(
     @param [in] ARG1 UID for the Form to be queried. */
 TgEXTN TgRESULT
 tgPH_Material_Query_Boiling_Temperature(
-    TgFLOAT32_PC NONULL OUT0, TgPH_MATERIAL_ID_C ARG1 );
+    TgFLOAT32_PC TgANALYSIS_NO_NULL OUT0, TgPH_MATERIAL_ID_C ARG1 );
 
 
 /*                                                                                                                                                     Material -- Fluid Component */
@@ -407,7 +407,7 @@ tgPH_Material_Set_Vapour_Pressure(
     @param [in] ARG1 UID for the Form to be queried. */
 TgEXTN TgRESULT
 tgPH_Material_Query_Vapour_Pressure(
-    TgFLOAT32_PC NONULL OUT0, TgPH_MATERIAL_ID_C ARG1 );
+    TgFLOAT32_PC TgANALYSIS_NO_NULL OUT0, TgPH_MATERIAL_ID_C ARG1 );
 
 /** @brief Setter for surface tension. Default materials assumed that it is measured in dynes / cm. @return Result Code.
     @param [in] ARG0 UID for the Form to be manipulated.
@@ -421,7 +421,7 @@ tgPH_Material_Set_Surface_Tension(
     @param [in] ARG1 UID for the Form to be queried. */
 TgEXTN TgRESULT
 tgPH_Material_Query_Surface_Tension(
-    TgFLOAT32_PC NONULL OUT0, TgPH_MATERIAL_ID_C ARG1 );
+    TgFLOAT32_PC TgANALYSIS_NO_NULL OUT0, TgPH_MATERIAL_ID_C ARG1 );
 
 /** @brief Setter for dynamic viscosity. Default materials assumed that it is measured in Pascal Seconds. @return Result Code.
     @param [in] ARG0 UID for the Form to be manipulated.
@@ -435,7 +435,7 @@ tgPH_Material_Set_Dynamic_Viscosity(
     @param [in] ARG1 UID for the Form to be queried. */
 TgEXTN TgRESULT
 tgPH_Material_Query_Dynamic_Viscosity(
-    TgFLOAT32_PC NONULL OUT0, TgPH_MATERIAL_ID_C ARG1 );
+    TgFLOAT32_PC TgANALYSIS_NO_NULL OUT0, TgPH_MATERIAL_ID_C ARG1 );
 
 /** @brief Setter for kinematic viscosity. Default materials assumed that it is measured in Stokes. @return Result Code.
     @param [in] ARG0 UID for the Form to be manipulated.
@@ -449,7 +449,7 @@ tgPH_Material_Set_Kinematic_Viscosity(
     @param [in] ARG1 UID for the Form to be queried. */
 TgEXTN TgRESULT
 tgPH_Material_Query_Kinematic_Viscosity(
-    TgFLOAT32_PC NONULL OUT0, TgPH_MATERIAL_ID_C ARG1 );
+    TgFLOAT32_PC TgANALYSIS_NO_NULL OUT0, TgPH_MATERIAL_ID_C ARG1 );
 
 /** @brief Setter for the gas constant. Default materials assumed that it is measured in metre / second. @return Result Code.
     @param [in] ARG0 UID for the Form to be manipulated.
@@ -463,7 +463,7 @@ tgPH_Material_Set_Speed_of_Sound(
     @param [in] ARG1 UID for the Form to be queried. */
 TgEXTN TgRESULT
 tgPH_Material_Query_Speed_of_Sound(
-    TgFLOAT32_PC NONULL OUT0, TgPH_MATERIAL_ID_C ARG1 );
+    TgFLOAT32_PC TgANALYSIS_NO_NULL OUT0, TgPH_MATERIAL_ID_C ARG1 );
 
 /** @} TGS_PHYSICS_MATERIAL */
 
@@ -502,8 +502,22 @@ tgPH_Mass_Set_Mass(
 /** @addtogroup TGS_PHYSICS_FORM_CONFIGURATION */
 /** @{ */
 
-/** @brief Setter for the category bits assigned to this Form. Calls are deferred to the end of the world step. . @return Result Code.
-    @param [in] ARG0 UID for the Body to be manipulated.
+/** @brief Enable the Form for World Collision (without a Body). Does nothing if attached to a Body. @return Result Code.
+    @param [in] ARG0 UID for the Form to be set.
+    @param [in] ARG1 is the data to be used in the set function. */
+TgEXTN TgRESULT
+tgPH_Form_Set_World_Collision(
+    TgPH_FORM_ID_C ARG0, TgBOOL_C ARG1 ); 
+
+/** @brief Retrieve the category bits assigned to this Form. @return Result Code.
+    @param [out] OUT0 Pointer to store the retrieved data.
+    @param [in] ARG1 UID for the Form to be queried. */
+TgEXTN TgRESULT
+tgPH_Form_Query_World_Collision(
+     TgBOOL_PC TgANALYSIS_NO_NULL OUT0, TgPH_FORM_ID_C ARG1 );
+
+/** @brief Setter for the category bits assigned to this Form. Calls are deferred to the end of the world step. @return Result Code.
+    @param [in] ARG0 UID for the Form to be set.
     @param [in] ARG1 is the data to be used in the set function. */
 TgEXTN TgRESULT
 tgPH_Form_Set_Category(
@@ -514,10 +528,10 @@ tgPH_Form_Set_Category(
     @param [in] ARG1 UID for the Form to be queried. */
 TgEXTN TgRESULT
 tgPH_Form_Query_Category(
-     TgUINT_E64_PC NONULL OUT0, TgPH_FORM_ID_C ARG1 );
+     TgUINT_E64_PC TgANALYSIS_NO_NULL OUT0, TgPH_FORM_ID_C ARG1 );
 
-/** @brief Setter for the collision bits assigned to this Form. Calls are deferred to the end of the world step. . @return Result Code.
-    @param [in] ARG0 UID for the Body to be manipulated.
+/** @brief Setter for the collision bits assigned to this Form. Calls are deferred to the end of the world step. @return Result Code.
+    @param [in] ARG0 UID for the Form to be manipulated.
     @param [in] ARG1 is the data to be used in the set function. */
 TgEXTN TgRESULT
 tgPH_Form_Set_Collide(
@@ -528,10 +542,10 @@ tgPH_Form_Set_Collide(
     @param [in] ARG1 UID for the Form to be queried. */
 TgEXTN TgRESULT
 tgPH_Form_Query_Collide(
-    TgUINT_E64_PC NONULL OUT0, TgPH_FORM_ID_C ARG1 );
+    TgUINT_E64_PC TgANALYSIS_NO_NULL OUT0, TgPH_FORM_ID_C ARG1 );
 
 /** @brief Setter for the material UID. Calls are deferred to the end of the world step. @return Result Code.
-    @param [in] ARG0 UID for the Body to be manipulated.
+    @param [in] ARG0 UID for the Form to be manipulated.
     @param [in] ARG1 is the data to be used in the set function. */
 TgEXTN TgRESULT
 tgPH_Form_Set_Material_ID(
@@ -542,10 +556,10 @@ tgPH_Form_Set_Material_ID(
     @param [in] ARG1 UID for the Form to be queried. */
 TgEXTN TgRESULT
 tgPH_Form_Query_Material_ID(
-    TgPH_MATERIAL_ID_PC NONULL OUT0, TgPH_FORM_ID_C ARG1 );
+    TgPH_MATERIAL_ID_PC TgANALYSIS_NO_NULL OUT0, TgPH_FORM_ID_C ARG1 );
 
 /** @brief Setter for the material UID. Calls are deferred to the end of the world step.
-    @param [in] ARG0 UID for the Body to be manipulated.
+    @param [in] ARG0 UID for the Form to be manipulated.
     @param [in] ARG1 Enumeration selecting the primitive type in ARG2.
     @param [in] ARG2 Pointer to primitive data. */
 TgEXTN TgRESULT
@@ -557,42 +571,42 @@ tgPH_Form_Set_Collision_Primitive(
     @param [in] ARG1 UID for the Form to be queried. */
 TgEXTN TgRESULT
 tgPH_Form_Query_Primitive(
-    ETgPM_SHORT_PC NONULL OUT0, TgPH_FORM_ID_C ARG1 );
+    ETgPM_SHORT_PC TgANALYSIS_NO_NULL OUT0, TgPH_FORM_ID_C ARG1 );
 
 /** @brief Retrieve the primitive data of the Form. @return Result Code.
     @param [out] OUT0 Pointer to store the retrieved data.
     @param [in] ARG1 UID for the Form to be queried. */
 TgEXTN TgRESULT
 tgPH_Form_Query_Primitive_Data(
-    UTg2_CO_Primitive_F32_04_PC NONULL OUT0, TgPH_FORM_ID_C ARG1 );
+    UTg2_CO_Primitive_F32_04_PC TgANALYSIS_NO_NULL OUT0, TgPH_FORM_ID_C ARG1 );
 
 /** @brief Retrieve the body UID associated with this Form. @return Result Code.
     @param [out] OUT0 Pointer to store the retrieved data.
     @param [in] ARG1 UID for the Form to be queried. */
 TgEXTN TgRESULT
 tgPH_Form_Query_Body_ID(
-    TgPH_BODY_ID_PC NONULL OUT0, TgPH_FORM_ID_C ARG1 );
+    TgPH_BODY_ID_PC TgANALYSIS_NO_NULL OUT0, TgPH_FORM_ID_C ARG1 );
 
 /** @brief Retrieve the next Form in the link list for the assigned body. @return Result Code.
     @param [out] OUT0 Pointer to store the retrieved data.
     @param [in] ARG1 UID for the Form to be queried. */
 TgEXTN TgRESULT
 tgPH_Form_Query_Next_Form_ID(
-    TgPH_FORM_ID_PC NONULL OUT0, TgPH_FORM_ID_C ARG1 );
+    TgPH_FORM_ID_PC TgANALYSIS_NO_NULL OUT0, TgPH_FORM_ID_C ARG1 );
 
 /** @brief Setter for the spacial partitioning UID. Calls are deferred to the end of the world step. @return Result Code.
-    @param [in] ARG0 UID for the Body to be manipulated.
+    @param [in] ARG0 UID for the Form to be manipulated.
     @param [in] ARG1 is the data to be used in the set function. */
 TgEXTN TgRESULT
 tgPH_Form_Set_Sweep_ID(
-    TgPH_FORM_ID_C ARG0, TgPNS_OBJECT_ID_C ARG1 );
+    TgPH_FORM_ID_C ARG0, TgPARTITION_OBJECT_ID_C ARG1 );
 
 /** @brief Retrieve the spacial partitioning UID. @return Result Code.
     @param [out] OUT0 is a pointer to store the retrieved data.
     @param [in] ARG1 UID for the Form to be queried. */
 TgEXTN TgRESULT
 tgPH_Form_Query_Sweep_ID(
-    TgPNS_OBJECT_ID_PC NONULL OUT0, TgPH_FORM_ID_C ARG1 );
+    TgPARTITION_OBJECT_ID_PC TgANALYSIS_NO_NULL OUT0, TgPH_FORM_ID_C ARG1 );
 
 /** @} TGS_PHYSICS_FORM_CONFIGURATION */
 
@@ -602,7 +616,7 @@ tgPH_Form_Query_Sweep_ID(
 /** @{ */
 
 /** @brief Setter for Form position in parent Body space. Calls are deferred to the end of the world step. @return Result Code.
-    @param [in] ARG0 UID for the Body to be manipulated.
+    @param [in] ARG0 UID for the Form to be manipulated.
     @param [in] ARG1 is the data to be used in the set function. */
 TgEXTN TgRESULT
 tgPH_Form_Set_Position_B(
@@ -613,10 +627,10 @@ tgPH_Form_Set_Position_B(
     @param [in] ARG1 UID for the Form to be queried. */
 TgEXTN TgRESULT
 tgPH_Form_Query_Position_B(
-    TgVEC_F32_04_1_PC NONULL OUT0, TgPH_FORM_ID_C ARG1 );
+    TgVEC_F32_04_1_PC TgANALYSIS_NO_NULL OUT0, TgPH_FORM_ID_C ARG1 );
 
 /** @brief Setter for Form rotation in parent Body space. Calls are deferred to the end of the world step. @return Result Code.
-    @param [in] ARG0 UID for the Body to be manipulated.
+    @param [in] ARG0 UID for the Form to be manipulated.
     @param [in] ARG1 is the data to be used in the set function. */
 TgEXTN TgRESULT
 tgPH_Form_Set_Rotation_B(
@@ -627,10 +641,10 @@ tgPH_Form_Set_Rotation_B(
     @param [in] ARG1 UID for the Form to be queried. */
 TgEXTN TgRESULT
 tgPH_Form_Query_Rotation_B(
-    TgVEC_F32_04_1_PC NONULL OUT0, TgPH_FORM_ID_C ARG1 );
+    TgVEC_F32_04_1_PC TgANALYSIS_NO_NULL OUT0, TgPH_FORM_ID_C ARG1 );
 
 /** @brief Setter for Form scale in Origin space. Calls are deferred to the end of the world step. @return Result Code.
-    @param [in] ARG0 UID for the Body to be manipulated.
+    @param [in] ARG0 UID for the Form to be manipulated.
     @param [in] ARG1 is the data to be used in the set function. */
 TgEXTN TgRESULT
 tgPH_Form_Set_Scale(
@@ -641,49 +655,49 @@ tgPH_Form_Set_Scale(
     @param [in] ARG1 UID for the Form to be queried. */
 TgEXTN TgRESULT
 tgPH_Form_Query_Scale(
-    TgVEC_F32_04_1_PC NONULL OUT0, TgPH_FORM_ID_C ARG1 );
+    TgVEC_F32_04_1_PC TgANALYSIS_NO_NULL OUT0, TgPH_FORM_ID_C ARG1 );
 
 /** @brief Retrieve the final transform in Body space. @return Result Code.
     @param [out] OUT0 is a pointer to store the retrieved data.
     @param [in] ARG1 UID for the Form to be queried. */
 TgEXTN TgRESULT
 tgPH_Form_Query_Final_Transform_B(
-    TgVEC_F32_04_3_PC NONULL OUT0, TgPH_FORM_ID_C ARG1 );
+    TgVEC_F32_04_3_PC TgANALYSIS_NO_NULL OUT0, TgPH_FORM_ID_C ARG1 );
 
 /** @brief Retrieve the Form's AABB in Origin space. @return Result Code.
     @param [out] OUT0 is a pointer to store the retrieved data.
     @param [in] ARG1 UID for the Form to be queried. */
 TgEXTN TgRESULT
 tgPH_Form_Query_AABB_O(
-    TgBOXAA_F32_04_PC NONULL OUT0, TgPH_FORM_ID_C ARG1 );
+    TgBOXAA_F32_04_PC TgANALYSIS_NO_NULL OUT0, TgPH_FORM_ID_C ARG1 );
 
 /** @brief Retrieve the previous translation in World space. @return Result Code.
     @param [out] OUT0 is a pointer to store the retrieved data.
     @param [in] ARG1 UID for the Form to be queried. */
 TgEXTN TgRESULT
 tgPH_Form_Query_Last_Position_W(
-    TgVEC_F32_04_1_PC NONULL OUT0, TgPH_FORM_ID_C ARG1 );
+    TgVEC_F32_04_1_PC TgANALYSIS_NO_NULL OUT0, TgPH_FORM_ID_C ARG1 );
 
 /** @brief Retrieve the translation in World space. @return Result Code.
     @param [out] OUT0 is a pointer to store the retrieved data.
     @param [in] ARG1 UID for the Form to be queried. */
 TgEXTN TgRESULT
 tgPH_Form_Query_Position_W(
-    TgVEC_F32_04_1_PC NONULL OUT0, TgPH_FORM_ID_C ARG1 );
+    TgVEC_F32_04_1_PC TgANALYSIS_NO_NULL OUT0, TgPH_FORM_ID_C ARG1 );
 
 /** @brief Retrieve the final transform in World space. @return Result Code.
     @param [out] OUT0 is a pointer to store the retrieved data.
     @param [in] ARG1 UID for the Form to be queried. */
 TgEXTN TgRESULT
 tgPH_Form_Query_Final_Transform_W(
-    TgVEC_F32_04_3_PC NONULL OUT0, TgPH_FORM_ID_C ARG1 );
+    TgVEC_F32_04_3_PC TgANALYSIS_NO_NULL OUT0, TgPH_FORM_ID_C ARG1 );
 
 /** @brief Retrieve the Form's AABB in World space. @return Result Code.
     @param [out] OUT0 is a pointer to store the retrieved data.
     @param [in] ARG1 UID for the Form to be queried. */
 TgEXTN TgRESULT
 tgPH_Form_Query_AABB_W(
-    TgBOXAA_F32_04_PC NONULL OUT0, TgPH_FORM_ID_C ARG1 );
+    TgBOXAA_F32_04_PC TgANALYSIS_NO_NULL OUT0, TgPH_FORM_ID_C ARG1 );
 
 /** @} TGS_PHYSICS_FORM_SCENE */
 
@@ -693,7 +707,7 @@ tgPH_Form_Query_AABB_W(
 /** @{ */
 
 /** @brief Setter for Form debug colour. Calls are deferred to the end of the world step. . @return Result Code.
-    @param [in] ARG0 UID for the Body to be manipulated.
+    @param [in] ARG0 UID for the Form to be manipulated.
     @param [in] ARG1 is the data to be used in the set function. */
 TgEXTN TgRESULT
 tgPH_Form_Set_Colour(
@@ -704,30 +718,28 @@ tgPH_Form_Set_Colour(
     @param [in] ARG1 UID for the Form to be queried. */
 TgEXTN TgRESULT
 tgPH_Form_Query_Colour(
-    TgVEC_F32_04_1_PC NONULL OUT0, TgPH_FORM_ID_C ARG1 ); // Debug Colour
-
-/** @brief Setter for the Form's enabled status. Calls are deferred to the end of the world step. . @return Result Code.
-    @param [in] ARG0 UID for the Body to be manipulated.
-    @param [in] ARG1 is the data to be used in the set function. */
-TgEXTN TgRESULT
-tgPH_Form_Set_Enabled(
-    TgPH_FORM_ID_C ARG0, TgBOOL_C ARG1 );
-
-/** @brief Retrieve the Form's enabled status. @return Result Code.
-    @param [out] OUT0 is a pointer to store the retrieved data.
-    @param [in] ARG1 UID for the Form to be queried. */
-TgEXTN TgRESULT
-tgPH_Form_Query_Enabled(
-    TgBOOL_PC NONULL OUT0, TgPH_FORM_ID_C ARG1 );
+    TgVEC_F32_04_1_PC TgANALYSIS_NO_NULL OUT0, TgPH_FORM_ID_C ARG1 ); // Debug Colour
 
 #if defined(TgBUILD_DEBUG__PHYSICS) && defined(TgCOMPILE__RENDER_DEBUG_OUTPUT)
+/** @brief Display the Physics Performance Stats Page/Display.
+    @param [in] ARG0 contains pointers to the data structures required by the Kernel GPU for Debug Rendering.
+    @param [in] ARG1 Pointer to a data structure retrieved from GPU Kernel for Rendering.
+    @param [in] ARG2 Pointer to a data structure describing the Render Target buffers.
+    @param [in] ARG3 Pointer to a data structure describing the Depth Stencil buffer. */
+TgEXTN TgVOID
+tgPH_Debug_Render_Performance_Stats(
+    UTg2_KN_GPU_CMD_C ARG0, STg2_KN_GPU_HLSL_Output_DESC_CPC TgANALYSIS_NO_NULL ARG1, STg2_KN_GPU_Render_Buffer_CPC TgANALYSIS_NO_NULL ARG2,
+    STg2_KN_GPU_Render_Buffer_CPC TgANALYSIS_NO_NULL ARG3 );
+
 /** @brief Visualize all of the Forms in a World through Debug Rendering.
     @param [in] ARG0 contains pointers to the data structures required by the Kernel GPU for Debug Rendering.
     @param [in] ARG1 Pointer to a configured Kernel Debug Render Model data structure.
-    @param [in] ARG2 UID for the World to be drawn. */
+    @param [in] ARG2 UID for the World to be drawn.
+    @param [in] ARG3 Enumeration indicating the format of the render buffer.
+    @param [in] ARG4 Enumeration indicating the format of the depth-stencil buffer. */
 TgEXTN TgVOID
 tgPH_Form_Visualize_Render(
-     UTg2_KN_GPU_CMD_C ARG0, STg2_KN_GPU_HLSL_CB_Debug_Model_PC TgANALYSIS_NO_NULL ARG1, TgPH_WORLD_ID_C ARG2 );
+     UTg2_KN_GPU_CMD_C ARG0, STg2_KN_GPU_HLSL_CB_Debug_Model_PC TgANALYSIS_NO_NULL ARG1, TgPH_WORLD_ID_C ARG2, ETgKN_GPU_EXT_FORMAT_C ARG3, ETgKN_GPU_EXT_FORMAT_C ARG4 );
 /*# defined(TgBUILD_DEBUG__PHYSICS) && defined(TgCOMPILE__RENDER_DEBUG_OUTPUT) */
 #endif
 /** @} TGS_PHYSICS_FORM_MISCELLANEOUS */
@@ -765,7 +777,7 @@ tgPH_Body_Remove_Form(
     @return KTgS_OK on success, and KTgE_FAIL or an error code otherwise */
 TgEXTN TgRESULT
 tgPH_Body_Query_First_Form_ID(
-    TgPH_FORM_ID_PC NONULL OUT0, TgPH_BODY_ID_C ARG1 );
+    TgPH_FORM_ID_PC TgANALYSIS_NO_NULL OUT0, TgPH_BODY_ID_C ARG1 );
 
 /** @brief Return the first constraint (in the linked list) associated with this body.
     @param [out] OUT0 Pointer to the output value.
@@ -773,7 +785,7 @@ tgPH_Body_Query_First_Form_ID(
     @return KTgS_OK on success, and KTgE_FAIL or an error code otherwise */
 TgEXTN TgRESULT
 tgPH_Body_Query_First_Constraint_ID(
-    TgPH_CONSTRAINT_ID_PC NONULL OUT0, TgPH_BODY_ID_C ARG1 );
+    TgPH_CONSTRAINT_ID_PC TgANALYSIS_NO_NULL OUT0, TgPH_BODY_ID_C ARG1 );
 
 /** @} TGS_PHYSICS_BODY_FORM_CONSTRAINT */
 
@@ -787,35 +799,35 @@ tgPH_Body_Query_First_Constraint_ID(
     @param [in] ARG1 UID for the Body to be queried. */
 TgEXTN TgRESULT
 tgPH_Body_Query_Moment_Of_Inertia(
-    TgVEC_F32_04_3_PC NONULL OUT0, TgPH_BODY_ID_C ARG1 );
+    TgVEC_F32_04_3_PC TgANALYSIS_NO_NULL OUT0, TgPH_BODY_ID_C ARG1 );
 
 /** @brief Retrieve the Body's Inerse Moment of Inertia. @return Result Code.
     @param [out] OUT0 is a pointer to store the retrieved data.
     @param [in] ARG1 UID for the Body to be queried. */
 TgEXTN TgRESULT
 tgPH_Body_Query_Inverse_Moment_Of_Inertia(
-    TgVEC_F32_04_3_PC NONULL OUT0, TgPH_BODY_ID_C ARG1 );
+    TgVEC_F32_04_3_PC TgANALYSIS_NO_NULL OUT0, TgPH_BODY_ID_C ARG1 );
 
 /** @brief Retrieve the Body's Centre of Gravity. @return Result Code.
     @param [out] OUT0 is a pointer to store the retrieved data.
     @param [in] ARG1 UID for the Body to be queried. */
 TgEXTN TgRESULT
 tgPH_Body_Query_Centre_Of_Gravity(
-    TgVEC_F32_04_1_PC NONULL OUT0, TgPH_BODY_ID_C ARG1 );
+    TgVEC_F32_04_1_PC TgANALYSIS_NO_NULL OUT0, TgPH_BODY_ID_C ARG1 );
 
 /** @brief Retrieve the Body's Mass. @return Result Code.
     @param [out] OUT0 is a pointer to store the retrieved data.
     @param [in] ARG1 UID for the Body to be queried. */
 TgEXTN TgRESULT
 tgPH_Body_Query_Mass(
-    TgVEC_F32_04_1_PC NONULL OUT0, TgPH_BODY_ID_C ARG1 );
+    TgVEC_F32_04_1_PC TgANALYSIS_NO_NULL OUT0, TgPH_BODY_ID_C ARG1 );
 
 /** @brief Retrieve the Body's Inverse Mass. @return Result Code.
     @param [out] OUT0 is a pointer to store the retrieved data.
     @param [in] ARG1 UID for the Body to be queried. */
 TgEXTN TgRESULT
 tgPH_Body_Query_Inverse_Mass(
-    TgVEC_F32_04_1_PC NONULL OUT0, TgPH_BODY_ID_C ARG1 );
+    TgVEC_F32_04_1_PC TgANALYSIS_NO_NULL OUT0, TgPH_BODY_ID_C ARG1 );
 
 /** @} TGS_PHYSICS_BODY_MASS */
 
@@ -940,7 +952,7 @@ tgPH_Body_Set_Persistent_Force(
     @param [in] ARG1 UID for the Body to be queried. */
 TgEXTN TgRESULT
 tgPH_Body_Query_Persistent_Force(
-    TgVEC_F32_04_1_PC NONULL OUT0, TgPH_BODY_ID_C ARG1 );
+    TgVEC_F32_04_1_PC TgANALYSIS_NO_NULL OUT0, TgPH_BODY_ID_C ARG1 );
 
 /** @} TGS_PHYSICS_BODY_FORCE */
 
@@ -1056,15 +1068,15 @@ tgPH_Body_Query_Disable_Timer(
     @param [out] OUT0 is a pointer to store the retrieved data.
     @param [in] ARG1 UID for the Body to be queried. */
 TgEXTN TgRESULT
-tgPH_Body_Query_Enabled(
-    TgBOOL_PC NONULL OUT0, TgPH_BODY_ID_C ARG1 );
+tgPH_Body_Query_Update(
+    TgBOOL_PC TgANALYSIS_NO_NULL OUT0, TgPH_BODY_ID_C ARG1 );
 
 /** @brief Retrieve the indicator marking if this Body is part of a ragdoll. @return Result Code.
     @param [out] OUT0 is a pointer to store the retrieved data.
     @param [in] ARG1 UID for the Body to be queried. */
 TgEXTN TgRESULT
 tgPH_Body_Query_Ragdoll(
-    TgBOOL_PC NONULL OUT0, TgPH_BODY_ID_C ARG1 );
+    TgBOOL_PC TgANALYSIS_NO_NULL OUT0, TgPH_BODY_ID_C ARG1 );
 
 /** @brief Setter for the Body's function to calculate forces and moments. Calls are deferred to the end of the world step. @return Result Code.
     @param [in] ARG0 UID for the Body to be manipulated.
@@ -1156,49 +1168,49 @@ tgPH_Constraint_Configure(
     @param [in] ARG1 UID for the Constraint to be queried. */
 TgEXTN TgRESULT
 tgPH_Constraint_Query_Body_0_ID(
-     TgPH_BODY_ID_PC NONULL OUT0, TgPH_CONSTRAINT_ID_C ARG1 );
+     TgPH_BODY_ID_PC TgANALYSIS_NO_NULL OUT0, TgPH_CONSTRAINT_ID_C ARG1 );
 
 /** @brief Retrieve the second Body ID associated with this Constraint. @return Result Code.
     @param [out] OUT0 is a pointer to store the retrieved data.
     @param [in] ARG1 UID for the Constraint to be queried. */
 TgEXTN TgRESULT
 tgPH_Constraint_Query_Body_1_ID(
-     TgPH_BODY_ID_PC NONULL OUT0, TgPH_CONSTRAINT_ID_C ARG1 );
+     TgPH_BODY_ID_PC TgANALYSIS_NO_NULL OUT0, TgPH_CONSTRAINT_ID_C ARG1 );
 
 /** @brief Retrieve the maximum amount of compressive force prior to breakage of the Constraint. Conceptually the applied force is to push the bodies apart. @return Result Code.
     @param [out] OUT0 is a pointer to store the retrieved data.
     @param [in] ARG1 UID for the Constraint to be queried. */
 TgEXTN TgRESULT
 tgPH_Constraint_Query_Breakable_Compressive_Force(
-     TgFLOAT32_PC NONULL OUT0, TgPH_CONSTRAINT_ID_C ARG1 );
+     TgFLOAT32_PC TgANALYSIS_NO_NULL OUT0, TgPH_CONSTRAINT_ID_C ARG1 );
 
 /** @brief Retrieve the maximum amount of extension force prior to breakage of the Constraint. Conceptually the applied force is to pull the bodies together. @return Result Code.
     @param [out] OUT0 is a pointer to store the retrieved data.
     @param [in] ARG1 UID for the Constraint to be queried. */
 TgEXTN TgRESULT
 tgPH_Constraint_Query_Breakable_Extension_Force(
-     TgFLOAT32_PC NONULL OUT0, TgPH_CONSTRAINT_ID_C ARG1 );
+     TgFLOAT32_PC TgANALYSIS_NO_NULL OUT0, TgPH_CONSTRAINT_ID_C ARG1 );
 
 /** @brief Retrieve the maximum torque (て) prior to breakage of the Constraint. @return Result Code.
     @param [out] OUT0 is a pointer to store the retrieved data.
     @param [in] ARG1 UID for the Constraint to be queried. */
 TgEXTN TgRESULT
 tgPH_Constraint_Query_Breakable_Max_Torque(
-     TgFLOAT32_PC NONULL OUT0, TgPH_CONSTRAINT_ID_C ARG1 );
+     TgFLOAT32_PC TgANALYSIS_NO_NULL OUT0, TgPH_CONSTRAINT_ID_C ARG1 );
 
 /** @brief Retrieve the static coefficient of friction (μs) of the Constraint. @return Result Code.
     @param [out] OUT0 is a pointer to store the retrieved data.
     @param [in] ARG1 UID for the Constraint to be queried. */
 TgEXTN TgRESULT
 tgPH_Constraint_Query_Static_Coefficient_of_Friction(
-     TgFLOAT32_PC NONULL OUT0, TgPH_CONSTRAINT_ID_C ARG1 );
+     TgFLOAT32_PC TgANALYSIS_NO_NULL OUT0, TgPH_CONSTRAINT_ID_C ARG1 );
 
 /** @brief Retrieve the dynamic coefficient of friction (μd) of the Constraint. @return Result Code.
     @param [out] OUT0 is a pointer to store the retrieved data.
     @param [in] ARG1 UID for the Constraint to be queried. */
 TgEXTN TgRESULT
 tgPH_Constraint_Query_Dynamic_Coefficient_of_Friction(
-     TgFLOAT32_PC NONULL OUT0, TgPH_CONSTRAINT_ID_C ARG1 );
+     TgFLOAT32_PC TgANALYSIS_NO_NULL OUT0, TgPH_CONSTRAINT_ID_C ARG1 );
 
 /** @brief Setter that controls whether the Constraint will "break" when reaching a specified maximum force. Calls are deferred to the end of the world step. @return Result Code.
     @param [in] ARG0 UID for the Body to be manipulated.
@@ -1212,7 +1224,7 @@ tgPH_Constraint_Set_Breakable(
     @param [in] ARG1 UID for the Constraint to be queried. */
 TgEXTN TgRESULT
 tgPH_Constraint_Query_Breakable(
-     TgBOOL_PC NONULL OUT0, TgPH_CONSTRAINT_ID_C ARG1 );
+     TgBOOL_PC TgANALYSIS_NO_NULL OUT0, TgPH_CONSTRAINT_ID_C ARG1 );
 
 /** @} TGS_PHYSICS_CONSTRAINT_CONFIGURATION */
 
@@ -1232,14 +1244,14 @@ tgPH_Constraint_Query_Connected(
     @param [in] ARG1 UID for the Body to be queried. */
 TgEXTN TgRESULT
 tgPH_Constraint_Query_Next_Constraint_ID_For_Body_0(
-    TgPH_CONSTRAINT_ID_PC NONULL OUT0, TgPH_CONSTRAINT_ID_C ARG1 );
+    TgPH_CONSTRAINT_ID_PC TgANALYSIS_NO_NULL OUT0, TgPH_CONSTRAINT_ID_C ARG1 );
 
 /** @brief Retrieve the next Constraint associated with Body 1 of this Constraint. @return Result Code.
     @param [out] OUT0 is a pointer to store the retrieved data.
     @param [in] ARG1 UID for the Body to be queried. */
 TgEXTN TgRESULT
 tgPH_Constraint_Query_Next_Constraint_ID_For_Body_1(
-    TgPH_CONSTRAINT_ID_PC NONULL OUT0, TgPH_CONSTRAINT_ID_C ARG1 );
+    TgPH_CONSTRAINT_ID_PC TgANALYSIS_NO_NULL OUT0, TgPH_CONSTRAINT_ID_C ARG1 );
 
 /** @} TGS_PHYSICS_CONSTRAINT_UTILITY */
 /** @} TGS_PHYSICS_CONSTRAINT */
@@ -1273,7 +1285,7 @@ tgPH_Ragdoll_Query_Context(
     @param [in] ARG1 UID for the Ragdoll to be queried. */
 TgEXTN TgRESULT
 tgPH_Ragdoll_Query_Number_Of_Bones(
-     TgRSIZE_PC NONULL OUT0, TgPH_RAGDOLL_ID_C ARG1 );
+     TgRSIZE_PC TgANALYSIS_NO_NULL OUT0, TgPH_RAGDOLL_ID_C ARG1 );
 
 /** @} TGS_PHYSICS_RAGDOLL_CONFIGURATION */
 
@@ -1287,7 +1299,7 @@ tgPH_Ragdoll_Query_Number_Of_Bones(
     @param [in] ARG2 Integer index for the selected bone. */
 TgEXTN TgRESULT
 tgPH_Ragdoll_Query_Bone_Position_R(
-     TgVEC_F32_04_1_PC NONULL OUT0, TgPH_RAGDOLL_ID_C ARG1, TgRSIZE_C ARG2 );
+     TgVEC_F32_04_1_PC TgANALYSIS_NO_NULL OUT0, TgPH_RAGDOLL_ID_C ARG1, TgRSIZE_C ARG2 );
 
 /** @brief Retrieve the final transform of the bone in the Ragdoll reference frame. @return Result Code.
     @param [out] OUT0 is a pointer to store the retrieved data.
@@ -1303,7 +1315,7 @@ tgPH_Ragdoll_Query_Bone_Final_Transform_R(
     @param [in] ARG2 Integer index for the selected bone. */
 TgEXTN TgRESULT
 tgPH_Ragdoll_Query_Bone_Skeleton_Parent_Index(
-     TgUINT_E32_PC NONULL OUT0, TgPH_RAGDOLL_ID_C ARG1, TgRSIZE_C ARG2 );
+     TgUINT_E32_PC TgANALYSIS_NO_NULL OUT0, TgPH_RAGDOLL_ID_C ARG1, TgRSIZE_C ARG2 );
 
 /** @brief Retrieve the associated animation skeleton bone index for this bone. @return Result Code.
     @param [out] OUT0 is a pointer to store the retrieved data.
@@ -1327,7 +1339,7 @@ tgPH_Ragdoll_Query_Bone_Form_ID(
     @param [in] ARG2 Integer index for the selected bone. */
 TgEXTN TgRESULT
 tgPH_Ragdoll_Query_Bone_Body_ID(
-     TgPH_BODY_ID_PC NONULL OUT0, TgPH_RAGDOLL_ID_C ARG1, TgRSIZE_C ARG2 );
+     TgPH_BODY_ID_PC TgANALYSIS_NO_NULL OUT0, TgPH_RAGDOLL_ID_C ARG1, TgRSIZE_C ARG2 );
 
 /** @brief Retrieve the Constraint ID associated with this bone. @return Result Code.
     @param [out] OUT0 is a pointer to store the retrieved data.
@@ -1343,7 +1355,7 @@ tgPH_Ragdoll_Query_Bone_Constraint_ID(
     @param [in] ARG2 Integer index for the selected bone. */
 TgEXTN TgRESULT
 tgPH_Ragdoll_Query_Bone_Motor_ID(
-     TgPH_MOTOR_ID_PC NONULL OUT0, TgPH_RAGDOLL_ID_C ARG1, TgRSIZE_C ARG2 );
+     TgPH_MOTOR_ID_PC TgANALYSIS_NO_NULL OUT0, TgPH_RAGDOLL_ID_C ARG1, TgRSIZE_C ARG2 );
 
 /** @} TGS_PHYSICS_RAGDOLL_BONE */
 /** @} TGS_PHYSICS_RAGDOLL */
@@ -1581,6 +1593,20 @@ tgPH_World_Set_Collision_Enable(
     @param [in] ARG1 UID for the Body to be queried. */
 TgEXTN TgRESULT
 tgPH_World_Query_Collision_Enable(
+    TgBOOL_PC OUT0, TgPH_WORLD_ID_C ARG1 );
+
+/** @brief Setter that controls whether the World is paused. @return Result Code.
+    @param [in] ARG0 UID for the Body to be manipulated.
+    @param [in] ARG1 is the data to be used in the set function. */
+TgEXTN TgRESULT
+tgPH_World_Set_Collision_Simple_Override(
+    TgPH_WORLD_ID_C ARG0, TgBOOL_C ARG1 );
+
+/** @brief Retrieve the pause status of the World. @return Result Code.
+    @param [out] OUT0 is a pointer to store the retrieved data.
+    @param [in] ARG1 UID for the Body to be queried. */
+TgEXTN TgRESULT
+tgPH_World_Query_Collision_Simple_Override(
     TgBOOL_PC OUT0, TgPH_WORLD_ID_C ARG1 );
 
 /** @} TGS_PHYSICS_WORLD_DEBUG_CONTROLS */

@@ -28,14 +28,14 @@
     @param [out] OUT Pointer to the geometry object (rectangle) */
 TgINLINE TgVOID
 FCN_VO(tgGM_RT_Reset)(
-    VEC_OBJ_T(TgRECTANGLE,PCU) NONULL OUT );
+    VEC_OBJ_T(TgRECTANGLE,PCU) TgANALYSIS_NO_NULL OUT );
 
 /** @brief Validate the integrity of the geometry object (rectangle)
     @param [in] ARG Pointer to a geometry object (rectangle)
     @return True if the geometry object (rectangle) is valid and false otherwise */
 TgINLINE TgBOOL
 FCN_VO(tgGM_RT_Is_Valid)(
-    VEC_OBJ_T(TgRECTANGLE,CPCU) NONULL ARG );
+    VEC_OBJ_T(TgRECTANGLE,CPCU) TgANALYSIS_NO_NULL ARG );
 
 /** @brief Determine the point on the geometry object (rectangle) that is furthest along the direction of ARG1
     @param [in] ARG0 Pointer to a geometry object (rectangle)
@@ -43,21 +43,21 @@ FCN_VO(tgGM_RT_Is_Valid)(
     @return The point on the geometry object (rectangle) that is furthest along the direction of ARG1 */
 TgINLINE VEC_T(1)
 FCN_VO(tgGM_RT_Support_Point)(
-    VEC_OBJ_T(TgRECTANGLE,CPCU) NONULL ARG0, VEC_T(1,C) ARG1 );
+    VEC_OBJ_T(TgRECTANGLE,CPCU) TgANALYSIS_NO_NULL ARG0, VEC_T(1,C) ARG1 );
 
 /** @brief Calculate the surface area of the geometry object (rectangle)
     @param [in] ARG Pointer to a geometry object (rectangle)
     @return The surface area of the geometry object (rectangle) */
 TgINLINE VEC_T(1)
 FCN_VO(tgGM_RT_Area)(
-    VEC_OBJ_T(TgRECTANGLE,CPCU) NONULL ARG );
+    VEC_OBJ_T(TgRECTANGLE,CPCU) TgANALYSIS_NO_NULL ARG );
 
 /** @brief Calculate the minimum necessary Axis-Aligned Bounding Box to contain the geometry object (rectangle)
     @param [out] ARG0 Pointer to an axis-aligned bounding box object
     @param [in] ARG1 Pointer to a geometry object (rectangle) */
 TgINLINE TgVOID
 FCN_VO(tgGM_RT_BA)(
-    VEC_OBJ_T(TgBOXAA,PCU) NONULL ARG0, VEC_OBJ_T(TgRECTANGLE,CPCU) NONULL ARG1 );
+    VEC_OBJ_T(TgBOXAA,PCU) TgANALYSIS_NO_NULL ARG0, VEC_OBJ_T(TgRECTANGLE,CPCU) TgANALYSIS_NO_NULL ARG1 );
 
 /** @brief Calculate the minimum necessary Axis-Aligned Bounding Box to contain the swept geometry object (rectangle)
     @param [out] ARG0 Pointer to an axis-aligned bounding box object
@@ -65,7 +65,7 @@ FCN_VO(tgGM_RT_BA)(
     @param [in] ARG2 Pointer to a vector describing the swept direction and magnitude */
 TgINLINE TgVOID
 FCN_VO(tgGM_RT_Sweep_BA)(
-    VEC_OBJ_T(TgBOXAA,PCU) NONULL ARG0, VEC_OBJ_T(TgRECTANGLE,CPCU) NONULL ARG1, VEC_T(1,C) ARG2 );
+    VEC_OBJ_T(TgBOXAA,PCU) TgANALYSIS_NO_NULL ARG0, VEC_OBJ_T(TgRECTANGLE,CPCU) TgANALYSIS_NO_NULL ARG1, VEC_T(1,C) ARG2 );
 
 /** @brief Project the geometry object (rectangle) along the direction vector
     @param [out] OUT0 Pointer to a scalar value to hold the lower bound of the projection
@@ -74,7 +74,7 @@ FCN_VO(tgGM_RT_Sweep_BA)(
     @param [in] ARG3 Direction vector */
 TgINLINE TgVOID
 FCN_VO(tgGM_RT_Project)(
-    VEC_T(1,PCU) NONULL ARG0, VEC_T(1,PCU) NONULL ARG1, VEC_OBJ_T(TgRECTANGLE,CPCU) NONULL ARG2, VEC_T(1,C) ARG3 );
+    VEC_T(1,PCU) TgANALYSIS_NO_NULL ARG0, VEC_T(1,PCU) TgANALYSIS_NO_NULL ARG1, VEC_OBJ_T(TgRECTANGLE,CPCU) TgANALYSIS_NO_NULL ARG2, VEC_T(1,C) ARG3 );
 
 /** @brief Test to see if a point is either on or in the geometry object (rectangle)
     @param [in] ARG0 Pointer to a geometry object (rectangle)
@@ -82,14 +82,14 @@ FCN_VO(tgGM_RT_Project)(
     @return True if the position is either on or in the geometry object (rectangle) and false otherwise */
 TgINLINE TgBOOL
 FCN_VO(tgGM_RT_Is_Contained)(
-    VEC_OBJ_T(TgRECTANGLE,CPCU) NONULL ARG0, VEC_T(1,C) ARG1 );
+    VEC_OBJ_T(TgRECTANGLE,CPCU) TgANALYSIS_NO_NULL ARG0, VEC_T(1,C) ARG1 );
 
 /** @brief Transform the geometry object (rectangle) at ARG0 by the matrix at ARG1
     @param [in,out] ARG0 Pointer to a geometry object (rectangle)
     @param [in] ARG1 Column-Major matrix (3x4) containing rotation and translation */
 TgINLINE TgVOID
 FCN_VO(tgGM_RT_TX)(
-    VEC_OBJ_T(TgRECTANGLE,PCU) NONULL ARG0, VEC_T(3,CPCU) NONULL ARG1 );
+    VEC_OBJ_T(TgRECTANGLE,PCU) TgANALYSIS_NO_NULL ARG0, VEC_T(3,CPCU) TgANALYSIS_NO_NULL ARG1 );
 
 /** @brief Transform the geometry object (rectangle) at ARG1 by the matrix at ARG2 and store it in ARG0
     @param [out] ARG0 Pointer to a geometry object (rectangle)
@@ -97,7 +97,7 @@ FCN_VO(tgGM_RT_TX)(
     @param [in] ARG2 Column-Major matrix (3x4) containing rotation and translation */
 TgINLINE TgVOID
 FCN_VO(tgGM_RT_Copy_TX)(
-    VEC_OBJ_T(TgRECTANGLE,PCU) NONULL ARG0, VEC_OBJ_T(TgRECTANGLE,CPCU) NONULL ARG1, VEC_T(3,CPCU) NONULL ARG2);
+    VEC_OBJ_T(TgRECTANGLE,PCU) TgANALYSIS_NO_NULL ARG0, VEC_OBJ_T(TgRECTANGLE,CPCU) TgANALYSIS_NO_NULL ARG1, VEC_T(3,CPCU) TgANALYSIS_NO_NULL ARG2);
 
 
 /** @brief Initialize a new geometry object (rectangle) with the function arguments
@@ -109,7 +109,7 @@ FCN_VO(tgGM_RT_Copy_TX)(
     @param [in] ARG3 - Direction vector - normal of the plane of the rectangle */
 TgINLINE TgVOID
 FCN_VO(tgGM_RT_Init_SEN)(
-    VEC_OBJ_T(TgRECTANGLE,PCU) NONULL ARG0, VEC_T(1,C) ARG1, VEC_T(1,C) ARG2, VEC_T(1,C) ARG3, VEC_T(1,C) ARG4 );
+    VEC_OBJ_T(TgRECTANGLE,PCU) TgANALYSIS_NO_NULL ARG0, VEC_T(1,C) ARG1, VEC_T(1,C) ARG2, VEC_T(1,C) ARG3, VEC_T(1,C) ARG4 );
 
 /** @brief Initialize a new geometry object (rectangle) with the function arguments
     @note Orthogonality of the edge vectors is the responsibility of the caller
@@ -119,14 +119,14 @@ FCN_VO(tgGM_RT_Init_SEN)(
     @param [in] ARG3 - Direction vector - direction and length of the second edge */
 TgINLINE TgVOID
 FCN_VO(tgGM_RT_Init_SE)(
-    VEC_OBJ_T(TgRECTANGLE,PCU) NONULL ARG0, VEC_T(1,C) ARG1, VEC_T(1,C) ARG2, VEC_T(1,C) ARG3 );
+    VEC_OBJ_T(TgRECTANGLE,PCU) TgANALYSIS_NO_NULL ARG0, VEC_T(1,C) ARG1, VEC_T(1,C) ARG2, VEC_T(1,C) ARG3 );
 
 /** @brief Copy the one geometry object (rectangle) to another of the same type
     @param [out] ARG0 Pointer to a geometry object (rectangle)
     @param [in] ARG1 Pointer to a geometry object (rectangle) */
 TgINLINE TgVOID
 FCN_VO(tgGM_RT_Copy)(
-    VEC_OBJ_T(TgRECTANGLE,PCU) NONULL ARG0, VEC_OBJ_T(TgRECTANGLE,CPCU) NONULL ARG1 );
+    VEC_OBJ_T(TgRECTANGLE,PCU) TgANALYSIS_NO_NULL ARG0, VEC_OBJ_T(TgRECTANGLE,CPCU) TgANALYSIS_NO_NULL ARG1 );
 
 
 /** @brief Set the origin
@@ -134,7 +134,7 @@ FCN_VO(tgGM_RT_Copy)(
     @param [in] ARG1 Position vector */
 TgINLINE TgVOID
 FCN_VO(tgGM_RT_Set_Origin)(
-    VEC_OBJ_T(TgRECTANGLE,PCU) NONULL ARG0, VEC_T(1,C) ARG1 );
+    VEC_OBJ_T(TgRECTANGLE,PCU) TgANALYSIS_NO_NULL ARG0, VEC_T(1,C) ARG1 );
 
 /** @brief Set the direction and length of the two edge vectors
     @param [in,out] ARG0 Pointer to a geometry object (rectangle)
@@ -142,7 +142,7 @@ FCN_VO(tgGM_RT_Set_Origin)(
     @param [in] ARG2 Direction vector - Direction and length of the edge (2/2) */
 TgINLINE TgVOID
 FCN_VO(tgGM_RT_Set_Edge)(
-    VEC_OBJ_T(TgRECTANGLE,PCU) NONULL ARG0, VEC_T(1,C) ARG1, VEC_T(1,C) ARG2 );
+    VEC_OBJ_T(TgRECTANGLE,PCU) TgANALYSIS_NO_NULL ARG0, VEC_T(1,C) ARG1, VEC_T(1,C) ARG2 );
 
 /** @brief Set the direction and length of the edge and normal
     @param [in,out] ARG0 Pointer to a geometry object (rectangle)
@@ -151,7 +151,7 @@ FCN_VO(tgGM_RT_Set_Edge)(
     @param [in] ARG3 Direction vector - Unit normal to the plane defined by the two edge vectors */
 TgINLINE TgVOID
 FCN_VO(tgGM_RT_Set_Edge_Normal)(
-    VEC_OBJ_T(TgRECTANGLE,PCU) NONULL ARG0, VEC_T(1,C) ARG1, VEC_T(1,C) ARG2, VEC_T(1,C) ARG3 );
+    VEC_OBJ_T(TgRECTANGLE,PCU) TgANALYSIS_NO_NULL ARG0, VEC_T(1,C) ARG1, VEC_T(1,C) ARG2, VEC_T(1,C) ARG3 );
 
 
 /** @brief Return the origin
@@ -159,56 +159,56 @@ FCN_VO(tgGM_RT_Set_Edge_Normal)(
     @return The origin */
 TgINLINE VEC_T(1)
 FCN_VO(tgGM_RT_Query_Origin)(
-    VEC_OBJ_T(TgRECTANGLE,CPCU) NONULL ARG );
+    VEC_OBJ_T(TgRECTANGLE,CPCU) TgANALYSIS_NO_NULL ARG );
 
 /** @brief Return the direction and length of the first edge
     @param [in] ARG Pointer to a geometry object (rectangle)
     @return The direction and length of the first edge */
 TgINLINE VEC_T(1)
 FCN_VO(tgGM_RT_Query_Edge_0)(
-    VEC_OBJ_T(TgRECTANGLE,CPCU) NONULL ARG );
+    VEC_OBJ_T(TgRECTANGLE,CPCU) TgANALYSIS_NO_NULL ARG );
 
 /** @brief Return the direction and length of the second edge
     @param [in] ARG Pointer to a geometry object (rectangle)
     @return The direction and length of the second edge */
 TgINLINE VEC_T(1)
 FCN_VO(tgGM_RT_Query_Edge_1)(
-    VEC_OBJ_T(TgRECTANGLE,CPCU) NONULL ARG );
+    VEC_OBJ_T(TgRECTANGLE,CPCU) TgANALYSIS_NO_NULL ARG );
 
 /** @brief Return the normal of the plane
     @param [in] ARG Pointer to a geometry object (rectangle)
     @return The normal of the plane */
 TgINLINE VEC_T(1)
 FCN_VO(tgGM_RT_Query_Normal)(
-    VEC_OBJ_T(TgRECTANGLE,CPCU) NONULL ARG );
+    VEC_OBJ_T(TgRECTANGLE,CPCU) TgANALYSIS_NO_NULL ARG );
 
 /** @brief Return the first point of the rectangle
     @param [in] ARG Pointer to a geometry object (rectangle)
     @return The first point of the rectangle */
 TgINLINE VEC_T(1)
 FCN_VO(tgGM_RT_Query_Point_0)(
-    VEC_OBJ_T(TgRECTANGLE,CPCU) NONULL ARG );
+    VEC_OBJ_T(TgRECTANGLE,CPCU) TgANALYSIS_NO_NULL ARG );
 
 /** @brief Return the second point of the rectangle
     @param [in] ARG Pointer to a geometry object (rectangle)
     @return The second point of the rectangle */
 TgINLINE VEC_T(1)
 FCN_VO(tgGM_RT_Query_Point_1)(
-    VEC_OBJ_T(TgRECTANGLE,CPCU) NONULL ARG );
+    VEC_OBJ_T(TgRECTANGLE,CPCU) TgANALYSIS_NO_NULL ARG );
 
 /** @brief Return the third point of the rectangle
     @param [in] ARG Pointer to a geometry object (rectangle)
     @return The third point of the rectangle */
 TgINLINE VEC_T(1)
 FCN_VO(tgGM_RT_Query_Point_2)(
-    VEC_OBJ_T(TgRECTANGLE,CPCU) NONULL ARG );
+    VEC_OBJ_T(TgRECTANGLE,CPCU) TgANALYSIS_NO_NULL ARG );
 
 /** @brief Return the fourth point of the rectangle
     @param [in] ARG Pointer to a geometry object (rectangle)
     @return The fourth point of the rectangle */
 TgINLINE VEC_T(1)
 FCN_VO(tgGM_RT_Query_Point_3)(
-    VEC_OBJ_T(TgRECTANGLE,CPCU) NONULL ARG );
+    VEC_OBJ_T(TgRECTANGLE,CPCU) TgANALYSIS_NO_NULL ARG );
 
 
 /** @} TGS_COMMON_GEOMETRY_RT */

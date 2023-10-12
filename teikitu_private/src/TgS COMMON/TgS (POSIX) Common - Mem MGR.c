@@ -11,7 +11,11 @@
 
 #include <sys/param.h>
 #include <sys/mman.h>
+#if defined(TgBUILD_HOST_SYSTEM__HMAC)
+#include <stdlib.h>
+#else
 #include <malloc.h>
+#endif
 
 
 /* == Common ===================================================================================================================================================================== */
@@ -69,7 +73,7 @@ TgVOID_P tgMM_PM_Virtual_Reserve( TgRSIZE_C iSize )
 {
     TgVOID_P                            pMem;
 
-    pMem = valloc( iSize );
+    pMem = malloc( iSize );
     return (pMem);
 
 //    TgSIZE_ALL                          uiPageSize, uiSize_To_Allocate;

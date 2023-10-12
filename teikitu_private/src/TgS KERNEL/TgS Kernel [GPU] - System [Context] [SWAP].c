@@ -249,7 +249,7 @@ TgVOID tgKN_GPU__SwapChain__Present_Print_Debug_Stats( UTg2_KN_GPU_CMD_C uCMD, T
     sOutput_Debug_String_0.m_auszText[0] = uszBuffer;
     sOutput_Debug_String_0.m_nuiText = 1;
     sOutput_Debug_String_0.m_vText_Box_V.x = -1.0F + (10.0F / (float)sRTBuffer.m_uiWidth);
-    sOutput_Debug_String_0.m_vText_Box_V.y = 1.0F - (40.0F / (float)sRTBuffer.m_uiHeight); /* Odd, it seems to be taking into account the windows title bar. */
+    sOutput_Debug_String_0.m_vText_Box_V.y = 1.0F - (10.0F / (float)sRTBuffer.m_uiHeight);
     sOutput_Debug_String_0.m_vText_Box_V.z = 1.0F - (10.0F / (float)sRTBuffer.m_uiWidth);
     sOutput_Debug_String_0.m_vText_Box_V.w =-1.0F + (10.0F / (float)sRTBuffer.m_uiHeight);
     sOutput_Debug_String_0.m_vText_Colour.r = 0.0F;

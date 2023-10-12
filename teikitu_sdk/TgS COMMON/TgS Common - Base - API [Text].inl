@@ -22,7 +22,7 @@
 
 /* ---- tgUSZ_Get_At ------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgCHAR_U8_P tgUSZ_Get_At( TgCHAR_U8_P NONULL mbzARG, TgRSIZE nbyMaxARG, TgRSIZE uiIndex )
+TgINLINE TgCHAR_U8_P tgUSZ_Get_At( TgCHAR_U8_P TgANALYSIS_NO_NULL mbzARG, TgRSIZE nbyMaxARG, TgRSIZE uiIndex )
 {
     TgCHAR_U8_CP                        mbzARG_Ret;
     
@@ -38,7 +38,7 @@ TgINLINE TgCHAR_U8_P tgUSZ_Get_At( TgCHAR_U8_P NONULL mbzARG, TgRSIZE nbyMaxARG,
 
 /* ---- tgUSZ_Get_Last ----------------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgCHAR_U8_P tgUSZ_Get_Last( TgCHAR_U8_P NONULL mbzARG, TgRSIZE nbyMaxARG, TgRSIZE uiMaxRead )
+TgINLINE TgCHAR_U8_P tgUSZ_Get_Last( TgCHAR_U8_P TgANALYSIS_NO_NULL mbzARG, TgRSIZE nbyMaxARG, TgRSIZE uiMaxRead )
 {
     TgCHAR_U8_CP                        mbzARG_Ret;
     
@@ -54,7 +54,7 @@ TgINLINE TgCHAR_U8_P tgUSZ_Get_Last( TgCHAR_U8_P NONULL mbzARG, TgRSIZE nbyMaxAR
 
 /* ---- tgUSZ_Get_End ------------------------------------------------------------------------------------------------------------------------------------------------------------ */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgINLINE TgCHAR_U8_P tgUSZ_Get_End( TgCHAR_U8_P NONULL mbzARG, TgRSIZE nbyMaxARG, TgRSIZE uiMaxRead )
+TgINLINE TgCHAR_U8_P tgUSZ_Get_End( TgCHAR_U8_P TgANALYSIS_NO_NULL mbzARG, TgRSIZE nbyMaxARG, TgRSIZE uiMaxRead )
 {
     TgCHAR_U8_CP                        mbzARG_Ret;
     
@@ -71,7 +71,7 @@ TgINLINE TgCHAR_U8_P tgUSZ_Get_End( TgCHAR_U8_P NONULL mbzARG, TgRSIZE nbyMaxARG
 /* ---- tgUSZ_Query_Region ------------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 TgINLINE TgRESULT tgUSZ_Query_Region(
-    TgCHAR_U8_CPP pmbzBegin, TgCHAR_U8_CPP pmbzEnd, TgCHAR_U8_CP NONULL mbzARG_Start, TgRSIZE nbyMaxARG, TgRSIZE uiARG_Index, TgRSIZE uiMaxRegion )
+    TgCHAR_U8_CPP pmbzBegin, TgCHAR_U8_CPP pmbzEnd, TgCHAR_U8_CP TgANALYSIS_NO_NULL mbzARG_Start, TgRSIZE nbyMaxARG, TgRSIZE uiARG_Index, TgRSIZE uiMaxRegion )
 {
     *pmbzBegin = tgUSZ_Query_At( mbzARG_Start, nbyMaxARG, uiARG_Index );
     if (nullptr == *pmbzBegin)
@@ -88,7 +88,7 @@ TgINLINE TgRESULT tgUSZ_Query_Region(
 /* ---- tgUSZ_Get_Region --------------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 TgINLINE TgRESULT tgUSZ_Get_Region(
-    TgCHAR_U8_PP NONULL pmbzBegin, TgCHAR_U8_PP NONULL pmbzEnd, TgCHAR_U8_P NONULL mbzARG_Start, TgRSIZE nbyMaxARG, TgRSIZE uiARG_Index, TgRSIZE uiMaxRegion  )
+    TgCHAR_U8_PP TgANALYSIS_NO_NULL pmbzBegin, TgCHAR_U8_PP TgANALYSIS_NO_NULL pmbzEnd, TgCHAR_U8_P TgANALYSIS_NO_NULL mbzARG_Start, TgRSIZE nbyMaxARG, TgRSIZE uiARG_Index, TgRSIZE uiMaxRegion  )
 {
     TgCHAR_U8_CP                        mbzBegin, mbzEnd;
     

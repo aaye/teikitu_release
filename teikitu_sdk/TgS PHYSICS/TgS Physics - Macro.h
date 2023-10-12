@@ -31,18 +31,18 @@
 
 
 #define PHYSICS_FUNCTION_QUERY__DECLERATION_ASSIGN(OBJ_NAME,OBJ_ID,ATTRIBUTE,ATTRIBUTE_TYPE)                                                                                        \
-    TgEXTN TgRESULT tgPH_##OBJ_NAME##_Query_##ATTRIBUTE( ATTRIBUTE_TYPE * const NONULL OUT0, TgPH_##OBJ_ID##_ID_C ARG1 );                                                           \
+    TgEXTN TgRESULT tgPH_##OBJ_NAME##_Query_##ATTRIBUTE( ATTRIBUTE_TYPE * const TgANALYSIS_NO_NULL OUT0, TgPH_##OBJ_ID##_ID_C ARG1 );                                                           \
 
 #define PHYSICS_FUNCTION_ACCESSOR__DECLERATION_ASSIGN(OBJ_NAME,OBJ_ID,ATTRIBUTE,ATTRIBUTE_TYPE)                                                                                     \
     TgEXTN TgRESULT tgPH_##OBJ_NAME##_Set_##ATTRIBUTE( TgPH_##OBJ_ID##_ID_C ARG0, ATTRIBUTE_TYPE const ARG1 );                                                                      \
-    TgEXTN TgRESULT tgPH_##OBJ_NAME##_Query_##ATTRIBUTE( ATTRIBUTE_TYPE * const NONULL OUT0, TgPH_##OBJ_ID##_ID_C ARG1 );                                                           \
+    TgEXTN TgRESULT tgPH_##OBJ_NAME##_Query_##ATTRIBUTE( ATTRIBUTE_TYPE * const TgANALYSIS_NO_NULL OUT0, TgPH_##OBJ_ID##_ID_C ARG1 );                                                           \
 
 #define PHYSICS_FUNCTION_QUERY__DECLERATION_COPY(OBJ_NAME,OBJ_ID,ATTRIBUTE,ATTRIBUTE_TYPE)                                                                                          \
-    TgEXTN TgRESULT tgPH_##OBJ_NAME##_Query_##ATTRIBUTE( ATTRIBUTE_TYPE * const NONULL OUT0, TgPH_##OBJ_ID##_ID_C ARG1 );                                                           \
+    TgEXTN TgRESULT tgPH_##OBJ_NAME##_Query_##ATTRIBUTE( ATTRIBUTE_TYPE * const TgANALYSIS_NO_NULL OUT0, TgPH_##OBJ_ID##_ID_C ARG1 );                                                           \
 
 #define PHYSICS_FUNCTION_ACCESSOR__DECLERATION_COPY(OBJ_NAME,OBJ_ID,ATTRIBUTE,ATTRIBUTE_TYPE)                                                                                       \
     TgEXTN TgRESULT tgPH_##OBJ_NAME##_Set_##ATTRIBUTE( TgPH_##OBJ_ID##_ID_C ARG0, ATTRIBUTE_TYPE const * ARG1 );                                                                    \
-    TgEXTN TgRESULT tgPH_##OBJ_NAME##_Query_##ATTRIBUTE( ATTRIBUTE_TYPE * const NONULL OUT0, TgPH_##OBJ_ID##_ID_C ARG1 );                                                           \
+    TgEXTN TgRESULT tgPH_##OBJ_NAME##_Query_##ATTRIBUTE( ATTRIBUTE_TYPE * const TgANALYSIS_NO_NULL OUT0, TgPH_##OBJ_ID##_ID_C ARG1 );                                                           \
 
 
 /* =============================================================================================================================================================================== */

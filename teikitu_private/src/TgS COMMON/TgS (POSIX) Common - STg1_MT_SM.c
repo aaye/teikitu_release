@@ -21,7 +21,7 @@
 
 /* ---- tgPM_MT_SM_Init ---------------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgRESULT tgPM_MT_SM_Init( STg1_MT_SM_PCU NONULL psSM, TgCHAR_U8_CPCU OKNULL mbzName, TgUINT_E32_C uiInit, TgATTRIBUTE_MAYBE_UNUSED TgUINT_E32_C uiMax )
+TgRESULT tgPM_MT_SM_Init( STg1_MT_SM_PCU psSM, TgCHAR_U8_CPCU OKNULL mbzName, TgUINT_E32_C uiInit, TgATTRIBUTE_MAYBE_UNUSED TgUINT_E32_C uiMax )
 {
     if (nullptr == mbzName)
     {
@@ -54,7 +54,7 @@ TgRESULT tgPM_MT_SM_Init( STg1_MT_SM_PCU NONULL psSM, TgCHAR_U8_CPCU OKNULL mbzN
 
 /* ---- tgPM_MT_SM_Free ---------------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgVOID tgPM_MT_SM_Free( STg1_MT_SM_PCU NONULL psSM )
+TgVOID tgPM_MT_SM_Free( STg1_MT_SM_PCU psSM )
 {
     TgSINT_E32                          iRet;
 
@@ -71,7 +71,7 @@ TgVOID tgPM_MT_SM_Free( STg1_MT_SM_PCU NONULL psSM )
 
 /* ---- tgPM_MT_SM_Wait_Block ---------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgVOID tgPM_MT_SM_Wait_Block( STg1_MT_SM_PCU NONULL psSM )
+TgVOID tgPM_MT_SM_Wait_Block( STg1_MT_SM_PCU psSM )
 {
     TgVERIFY(0 == sem_wait( psSM->m_hSemaphore ));
 }
@@ -79,7 +79,7 @@ TgVOID tgPM_MT_SM_Wait_Block( STg1_MT_SM_PCU NONULL psSM )
 
 /* ---- tgPM_MT_SM_Wait ---------------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgRESULT tgPM_MT_SM_Wait( STg1_MT_SM_PCU NONULL psSM )
+TgRESULT tgPM_MT_SM_Wait( STg1_MT_SM_PCU psSM )
 {
     TgSINT_E32                          iRet;
     iRet = sem_trywait( psSM->m_hSemaphore );
@@ -89,7 +89,7 @@ TgRESULT tgPM_MT_SM_Wait( STg1_MT_SM_PCU NONULL psSM )
 
 /* ---- tgPM_MT_SM_Signal -------------------------------------------------------------------------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-TgVOID tgPM_MT_SM_Signal( STg1_MT_SM_PCU NONULL psSM, TgUINT_E32_C nuiSignal )
+TgVOID tgPM_MT_SM_Signal( STg1_MT_SM_PCU psSM, TgUINT_E32_C nuiSignal )
 {
     TgSINT_E32                          iRet;
 
