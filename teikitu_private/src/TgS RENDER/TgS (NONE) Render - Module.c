@@ -82,4 +82,3 @@ TgBOOL tgRN_Query_Boot( TgVOID )
 {
     return (true);
 }
- 
